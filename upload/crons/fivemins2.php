@@ -21,6 +21,7 @@ if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 //Mining refill
 $db->query("UPDATE `mining` SET `miningpower`=`miningpower`+(`max_miningpower`/(5)) WHERE `miningpower`<`max_miningpower`");
 $db->query("UPDATE `mining` SET `miningpower`=`max_miningpower` WHERE `miningpower`>`max_miningpower`");
+
 //Brave Refill
 $db->query("UPDATE `users` SET `brave`=`brave`+((`maxbrave`/10)+0.5) WHERE `brave`<`maxbrave`");
 $db->query("UPDATE `users` SET `brave`=`maxbrave` WHERE `brave`>`maxbrave`");
@@ -28,13 +29,17 @@ $db->query("UPDATE `users` SET `brave`=`maxbrave` WHERE `brave`>`maxbrave`");
 //Energy Refill
 $db->query("UPDATE users SET energy=energy+(maxenergy/(6)) WHERE energy<maxenergy AND vip_days=0");
 $db->query("UPDATE users SET energy=energy+(maxenergy/(3)) WHERE energy<maxenergy AND vip_days>0");
+
 $db->query("UPDATE users SET energy=maxenergy WHERE energy>maxenergy");
 //Will refill
-$db->query("UPDATE users SET will=will+(maxwill/10) WHERE will<maxwill");
-$db->query("UPDATE users SET will = maxwill WHERE will > maxwill");
-//Farm water update
-$db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_available` + 5");
-$db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_max` WHERE `farm_water_available` > `farm_water_max`");
+$q = $db->query("SELECT `will`,`userid`,`maxwill` FROM `users` WHERE `will` < `maxwill`");
+while ($r = $db->fetch_row($q))
+{
+    if (!userHasEffect($r['userid'], effect_posion))
+        $db->query("UPDATE `users` SET `will` = `will` + (`maxwill` / 10) WHERE `userid` = {$r['userid']}");
+}
+$db->free_result($q);
+$db->query("UPDATE `users` SET `will` = `maxwill` WHERE `will` > `maxwill`");
 
 //Wood Cutter
 $increase = $set['cutter_capacity_max'] * 0.02;

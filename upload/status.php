@@ -47,7 +47,8 @@ function effectNameParser($effectID)
         effect_injure_sec_wep => "Secondary Hand Injured",
         effect_drill_jam => "Power Miner Jam",
         effect_mining_fear => "Mining Fear",
-        effect_daily_gym_bonus => "Daily Gym Bonus"
+        effect_daily_gym_bonus => "Daily Gym Bonus",
+        effect_poisoned_weaps => "Poisoned Weapons"
     );
     return $effectNameArray[$effectID];
 }
@@ -61,7 +62,7 @@ function effectDescParser($effectID, $effectMulti = 1)
         sleep => "Sleeping to regenerate stats.",
         wood_cut_cooldown => "Using the woodcutter excessively would be rude",
         effect_mysterious_potion => "Must recover before drinking another",
-        effect_posion => "Losing " . number_format($effectMulti * 5) . "% HP per minute",
+        effect_posion => "Unable to naturally regenerate will",
         effect_regen => "Regenerating " . number_format($effectMulti * 5) . "% HP per minute",
         farm_well_cooldown => "Using the farming well excessively would be rude",
         farm_well_less_cooldown => "-50% cooldown time, per bucket, when filling from the well",
@@ -71,9 +72,10 @@ function effectDescParser($effectID, $effectMulti = 1)
         effect_guard => "Increases guard in combat by " . number_format($effectMulti * 5) . "%",
         effect_injure_prim_wep => "Cannot equip primary weapon until healed",
         effect_injure_sec_wep => "Cannot equip secondary weapon until healed",
-        effect_drill_jam => "Powered miners are jammed and no resources are being made right now.",
-        effect_mining_fear => "Too tripped out to go mining right now.",
-        effect_daily_gym_bonus => "Increase your gym gains from now until the end of the day by {$effectMulti}%."
+        effect_drill_jam => "Powered miners are jammed and no resources are being made right now",
+        effect_mining_fear => "Too tripped out to go mining right now",
+        effect_daily_gym_bonus => "Increased gym gains from now until the end of the day by {$effectMulti}%",
+        effect_poisoned_weaps => "Your weapons have a " . number_format($effectMulti * 8) . "% chance of dealing the Poison effect on your opponents"
     );
     return $effectNameArray[$effectID];
 }

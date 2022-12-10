@@ -26,6 +26,8 @@ define('effect_strength', 'strength');
 define('effect_agility', 'guard');
 define('effect_guard', 'guard');
 
+define('effect_poisoned_weaps', 'effect_poisoned_weaps');
+
 //Injuries
 define('effect_injure_prim_wep', "prim_weap_disable");
 define('effect_injure_sec_wep', "sec_weap_disable");
