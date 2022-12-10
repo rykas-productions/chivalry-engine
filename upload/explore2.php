@@ -10,6 +10,8 @@ require("globals.php");
 include('facebook.php');
 $blockAccess = false;
 $txtClass='';
+$month = date('n');
+$day = date('j');
 if ($blockAccess)
 {
 	//Block access if user is in the infirmary.
@@ -149,8 +151,16 @@ echo "
                     <a href='itemweekshop.php' class='{$txtClass}'>Item of the Week</a><br />
                     <a href='votestore.php'>Vote Point Store <span class='badge badge-pill badge-primary'>" . number_format($ir['vote_points']) . "</span></a><br />
 					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . number_format($vipMarket) . "</span></a><br />
-					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a><br />
-                    <a href='attack.php?user=21'>Participate in Turkey Hunt</a><br />
+					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a><br />";
+                    if ($month == 11)
+                        echo "<a href='attack.php?user=21'>Participate in Turkey Hunt</a><br />";
+                    if ($month == 12)
+                    {
+                        echo "<a href='adventcalender.php'>CID Advent Calendar</a><br />
+                                <a href='xmastree.php'>CID Christmas Tree</a><br />
+                                <a href='xmastree.php?action=wish'>Christmas Tree</a><br />";
+                    }
+                        echo"
 				</div>
 			</div>
 		</div>

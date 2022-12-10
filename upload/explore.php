@@ -8,6 +8,8 @@ if ($userUI == 1)
 }
 $blockAccess = false;
 $txtClass='';
+$month = date('n');
+$day = date('j');
 if ($blockAccess)
 {
 	//Block access if user is in the infirmary.
@@ -110,10 +112,27 @@ echo"
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
 						<a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a>
-					</div>
-                    <div class='col-12 col-sm-6 col-md-4 col-lg-12'>
-						<a href='attack.php?user=21'>Participate in Turkey Hunt</a>
 					</div>";
+                    if ($month == 11)
+                    {
+                        echo "
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-12'>
+    						<a href='attack.php?user=21'>Participate in Turkey Hunt</a>
+    					</div>";
+                    }
+                    if ($month == 12)
+                    {
+                        echo "
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-12'>
+    						<a href='adventcalender.php'>CID Advent Calendar</a>
+    					</div>
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-12'>
+    						<a href='xmastree.php'>CID Christmas Tree</a>
+    					</div>
+                        <div class='col-12 col-sm-6 col-md-4 col-lg-12'>
+    						<a href='xmastree.php?action=wish'>Christmas Wish</a>
+    					</div>";
+                    }
 						$bossq=$db->query("
 							SELECT `boss_user`,`location` 
 							FROM `activeBosses` `ab`
