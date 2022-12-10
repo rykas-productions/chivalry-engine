@@ -38,6 +38,30 @@ The following is a list of milestones that players have accomplished inside of C
     <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
         <div class='card'>
             <div class='card-header'>
+                Top Turkey Hunters (2022)
+            </div>
+            <div class='card-body'>
+                <div class='row'>";
+                    $turkq = $db->query("SELECT * FROM `user_pref` WHERE `preference` = '2022turkeyKills' ORDER BY `value` * 1 DESC LIMIT 5");
+                    while ($r = $db->fetch_row($turkq))
+                    {
+                        echo "<div class='col-12 col-sm-6 col-lg-4 col-xl-6'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . " [{$r['userid']}]</a>
+                            </div>
+                            <div class='col-12 text-muted small'>
+                                " . shortNumberParse($r['value']) . " kills
+                            </div>
+                        </div>
+                    </div>";
+                    }
+            echo"</div></div>
+        </div>
+    </div>
+    <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+        <div class='card'>
+            <div class='card-header'>
                 2018 Referral Contest Winner
             </div>
             <div class='card-body'>
@@ -92,7 +116,7 @@ The following is a list of milestones that players have accomplished inside of C
             </div>
             <div class='card-body'>
                 <div class='row'>
-                    <div class='col-12 col-sm-6 col-lg-4 col-xl-6 col-xxl'>
+                    <div class='col-12 col-sm-6 col-lg-4 col-xl-6'>
                         <div class='row'>
                             <div class='col-12'>
                                 <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
@@ -102,7 +126,7 @@ The following is a list of milestones that players have accomplished inside of C
                             </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-lg-4 col-xl-6 col-xxl'>
+                    <div class='col-12 col-sm-6 col-lg-4 col-xl-6'>
                         <div class='row'>
                             <div class='col-12'>
                                 <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
@@ -112,7 +136,7 @@ The following is a list of milestones that players have accomplished inside of C
                             </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-lg-4 col-xl-6 col-xxl'>
+                    <div class='col-12 col-sm-6 col-lg-4 col-xl-6'>
                         <div class='row'>
                             <div class='col-12'>
                                 <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
@@ -122,7 +146,7 @@ The following is a list of milestones that players have accomplished inside of C
                             </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-lg col-xl-6 col-xxl'>
+                    <div class='col-12 col-sm-6 col-lg col-xl-6'>
                         <div class='row'>
                             <div class='col-12'>
                                 <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
@@ -132,7 +156,7 @@ The following is a list of milestones that players have accomplished inside of C
                             </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-lg col-xl-6 col-xxl'>
+                    <div class='col-12 col-sm-6 col-lg col-xl-6'>
                         <div class='row'>
                             <div class='col-12'>
                                 <a href='profile.php?user=161'>" . parseUsername(161) . " [161]</a>
