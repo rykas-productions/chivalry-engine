@@ -693,7 +693,7 @@ function attacking()
             if ($missed == 1)
             {
                 alert('warning', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} You attempt to strike {$odata['username']} using your {$api->SystemItemIDtoName($_GET['weapon'])} but missed. Your
-                    opponent has " . number_format($odata['hp']) . " HP Remaining.", false, '', true);
+                    opponent has " . shortNumberParse($odata['hp']) . " HP Remaining.", false, '', true);
             }
             else
             {
@@ -701,7 +701,7 @@ function attacking()
                 $db->query("UPDATE `users` SET `hp` = `hp` - {$mydamage} WHERE `userid` = {$_GET['user']}");
                 $db->query("DELETE FROM `spy_advantage` WHERE `user` = {$userid} AND `spied` = {$_GET['user']}");
                 alert('success', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} Using your {$r1['itmname']} you manage to strike
-                {$odata['username']} dealing " . number_format($mydamage) . " damage. Your opponent has " . number_format($odata['hp']) . " HP remaining.", false, '', true);
+                {$odata['username']} dealing " . shortNumberParse($mydamage) . " damage. Your opponent has " . shortNumberParse($odata['hp']) . " HP remaining.", false, '', true);
                 $_SESSION['attackdmg'] += $mydamage;
                 user_log($userid,'dmgdone',$mydamage);
 				//Check if the attacked user is, in fact, an active boss.
@@ -710,6 +710,10 @@ function attacking()
 				{
 					$bossr=$db->fetch_row($bossq);
 					logBossDmg($userid,$bossr['boss_id'],$mydamage);
+				}
+				if (doPoisonLogic($userid, $_GET['user']))
+				{
+				    toast("","You've successfully poisoned your opponent!!");
 				}
             }
         }
@@ -904,14 +908,18 @@ function attacking()
                 {
                     if ($miss == 1)
                     {
-                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you with their {$api->SystemItemIDtoName($enweps[$weptouse]['itmid'])} but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
+                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you with their {$api->SystemItemIDtoName($enweps[$weptouse]['itmid'])} but missed. You have " . shortNumberParse($youdata['hp']) . " HP remaining.", false);
                     }
                     else
                     {
                         $db->query("UPDATE `users` SET `hp` = `hp` - {$dam} WHERE `userid` = {$userid}");
                         alert('danger', "", "<b>Attempt {$ns})</b> Using their {$wep}, {$odata['username']} managed to strike you dealing
-                         " . number_format($dam) . " damage. You have " . number_format($youdata['hp']) . " HP remaining.", false, '', true);
+                         " . shortNumberParse($dam) . " damage. You have " . shortNumberParse($youdata['hp']) . " HP remaining.", false, '', true);
                          user_log($_GET['user'],'dmgdone',$dam);
+                         if (doPoisonLogic($_GET['user'], $userid))
+                         {
+                             toast("","Your opponent has successfully poisoned you!!");
+                         }
                     }
                 }
                 else
@@ -1205,14 +1213,14 @@ function beat()
 		}
 		if ($r['userid'] == 21)
 		{
-			$turkeyKills=getCurrentUserPref('2022turkeyKills',0);
-			$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
+		    $turkeyKills=getCurrentUserPref(date('Y') . "turkeyKills",0);
+			/*$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
 			if ($gotBadge == 0)
 			{
 				$api->UserGiveItem($userid,455,1);
 				setCurrentUserPref('2022turkeyBadge',1);
-			}
-			setCurrentUserPref('2022turkeyKills',$turkeyKills+1);
+			}*/
+		    setCurrentUserPref(date('Y') . "turkeyKills",$turkeyKills+1);
 			$feathers=Random(20,100);
 			$api->UserGiveItem($userid,197,$feathers);
 			$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
@@ -1508,14 +1516,14 @@ function xp()
 			}
 			if ($r['userid'] == 21)
 			{
-				$turkeyKills=getCurrentUserPref('2022turkeyKills',0);
-				$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
+			    $turkeyKills=getCurrentUserPref(date('Y') . "turkeyKills",0);
+				/*$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
 				if ($gotBadge == 0)
 				{
 					$api->UserGiveItem($userid,455,1);
 					setCurrentUserPref('2022turkeyBadge',1);
-				}
-				setCurrentUserPref('2022turkeyKills',$turkeyKills+1);
+				}*/
+			    setCurrentUserPref(date('Y') . "turkeyKills",$turkeyKills+1);
 				$feathers=Random(20,100);
 				$api->UserGiveItem($userid,197,$feathers);
 				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
@@ -1661,14 +1669,14 @@ function mug()
 			}
 			if ($r['userid'] == 21)
 			{
-				$turkeyKills=getCurrentUserPref('2022turkeyKills',0);
-				$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
+			    $turkeyKills=getCurrentUserPref(date('Y') . "turkeyKills",0);
+				/*$gotBadge=getCurrentUserPref('2022turkeyBadge',0);
 				if ($gotBadge == 0)
 				{
 					$api->UserGiveItem($userid,455,1);
 					setCurrentUserPref('2022turkeyBadge',1);
-				}
-				setCurrentUserPref('2022turkeyKills',$turkeyKills+1);
+				}*/
+			    setCurrentUserPref(date('Y') . "turkeyKills",$turkeyKills+1);
 				$feathers=Random(20,100);
 				$api->UserGiveItem($userid,197,$feathers);
 				$api->GameAddNotification($userid,"For hunting a turkey, you've received {$feathers} Turkey Feathers.");
