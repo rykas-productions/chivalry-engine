@@ -289,8 +289,8 @@ if ($_GET['user'] == 21)
 {
 	if (date('n') == 11)
 	{
-		$turkeyKills=getCurrentUserPref('2022turkeyKills',0);
-		alert("info","","You have hunted " . number_format($turkeyKills) . " turkey this year.",false);
+	    $turkeyKills=getCurrentUserPref(date('Y') . "turkeyKills",0);
+		alert("info","","You have hunted " . shortNumberParse($turkeyKills) . " turkey(s) this year.",false);
 	}
 }
 echo "<h3>{$user_name}'s Profile</h3>
