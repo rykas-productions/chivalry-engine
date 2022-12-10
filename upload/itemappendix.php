@@ -134,7 +134,7 @@ while ($r = $db->fetch_row($q))
 										$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
 										$einfo['dir'] = ($einfo['dir'] == 'pos') ? '+' : '-';
 											$statformatted = statParser($einfo['stat']);
-										echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
+										echo "{$einfo['dir']}" . shortNumberParse($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
 									}
 								}
 					echo "	</div>
@@ -143,15 +143,15 @@ while ($r = $db->fetch_row($q))
 						<div class='row'>
 							<div class='col-md'>
 								<b>Buy Value</b><br />
-								<small>" . number_format($totalbuy) . " Copper Coins</small>
+								<small>" . shortNumberParse($totalbuy) . " Copper Coins</small>
 							</div>
 							<div class='col-md'>
 								<b>Sell Value</b><br />
-								<small>" . number_format($totalsell) . " Copper Coins</small>
+								<small>" . shortNumberParse($totalsell) . " Copper Coins</small>
 							</div>
 							<div class='col-md'>
 								<b>Circulating</b><br />
-								<small>" . number_format($total) . "</small>
+								<small>" . shortNumberParse($total) . "</small>
 							</div>
 						</div>
 						<hr />
@@ -161,7 +161,7 @@ while ($r = $db->fetch_row($q))
 								echo "
 								<div class='col-md'>
 									<b>Weapon</b><br />
-									<small>" . number_format($r['weapon']) . "</small>
+									<small>" . shortNumberParse($r['weapon']) . "</small>
 								</div>";
 							}
 							if ($r['ammo'] > 0)
@@ -177,7 +177,7 @@ while ($r = $db->fetch_row($q))
 								echo "
 								<div class='col-md'>
 									<b>Armor</b><br />
-									<small>" . number_format($r['armor']) . "</small>
+									<small>" . shortNumberParse($r['armor']) . "</small>
 								</div>";
 							}
 							echo "
