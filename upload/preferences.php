@@ -1428,7 +1428,7 @@ function resetacc()
 			$db->query("UPDATE `user_settings` SET `reset` = {$reset} + 1 WHERE `userid` = {$userid}");
 		alert('success',"Success!","Your account has been reset. Please log in to continue.",true,'logout.php');
 		$api->SystemLogsAdd($userid, 'preferences', "Successfully reset account. (Reset # {$reset})");
-		$realReset = $reset - 1;
+		$realReset = $reset;
 		if ($realReset == 1)
 		{
 			$api->UserGiveItem($userid,346,1);
