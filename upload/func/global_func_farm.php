@@ -17,6 +17,7 @@ function fiveMinuteFarm()
     		$db->query("UPDATE `farm_data` SET `farm_wellness` = `farm_wellness` - {$wellnessLost} WHERE `farm_id` = {$r['farm_id']}");
 	    }
 	}
+	doWellTick();
 }
 //Catch for lazy programming
 function fixFarmLevel()
@@ -408,4 +409,20 @@ function returnStagebyID($stageInt, $stageTime)
         else
             return "Tended";
     }
+}
+
+function doWellTick()
+{
+    $minimumGained = 5;
+    global $db;
+    $q = $db->query("SELECT * FROM `farm_users` WHERE `farm_water_max` > 0");
+    while ($r = $db->fetch_row($q))
+    {
+        if (($r['farm_water_max'] * 0.05) < $minimumGained)
+            $gained = $minimumGained;
+        else
+            $gained = $r['farm_water_max'] * 0.05;
+        $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_available` + {$gained} WHERE `userid` = {$r['userid']}");
+    }
+    $db->query("UPDATE `farm_users` SET `farm_water_available` = `farm_water_max` WHERE `farm_water_available` > `farm_water_max`");
 }

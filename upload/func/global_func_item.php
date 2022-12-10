@@ -336,3 +336,17 @@ function consumeBucket($player, $consumedBucketID, $consumedQty)
     $api->UserTakeItem($player, $consumedBucketID, $consumedQty);
     $api->UserGiveItem($player, $bucketID, $consumedQty);
 }
+
+function returnTotalItemCount($itemID)
+{
+    global $db;
+    $armory = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$itemID} AND `gaGUILD` != 20"));
+    $invent = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$itemID} AND `inv_userid` != 1"));
+    $market = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$itemID}"));
+    $primary = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`) FROM `users` WHERE `equip_primary` = {$itemID} AND `userid` != 1"));
+    $secondary = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$itemID} AND `userid` != 1"));
+    $armor = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$itemID} AND `userid` != 1"));
+    $badge = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$itemID} AND `userid` != 1"));
+    $trink = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_slot`) FROM `user_equips` WHERE `itemid` = {$itemID}"));
+    return $invent + $armory + $market + $primary + $secondary + $armor + $badge + $trink;
+}

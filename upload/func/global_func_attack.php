@@ -58,7 +58,6 @@ function returnUserEffectiveStat($userid, $stat)
     if (userHasEffect($userid, $stat))
     {
         $effectLvl = returnEffectMultiplier($userid, $stat);
-        var_dump($effectLvl);
         $return = $return + ($return * ((5 * $effectLvl) / 100));
     }
     return $return;
@@ -113,17 +112,20 @@ function preFightChecks()
     {
         alert("danger", "Uh Oh!", "You've chosen to attack a non-existent user. Check your source and try again.", true, "{$ref}.php");
         die($h->endpage());
-    } //If the user is trying to attack himself.
+    } 
+    //If the user is trying to attack himself.
     else if ($_GET['user'] == $userid) 
     {
         alert("danger", "Uh Oh!", "Depressed or not, you cannot attack yourself.", true, "{$ref}.php");
         die($h->endpage());
-    } //If the user has no HP, and is not already attacking.
+    } 
+    //If the user has no HP, and is not already attacking.
     else if ($ir['hp'] <= 1 && $ir['attacking'] == 0) 
     {
         alert("danger", "Uh Oh!", "You have no health, so you cannot attack. Come back when your health has refilled.", true, "{$ref}.php");
         die($h->endpage());
-    } //If the user has left a previous after losing.
+    } 
+    //If the user has left a previous after losing.
     else if (isset($_SESSION['attacklost']) && $_SESSION['attacklost'] > 1) 
     {
         $_SESSION['attacklost'] = 0;
@@ -285,6 +287,8 @@ function handleDopplegangerLogic()
     //Doppleganger
     if ($_GET['user'] == 20)
     {
+        $db->query("UPDATE `userstats` SET `strength` = 1000, `agility` = 1000, `guard` = 1000 WHERE `userid` = 20");
+        
         $float = randomDecimal(0.90,1.15,2);
         $str=$ir['strength']*$float;
         $agl=$ir['agility']*$float;
@@ -307,4 +311,22 @@ function setAttackStatus()
     $_SESSION['attacking'] = $_GET['user'];
     $ir['attacking'] = $_GET['user'];
     $api->UserInfoSetStatic($userid, "attacking", $ir['attacking']);
+}
+
+function doPoisonLogic($userid, $receiver)
+{
+    global $api;
+    $chance = calcPoisonChance($userid);
+    if (Random(1,100) <= $chance)
+    {
+        $poirng = Random(20,50);
+        userGiveEffect($receiver, effect_posion, $poirng * 60);
+        $api->GameAddNotification($receiver, "You were poisoned in combat! Your Will won't regenerate naturally for the next {$poirng} minutes.");
+        return true;
+    }
+}
+
+function calcPoisonChance($userid)
+{
+    return returnEffectMultiplier($userid, effect_poisoned_weaps) * 8;
 }
