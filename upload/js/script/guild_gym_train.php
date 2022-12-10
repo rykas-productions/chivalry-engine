@@ -26,9 +26,9 @@ else
 {
 	alert("danger", "Uh Oh!", "You are not in a guild and thus, cannot train here anymore.", false);
 }
-if ($gd['guild_level'] < 3)
+if (!guildOwnsAsset($ir['guild'], "guild_gym"))
 {
-	alert('danger',"Uh Oh!","You guild needs to be at least level 3 to access the guild gym!", false);
+	alert('danger',"Uh Oh!","Your guild must purchase the Guild Gym before you can train here.", false);
 	die($h->endpage());
 }
 //User is in the infirmary
@@ -41,21 +41,7 @@ if ($api->UserStatus($ir['userid'], 'dungeon')) {
     alert("danger", "Locked Up!", "You cannot train while you're in the dungeon.", false);
     die($h->endpage());
 }
-if ($gd['guild_bonus_time'] > time())
-{
-	$multiplier = (1.95+(($gd['guild_level']/100)*6.25)*$multi);
-}
-else
-{
-	$multiplier = (1.25+(($gd['guild_level']/100)*6.25)*$multi);
-}
-if ($multiplier > (2.5*$multi))
-{
-	if ($gd['guild_bonus_time'] > time())
-		$multiplier = (3*$multi);
-	else
-		$multiplier = (2.5*$multi);
-}
+$multiplier = calculateGuildGymBonus($gd['guild_id']);
 if (userHasEffect($userid, effect_daily_gym_bonus))
     $multiplier = $multiplier + (returnEffectMultiplier($userid, effect_daily_gym_bonus) / 100);
 $statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor", "All" => "all");
@@ -138,7 +124,6 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         $ir['energy'] -= $_POST['amnt'];
         if ($stat != 'all')
             $ir[$stat] += $gain;
-		$api->UserTakeItem($userid, 18, 1);
 		$newEnergyPerc = $api->UserInfoGet($userid, 'energy', true);
 		$newWillPerc = $api->UserInfoGet($userid, 'will', true);
 		$newEnergy = $api->UserInfoGet($userid, 'energy');
