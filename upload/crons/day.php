@@ -82,7 +82,7 @@ if ($month == 12)
 {
     if ($day == 1)
     {
-        $api->GameAddAnnouncement("Hey folks! The Advent Calendar is now available on Explore. Make sure you log in every day to get your rewards! Happy holidays!");
+        $api->GameAddAnnouncement("That concludes the turkey hunting season for " . date('Y') . "! The top five players who bagged the most kills are now visible on the Milestone page on explore. With that in mind, we're rolling right into Christmas season with the reintroduction of the CID Advent Calendar, Christmas Tree and Christmas Wish! See them on the explore page! Happy Holidays! :)");
     }
 }
 
