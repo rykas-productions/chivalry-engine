@@ -382,8 +382,7 @@ class headers
     		if (isset($macropage))
     		{
     			//Set User to need verified.
-    			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
-    			echo "This is a needed evil. Please confirm you are not a bot. Please be sure Javascript is enabled.<br />"; ?>
+    			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}"); ?>
                 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
     			<noscript>
                 <?php
@@ -391,11 +390,21 @@ class headers
     				alert('warning', "", "{$set['WebsiteName']}'s reCaptcha system needs you to enable Javascript to continue.", false);
                 ?>
     			</noscript>
-                <form action='macro.php' method='post' id='recaptchaForm'>
-    				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableRecaptchaBtn'></div>
-                    <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-                    <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" id="recaptchabtn" disabled="disabled">
-                </form>
+    			<div class='col-12 col-sm-10 col-md-7 col-xl-6 col-xxl-5 col-xxxl-3'>
+    			<div class='card'>
+    				<div class='card-header'>
+    					Necessary Evil. Please confirm check.
+					</div>
+					<div class='card-body'>
+						<form action='macro.php' method='post' id='recaptchaForm'>
+            				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableRecaptchaBtn'></div>
+                            <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
+                            <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary btn-block" id="recaptchabtn" disabled="disabled">
+                        </form>
+                        <i><small>If you cannot see the captcha, please enable Javascript</small></i>
+					</div>
+    			</div>
+    			</div>
                 <?php
                 die($h->endpage());
     		}
