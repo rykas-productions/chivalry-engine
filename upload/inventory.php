@@ -485,6 +485,11 @@ while ($i = $db->fetch_row($inv))
 									{
 										array_push($itemUse, array("spellbook.php", "Unlock Tome"));
 									}
+									//Poison Potion
+									if ($i['itmid'] == 258)
+									{
+									    array_push($itemUse, array("potion.php?potion=poison", "Poison Weaponry"));
+									}
 									//Will Stimulant
 									if ($i['itmid'] == 263)
 									{
