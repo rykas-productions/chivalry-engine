@@ -139,7 +139,7 @@ if (isset($_POST['comment']))
 	}
 	elseif ($api->UserBlocked($userid,$_GET['user']))
 	{
-		alert('danger', "Uh Oh!", "This user has you blocked. You cannot write comments to players that have you blocked.", false);
+		alert('danger', "Uh Oh!", "This user has you blocked. You cannot send messages to players that have you blocked.", false);
 	}
 	elseif (!permission("CanComment",$userid))
 	{
@@ -147,7 +147,7 @@ if (isset($_POST['comment']))
 	}
 	elseif ($mbd == 1)
 	{
-		alert('danger', "Uh Oh!", "You cannot send profile comments if you are mail-banned.", false);
+		alert('danger', "Uh Oh!", "You cannot send profile messages if you are mail-banned.", false);
 	}
 	else
 	{
@@ -253,33 +253,36 @@ $r['description']=$parser->getAsHtml();
 
 //Active / Online button
 $activeText = "Offline";
-$activeColor = "danger";
+$activeColor = "text-danger";
 if ($active == 1)
 {
 	$activeText = "Online";
-	$activeColor = "success";
+	$activeColor = "text-success";
 }
 elseif ($active == 2)
 {
 	$activeText = "Idle";
-	$activeColor = "warning";
+	$activeColor = "text-warning";
 }
 
 //Gender icon / color
 if ($r['gender'] == 'Male')
 {
+	$genderIcon = "fas fa-mars";
 	$genderTxt = "Male";
-	$genderClr = "info";
+	$genderClr = "text-info";
 }
 elseif ($r['gender'] == 'Female')
 {
+	$genderIcon = "fas fa-venus";
 	$genderTxt = "Female";
-	$genderClr = "warning";
+	$genderClr = "text-warning";
 }
 else
 {
+	$genderIcon = "fas fa-transgender";
 	$genderTxt = "Other";
-	$genderClr = "muted";
+	$genderClr = "text-muted";
 }
 $rhpperc = round($r['hp'] / $r['maxhp'] * 100);
 if ($_GET['user'] == 21)
@@ -438,16 +441,16 @@ echo "<h3>{$user_name}'s Profile</h3>
 			<div class='card-body'>
 				<div class='row'>
 					<div class='col'>
-						<div class='badge badge-{$activeColor}'>{$activeText}</div>
+						<i class='fas fa-circle {$activeColor}' data-toggle='tooltip' data-placement='top' title='" . htmlentities($activeText, ENT_QUOTES, 'ISO-8859-1') . "' style='font-size: 1.75rem;'></i>
 					</div>
 					<div class='col'>
-						<div class='badge badge-{$genderClr}'>{$genderTxt}</div>
+						<i class='{$genderIcon} {$genderClr}' data-toggle='tooltip' data-placement='top' title='" . htmlentities($genderTxt, ENT_QUOTES, 'ISO-8859-1') . "' style='font-size: 1.75rem;'></i>
 					</div>";
 					if ($r['vip_days'] > 0)
 					{
 						echo "
 						<div class='col'>
-							<div class='badge badge-danger'>" . shortNumberParse($r['vip_days']) . " VIP Days</div>
+							<i class='fa fa-shield-alt text-danger' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Donator", ENT_QUOTES, 'ISO-8859-1') . "' style='font-size: 1.75rem;'></i>
 						</div>";
 					}
 					if ($married != "N/A")
@@ -461,24 +464,36 @@ echo "<h3>{$user_name}'s Profile</h3>
 					{
 						$jobTitle = $db->fetch_single($db->query("SELECT `jNAME` from `jobs` WHERE `jRANK` = {$r['job']}"));
 						$jobRank = $db->fetch_single($db->query("SELECT `jrRANK` from `job_ranks` WHERE `jrID` = {$r['jobrank']}"));
+						if ($r['job'] == 1)
+							$jobIcon = "game-icon game-icon-anvil";
+						elseif ($r['job'] == 2)
+							$jobIcon = "game-icon game-icon-rally-the-troops";
+						elseif ($r['job'] == 3)
+							$jobIcon = "game-icon game-icon-teacher";
+						elseif ($r['job'] == 4)
+							$jobIcon = "game-icon game-icon-shop";
+						elseif ($r['job'] == 5)
+							$jobIcon = "game-icon game-icon-farmer";
+						elseif ($r['job'] == 6)
+							$jobIcon = "game-icon game-icon-guards";
 						echo "
 						<div class='col'>
-					       <div class='badge badge-primary'>{$jobRank} at {$jobTitle}</div>
-                        </div>";
+							<i class='{$jobIcon}' data-toggle='tooltip' data-placement='top' title='" . htmlentities("{$jobRank} at {$jobTitle}", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+						</div>";
 					}
 					if (user_dungeon($r['userid']))
 					{
 						echo "
 						<div class='col'>
-                            <div class='badge badge-danger'>In Dungeon</div>
-                        </div>";
+							<i class='fas fa-lock text-secondary' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Dungeon: {$r['dungeon_reason']} for " . TimeUntil_Parse($r['dungeon_out']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+						</div>";
 					}
 					if (user_infirmary($r['userid']))
 					{
 						echo "
 						<div class='col'>
-							<div class='badge badge-danger'>In Infirmary</div>
-                        </div>";
+							<i class='fas fa-medkit text-primary' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Infirmary: {$r['infirmary_reason']} for " . TimeUntil_Parse($r['infirmary_out']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+						</div>";
 					}
 					if ($r['guild'] > 0)
 					{
@@ -497,8 +512,8 @@ echo "<h3>{$user_name}'s Profile</h3>
 							$guildRank = "Member";
 						echo "
 						<div class='col'>
-                            <div class='badge badge-info'>{$guildRank} of {$gR['guild_name']}</div>
-                        </div>";
+							<i class='fas fa-fist-raised' data-toggle='tooltip' data-placement='top' title='" . htmlentities("{$guildRank} of {$gR['guild_name']}.", ENT_QUOTES) . "' style='font-size: 1.75rem; color: magenta;'></i>
+						</div>";
 					}
 					if ($r['fedjail'])
 					{
