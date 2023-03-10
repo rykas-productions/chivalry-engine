@@ -1,5 +1,0 @@
-eclipse.preferences.version=1
-org.eclipse.php.core.phpDoc=false
-org.eclipse.php.core.taskCaseSensitive=enabled
-org.eclipse.php.core.taskPriorities=HIGH,NORMAL,NORMAL,HIGH
-org.eclipse.php.core.taskTags=@todo,TODO,FIXME,@fixme
