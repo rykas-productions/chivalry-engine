@@ -998,16 +998,12 @@ class api
         global $db;
 		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
 		$xp = (isset($xp) && is_numeric($xp)) ? abs(intval($xp)) : 0;
-		if ($guild > 0 || $item > 0 || $xp > 0) {
+		if ($guild > 0 || $xp > 0) 
+		{
             $i = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_xp` FROM `guild` WHERE `guild_id` = {$guild}"));
-            if ($xp == 1) {
-                if ($i >= 1) {
-                    return true;
-                }
-            } else {
-                if ($i >= $xp) {
-                    return true;
-                }
+            if ($i >= $xp) 
+            {
+                return true;
             }
         }
     }
