@@ -183,6 +183,18 @@ if ($ir['rewarded'] == 0)
                 $api->UserGiveCurrency($userid,'secondary',750);
                 addToEconomyLog('Daily Reward', 'token', 750);
     }
+    
+    //3-9-2023 outage reward
+    $outageAward = getCurrentUserPref('3-9-23outageAward', false);
+    if (!$outageAward)
+    {
+        $api->UserGiveItem($userid,287,2);
+        $api->UserGiveItem($userid,286,2);
+        $api->UserGiveItem($userid,285,2);
+        
+        $api->GameAddNotification($userid,"For the long outage on March 9th, we're giving players 2 x Potion of Youthful Tolerance, Everlasting Speed and Permanent Strength (each!) Thank you for your patience and for playing CID!");
+        setCurrentUserPref('3-9-23outageAward', true);
+    }
     $month = date('n');
     $day = date('j');
     $year = date('Y');
