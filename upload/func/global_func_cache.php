@@ -74,9 +74,9 @@ function update_fg_info($ip)
         $ip='127.0.0.1';
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.fraudguard.io/ip/$ip",
+        CURLOPT_URL => "https://@api.fraudguard.io/ip/$ip",
+        CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
         CURLOPT_USERPWD => "{$set['FGUsername']}:{$set['FGPassword']}",
-        CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_RETURNTRANSFER => true));
     $content = curl_exec($curl);
     curl_close($curl);
