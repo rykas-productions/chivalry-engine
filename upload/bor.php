@@ -9,6 +9,8 @@
 require('globals.php');
 $tresder = Random(100, 999);
 $multipler=1.0;
+if (date('j') == 12)
+	$multipler == 2.0;
 if (reachedMonthlyDonationGoal())
     $multipler = $multipler + 0.5;
 echo "<h3>Box of Random</h3><hr />";
