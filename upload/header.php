@@ -261,7 +261,8 @@ class headers
         die($h->endpage());
     }
     $fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
-    $votecount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
+    $votecount=$db->fetch_single($db->query("SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
+	//$votecount = 0;
     echo "<div class='row'>";
         if ($votecount < 5)
         {
