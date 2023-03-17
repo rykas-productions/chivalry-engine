@@ -1256,15 +1256,32 @@ function masspay()
             alert('danger', "Action Blocked!", "This action was blocked for your security. Please submit the form quickly after opening it.");
             die($h->endpage());
         }
-        $q = $db->query("/*qc=on*/SELECT `userid`,`username` FROM `users` WHERE `user_level` != 'NPC'");
-        while ($r = $db->fetch_row($q)) {
-            $api->UserGiveCurrency($r['userid'], 'primary', $primary);
+        $q = $db->query("/*qc=on*/SELECT `userid`,`username`,`bank` FROM `users` WHERE `user_level` != 'NPC'");
+        $totalCopper = 0;
+        $totalTokens = 0;
+        $usersPaid = 0;
+        while ($r = $db->fetch_row($q)) 
+        {
+            if ($r['bank'] > -1)
+                $db->query("UPDATE `users` SET `bank` = `bank` + {$primary} WHERE `userid` = {$r['userid']}");
+            else
+                $api->UserGiveCurrency($r['userid'], 'primary', $primary);
             $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
-            $api->GameAddNotification($r['userid'], "The administration has given a mass payment of {$primary} Copper Coins and/or {$secondary} Chivalry Tokens to the game.");
-            echo "Successfully paid {$r['username']}.<br />";
+            $api->GameAddNotification($r['userid'], "The Chivalry is Dead game administration has given a mass payment of " . shortNumberParse($primary) . " Copper Coins and/or " . shortNumberParse($secondary) . " Chivalry Tokens to all players.");
+            $totalCopper = $totalCopper + $primary;
+            $totalTokens = $totalTokens + $secondary;
+            $usersPaid++;
         }
-        alert('success', 'Success!', "You have successfully mass paid the game.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Primary Currecny and/or {$secondary} Chivalry Tokens.");
+        alert('success', 'Success!', "You have successfully given out " . shortNumberParse($usersPaid) . " 
+                                        players a mass payment of " . shortNumberParse($primary) . " Copper Coins 
+                                        and/or " . shortNumberParse($secondary) . " Chivalry Tokens. Total given out 
+                                        was " . shortNumberParse($totalCopper) . " Copper Coins 
+                                        and/or " . shortNumberParse($totalTokens) . " Chivalry Tokens.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Copper Coins and/or {$secondary} Chivalry Tokens.");
+        if ($totalCopper > 0)
+            addToEconomyLog('Admin Gift', 'copper', $totalCopper);
+        if ($totalTokens > 0)
+            addToEconomyLog('Admin Gift', 'token', $totalTokens);
     } else {
         $csrf = request_csrf_html('staff_masspay');
         echo "<table class='table table-bordered'>
