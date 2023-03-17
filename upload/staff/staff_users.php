@@ -1266,6 +1266,7 @@ function masspay()
                 $db->query("UPDATE `users` SET `bank` = `bank` + {$primary} WHERE `userid` = {$r['userid']}");
             else
                 $api->UserGiveCurrency($r['userid'], 'primary', $primary);
+            
             $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
             $api->GameAddNotification($r['userid'], "The Chivalry is Dead game administration has given a mass payment of " . shortNumberParse($primary) . " Copper Coins and/or " . shortNumberParse($secondary) . " Chivalry Tokens to all players.");
             $totalCopper = $totalCopper + $primary;
@@ -1277,7 +1278,9 @@ function masspay()
                                         and/or " . shortNumberParse($secondary) . " Chivalry Tokens. Total given out 
                                         was " . shortNumberParse($totalCopper) . " Copper Coins 
                                         and/or " . shortNumberParse($totalTokens) . " Chivalry Tokens.", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of {$primary} Copper Coins and/or {$secondary} Chivalry Tokens.");
+        $api->SystemLogsAdd($userid, 'staff', "Sent mass payment of " . shortNumberParse($primary) . " Copper 
+                                                Coins and/or " . shortNumberParse($secondary) . " Chivalry Tokens. (Totalled " . shortNumberParse($totalCopper) . " Copper Coins 
+                                        and/or " . shortNumberParse($totalTokens) . " Chivalry Tokens.)");
         if ($totalCopper > 0)
             addToEconomyLog('Admin Gift', 'copper', $totalCopper);
         if ($totalTokens > 0)
