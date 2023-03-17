@@ -1267,7 +1267,7 @@ function masspay()
             else
                 $api->UserGiveCurrency($r['userid'], 'primary', $primary);
             
-            $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);
+            $api->UserGiveCurrency($r['userid'], 'seconday', $secondary);   //@todo inestigate why not gifting tokens
             $api->GameAddNotification($r['userid'], "The Chivalry is Dead game administration has given a mass payment of " . shortNumberParse($primary) . " Copper Coins and/or " . shortNumberParse($secondary) . " Chivalry Tokens to all players.");
             $totalCopper = $totalCopper + $primary;
             $totalTokens = $totalTokens + $secondary;
