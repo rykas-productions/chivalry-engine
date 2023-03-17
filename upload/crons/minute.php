@@ -10,11 +10,6 @@
 */
 $menuhide=1;
 require_once(__DIR__ .'/../globals_nonauth.php');
-if (!isset($argv))
-{
-    exit;
-}
-$_GET['code']=substr($argv[1],5);
 if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;

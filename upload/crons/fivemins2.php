@@ -9,11 +9,6 @@
 */
 $menuhide=1;
 require_once(__DIR__ .'/../globals_nonauth.php');
-if (!isset($argv))
-{
-    exit;
-}
-$_GET['code']=substr($argv[1],5);
 if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
@@ -32,14 +27,8 @@ $db->query("UPDATE users SET energy=energy+(maxenergy/(3)) WHERE energy<maxenerg
 
 $db->query("UPDATE users SET energy=maxenergy WHERE energy>maxenergy");
 //Will refill
-$q = $db->query("SELECT `will`,`userid`,`maxwill` FROM `users` WHERE `will` < `maxwill`");
-while ($r = $db->fetch_row($q))
-{
-    if (!userHasEffect($r['userid'], effect_posion))
-        $db->query("UPDATE `users` SET `will` = `will` + (`maxwill` / 10) WHERE `userid` = {$r['userid']}");
-}
-$db->free_result($q);
-$db->query("UPDATE `users` SET `will` = `maxwill` WHERE `will` > `maxwill`");
+$db->query("UPDATE users SET will=will+(maxwill/10) WHERE will<maxwill");
+$db->query("UPDATE users SET will = maxwill WHERE will > maxwill");
 
 //Wood Cutter
 $increase = $set['cutter_capacity_max'] * 0.02;

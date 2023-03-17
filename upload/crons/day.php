@@ -9,11 +9,6 @@
 */
 $menuhide=1;
 require_once(__DIR__ .'/../globals_nonauth.php');
-if (!isset($argv))
-{
-    exit;
-}
-$_GET['code']=substr($argv[1],5);
 if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
@@ -98,4 +93,6 @@ if ($month == 4)
                                     and thank each and everyone who logs in and plays Chivalry is Dead.");
     }
 }
+
+$api->GameAddNotification(1,"1 day ran.");
 ?>
