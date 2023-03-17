@@ -67,6 +67,7 @@ function home()
     global $db, $userid, $api, $h, $set;
     $logs = 25 + (round($set['cutter_level'] / 10));
     $userLogs = $api->UserCountItem($userid, 410);
+    //@todo grid the butyons here.
     echo "<div class='card'>
         <div class='card-body'>
             Here you may chop up your wood into sharpened sticks, if you so desire. You will receive " . number_format($logs) . " Sharpened Sticks per Log. 
