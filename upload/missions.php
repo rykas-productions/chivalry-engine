@@ -27,6 +27,7 @@ if ($db->num_rows($am) == 0)
 		`mission_end`, `mission_kill_count`, `mission_reward`) 
 		VALUES ('{$userid}', '{$kills}', '{$endtime}', '0', '{$reward}')");
 		//tablet coding is pita but doable...
+		//@todo grid size and test before launch
 		echo "<div class='card'>
                 <div class='card-header'>
                     Current Mission
@@ -43,15 +44,39 @@ if ($db->num_rows($am) == 0)
                                 </div>
                             </div>
                         </div>
+                        <div class='col'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Kill Count</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(0) . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Reward</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($reward) . " Copper Coins
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Mission Duration</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . TimeUntil_Parse($endtime) . "
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>";
-		
-		echo "Your current mission:<br />
-		Kills Required: " . number_format($kills) . "<br />
-		Kill Count: 0<br />
-		Reward: " . number_format($reward) . " Copper Coins<br />
-		Time Left: " . TimeUntil_Parse($endtime) ."<br />";
 	}
 	else
 	{
@@ -65,10 +90,55 @@ if ($db->num_rows($am) == 0)
 else
 {
 	$mr=$db->fetch_row($am);
-	echo "Your current mission:<br />
-		Kills Required: " . number_format($mr['mission_kills']) . "<br />
-		Kill Count: " . number_format($mr['mission_kill_count']) . "<br />
-		Reward: " . number_format($mr['mission_reward']) . " Copper Coins<br />
-		Time Left: " . TimeUntil_Parse($mr['mission_end']) ."<br />";
+	
+	echo "<div class='card'>
+                <div class='card-header'>
+                    Current Mission
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Kills Required</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($mr['mission_kills']) . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Kill Count</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($mr['mission_kill_count']) . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Reward</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($mr['mission_reward']) . " Copper Coins
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Mission Duration</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . TimeUntil_Parse($mr['mission_end']) . "
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>";
 }
 $h->endpage();
