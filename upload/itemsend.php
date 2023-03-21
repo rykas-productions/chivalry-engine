@@ -72,46 +72,64 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
     } else {
         $r = $db->fetch_row($id);
         $code = request_csrf_code("senditem_{$_GET['ID']}");
+        //@todo grid test/fix before publish
         echo "
 		<form action='?ID={$_GET['ID']}' method='post'>
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Enter who you would wish to send your {$r['itmname']}(s) to. You currently have " . number_format($r['inv_qty']) . ".
-					</th>
-				</tr>
-				<tr>
-					<th>
-						User
-					</th>
-					<td>
-						" . user_dropdown('user') . "
-					</td>
-				</tr>
-				<tr>
-					<th>
-						Quantity
-					</th>
-					<td>
-						<input type='number' min='1' max='{$r['inv_qty']}' class='form-control' name='qty' value='{$r['inv_qty']}' />
-					</td>
-				</tr>
-                <tr>
-					<th>
-						Message
-					</th>
-					<td>
-						<input type='text' class='form-control' name='msg' />
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Send Item'>
-					</td>
-				</tr>
-			</table>
-			<input type='hidden' name='verf' value='{$code}' />
-		</form>";
+            <div class='row'>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Sending " . shortNumberParse($r['inv_qty']) . " {$r['itmname']}(s)
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small>Send To</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            " . user_dropdown('user') . "
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small>Send Quantity</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' min='1' max='{$r['inv_qty']}' class='form-control' name='qty' value='{$r['inv_qty']}' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small>Optional Message</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='text' class='form-control' name='msg' placeholder='Optional.' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='submit' class='btn btn-primary btn-block' value='Send Item'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type='hidden' name='verf' value='{$code}' />
+        </form>";
     }
     $db->free_result($id);
 } else {
