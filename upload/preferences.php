@@ -398,16 +398,42 @@ function pic_change()
     global $db, $h, $userid, $ir, $api;
     if (!isset($_POST['newpic'])) {
         $csrf = request_csrf_html('prefs_changepic');
+        //@todo funcyion test before launch
         echo "
-		<h3>Change Display Picture</h3>
-		<hr />
-		Your images must be externally hosted. Image must be, at most, 8MB in size.<br />
-		New Picture Link<br />
-		<form method='post'>
-			<input type='url' name='newpic' class='form-control' value='{$ir['display_pic']}' />
-				{$csrf}
-			<br />
-			<input type='submit' class='btn btn-primary' value='Change Display Picture' />
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Changing Your Display Pic
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                Paste in the direct URL link to a photo you wish to use as a display picture. Max size is 8mb.
+                            </div>
+                            <div class='col-12 col-xl-9'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>New Avatar</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='url' name='newpic' class='form-control' value='{$ir['display_pic']}' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-xl-3'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Change Pic' />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
 		</form>
 		";
     } else {
