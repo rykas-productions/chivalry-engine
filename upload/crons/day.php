@@ -66,6 +66,7 @@ $ur=$db->fetch_single($uq);
 //$api->GameAddNotification($ur,"You have been chosen as the Player of the Day! Your profile will be displayed on the login page, and you've received a unique badge in your inventory.");
 item_add($ur,154,1);*/
 runMarketTick(1);   //low risk market
+runMarketTick(2);   //low risk market
 backupDatabase();
 purgeOldLogs();
 
@@ -93,6 +94,4 @@ if ($month == 4)
                                     and thank each and everyone who logs in and plays Chivalry is Dead.");
     }
 }
-
-$api->GameAddNotification(1,"1 day ran.");
 ?>
