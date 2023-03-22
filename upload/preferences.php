@@ -619,6 +619,7 @@ function emailchange()
 					<option value='1'>Opt-In</option>";
         $csrf = request_csrf_html('prefs_changeopt');
         $optsetting = ($ir['email_optin'] == 1) ? "Opt-in" : "Opt-out";
+        //@todo test before deployment
         echo "<form method='post'>
         <div class='row'>
             <div class='col-12'>
@@ -695,13 +696,43 @@ function changeemail()
         die($h->endpage());
     } else {
         $csrf=request_csrf_html('email_form_pref');
-        echo "<h3>Changing Account Email</h3><hr />
-        Use this form to change your account's email address. Please input a valid email address. Please contact the administration if you wish to lock your email address to changes.<br />
-        <form method='post'>
+        //@todo test b4 deploy
+        echo "<form method='post'>
+            <div class='row'>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Game Email Opt
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    You may update the email account used to log into your account here.
+                                </div>
+                                <div class='col-12 col-xl-9'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Gender</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='email' name='email' value='{$ir['email']}' class='form-control' required='1' id='email' onkeyup='CheckEmail(this.value);'>
+                                            <div id='emailresult' class='invalid-feedback'></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-xl-3'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <input type='submit' name='Update Email' class='btn btn-primary btn-block'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {$csrf}
-            <input type='email' name='email' value='{$ir['email']}' class='form-control' required='1' id='email' onkeyup='CheckEmail(this.value);'>
-            <div id='emailresult' class='invalid-feedback'></div>
-            <input type='submit' name='Change Email' class='btn btn-primary'>
         </form>";
     }
 }
