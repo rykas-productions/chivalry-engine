@@ -233,10 +233,10 @@ function name_change()
                             </div>
                             <div class='col-12 col-xl-9'>
                                 <div class='row'>
-                                    <div class='col-12 col-xl-3'>
-                                        <b><small>New Name</small></b>
+                                    <div class='col-12'>
+                                        <small>New Name</small>
                                     </div>
-                                    <div class='col-12 col-xl'>
+                                    <div class='col-12'>
                                         <input type='text' class='form-control' minlength='3' maxlength='32' id='username' required='1' value='{$ir['username']}' name='newname'>
                                     </div>
                                 </div>
@@ -307,48 +307,67 @@ function pw_change()
     if (empty($_POST['oldpw'])) {
         $csrf = request_csrf_html('prefs_changepw');
 		$_SESSION['newkeycsrf']=randomizer();
-        echo "
+		//@todo test before going live
+        echo "<form method='post'>
+        <div class='row'>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Change Password
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12 col-md-6 col-lg'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small>Current Password</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='password' required='1' class='form-control' name='oldpw' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-md-6 col-lg'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small>New Password</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='password' id='password' required='1' class='form-control' onkeyup='CheckPasswords(this.value);' name='newpw' />
+                                            <div id='passwordresult'></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-lg'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small>Confirm Password</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='password' required='1' class='form-control' name='newpw2' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                         <div class='col-12'>
+                                            <small><br />{$csrf}</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='submit' class='btn btn-primary btn-block' value='Change Password'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
 	<h3>Password Change</h3>
 	<hr />
 	Remember that changing your password will make all your previously sent and received messages unreadable. You 
-	may click <a href='?action=pwchange&newkey=1&csrf={$_SESSION['newkeycsrf']}'>here</a> if you just wish to regenerate your message encryption key.
-	<form method='post'>
-	<table class='table table-bordered'>
-	<tr>
-		<th>
-			Current Password
-		</th>
-		<td>
-			<input type='password' required='1' class='form-control' name='oldpw' />
-		</td>
-	</tr>
-	<tr>
-		<th>
-			New Password
-		</th>
-		<td>
-			<input type='password' id='password' required='1' class='form-control' onkeyup='CheckPasswords(this.value);' name='newpw' />
-            <div id='passwordresult'></div>
-        </td>
-	</tr>
-	<tr>
-		<th>
-			Confirm Password
-		</th>
-		<td>
-			<input type='password' required='1' class='form-control' name='newpw2' />
-		</td>
-	</tr>
-	<tr>
-		<td colspan='2'>
-			<input type='submit' class='btn btn-primary' value='Update Password' />
-		</td>
-	</tr>
-    	{$csrf}
-    	
-	</form>
-	</table>
-   	";
+	may click <a href='?action=pwchange&newkey=1&csrf={$_SESSION['newkeycsrf']}'>here</a> if you just wish to regenerate your message encryption key.";
     } else {
         if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepw', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
