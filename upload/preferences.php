@@ -493,7 +493,7 @@ function sigchange()
                     <div class='card-body'>
                         <div class='row'>
                             <div class='col-12'>
-                                Update your forumsignature using the textbox below. BBcode may be used, so long it isn't abused.
+                                Update your forum signature using the textbox below. BBcode may be used, so long it isn't abused.
                             </div>
                             <div class='col-12 col-xl-9'>
                                 <div class='row'>
@@ -553,31 +553,45 @@ function sexchange()
 				<option value='Female'>Female</option>
 				<option value='Other'>Other</option>";
         $csrf = request_csrf_html('prefs_changesex');
-        echo "<table class='table table-bordered'>
-		<form method='post'>
-		<tr>
-			<th colspan='2'>
-				At a cost of 5 Chivalry Tokens, you may change the gender you identify as. You currently identify as {$ir['gender']}.
-			</th>
-		</tr>
-		<tr>
-			<th>
-				Gender
-			</th>
-			<td>
-				<select name='gender' class='form-control' type='dropdown'>
-					{$g}
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'>
-				<input type='submit' value='Change Gender' class='btn btn-primary'>
-			</td>
-		</tr>
-		{$csrf}
-		</form>
-		</table>";
+        //@todo test before deployment
+        echo "<form method='post'>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Changing Gender Identity
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                You may change your gender identity for 5 Chivalry Tokens.
+                            </div>
+                            <div class='col-12 col-xl-9'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Gender</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <select name='gender' class='form-control' type='dropdown'>
+					                       {$g}
+				                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-xl-3'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Change Gender' />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
+		</form>";
     }
 }
 
