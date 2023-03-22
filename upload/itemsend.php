@@ -72,7 +72,6 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
     } else {
         $r = $db->fetch_row($id);
         $code = request_csrf_code("senditem_{$_GET['ID']}");
-        //@todo grid test/fix before publish
         echo "
 		<form action='?ID={$_GET['ID']}' method='post'>
             <div class='row'>
@@ -83,7 +82,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
                         </div>
                         <div class='card-body'>
                             <div class='row'>
-                                <div class='col-12'>
+                                <div class='col-12 col-md-6 col-lg'>
                                     <div class='row'>
                                          <div class='col-12'>
                                             <small>Send To</small>
@@ -93,7 +92,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12'>
+                                <div class='col-12 col-md-6 col-lg'>
                                     <div class='row'>
                                          <div class='col-12'>
                                             <small>Send Quantity</small>
@@ -103,7 +102,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12'>
+                                <div class='col-12 col-lg'>
                                     <div class='row'>
                                          <div class='col-12'>
                                             <small>Optional Message</small>
@@ -116,7 +115,7 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
                                 <div class='col-12'>
                                     <div class='row'>
                                          <div class='col-12'>
-                                            <small></small>
+                                            <small><br /></small>
                                         </div>
                                         <div class='col-12'>
                                             <input type='submit' class='btn btn-primary btn-block' value='Send Item'>
