@@ -29,7 +29,6 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-//@todo functionality check before placed in game
 require("globals.php");
 //randomNumber number generator for anti-refreshing.
 $tresder = (Random(100, 999));
@@ -40,13 +39,6 @@ $tresde = filter_input(INPUT_GET, 'tresde', FILTER_SANITIZE_NUMBER_INT) ?: 0;
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
 }
-//User has less primary currency than their maximum bet.
-if ($ir['primary_currency'] < $maxbet) 
-{
-    alert('danger', "Uh Oh!", "You do not have enough Copper Coins to place your bet. You only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", true, 'explore.php');
-    $_SESSION['number'] = 0;
-    die($h->endpage());
-}
 //The RNG received from GET does not equal RNG in SESSION, or is less than 100
 if (($_SESSION['tresde'] == $tresde) || $tresde < 100) {
     alert('danger', "Uh Oh!", "Do not refresh while playing High/Low.", true, "?tresde={$tresder}");
@@ -55,7 +47,6 @@ if (($_SESSION['tresde'] == $tresde) || $tresde < 100) {
 }
 //Bind RNG from GET to SESSION
 $_SESSION['tresde'] = $tresde;
-echo "<h3>High/Low</h3><hr />";
 if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower'))) 
 {
     //Player did not select a number.
@@ -66,42 +57,59 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
     } 
     else 
     {
+        //User has less primary currency than their maximum bet.
+        if ($ir['primary_currency'] < $maxbet)
+        {
+            alert('danger', "Uh Oh!", "You do not have enough Copper Coins to place your bet. You need 
+                    " . shortNumberParse($maxbet) . " and you only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", true, 'explore.php');
+            $_SESSION['number'] = 0;
+            die($h->endpage());
+        }
+        //User has won max winnings this hour.
+        elseif ($ir['winnings_this_hour'] >= (($maxbet*15)*20))
+        {
+            alert('danger', "Uh Oh!", "The casino's run out of cash to give you. Come back in an hour.", true, "explore.php");
+            die($h->endpage());
+        }
         //Bind guessed number from SESSION into a variable.
         $guessed = (isset($_SESSION['number']) && is_numeric($_SESSION['number'])) ? abs($_SESSION['number']) : Random(1, 100);
         $numb = Random(1, 100);
         //Take the player's bet.
         $api->UserTakeCurrency($userid, 'primary', $maxbet);
+        addToEconomyLog('Gambling', 'copper', $maxbet * -1);
         
         //Change is suspected to be higher, but new number is lower than original number.
         if ($guessed > $numb && $_POST['change'] == 'higher') 
         {
             alert('danger', "Uh Oh!", "You guessed the game operator would show a number higher than {$guessed}.
-			    The number revealed is {$numb}. You have lost this bet and lost your bet of " . shortNumberParse($maxbet) . " Copper Coins.", false);
+			    The number revealed is {$numb}. You have lost this bet and lost your bet of " . shortNumberParse($maxbet) . " Copper Coins.", true, "?tresde={$tresder}");
             $gain = 0;
             $api->SystemLogsAdd($userid, 'gambling', "Bet higher number in High/Low and lost " . shortNumberParse($maxbet) . " Copper Coins.");
         } 
         //Change is suspected to be higher, and user is correct.
         elseif ($guessed < $numb && $_POST['change'] == 'higher') 
         {
-            $gain = $maxbet * 1.05;
-            
+            $gain = $maxbet * 1.1;
+            $extra = $maxbet * 0.1;
             alert('success', "Success!", "You guessed the game operator would show a number higher than {$guessed}.
-			    The number revealed is {$numb}. You won this bet!", false);
+			    The number revealed is {$numb}. You won this bet and pocket an extra " . shortNumberParse($extra) . " Copper Coins!", true, "?tresde={$tresder}");
             $api->SystemLogsAdd($userid, 'gambling', "Bet higher number in High/Low and won " . shortNumberParse($gain) . " Copper Coins.");
         } 
         //Change is suspected to be lower, and user is correct.
         elseif ($guessed > $numb && $_POST['change'] == 'lower') 
         {
+            $gain = $maxbet * 1.1;
+            $extra = $maxbet * 0.1;
             alert('success', "Success!", "You guessed the game operator would show a number lower than {$guessed}.
-			    The number revealed is {$numb}. You have won this bet!", false);
-            $gain = $maxbet * 1.05;
+			    The number revealed is {$numb}. You won this bet and pocket an extra " . shortNumberParse($extra) . " Copper Coins!", true, "?tresde={$tresder}");
+            
             $api->SystemLogsAdd($userid, 'gambling', "Bet lower number in High/Low and won " . shortNumberParse($gain) . " Copper Coins.");
         } 
         //Change is suspected to be lower, but the new number is higher than the original.
         elseif ($guessed < $numb && $_POST['change'] == 'lower') 
         {
             alert('danger', "Uh Oh!", "You guessed the game operator would show a number less than {$guessed}. The number
-			    revealed is {$numb}. You lose this round and lost your bet of " . shortNumberParse($maxbet) . " Copper Coins.", false);
+			    revealed is {$numb}. You lose this round and lost your bet of " . shortNumberParse($maxbet) . " Copper Coins.", true, "?tresde={$tresder}");
             $gain = 0;
             $api->SystemLogsAdd($userid, 'gambling', "Bet lower number in High/Low and lost " . shortNumberParse($maxbet) . " Copper Coins.");
         } //The new number is the same as the old number.
@@ -114,6 +122,8 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
         
         //Give the user their winnings, if possible.
         $api->UserGiveCurrency($userid, 'primary', $gain);
+        if ($gain > 0)
+            addToEconomyLog('Gambling', 'copper', $gain);
         
         //Bind 0 to SESSION to not have abuse.
         $_SESSION['number'] = 0;
@@ -122,7 +132,6 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
     //Generate starting number and bind it to SESSION.
     $numb = Random(1, 100);
     $_SESSION['number'] = $numb;
-    //@todo grid breakpoints and card
     echo "
         <div class='card'>
             <div class='card-header'>
@@ -133,36 +142,28 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
                     <div class='col-12'>
                         Place a bet of " . shortNumberParse($maxbet) . " Copper Coins on whether the next drawn 
                         number will be higher or lower than the currrently displayed one. Number range is limited 
-                        to 1 - 100. If you're correct, you will win 5% of your bet as bonus. Wrong, you lose it all!
+                        to 1 - 100. If you're correct, you will win 10% of your bet as bonus. Wrong, you lose it all!
                         On the off chance the numbers are the same, you'll just be refunded your bet.
+                    </div>
+                    <div class='col-12'>
+                        <b>The number {$numb} is displayed.</b> Is the next number going to be higher or lower?
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-12 col-sm-6'>
+                        <form action='?tresde={$tresder}' method='post'>
+        					<input type='hidden' name='change' value='lower'>
+        					<input type='submit' value='Lower' class='btn btn-danger btn-block'>
+        				</form>
+                    </div>
+                    <div class='col-12 col-sm-6'>
+                        <form action='?tresde={$tresder}' method='post'>
+        					<input type='hidden' name='change' value='higher'>
+        					<input type='submit' value='Higher' class='btn btn-success btn-block'>
+        				</form>
                     </div>
                 </div>
             </div>
-        </div>
-Welcome to High/Low. Here you will place a bet whether or not the next drawn number will be higher or lower
-        than the currently drawn number. The number range is 1 through 100.<br />
-	<table class='table table-bordered'>
-		<tr>
-			<th colspan='2'>
-				The operator displays {$numb}. Do you believe the next number will be higher or lower? 
-                Numbers will only be drawn 1 - 100. Select your choice. Bets are limited to 
-                " . shortNumberParse($maxbet) . " Copper Coins exactly.
-			</th>
-		</tr>
-		<tr>
-			<td>
-				<form action='?tresde={$tresder}' method='post'>
-					<input type='hidden' name='change' value='lower'>
-					<input type='submit' value='Lower' class='btn btn-primary'>
-				</form>
-			</td>
-			<td>
-				<form action='?tresde={$tresder}' method='post'>
-					<input type='hidden' name='change' value='higher'>
-					<input type='submit' value='Higher' class='btn btn-primary'>
-				</form>
-			</td>
-		</tr>
-	</table>";
+        </div>";
 }
 $h->endpage();
