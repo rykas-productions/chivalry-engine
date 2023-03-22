@@ -482,28 +482,42 @@ function sigchange()
     } else {
         $ir['signature'] = strip_tags(stripslashes($ir['signature']));
         $csrf = request_csrf_html('prefs_changesig');
+        //@todo test before deploy
         echo "<form method='post'>
-		<table class='table-bordered table'>
-			<tr>
-				<th colspan='2'>
-					You can change your forum signature here. BBCode is allowable.
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Your Signature
-				</th>
-				<td>
-					<textarea class='form-control' rows='4' name='sig'>{$ir['signature']}</textarea>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' value='Change Signature' class='btn btn-primary'>
-				</td>
-			</tr>
-			{$csrf}
-		</table>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Changing Forum Signature
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                Update your forumsignature using the textbox below. BBcode may be used, so long it isn't abused.
+                            </div>
+                            <div class='col-12 col-xl-9'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Signature</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <textarea class='form-control' rows='4' name='sig'>{$ir['signature']}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-xl-3'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Update Sig' />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
 		</form>";
     }
 }
