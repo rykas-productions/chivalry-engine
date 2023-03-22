@@ -11,6 +11,8 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
     alert('danger',"Uh Oh!","You cannot use the roulette table while in the infirmary or dungeon.",true,'index.php');
     die($h->endpage());
 }
+
+loadGamblingAlert();
 $blacks = array(2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35);
 $reds = array(1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36);
 $oneeighteen = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18);

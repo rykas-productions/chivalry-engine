@@ -63,3 +63,9 @@ function scaledColorProgressBar($barValue, $barMin, $barMax)
     else
         return successProgressBar($barValue, $barMin, $barMax);
 }
+
+function loadGamblingAlert()
+{
+    global $ir;
+    alert('info',"","You have won " . shortNumberParse($ir['winnings_this_hour']) . " / " . shortNumberParse((calculateUserMaxBet($ir['userid']) * 15) * 20) . " Copper Coins this hour.", false);
+}

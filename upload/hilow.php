@@ -34,6 +34,7 @@ require("globals.php");
 $tresder = (Random(100, 999));
 //Assign max bet to var
 $maxbet = calculateUserMaxBet($userid);
+loadGamblingAlert();
 $tresde = filter_input(INPUT_GET, 'tresde', FILTER_SANITIZE_NUMBER_INT) ?: 0;
 //Anti-refresh bound isn't bound to SESSION, so bind 0 to it.
 if (!isset($_SESSION['tresde'])) {
@@ -77,6 +78,7 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
         //Take the player's bet.
         $api->UserTakeCurrency($userid, 'primary', $maxbet);
         addToEconomyLog('Gambling', 'copper', $maxbet * -1);
+        $db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` - ({$maxbet}) WHERE `userid` = {$userid}");
         
         //Change is suspected to be higher, but new number is lower than original number.
         if ($guessed > $numb && $_POST['change'] == 'higher') 
@@ -123,7 +125,11 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
         //Give the user their winnings, if possible.
         $api->UserGiveCurrency($userid, 'primary', $gain);
         if ($gain > 0)
+        {
             addToEconomyLog('Gambling', 'copper', $gain);
+        
+            $db->query("UPDATE `user_settings` SET `winnings_this_hour` = `winnings_this_hour` + ({$gain}) WHERE `userid` = {$userid}");
+        }
         
         //Bind 0 to SESSION to not have abuse.
         $_SESSION['number'] = 0;

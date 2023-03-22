@@ -13,6 +13,7 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot use the slots while in the infirmary or dungeon.",true,'index.php');
 	die($h->endpage());
 }
+loadGamblingAlert();
 $tresder = (Random(100, 999));
 $maxbet = calculateUserMaxBet($userid);
 $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs($_GET['tresde']) : 0;
