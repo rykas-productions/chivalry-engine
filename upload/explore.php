@@ -60,9 +60,9 @@ $rmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`irID`) FROM `ite
 $secmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`sec_id`) FROM `sec_market`"));
 $forumposts = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_time` > {$last15}"));
 $wars = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE `gw_end` > {$time}"));
-$users = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users`")));
-$userson = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last15}")));
-$userstown = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}")));
+$users = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users`")));
+$userson = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last15}")));
+$userstown = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}")));
 $paperads = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
 $rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `russian_roulette` WHERE `challengee` = {$userid}"));
 $bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
@@ -105,13 +105,13 @@ echo"
 						<a href='itemweekshop.php' class='{$txtClass}'>" . loadImageAsset("explore/item_of_week.svg") . " Item of the Week</a>
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
-						<a href='votestore.php'>" . loadImageAsset("explore/vote_store.svg") . " Vote Point Store <span class='badge badge-pill badge-primary'>" . number_format($ir['vote_points']) . "</span></a>
+						<a href='votestore.php'>" . loadImageAsset("explore/vote_store.svg") . " Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a>
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
-						<a href='vipmarket.php'>" . loadImageAsset("explore/vip_store.svg") . " VIP Days Market <span class='badge badge-pill badge-primary'>" . number_format($vipMarket) . "</span></a>
+						<a href='vipmarket.php'>" . loadImageAsset("explore/vip_store.svg") . " VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a>
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
-						<a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a>
+						<a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a>
 					</div>";
                     if ($month == 11)
                     {
@@ -228,7 +228,7 @@ echo"
 						<a href='criminal.php' class='{$txtClass}'>" . loadImageAsset("explore/crime_center.svg") . " Criminal Center</a>
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
-						<a href='streetbum.php' class='{$txtClass}'>" . loadImageAsset("explore/street_beg.svg") . " Street Begging <span class='badge badge-pill badge-primary'>" . number_format($ir['searchtown']) . "</span></a>
+						<a href='streetbum.php' class='{$txtClass}'>" . loadImageAsset("explore/street_beg.svg") . " Street Begging <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['searchtown']) . "</span></a>
 					</div>";
 						if ($ir['autobum'] > 0)
 						{
@@ -280,7 +280,7 @@ echo"
 						<a href='playerreport.php'>" . loadImageAsset("explore/player_report.svg") . " Player Report</a>
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
-						<a href='announcements.php'>" . loadImageAsset("explore/announcement.svg") . " Announcements <span class='badge badge-pill badge-primary'>" . number_format($ir['announcements']) . "</span></a>
+						<a href='announcements.php'>" . loadImageAsset("explore/announcement.svg") . " Announcements <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['announcements']) . "</span></a>
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
 						<a href='itemappendix.php'>" . loadImageAsset("explore/item_list.svg") . " Item Appendix</a>
@@ -312,7 +312,7 @@ echo"
 						<a href='slots.php?tresde={$tresder}' class='{$txtClass}'>" . loadImageAsset("explore/slots.svg") . " Slots</a>
 					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
-						<a href='hexbags.php' class='{$txtClass}'>" . loadImageAsset("explore/hexbags.svg") . " Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['hexbags']) . "</span></a>
+						<a href='hexbags.php' class='{$txtClass}'>" . loadImageAsset("explore/hexbags.svg") . " Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['hexbags']) . "</span></a>
 					</div>";
 					if ($ir['autohex'] > 0)
 					{
@@ -324,6 +324,9 @@ echo"
 					echo"
 					<div class='col-12 col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='raffle.php' class='{$txtClass}'>" . loadImageAsset("explore/cid_raffle.svg") . " CID Raffle <span class='badge badge-pill badge-primary'>" . shortNumberParse($set['lotterycash']) . "</span></a>
+					</div>
+                    <div class='col-12 col-sm-6 col-lg-12 col-xxxl-6'>
+						<a href='hilow.php?tresde={$tresder}' class='{$txtClass}'>High/Low</span></a>
 					</div>
 				</div>
 			</div>

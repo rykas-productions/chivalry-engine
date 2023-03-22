@@ -62,9 +62,9 @@ $rmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`irID`) FROM `ite
 $secmarket = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`sec_id`) FROM `sec_market`"));
 $forumposts = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_time` > {$last15}"));
 $wars = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`gw_id`) FROM `guild_wars` WHERE `gw_end` > {$time}"));
-$users = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users`")));
-$userson = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last15}")));
-$userstown = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}")));
+$users = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users`")));
+$userson = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `laston` > {$last15}")));
+$userstown = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `users` WHERE `location` = {$ir['location']}")));
 $paperads = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
 $rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `russian_roulette` WHERE `challengee` = {$userid}"));
 $bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
@@ -149,9 +149,9 @@ echo "
 					<a href='itemrequest.php'><i class='game-icon game-icon-trade'></i> Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
 					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
                     <a href='itemweekshop.php' class='{$txtClass}'>Item of the Week</a><br />
-                    <a href='votestore.php'>Vote Point Store <span class='badge badge-pill badge-primary'>" . number_format($ir['vote_points']) . "</span></a><br />
-					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . number_format($vipMarket) . "</span></a><br />
-					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . number_format($estates) . "</span></a><br />";
+                    <a href='votestore.php'>Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a><br />
+					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a><br />
+					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a><br />";
                     if ($month == 11)
                         echo "<a href='attack.php?user=21'>Participate in Turkey Hunt</a><br />";
                     if ($month == 12)
@@ -194,9 +194,9 @@ echo "
 					<a href='gym.php' class='{$txtClass}'><i class='game-icon game-icon-weight-lifting-down'></i> The Gym</a><br />
 					<a href='chivalry_gym.php' class='{$txtClass}'><i class='game-icon game-icon-weight-lifting-up'></i> Chivalry Gym</a><br />
 					<a href='criminal.php' class='{$txtClass}'><i class='game-icon game-icon-robber'></i> Criminal Center</a><br />
-					<a href='streetbum.php' class='{$txtClass}'> Street Begging <span class='badge badge-pill badge-primary'>" . number_format($ir['searchtown']) . "</span></a><br />";
+					<a href='streetbum.php' class='{$txtClass}'> Street Begging <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['searchtown']) . "</span></a><br />";
 					if ($ir['autobum'] > 0)
-						echo "<a href='autobum.php' class='{$txtClass}'> Auto Street Bum <span class='badge badge-pill badge-primary'>" . number_format($ir['autobum']) . "</span></a><br />";
+						echo "<a href='autobum.php' class='{$txtClass}'> Auto Street Bum <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autobum']) . "</span></a><br />";
 					echo"
 					<a href='academy.php' class='{$txtClass}'><i class='game-icon game-icon-diploma'></i> Local Academy</a><br />
 					<a href='achievements.php'><i class='game-icon game-icon-achievement'></i> Achievements</a><br />
@@ -216,7 +216,7 @@ echo "
 					<a href='fedjail.php'><i class='game-icon game-icon-closed-doors'></i> Federal Dungeon</a><br />
 					<a href='stats.php'><i class='fas fa-chart-bar'></i> Game Statistics</a><br />
 					<a href='playerreport.php'><i class='far fa-flag'></i> Player Report</a><br />
-					<a href='announcements.php'><i class='fas fa-bullhorn'></i> Announcements <span class='badge badge-pill badge-primary'>" . number_format($ir['announcements']) . "</span></a><br />
+					<a href='announcements.php'><i class='fas fa-bullhorn'></i> Announcements <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['announcements']) . "</span></a><br />
 					<a href='itemappendix.php'><i class='fas fa-list'></i> Item Appendix</a><br />
 					<a href='milestones.php'>Milestones</a><br />
                     <a href='promo.php'>Promo Codes</a><br />
@@ -229,11 +229,12 @@ echo "
 					<a href='russianroulette.php' class='{$txtClass}'><i class='game-icon game-icon-revolver'></i> Russian Roulette <span class='badge badge-pill badge-primary'>{$rr}</span></a><br />
 					<a href='roulette.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-table'></i> Roulette Table</a><br />
 					<a href='slots.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-pokecog spinner'></i> Slot Machines</a><br />
-                    <a href='hexbags.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['hexbags']) . "</span></a><br />";
+                    <a href='hexbags.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['hexbags']) . "</span></a><br />";
 if ($ir['autohex'] > 0)
-    echo "<a href='autohex.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>" . number_format($ir['autohex']) . "</span></a><br />";
+    echo "<a href='autohex.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autohex']) . "</span></a><br />";
 echo "
-					<a href='raffle.php' class='{$txtClass}'><i class='fas fa-ticket-alt'></i> CID Raffle <span class='badge badge-pill badge-primary'>" . number_format($set['lotterycash']) . "</span></a>
+					<a href='raffle.php' class='{$txtClass}'><i class='fas fa-ticket-alt'></i> CID Raffle <span class='badge badge-pill badge-primary'>" . shortNumberParse($set['lotterycash']) . "</span></a>
+                    <a href='hilow.php?tresde={$tresder}'>High/Low</a>
 				</div>
 			</div>
 		</div>
