@@ -72,15 +72,15 @@ switch ($_GET['action']) {
 function home()
 {
 	global $db, $ir, $userid, $estate, $edb;
-	$gardenLevel = ($estate['gardenUpgrade'] > 0) ? number_format($estate['gardenUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>Needs constructed</i>";
-	$sleepLevel = ($estate['sleepUpgrade'] > 0) ? number_format($estate['sleepUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>Needs constructed</i>";
-	$vaultLevel = ($estate['vaultUpgrade'] > 0) ? number_format($estate['vaultUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>Needs constructed</i>";
+	$gardenLevel = ($estate['gardenUpgrade'] > 0) ? number_format($estate['gardenUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>N/A</i>";
+	$sleepLevel = ($estate['sleepUpgrade'] > 0) ? number_format($estate['sleepUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>N/A</i>";
+	$vaultLevel = ($estate['vaultUpgrade'] > 0) ? number_format($estate['vaultUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>N/A</i>";
 	$gLink = ($estate['gardenUpgrade'] > 0) ? "<a href='?action=upgradeGarden'>Upgrade</a>" : "<a href='?action=constructGarden'>Construct</a>" ;
 	$vLink = ($estate['vaultUpgrade'] > 0) ? "<a href='?action=upgradeVault'>Upgrade</a>" : "<a href='?action=constructVault'>Construct</a>" ;
 	$sLink = ($estate['sleepUpgrade'] > 0) ? "<a href='?action=upgradeSleep'>Upgrade</a>" : "<a href='?action=constructSleep'>Construct</a>" ;
 	echo"
 	<div class='row'>
-		<div class='col-12 col-lg-6 col-xl-4'>
+		<div class='col-12 col-lg-6 col-xxxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
@@ -94,50 +94,62 @@ function home()
 				</div>
 				<div class='card-body'>
 					<div class='row'>
-						<div class='col-6 col-sm-5'>
-							Base Will
-						</div>
-						<div class='col-6 col-sm-7'>
-							" . shortNumberParse($edb['house_will']) . "
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-6 col-sm-5'>
-							Max Will
-						</div>
-						<div class='col-6 col-sm-7'>
-							" . shortNumberParse($ir['maxwill']) . "
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-5'>
-							Buy Value
-						</div>
-						<div class='col-7'>
-							" . shortNumberParse($edb['house_price']) . " Copper Coins
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-5'>
-							Current Value
-						</div>
-						<div class='col-7'>
-							" . shortNumberParse(calculateSellPrice($estate['ue_id'])) . " Copper Coins
-						</div>
-					</div>
-                    <div class='row'>
-						<div class='col-5'>
-							Total Upgrades
-						</div>
-						<div class='col-7'>
-							" . countEstateTotalUpgrades($estate['ue_id']) . " / {$edb['upgradeLevel']}
-						</div>
+                        <div class='col-12 col-sm-6 col-xxl-3'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Base Will</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($edb['house_will']) . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-xxl-3'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Total Will</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($ir['maxwill']) . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg-12 col-xl-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Buy Value</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($edb['house_price']) . " Copper Coins
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg-12 col-xl-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Actual Value</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(calculateSellPrice($estate['ue_id'])) . " Copper Coins
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Upgrades/Max</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . countEstateTotalUpgrades($estate['ue_id']) . " / {$edb['upgradeLevel']}
+                                </div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>
 			<br />
 		</div>
-		<div class='col-12 col-lg-6 col-xl-4'>
+		<div class='col-12 col-lg-6 col-xxxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
@@ -155,26 +167,32 @@ function home()
 				</div>
 				<div class='card-body'>
 					<div class='row'>
-						<div class='col-4'>
-							Garden Level
-						</div>
-						<div class='col-8'>
-							{$gardenLevel}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-4'>
-							Bonus Will
-						</div>
-						<div class='col-8'>
-							" . shortNumberParse(calcExtraWill($estate['gardenUpgrade'], $edb['house_will'])+$estate['bonusWill']) . "
-						</div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Level</small>
+                                </div>
+                                <div class='col-12'>
+                                    {$gardenLevel}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Bonus Will</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(calcExtraWill($estate['gardenUpgrade'], $edb['house_will'])+$estate['bonusWill']) . "
+                                </div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>
 			<br />
 		</div>
-		<div class='col-12 col-lg-6 col-xl-4'>
+		<div class='col-12 col-lg-6 col-xxxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
@@ -192,31 +210,32 @@ function home()
 				</div>
 				<div class='card-body'>
 					<div class='row'>
-						<div class='col-5'>
-							Quarters Level
-						</div>
-						<div class='col-7'>
-							{$sleepLevel}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-5'>
-							Efficiency
-						</div>
-						<div class='col-7'>
-							" . calcSleepEfficiency($estate['sleepUpgrade'], $edb['house_will']) . " / Minute
-						</div>
-					</div>
-                    <div class='row'>
-						<div class='col'>
-							<a href='?action=doSleep' class='btn btn-primary btn-block'>Sleep</a>
-						</div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Level</small>
+                                </div>
+                                <div class='col-12'>
+                                    {$sleepLevel}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Bonus Will</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . calcSleepEfficiency($estate['sleepUpgrade'], $edb['house_will']) . " / Minute
+                                </div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>
 			<br />
 		</div>
-		<div class='col-12 col-lg-6 col-xl-4'>
+		<div class='col-12 col-lg-6 col-xxxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
@@ -233,54 +252,69 @@ function home()
 					</div>
 				</div>
 				<div class='card-body'>
-					<div class='row'>
-						<div class='col-4'>
-							Vault Level
-						</div>
-						<div class='col-8'>
-							{$vaultLevel}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-4'>
-							Stored
-						</div>
-						<div class='col-8'>
-							" . shortNumberParse($estate['vault']) . " Copper Coins
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-4'>
-							Capacity
-						</div>
-						<div class='col-8'>
-							" . shortNumberParse(calcVaultCapacity($estate['vaultUpgrade'], $edb['house_price'])) . " Copper Coins
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col-12'>
-							<a href='#' data-toggle='modal' data-target='#estate_vault' class='btn btn-primary btn-block'>Access Vault</a>
-						</div>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Level</small>
+                                </div>
+                                <div class='col-12'>
+                                    {$vaultLevel}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Stored</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($estate['vault']) . " Copper Coins
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                 <div class='col-12'>
+                                    <small>Capacity</small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(calcVaultCapacity($estate['vaultUpgrade'], $edb['house_price'])) . " Copper Coins
+                                </div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>
 			<br />
 		</div>
-		<div class='col-12 col-lg-12 col-xl-8'>
-			<div class='row'>
-				<div class='col-6 col-md-4'>
-					<a href='?action=moveOut' class='btn btn-info btn-block'>Move Out</a>
-					<br />
-				</div>
-				<div class='col-6 col-md-4'>
-					<a href='?action=propertyList' class='btn btn-success btn-block'>Your Properties</a>
-					<br />
-				</div>
-				<div class='col-12 col-md-4 col-xl-8'>
-					<a href='?action=sellList' class='btn btn-block btn-warning'>Avaliable Properties</a>
-					<br />
-				</div>
-			</div>
+		<div class='col-12 col-xxxl'>
+			<div class='card'>
+                <div class='card-body'>
+        			<div class='row'>
+        				<div class='col-12 col-sm-6 col-lg-4'>
+        					<a href='?action=moveOut' class='btn btn-info btn-block'>Move Out</a>
+        					<br />
+        				</div>
+        				<div class='col-12 col-sm-6 col-lg-4'>
+        					<a href='?action=propertyList' class='btn btn-success btn-block'>Your Properties</a>
+        					<br />
+        				</div>
+        				<div class='col-12 col-sm-6 col-lg-4'>
+        					<a href='?action=sellList' class='btn btn-block btn-warning'>Avaliable Properties</a>
+        					<br />
+        				</div>
+                        <div class='col-12 col-sm-6 col-lg-4'>
+        					<a href='?action=doSleep' class='btn btn-primary btn-block'>Sleep</a>
+        					<br />
+        				</div>
+                        <div class='col-12 col-sm-6 col-lg-4'>
+        					<a href='#' data-toggle='modal' data-target='#estate_vault' class='btn btn-primary btn-block'>Access Vault</a>
+        					<br />
+        				</div>
+        			</div>
+                </div>
+            </div>
 		</div>
 	</div>";
 }
