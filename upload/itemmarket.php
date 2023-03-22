@@ -566,69 +566,84 @@ function add()
         $csrf = request_csrf_html("imadd_form");
         $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs($_GET['ID']) : 0;
         echo "<form method='post' action='?action=add'>
-		<table class='table table-bordered'>
-			<tr>
-				<th colspan='2'>
-					Select the item you wish to add to the item market.
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Item
-				</th>
-				<td>
-					" . inventory_dropdown('ID', $_GET['ID']) . "
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Quantity
-				</th>
-				<td>
-					<input type='number' min='1' required='1' class='form-control' name='QTY'>
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Currency Type<br />
-					<small>Copper Coins or Chivalry Tokens</small>
-				</th>
-				<td>
-					<select name='currency' type='dropdown' class='form-control'>
-						<option value='primary'>Copper Coins</option>
-						<option value='secondary'>Chivalry Tokens</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Price per Item<br />
-					<small>Subject to a 2% market fee.</small>
-				</th>
-				<td>
-					<input  type='number' min='1' required='1' class='form-control' name='price' />
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Deposit Location<br />
-					<small>Automatic bank deposits have a 5% fee.</small>
-				</th>
-				<td>
-					<select name='deposit' type='dropdown' class='form-control'>
-						<option value='false'>Wallet</option>
-						<option value='true'>Bank</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='Add Listing'
-				</td>
-			</tr>
-			{$csrf}
-		</table>
-		</form>";
+                <div class='card'>
+                    <div class='card-header'>
+                        Adding Item to Market
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxxl'>
+                                <div class='row'>
+                                     <div class='col-12'>
+                                        <small>Item</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . inventory_dropdown('ID', $_GET['ID']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxxl'>
+                                <div class='row'>
+                                     <div class='col-12'>
+                                        <small>Sell Quantity</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='number' min='1' required='1' class='form-control' name='QTY'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxxl'>
+                                <div class='row'>
+                                     <div class='col-12'>
+                                        <small>Currency</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <select name='currency' type='dropdown' class='form-control'>
+                    						<option value='primary'>Copper Coins</option>
+                    						<option value='secondary'>Chivalry Tokens</option>
+                    					</select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxxl'>
+                                <div class='row'>
+                                     <div class='col-12'>
+                                        <small>Price/item</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input  type='number' min='1' required='1' class='form-control' name='price' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxxl'>
+                                <div class='row'>
+                                     <div class='col-12'>
+                                        <small>Deposit Location</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <select name='deposit' type='dropdown' class='form-control'>
+                    						<option value='false'>Wallet</option>
+                    						<option value='true'>Bank</option>
+                    					</select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6 col-xl-4 col-xxxl-12'>
+                                <div class='row'>
+                                     <div class='col-12'>
+                                        <small><br /></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Create Listing'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {$csrf}
+                </form><br />";
+        alert('info',"","Bank deposits have a 5% fee. All sales are subject to a 2% market fee.",false);
     }
 }
 function itemmarket_dropdown($ddname = "item", $selected = -1)
