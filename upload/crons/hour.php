@@ -32,6 +32,4 @@ if ((date('G') == 6) || (date('G') == 12) || (date('G') == 18))
     //halloween 2022
     $db->query("UPDATE `2018_halloween_chuck` SET `count` = `count` + 2 WHERE `count` < 20");
     $db->query("UPDATE `2018_halloween_chuck` SET `count` = 20 WHERE `count` > 20");
-
-$api->GameAddNotification(1,"60 minutes ran.");
 ?>
