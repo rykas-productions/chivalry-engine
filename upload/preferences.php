@@ -564,7 +564,7 @@ function sexchange()
                     <div class='card-body'>
                         <div class='row'>
                             <div class='col-12'>
-                                You may change your gender identity for 5 Chivalry Tokens.
+                                You may change your gender identity for 5 Chivalry Tokens. You currently identify as {$ir['gender']}.
                             </div>
                             <div class='col-12 col-xl-9'>
                                 <div class='row'>
@@ -619,31 +619,45 @@ function emailchange()
 					<option value='1'>Opt-In</option>";
         $csrf = request_csrf_html('prefs_changeopt');
         $optsetting = ($ir['email_optin'] == 1) ? "Opt-in" : "Opt-out";
-        echo "<table class='table table-bordered'>
-		<form method='post'>
-		<tr>
-			<th colspan='2'>
-				Use this form to opt-in or out of emails from the game. You are currently {$optsetting} for game emails.
-			</th>
-		</tr>
-		<tr>
-			<th>
-				Opt-Setting
-			</th>
-			<td>
-				<select name='opt' class='form-control' type='dropdown'>
-					{$g}
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'>
-				<input type='submit' value='Change Opt-Setting' class='btn btn-primary'>
-			</td>
-		</tr>
-		{$csrf}
-		</form>
-		</table>";
+        echo "<form method='post'>
+        <div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Game Email Opt
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                {$set{'WebsiteName'}} occasionally sends emails to its users to keep them informed. If you do
+                                not wish to receive these emails, you may opt out here. You are currently {$optsetting}.
+                            </div>
+                            <div class='col-12 col-xl-9'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>Gender</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <select name='opt' class='form-control' type='dropdown'>
+					                       {$g}
+				                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-xl-3'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Update Opt Preference' />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
+		</form>";
     }
 }
 
