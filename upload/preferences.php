@@ -702,7 +702,7 @@ function changeemail()
                 <div class='col-12'>
                     <div class='card'>
                         <div class='card-header'>
-                            Game Email Opt
+                            Account Email
                         </div>
                         <div class='card-body'>
                             <div class='row'>
@@ -712,7 +712,7 @@ function changeemail()
                                 <div class='col-12 col-xl-9'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <small>Gender</small>
+                                            <small>Email</small>
                                         </div>
                                         <div class='col-12'>
                                             <input type='email' name='email' value='{$ir['email']}' class='form-control' required='1' id='email' onkeyup='CheckEmail(this.value);'>
@@ -766,28 +766,42 @@ function descchange()
         //Escape the announcement for safety reasons.
         $am_for_area = strip_tags($ir['description']);
         $csrf = request_csrf_html('pref_changedesc');
+        //@todo test b4 deploy
         echo "<form method='post'>
-		<table class='table table-bordered'>
-			<tr>
-				<th colspan='2'>
-					You may change your profile description here. Text only. No BBCode. 1,000 character maximum.
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Your Description
-				</th>
-				<td>
-					<textarea class='form-control' name='desc'>{$am_for_area}</textarea>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' value='Change Description' class='btn btn-primary'>
-				</td>
-			</tr>
-			{$csrf}
-		</table>
+            <div class='row'>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Change profile description
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    A small text shown on your profile. BBcode is allowed, maximum of 1,000 characters.
+                                </div>
+                                <div class='col-12 col-xl-9'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small>Description</small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <textarea class='form-control' name='desc'>{$am_for_area}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12 col-xl-3'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <input type='submit' name='Update Description' class='btn btn-primary btn-block'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {$csrf}
 		</form>";
     }
 }
