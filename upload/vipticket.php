@@ -9,20 +9,23 @@ if (!$api->UserHasItem($userid,89,1))
 $rng=Random(1,6);
 if ($rng == 1)
 {
-	$cash=Random(50000,100000);
-	alert("success","Success!","You scratch this spot off and you win {$cash} Copper Coins. Congratulations!",true,'inventory.php');
+    $cash = Random(50000 * levelMultiplier($ir['level']),
+        100000 * levelMultiplier($ir['level']));
+	alert("success","Success!","You scratch this spot off and you win " . shortNumberParse($cash) . " Copper Coins. Congratulations!",true,'inventory.php');
 	$api->UserGiveCurrency($userid,'primary',$cash);
 	addToEconomyLog('Scratch Ticket', 'copper', $cash);
 }
 elseif ($rng == 2)
 {
-	$cash=Random(5000,7500);
-	alert("success","Success!","You scratch this spot off and you win {$cash} Chivalry Tokens. Congratulations!",true,'inventory.php');
+    $cash=Random(5000 * levelMultiplier($ir['level']),
+        7500 *levelMultiplier($ir['level']));
+	alert("success","Success!","You scratch this spot off and you win " . shortNumberParse($cash) . " Chivalry Tokens. Congratulations!",true,'inventory.php');
 	$api->UserGiveCurrency($userid,'secondary',$cash);
 	addToEconomyLog('Scratch Ticket', 'token', $cash);
 }
 elseif ($rng == 3)
 {
+    //@todo make this gift random badge
 	alert("success","Success!","You scratch this spot off and you win a Salty Badge. Congratulations!",true,'inventory.php');
 	$api->UserGiveItem($userid,163,1);
 }
