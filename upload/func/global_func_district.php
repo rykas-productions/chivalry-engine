@@ -246,6 +246,11 @@ function isDistrictAccessible($district_id)
                     return false;
 }
 
+/**
+ * Check to see if input district ID is valid/exists.
+ * @param $district_id
+ * @return boolean
+ */
 function isGuildDistrict($district_id)
 {
     global $db, $ir, $districtConfig;
@@ -274,7 +279,8 @@ function isGuildDistrict($district_id)
  * @param float $defenseBuff Buff levels for the defenders, defaults to 1.0
  * @return string json containing attack result.
  */
-function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior, $defenseArcher, $defenseGeneral = 0, $attackBuff = 1.0, $defenseBuff = 1.0)
+function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior, $defenseArcher, 
+    $defenseGeneral = 0, $attackBuff = 1.0, $defenseBuff = 1.0)
 {
     global $districtConfig;
     
@@ -1058,6 +1064,7 @@ function parseSEtile(int $districtID, $extra = '')
 
 /**
  * Helper function to help the district tiles look significantly better.
+ * @internal
  */
 function returnTileClass($district)
 {
