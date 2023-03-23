@@ -282,7 +282,7 @@ if (!$_GET['user']) {
 								echo "</td>
 							</tr>";
         }
-        if (user_infirmary($r['userid'])) {
+        if (isUserInfirmary($r['userid'])) {
             echo "
 							<tr>
 								<th>Infirmary</th>
@@ -292,7 +292,7 @@ if (!$_GET['user']) {
 								</td>
 							</tr>";
         }
-        if (user_dungeon($r['userid'])) {
+        if (isUserDungeon($r['userid'])) {
             echo "
 							<tr>
 								<th>Dungeon</th>

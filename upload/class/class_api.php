@@ -183,11 +183,10 @@ class api
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $status = $db->escape(stripslashes(strtolower($status)));
-        if ($status == 'infirmary') {
-            return user_infirmary($user);
-        } elseif ($status == 'dungeon') {
-            return user_dungeon($user);
-        }
+        if ($status == 'infirmary')
+            return isUserInfirmary($user);
+        elseif ($status == 'dungeon')
+            return isUserDungeon($user);
     }
 
     /*

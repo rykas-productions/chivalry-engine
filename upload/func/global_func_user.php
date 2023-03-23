@@ -45,7 +45,10 @@ function permission($perm, $user)
         return true;
 }
 /**
- * Internal function: used to see if a user is due to level up, and if so, perform that levelup.
+ * Called each page load. Calculates the exp required to level up, and then checks if 
+ * its time to level up the player.
+ * @internal
+ * @param   bool $disableLevelUp    Set to true to prevent leveling up.
  */
 function check_level($disableLevelUp = false)
 {
@@ -55,7 +58,8 @@ function check_level($disableLevelUp = false)
 	{
 		$ir['xp_needed']=$ir['xp_needed']-($ir['xp_needed']*0.1);
 	}
-	if ($disableLevelUp == false)
+	//Pass true to this func to disable level up.
+	if (!$disableLevelUp)
 	{
 		if ($ir['xp'] >= $ir['xp_needed']) {
 			$expu = $ir['xp'] - $ir['xp_needed'];
@@ -68,54 +72,83 @@ function check_level($disableLevelUp = false)
 			$ir['hp'] += 50;
 			$ir['maxhp'] += 50;
 			$ir['xp_needed'] = (round(($ir['level'] + 1) * ($ir['level'] + 1) * ($ir['level'] + 1) * 2.2) * (1 - ($ir['reset'] * 0.1)));
+			
 			//Increase user's everything.
 			$db->query("UPDATE `users` SET `xp` = '{$expu}' WHERE `userid` = {$userid}");
 			doLevelUpBonus($userid, $ir['reset']);
+			
 			//Give the user some stats for leveling up.
 			$StatGain = $ir['level'] * Random(150,275) / Random(2, 6);
 			$StatGain = $StatGain+($StatGain*levelMultiplier($ir['level'], $ir['reset']));
 			$StatGainFormat = shortNumberParse($StatGain);
 			$statArray = array("strength","guard","agility");
 			$Stat = array_rand($statArray);
+			
 			//Credit the stat gain.
 			$db->query("UPDATE `userstats` SET `{$statArray[$Stat]}` = `{$statArray[$Stat]}` + {$StatGain} WHERE `userid` = {$userid}");
+			
 			//Tell the user they've gained some stats.
 			notification_add($userid, "You have successfully leveled up and gained {$StatGainFormat} in {$statArray[$Stat]}.", "game-icon game-icon-corporal");
+			
 			//Log the level up, along with the stats gained.
 			SystemLogsAdd($userid, 'level', "Leveled up to level {$ir['level']} and gained {$StatGainFormat} in {$statArray[$Stat]}.");
 		}
 	}
 }
-
-/*
+/**
 	The function for testing if a player is in the hospital.
-	@param int $user The user who to test for.
+	@param     int     $user The user who to test for.
+	@deprecated        Use isUserInfirmary($userid)
 */
-
 function user_infirmary($user)
+{
+    return isUserInfirmary($user);
+}
+
+/**
+ * Used to test if user is in the infirmary.
+ * @param   integer     $userid User to testS
+ * @return  boolean     True/False if user is in infirmary.
+ * @since   2023/03/23
+ */
+function isUserInfirmary($userid)
 {
     global $db;
     //Assign current Unix Time to a variable.
     $CurrentTime = time();
     //Select user from infirmary if their exit infirmary time is after the current Unix Timestamp.
-    $query = $db->query("/*qc=on*/SELECT `infirmary_user` FROM `infirmary` WHERE `infirmary_user` = {$user} AND
+    $query = $db->query("/*qc=on*/SELECT `infirmary_user` 
+                        FROM `infirmary` 
+                        WHERE `infirmary_user` = {$userid} AND
                         `infirmary_out` > {$CurrentTime}");
     //Return false if they return no rows, true if they do.
     $return = ($db->num_rows($query) == 0) ? false : true;
     return $return;
 }
 
-/*
+/**
 	The function for testing if a player is in the dungeon.
-	@param int $user The user who to test for.
+	@param     int     $user The user who to test for.
+	@deprecated        Use isUserDungeon($userid)
 */
 function user_dungeon($user)
+{
+    return isUserDungeon($user);
+}
+/**
+ * Used to test if a player is in the dungeon
+ * @param   integer     $userid Player to test
+ * @return  boolean     True/False if user in dungeon
+ */
+function isUserDungeon($userid)
 {
     global $db;
     //Assign current Unix Time to a variable.
     $CurrentTime = time();
     //Select user from dungeon if their exit dungeon time is after the current Unix Timestamp.
-    $query = $db->query("/*qc=on*/SELECT `dungeon_user` FROM `dungeon` WHERE `dungeon_user` = {$user} AND
+    $query = $db->query("/*qc=on*/SELECT `dungeon_user` 
+                        FROM `dungeon` 
+                        WHERE `dungeon_user` = {$userid} AND
 						`dungeon_out` > {$CurrentTime}");
     //Return false if they return no rows, true if they do.
     $return = ($db->num_rows($query) == 0) ? false : true;
@@ -156,6 +189,10 @@ function put_infirmary($user, $time, $reason)
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to remove.
 */
+/**
+ * @param unknown $user
+ * @param unknown $time
+ */
 function remove_infirmary($user, $time)
 {
     global $db;
@@ -261,9 +298,9 @@ function parseUsername($id)
 		$username = $r['username'];
 	}
 	//Now for dungeon and infirmary icons
-	if (user_dungeon($id))
+	if (isUserDungeon($id))
 		$username .= " <i class='fas fa-unlock-alt text-danger' data-toggle='tooltip' data-placement='top' title='{$r['username']} is currently in the dungeon.'></i>";
-	if (user_infirmary($id))
+	if (isUserInfirmary($id))
 		$username .= " <i class='fas fa-hospital text-danger' data-toggle='tooltip' data-placement='top' title='{$r['username']} is currently in the infirmary.'></i>";
     return $username;
 }
@@ -1004,9 +1041,10 @@ function doPlayerofWeekTick()
                     ORDER BY RAND() LIMIT 1");
     $r = $db->fetch_single($q);
     $db->query("UPDATE `settings` SET `setting_value` = {$r} WHERE `setting_name` = 'random_player_showcase'");
-    $api->GameAddNotification($r, "You have been selected as the Player of the week. This gives you 25K Chivalry Tokens and a cool-ass badge. Your name and pic will be shown on the login page until next week.");
-    $api->UserGiveCurrency($r, "secondary", 25000);
+    $api->GameAddNotification($r, "You have been selected as the Player of the week. This gives you 50K Chivalry Tokens and a cool-ass badge. Your name and pic will be shown on the login page until next week.");
+    $api->UserGiveCurrency($r, "secondary", 50000);
     $api->UserGiveItem($r, 419, 1);
+    addToEconomyLog('Player of the Week', 'token', 50000);
 }
 
 function calculateXPNeededByLevel($lvl, $mr = 0)
@@ -1025,6 +1063,11 @@ function doLevelUpBonus($userid, $mr)
 						`hp` = `hp` + {$bonusHP}, `maxhp` = `maxhp` + {$bonusHP} WHERE `userid` = {$userid}");
 }
 
+/**
+ * Helper function to unequip all slots a player has.
+ * @param   integer     $userid Player ID
+ * @internal    
+ */
 function userUnequipAll($userid)
 {
     unequipUserSlot($userid, slot_prim_wep);
@@ -1069,6 +1112,11 @@ function isUserMarried($userid)
     return $result;
 }
 
+/**
+ * Return the player's marriage happiness.
+ * @param   integer     $userid PlayerID to test against.
+ * @return  integer     Marriage happiness. 0 if no marriage.
+ */
 function returnMarriageHappiness($userid)
 {
     global $db;
@@ -1088,7 +1136,7 @@ function returnMarriageHappiness($userid)
  * @param string $pass The user's encrypted password
  *
  * @return boolean    true for equal, false for not (login failed etc)
- *
+ * @internal
  */
 function verify_user_password($input, $pass)
 {
@@ -1101,6 +1149,7 @@ function verify_user_password($input, $pass)
  * Get the operating system by way of Browser User Agent, then store it into the database for the current player.
  * @param string $uagent Browser User Agent
  * @return string Operating System
+ * @internal
  */
 function getOS($uagent)
 {
@@ -1149,6 +1198,7 @@ function getOS($uagent)
  * Get the browser by way of user agent, then store it to database for the current player.
  * @param string $uagent Browser User Agent
  * @return string Operating System
+ * @internal
  */
 function getBrowser($uagent)
 {
@@ -1199,8 +1249,8 @@ function user_log($user,$logname,$value=1)
 }
 
 /**
- * Internal function to check the active missions and reward players who have completed
- * their missions.
+ * @internal Checks the active missions and reward players who have completed
+ * their missions
  */
 function missionCheck()
 {

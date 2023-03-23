@@ -51,8 +51,8 @@ function name()
 		$r['username'] = parseUsername($r['userid']);
 		$displaypic = ($r['display_pic']) ? "<img src='" . parseImage(parseDisplayPic($r['userid'])) . "' height='75' alt='' title=''>" : '';
 		$active = ($r['laston'] > time() - 300) ? "<span class='text-success'>Online</span>" : "<span class='text-danger'>Offline</span>";
-		$infirm = (user_infirmary($r['userid'])) ? "<span class='text-danger'>Infirmary</span>" : "<span class='text-success'>Healthy</span>";
-		$dung = (user_dungeon($r['userid'])) ? "<span class='text-danger'>Dungeon</span>" : "<span class='text-success'>Free</span>";
+		$infirm = (isUserInfirmary($r['userid'])) ? "<span class='text-danger'>Infirmary</span>" : "<span class='text-success'>Healthy</span>";
+		$dung = (isUserDungeon($r['userid'])) ? "<span class='text-danger'>Dungeon</span>" : "<span class='text-success'>Free</span>";
 		echo "
 		<div class='row'>
 			<div class='col-md-2'>

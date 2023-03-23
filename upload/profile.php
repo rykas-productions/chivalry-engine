@@ -218,7 +218,7 @@ $statusTitle = "Perfectly fine.";
 $statusColor = "text-success";
 $statusDetail = "";
 $statusIcon = "check-mark";
-if (user_infirmary($r['userid']))
+if (isUserInfirmary($r['userid']))
 {
 	$attbutton = 1;
 	$statusIcon = "health-increase";
@@ -227,9 +227,9 @@ if (user_infirmary($r['userid']))
 	$statusDetail = "{$r['infirmary_reason']}<br />
 	[<a href='infirmary.php?action=heal&user={$r['userid']}'>Heal</a>]";
 }
-elseif (user_infirmary($userid))
+elseif (isUserInfirmary($userid))
 	$attbutton = 2;
-elseif (user_dungeon($r['userid']))
+elseif (isUserDungeon($r['userid']))
 {
 	$statusIcon = "padlock";
 	$attbutton = 3;
@@ -238,7 +238,7 @@ elseif (user_dungeon($r['userid']))
 	$statusDetail = "{$r['dungeon_reason']}<br />
 	[<a href='dungeon.php?action=bust&user={$r['userid']}'>Bust</a>]";
 }
-elseif (user_dungeon($userid))
+elseif (isUserDungeon($userid))
 	$attbutton = 4;
 elseif ($r['hp'] == 0)
 	$attbutton = 5;
@@ -481,14 +481,14 @@ echo "<h3>{$user_name}'s Profile</h3>
 							<i class='{$jobIcon}' data-toggle='tooltip' data-placement='top' title='" . htmlentities("{$jobRank} at {$jobTitle}", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
 						</div>";
 					}
-					if (user_dungeon($r['userid']))
+					if (isUserDungeon($r['userid']))
 					{
 						echo "
 						<div class='col'>
 							<i class='fas fa-lock text-secondary' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Dungeon: {$r['dungeon_reason']} for " . TimeUntil_Parse($r['dungeon_out']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
 						</div>";
 					}
-					if (user_infirmary($r['userid']))
+					if (isUserInfirmary($r['userid']))
 					{
 						echo "
 						<div class='col'>

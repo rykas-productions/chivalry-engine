@@ -301,10 +301,10 @@ function consumeItem($userid, $itemID, $qty = 1)
                     else 
                     {
                         if ($einfo['stat'] == 'infirmary') 
-                            if (user_infirmary($userid) == true) 
+                            if (isUserInfirmary($userid)) 
                                 remove_infirmary($userid, $inc);
                         elseif ($einfo['stat'] == 'dungeon') 
-                            if (user_dungeon($userid) == true) 
+                            if (isUserDungeon($userid)) 
                                 remove_dungeon($userid, $inc);
                         else 
                         {

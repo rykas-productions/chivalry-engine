@@ -10,12 +10,12 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals.php');
-if (user_infirmary($userid))
+if (isUserInfirmary($userid))
 {
     alert('danger',"Uh Oh!","You cannot use the Temple of Fortune if you're in the infirmary.",true,'infirmary.php');
     die($h->endpage());
 }
-if (user_dungeon($userid))
+if (isUserDungeon($userid))
 {
     alert('danger',"Uh Oh!","You cannot use the Temple of Fortune if you're in the dungeon.",true,'dungeon.php');
     die($h->endpage());
