@@ -32,8 +32,12 @@ function fetchCachedQuery($query, $dir = 'query', $ttl = 86400)
     }
 }
 
-/*
- Gets the contents of a file if it exists, otherwise grabs and caches
+/**
+ * Gets fraudguard info based on IP address. Will search local cache first, 
+ * then pull from FG if out of date.
+ * @param string $ip
+ * @param number $hours
+ * @return string|json
  */
 function get_fg_cache($ip, $hours = 1)
 {
@@ -220,11 +224,6 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
             return "Chivalry Engine is up to date.";
             else
                 return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
-}
-
-function fetchCIDDB()
-{
-    return get_cached_file("https://chivalryisdeadgame.com/cache/latest.sql", dirname(__DIR__) . "/cache/latest.sql", 24);
 }
 
 function getVPSData()
