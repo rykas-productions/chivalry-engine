@@ -130,19 +130,22 @@ function lottery_play()
 	if ($chance == 1)	//Winner, winner, chicken dinner!!
 	{
 	    $winnings=shortNumberParse($set['lotterycash']);
+	    $newPot = round($set['lotterycash'] / 100);
+	    if ((!$newPot) || ($newPot < $minimumpot))
+	        $newPot = $minimumpot;
 		$api->UserGiveItem($userid,160,1);
 		alert('success',"Success!","You paid the fee and won the raffle's prize pot of {$winnings} Copper Coins! Congratulations!",true,"?action=play&verf={$csrf}","Play Again");
 		//Adds money!
 		$api->UserGiveCurrency($userid, 'primary', $set['lotterycash']);
 		//Sets the pot back to the minimum.
-		$db->query("UPDATE `settings` SET `setting_value` = {$minimumpot} WHERE `setting_id` = {$lotteryid}");
+		$db->query("UPDATE `settings` SET `setting_value` = {$newPot} WHERE `setting_id` = {$lotteryid}");
 		$userLink="<a href='profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}]";
-		$text = "The Chivalry is Dead Raffle has been won by {$userLink}. They received {$winnings} Copper Coins. A new raffle has started, beginning at " . shortNumberParse($minimumpot) . " Copper Coins. Best of luck to everyone!";
+		$text = "The Chivalry is Dead Raffle has been won by {$userLink}. They received {$winnings} Copper Coins. A new raffle has started, beginning at " . shortNumberParse($newPot) . " Copper Coins. Best of luck to everyone!";
 		$api->GameAddAnnouncement($text);
 		$db->query("UPDATE `settings` SET `setting_value` = 1000 WHERE `setting_name` = 'raffle_chance'");
         $db->query("UPDATE `settings` SET `setting_value` = {$userid} WHERE `setting_name` = 'raffle_last_winner'");\
 		addToEconomyLog('Gambling', 'copper', $set['lotterycash']);
-		addToEconomyLog('Gambling', 'copper', $minimumpot);
+		addToEconomyLog('Gambling', 'copper', $newPot);
 	}
 	if ($chance >= 2)	//Loser, loser, someone's got a bruiser!
 	{
