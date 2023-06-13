@@ -1,4 +1,11 @@
 <?php
+/**
+ * @desc Conditional function that returns true if RNG allows 
+ * @desc player input to be lucky. Removes luck from player if successful.
+ * @internal
+ * @param   integer     $user Player ID
+ * @return  boolean     True if a successful luck tick.
+ */
 function calculateLuck($user)
 {
 	global $db;
@@ -25,13 +32,13 @@ function getSkillLevel($user,$id)
 		return $db->fetch_single($q);
 }
 /**
- * Tests to see if the user's permission is allowed or not.
+ * @desc Tests to see if the user's permission is allowed or not.
  *
- * @param string $perm The permission to test for
- * @param int $user The user to test on
+ * @param   string  $perm The permission to test for
+ * @param   int     $user The user to test on
  *
- * @return bool                Returns true if the user has this,
- *                            false if not.
+* @return bool      Returns true if the user has this,
+ *                  false if not.
  */
 function permission($perm, $user)
 {
@@ -45,8 +52,8 @@ function permission($perm, $user)
         return true;
 }
 /**
- * Called each page load. Calculates the exp required to level up, and then checks if 
- * its time to level up the player.
+ * @desc Called each page load. Calculates the exp required to level up, and then checks if 
+ * @desc its time to level up the player.
  * @internal
  * @param   bool $disableLevelUp    Set to true to prevent leveling up.
  */
@@ -96,7 +103,7 @@ function check_level($disableLevelUp = false)
 	}
 }
 /**
-	The function for testing if a player is in the hospital.
+	@desc The function for testing if a player is in the hospital.
 	@param     int     $user The user who to test for.
 	@deprecated        Use isUserInfirmary($userid)
 */
@@ -106,8 +113,8 @@ function user_infirmary($user)
 }
 
 /**
- * Used to test if user is in the infirmary.
- * @param   integer     $userid User to testS
+ * @desc Used to test if user is in the infirmary.
+ * @param   integer     $userid User to test
  * @return  boolean     True/False if user is in infirmary.
  * @since   2023/03/23
  */
@@ -127,7 +134,7 @@ function isUserInfirmary($userid)
 }
 
 /**
-	The function for testing if a player is in the dungeon.
+	@desc The function for testing if a player is in the dungeon.
 	@param     int     $user The user who to test for.
 	@deprecated        Use isUserDungeon($userid)
 */
@@ -136,9 +143,10 @@ function user_dungeon($user)
     return isUserDungeon($user);
 }
 /**
- * Used to test if a player is in the dungeon
+ * @desc Test if a player is in the dungeon.
  * @param   integer     $userid Player to test
- * @return  boolean     True/False if user in dungeon
+ * @return  boolean     User in dungeon
+ * @since 3/24/2023
  */
 function isUserDungeon($userid)
 {
@@ -155,11 +163,41 @@ function isUserDungeon($userid)
     return $return;
 }
 
-/*
-	The function for putting/adding onto someones infirmary time.
+/**
+ * @desc Adjust a player's infirmary time.
+ * @param integer   $userid Player ID
+ * @param integer   $time Time in minutes.
+ * @param string    $reason Reason for infirmary, if blank won't update reason.
+ * @since 3/24/2023
+ * @example userInfirmaryAdjust(100, 55, "Death");
+ */
+function userInfirmaryAdjust($userid, $time, $reason = '')
+{
+    global $db;
+    $outTime = $db->fetch_single(
+        $db->query("/*qc=on*/SELECT `infirmary_out` 
+                    FROM `infirmary` 
+                    WHERE `infirmary_user` = {$userid}"));
+    $timeSeconds = $time * 60;
+    $newTime = time() + ($timeSeconds);
+    if ($outTime <= time())
+    {
+        
+        $db->query("UPDATE `infirmary` 
+                    SET `infirmary_out` = {$newTime}, 
+                    `infirmary_in` = " . time() . ",
+					WHERE `infirmary_user` = {$userid}");
+        if (!empty($reason))
+            $db->query("UPDATE `infirmary` SET `infirmary_reason` = '{$reason}' WHERE `infirmary_user` = {$userid}");
+    }
+}
+
+/**
+	@desc Put/add onto someones infirmary time.
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to add.
-	@param text $reason The reason the user is in the infirmary.
+	@param string $reason The reason the user is in the infirmary.
+	@deprecated Use userInfirmaryAdjust($userid, $time, $reason);
 */
 function put_infirmary($user, $time, $reason)
 {
@@ -184,14 +222,11 @@ function put_infirmary($user, $time, $reason)
     }
 }
 
-/*
-	The function for removing someones infirmary time.
-	@param int $user The user to put in the infirmary
-	@param int $time The time (in minutes) to remove.
-*/
 /**
- * @param unknown $user
- * @param unknown $time
+ * @desc Remove a user's infirmary time.
+ * @param integer   $user Player ID
+ * @param integer   $time Infirmary minutes
+ * @deprecated Use userInfirmaryAdjust($userid, $time, $reason);
  */
 function remove_infirmary($user, $time)
 {
@@ -245,7 +280,7 @@ function remove_dungeon($user, $time)
     $db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` - '{$TimeMath}' WHERE `dungeon_user` = {$user}");
 }
 /**
- * Get the "rank" a user has for a particular stat - if the return is n, then the user has the n'th highest value for that stat.
+ * @desc Get the "rank" a user has for a particular stat - if the return is n, then the user has the n'th highest value for that stat.
  * @param int $stat The value of the current user's stat.
  * @param string $mykey The stat to be ranked in. Must be a valid column name in the userstats table
  * @return integer The user's rank in the stat
@@ -269,6 +304,11 @@ function get_rank($stat, $mykey)
     return $result;
 }
 
+/**
+ * @desc Fetch and parse a username based on the player ID.
+ * @param integer   $id Player ID
+ * @return string   Properly parsed username.
+ */
 function parseUsername($id)
 {
     global $db;
@@ -279,14 +319,9 @@ function parseUsername($id)
     $r = $db->fetch_row($q);
 		
 	if ($r['fedjail'] > 0)
-	{
 		$username = "<span class='text-muted'><s>{$r['username']}</s></span>";
-	}
-	
 	elseif ($r['user_level'] == 'NPC')
-	{
 		$username = "<span class='font-weight-light'>{$r['username']}</span>";
-	}
 	elseif ($r['vip_days'] > 0)
 	{
 		if ($r['equip_badge'] == 0)
@@ -294,9 +329,7 @@ function parseUsername($id)
 		$username = "<span class='font-weight-bold' style='color:{$r['vipcolor']}' data-toggle='tooltip' data-placement='top' title='" . number_format($r['vip_days']) . " VIP Days remaining.'>{$r['username']} " . returnIcon($r['equip_badge']) . "</span>";
 	}
 	else
-	{
 		$username = $r['username'];
-	}
 	//Now for dungeon and infirmary icons
 	if (isUserDungeon($id))
 		$username .= " <i class='fas fa-unlock-alt text-danger' data-toggle='tooltip' data-placement='top' title='{$r['username']} is currently in the dungeon.'></i>";
@@ -304,7 +337,11 @@ function parseUsername($id)
 		$username .= " <i class='fas fa-hospital text-danger' data-toggle='tooltip' data-placement='top' title='{$r['username']} is currently in the infirmary.'></i>";
     return $username;
 }
-
+/**
+ * @desc Fetch and parse a player's display pic based on the player ID.
+ * @param integer   $id Player ID
+ * @return string   Properly rendered display pic.
+ */
 function parseDisplayPic($id)
 {
     global $db;
@@ -313,7 +350,12 @@ function parseDisplayPic($id)
     $pic = (empty($r)) ? parseImage(getGravatarPic($id)) : parseImage($r);
     return $pic;
 }
-
+/**
+ * @desc Fetch a linked Gravatar pic from a player ID.
+ * @desc Gravatar is based on email adress.
+ * @param integer   $id Player ID
+ * @return string   Properly parsed username.
+ */
 function getGravatarPic($id)
 {
 	global $db;
@@ -322,6 +364,12 @@ function getGravatarPic($id)
 	return $link;
 }
 
+/**
+ * @desc Calculate a level multiplier for bonuses.
+ * @param integer   $level Player's level.
+ * @param integer   $reset Player's Mastery Rank.
+ * @return float    Multiplier
+ */
 function levelMultiplier($level, $reset = 1)
 {
     $actualReset = $reset - 1;
@@ -363,6 +411,11 @@ function levelMultiplier($level, $reset = 1)
 	return $multiplier;
 }
 
+/**
+ * @desc Calculate a player's max city bank interest.
+ * @param integer   $user Player ID.
+ * @return integer  Player's maximum bank interest.
+ */
 function returnMaxInterest($user)
 {
 	global $db;
@@ -370,12 +423,23 @@ function returnMaxInterest($user)
 	return round(20000000 * levelMultiplier($level, getUserResetCount($user)));
 }
 
-function getCurrentUserPref($prefName, $defaultValue)
+/**
+ * @desc Current player sensitive version of getUserPref()
+ * @param string    $prefName Preference name to view
+ * @param string    $defaultValue Default value if player doesn't have preference set.
+ * @return mixed    Preference value
+ */
+function getCurrentUerPref($prefName, $defaultValue)
 {
 	global $userid;
 	return getUserPref($userid, $prefName, $defaultValue);
 }
 
+/**
+ * @desc Current Player sensitive version of setUserPref()
+ * @param unknown $prefName
+ * @param unknown $value
+ */
 function setCurrentUserPref($prefName, $value)
 {
 	global $userid;
@@ -455,7 +519,6 @@ function calculateXPNeeded($user)
 		LEFT JOIN `user_settings` AS `us`
 		ON `u`.`userid` = `us`.`userid`
 		WHERE `u`.`userid` = {$user}");
-	//$q=$db->query("SELECT `u`.`level`,`us`.`reset` FROM `users` AS `u` INNER JOIN `user_settings` AS `us` ON `u`.`userid` = `us`.`userid` WHERE `us`.`userid` = {$user}");
 	$r=$db->fetch_row($q);
 	if (!isset($r['reset']))
 		$r['reset'] = 0;
@@ -722,6 +785,14 @@ function deleteUser($user)
 	$db->query("DELETE FROM `vips_accepted` WHERE `vipFOR` = {$user}");
 }
 
+/**
+ * @param string $name
+ * @param atring $email
+ * @param string $pw
+ * @param string $gender
+ * @param string $class
+ * @return integer $i Assigned 
+ */
 function createUser($name,$email,$pw,$gender='Male',$class='Warrior')
 {
 	global $db, $api;
