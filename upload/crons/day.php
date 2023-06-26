@@ -74,6 +74,15 @@ $month = date('n');
 $day = date('j');
 $year = date('Y');
 
+if ($year == 2023)
+{
+	if ($month == 6)
+	{
+		if ($day >= 26 && $day <= 30)
+			$db->query("UPDATE `users` SET `hexbags` = `hexbags` + 100, `bor` = `bor` + 1000");
+	}
+}
+
 if ($month == 12)
 {
     if ($day == 1)
