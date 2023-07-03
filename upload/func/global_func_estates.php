@@ -18,19 +18,19 @@ function calcWaterCosts($gardenLevel, $estateWill)
 {
 	$gardenLevel++;
 	$gardenLevel*=0.1;
-	return ceil(($estateWill*0.05)*$gardenLevel)+$gardenLevel;
+	return ceil(($estateWill*0.025)*$gardenLevel)+$gardenLevel;
 }
 function calcStoneCosts($gardenLevel, $estateWill)
 {
 	$gardenLevel++;
-	$gardenLevel*=0.5;
-	return ceil(($estateWill*0.08)*$gardenLevel)+$gardenLevel;
+	$gardenLevel*=0.1;
+	return ceil(($estateWill*0.042)*$gardenLevel)+$gardenLevel;
 }
 function calcStickCosts($gardenLevel, $estateWill)
 {
 	$gardenLevel++;
-	$gardenLevel*=0.5;
-	return ceil(($estateWill*0.12)*$gardenLevel)+$gardenLevel;
+	$gardenLevel*=0.1;
+	return ceil(($estateWill*0.061)*$gardenLevel)+$gardenLevel;
 }
 //
 function calcIronCosts($vaultLevel, $estateCost)
@@ -111,13 +111,15 @@ function calculateSellPrice($estate_id)
 	global $db;
 	$r=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$estate_id}"));
 	$r2=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$r['estate']}"));
-	$startPrice = $r2['house_price'];
-	$startSellPrice = $r2['house_price'] * 0.8;
-	$upgradeCount = $r['gardenUpgrade'] + $r['sleepUpgrade'] + $r['vaultUpgrade'];
-	$multi = 0.0725617821 * $upgradeCount;
-	$addToSell = $startPrice * $multi;
-	$finalSell = $addToSell + $startSellPrice;
-	return round($finalSell);
+	//start at 85% value due to depreciation
+	$multi = 0.85;
+	if ($r['gardenUpgrade'] > 0)
+	    $multi = ($multi) + ($r['gardenUpgrade'] * 0.075);
+    if ($r['vaultUpgrade'] > 0)
+        $multi = ($multi) + ($r['vaultUpgrade'] * 0.07);
+    if ($r['sleepUpgrade'] > 0)
+        $multi = ($multi) + ($r['sleepUpgrade'] * 0.065);
+    return round($multi * $r2['house_price']);
 }
 
 function increaseMaxWill($userid, $increase)
