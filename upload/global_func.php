@@ -1341,3 +1341,10 @@ function logTokenMarketAvg($bought,$total)
     $time = time();
     $db->query("INSERT INTO `token_market_avg` (`token_sold`, `token_total`, `token_time`) VALUES ('{$bought}', '{$total}', '{$time}')");
 }
+
+function logMarketAvg($qty, $cost)
+{
+    global $db;
+    $time = time();
+    $db->query("INSERT INTO `token_market_avg` (`token_sold`, `token_total`, `token_time`) VALUES ('{$qty}', '{$cost}', '{$time}')");
+}
