@@ -22,8 +22,11 @@ switch ($_GET['action']) {
     case 'remove':
         remove();
         break;
-    case 'buy':
-        buy();
+    //case 'buy':
+    //    buy();
+    //    break;
+	case 'buy':
+        buy2();
         break;
     default:
         home();
@@ -31,7 +34,7 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $db, $api, $userid, $avgprice;
+    global $db, $api, $userid, $avgprice, $ir;
     echo "
     <div class='row'>
         <div class='col-12 col-md-6'>
@@ -46,11 +49,29 @@ function home()
             <div class='card'>
                 <div class='card-body'>
                     <div class='row'>
-                        <div class='col-12'>
-                            <small><b>Market Average</b></small>
+                        <div class='col-12 col-sm-6 col-md-12 col-xxl-6 col-xxxl'>
+                            <div class='col-12'>
+                                <small><b>Market Average</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($avgprice) . " Copper Coins
+                            </div>
                         </div>
-                        <div class='col-12'>
-                            " . shortNumberParse($avgprice) . " Copper Coins
+                        <div class='col-12 col-sm-6 col-md-12 col-xxl-6 col-xxxl'>
+                            <div class='col-12'>
+                                <small><b>Your Tokens</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-md-12 col-xxl-6 col-xxxl'>
+                            <div class='col-12'>
+                                <small><b>Your Copper</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($ir['primary_currency']) . " Copper Coins
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -177,6 +198,113 @@ function buy()
     alert('success', "Success!", "You have bought " . shortNumberParse($r['sec_total']) . " Chivalry Tokens for " . shortNumberParse($totalcost) . " Copper Coins.", true, 'secmarket.php');
     logMarketAvg($r['sec_total'],$totalcost);
 	die($h->endpage());
+}
+
+function buy2()
+{
+    global $db, $h, $userid, $api, $ir;
+    $_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
+    if (empty($_GET['id'])) {
+        alert('danger', "Uh Oh!", "Please specify a listing you wish to buy.", true, 'secmarket.php');
+        die($h->endpage());
+    }
+    $q = $db->query("/*qc=on*/SELECT * FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
+    if ($db->num_rows($q) == 0) {
+        alert('danger', "Uh Oh!", "Please specify an existent listing to buy.", true, 'secmarket.php');
+        die($h->endpage());
+    }
+    $r = $db->fetch_row();
+    if ($r['sec_user'] == $userid) {
+        alert('danger', "Uh Oh!", "You cannot buy your own listing.", true, 'secmarket.php');
+        die($h->endpage());
+    }
+	if ($api->SystemCheckUsersIPs($userid, $r['sec_user'])) 
+	{
+		alert('danger', "Uh Oh!", "You cannot buy an offer from someone who shares your IP Address.", true, 'itemmarket.php');
+		die($h->endpage());
+	}
+	if (isset($_POST['qty']))
+	{
+		$_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs($_POST['qty']) : 0;
+		if ($_POST['qty'] == 0)
+		{
+			alert('danger', "Uh Oh!", "You need to buy at least one Chivalry Token.", true, 'secmarket.php');
+			die($h->endpage());
+		}
+		if ($_POST['qty'] > $r['sec_total'])
+		{
+		    alert('danger', "Uh Oh!", "You are trying to purchase more than this listing has.", true, 'secmarket.php');
+		    die($h->endpage());
+		}
+		$totalcost = $r['sec_cost'] * $_POST['qty'];
+		if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) 
+		{
+			alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
+			die($h->endpage());
+		}
+		$remove = 0.02;
+		if ($r['sec_deposit'] == 'true')
+			$remove = $remove + 0.05;
+		$taxed=$totalcost-($totalcost*$remove);
+		addToEconomyLog('Market Fees', 'copper', ($totalcost*$remove)*-1);
+		$api->SystemLogsAdd($userid, 'secmarket', "Bought " . shortNumberParse($r['sec_total']) . " Chivalry Tokens from the market for " . shortNumberParse($totalcost) . " Copper Coins.");
+		$api->UserGiveCurrency($userid, 'secondary', $_POST['qty']);
+		$api->UserTakeCurrency($userid, 'primary', $totalcost);
+		$api->UserGiveCurrency($r['sec_user'], 'primary', $taxed);
+		$api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> bought 
+			" . shortNumberParse($_POST['qty']) . " Chivalry Tokens from the Chivalry Token Market for a total of " . shortNumberParse($taxed) . " Copper Coins.");
+		$db->query("UPDATE `sec_market` SET `sec_total` = `sec_total` - {$_POST['qty']} WHERE `sec_id` = {$_GET['id']}");
+		$db->query("DELETE FROM `sec_market` WHERE `sec_total` = 0");
+		
+		alert('success', "Success!", "You have bought " . shortNumberParse($_POST['qty']) . " Chivalry Tokens for " . shortNumberParse($totalcost) . " Copper Coins.", true, 'secmarket.php');
+		logMarketAvg($_POST['qty'],$totalcost);
+		die($h->endpage());
+	}
+	else
+	{
+		echo "
+		<form method='post'>
+            <div class='row'>
+                <div class='col-12'>
+                    <div class='card'>
+                        <div class='card-header'>
+                            Buying Chivalry Token Listing
+                        </div>
+                        <div class='card-body'>
+                            <div class='row'>
+                                <div class='col-12'>";
+									alert("info","","This listing has " . shortNumberParse($r['sec_total']) . " Chivalry Tokens for sale 
+									at " . shortNumberParse($r['sec_cost']) . " Copper Coins each. How many do you wish to purhcase? You have 
+									" . shortNumberParse($ir['primary_currency']) . " Copper Coins",false);
+                                echo"</div>
+                                <div class='col-12 col-sm-4 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <b><small>Chivalry Tokens</small></b>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='number' name='qty' class='form-control' required='1' min='1' value='{$r["sec_total"]}' max='{$r["sec_total"]}'>
+                                        </div>
+                                    </div>
+                                    <br />
+                                </div>
+                                <div class='col-12 col-xl'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            <small><br /></small>
+                                        </div>
+                                        <div class='col-12'>
+                                            <input type='submit' class='btn btn-primary btn-block' value='Buy Tokens'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>";
+	}
 }
 
 function remove()
