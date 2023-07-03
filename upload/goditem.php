@@ -41,31 +41,38 @@ switch ($_GET['action']) {
 }
 function home()
 {
-	echo "<h3>Scroll of the Adminly</h3><hr />
-    <div class='row'>
-        <div class='col'>
-            <a href='?action=level' class='btn btn-primary btn-block'>Set Level</a>
-        </div>
-        <div class='col'>
-            <a href='?action=backupdb' class='btn btn-danger btn-block'>Manual Database Backup</a>
-        </div>
-        <div class='col'>
-            <a href='?action=bankint' class='btn btn-primary btn-block'>Run Bank Interest</a>
-        </div>
-        <div class='col'>
-            <a href='?action=givemoves' class='btn btn-primary btn-block'>Give District Moves</a>
-        </div>
-        <div class='col'>
-            <a href='?action=giveyoutroops' class='btn btn-primary btn-block'>Give Guild Troops</a>
-        </div>
-        <div class='col'>
-            <a href='?action=givenpctroops' class='btn btn-primary btn-block'>Give NPC Guild Troops</a>
-        </div>
-		<div class='col'>
-            <a href='?action=fixsql' class='btn btn-primary btn-block'>Fix SQL Error</a>
-        </div>
-    </div>
-	";
+    global $api, $h;
+    echo "  <div class='card'>
+                <div class='card-header'>
+                    {$api->SystemItemIDtoName(320)}
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2'>
+                            <a href='?action=level' class='btn btn-primary btn-block btn-sm'>Set Level</a>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2'>
+                            <a href='?action=backupdb' class='btn btn-danger btn-block btn-sm'>Manual DB Backup</a>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2'>
+                            <a href='?action=bankint' class='btn btn-primary btn-block btn-sm'>Run Bank Interest</a>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2'>
+                            <a href='?action=givemoves' class='btn btn-primary btn-block btn-sm'>Give District Moves</a>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2'>
+                            <a href='?action=giveyoutroops' class='btn btn-primary btn-block btn-sm'>Give Guild Troops</a>
+                        </div>
+                        <div class='col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2'>
+                            <a href='?action=givenpctroops' class='btn btn-primary btn-block btn-sm'>Give NPC Troops</a>
+                        </div>
+                		<div class='col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-2'>
+                            <a href='?action=fixsql' class='btn btn-primary btn-block btn-sm'>Fix SQL Error</a>
+                        </div>
+                    </div>
+                </div>
+            </div>";
+                    $h->endpage();
 }
 
 function level()
