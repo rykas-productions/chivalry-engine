@@ -241,7 +241,7 @@ function getVPSData()
         {
             $curl = curl_init();
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.vps.net/ssd_virtual_machines/259426.api10json",
+                CURLOPT_URL => "https://api.vps.net/ssd_virtual_machines/318307.api10json",
                 CURLOPT_USERPWD => $_CONFIG['vpsAuth'],
                 CURLOPT_SSL_VERIFYPEER => false,
                 CURLOPT_HTTPHEADER => array("Accept: application/json"),
@@ -256,7 +256,7 @@ function getVPSData()
     {
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.vps.net/ssd_virtual_machines/259426.api10json",
+            CURLOPT_URL => "https://api.vps.net/ssd_virtual_machines/318307.api10json",
             CURLOPT_USERPWD => $_CONFIG['vpsAuth'],
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_HTTPHEADER => array("Accept: application/json"),
