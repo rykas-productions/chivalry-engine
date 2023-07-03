@@ -254,15 +254,18 @@ $r['description']=$parser->getAsHtml();
 //Active / Online button
 $activeText = "Offline";
 $activeColor = "text-danger";
+$cardColor = "";
 if ($active == 1)
 {
 	$activeText = "Online";
 	$activeColor = "text-success";
+	$cardColor = "text-white bg-success";
 }
 elseif ($active == 2)
 {
 	$activeText = "Idle";
 	$activeColor = "text-warning";
+	$cardColor = "text-white bg-warning";
 }
 
 //Gender icon / color
@@ -296,7 +299,7 @@ if ($_GET['user'] == 21)
 echo "<h3>{$user_name}'s Profile</h3>
 <div class='row'>
 	<div class='col-lg-6 col-xl-7'>
-		<div class='card'>
+		<div class='card {$cardColor}'>
 			<div class='card-header text-left'>
 				User info
 			</div>
