@@ -10,7 +10,7 @@ $macropage = ('russianroulette.php');
 require("globals.php");
 $maxbet = calculateUserMaxBet($userid);
 loadGamblingAlert();
-echo "<h3><i class='game-icon game-icon-revolver'></i> Russian Roulette</h3><hr />";
+alert('warning',"","<h5>Russian Roulette takes a 10% fee on all winnings.</h5>", false);
 //Do not allow the user to play Russian Roulette if they're in the dungeon/infirmary.
 if ($api->UserStatus($userid, 'dungeon')) {
     alert('danger', "Uh Oh!", "You cannot play Russian Roulette while in the dungeon.");
@@ -44,81 +44,105 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $api, $h, $userid, $maxbet;
-    echo "
-    <form method='post' action='?action=bet'>
-    <table class='table table-bordered'>
-        <tr>
-            <th colspan='2'>
-                Welcome to Russian Roulette, good sir! Who would you like to challenge? Remember, the Russian Roulette center
-                takes a 10% fee on all winnings. You may bet up to " . shortNumberParse($maxbet) . " Copper Coins.
-            </th>
-        </tr>
-        <tr>
-            <th>
-                 User
-            </th>
-            <td>
-                " . user_dropdown('user', $userid) . "
-            </td>
-        </tr>
-        <tr>
-             <th>
-                 Bet
-            </th>
-            <td>
-                <input type='number' name='bet' min='0' value='0' max='{$maxbet}' required='1' class='form-control'>
-            </td>
-        </tr>
-        <tr>
-            <td colspan='2'>
-                <input type='submit' class='btn btn-primary' value='Send Challenge'>
-            </td>
-        </tr>
-    </table>
-    </form>
-    <h4>Challenges Involving You</h4>";
-    echo "<table class='table'>
-        <tr>
-            <th>
-                Challenger
-            </th>
-            <th>
-                Receiver
-            </th>
-            <th>
-                Bet
-            </th>
-            <th>
-                Actions
-            </th>
-        </tr>";
     //List the challenges the player has sent/received.
     $q = $db->query("/*qc=on*/SELECT * FROM `russian_roulette` WHERE `challengee` = {$userid} OR `challenger` = {$userid}");
-    while ($r = $db->fetch_row($q)) {
-        //Player is the challenger in this challenge. Give them option to withdraw bet.
-        if ($userid == $r['challenger'])
-            $link = "<a href='?action=withdraw&id={$r['rr_id']}'>Withdraw</a>";
-        //Player is the receiver, give them option to decline or accept.
-        else
-            $link = "<a href='?action=do&id={$r['rr_id']}'>Accept</a><br />
-                        <a href='?action=dont&id={$r['rr_id']}'>Decline</a>";
-        echo "
-        <tr>
-            <td>
-                " . parseUsername($r['challenger']) . " [{$r['challenger']}]
-            </td>
-            <td>
-                " . parseUsername($r['challengee']) . " [{$r['challengee']}]
-            </td>
-            <td>
-                " . shortNumberParse($r['reward']) . " Copper Coins
-            </td>
-            <td>
-                {$link}
-            </td>
-        </tr>";
+    if ($db->num_rows($q) > 0)
+    {
+        echo "<div class='card'>
+                <div class='card-header'>
+                    Challenges Involving You
+                </div>
+                <div class='card-body'>";
+        while ($r = $db->fetch_row($q)) 
+        {
+            if ($userid == $r['challenger'])
+                $link = "<div class='col'><a href='?action=withdraw&id={$r['rr_id']}' class='btn btn-primary btn-sm btn-block'>Withdraw</a></div>";
+            else
+            {
+                $link = "<div class='col-12 col-sm'><a href='?action=do&id={$r['rr_id']}' class='btn btn-success btn-sm btn-block'>Accept</a></div>
+                        <div class='col-12 col-sm'><a href='?action=dont&id={$r['rr_id']}' class='btn btn-danger btn-sm btn-block'>Decline</a></div>";
+            }
+            echo "<div class='row'>
+                    <div class='col-12 col-sm-6 col-xl'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Challenger</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <a href='profile.php?user={$r['challenger']}'>" . parseUsername($r['challenger']) . "</a> [{$r['challenger']}]
+                            </div>
+                         </div>
+                    </div>
+                    <div class='col-12 col-xl col-sm-6'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Challengee</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <a href='profile.php?user={$r['challengee']}'>" . parseUsername($r['challengee']) . "</a> [{$r['challengee']}]
+                            </div>
+                         </div>
+                    </div>
+                    <div class='col-12 col-xl col-sm-6'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Wager</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($r['reward']) . " Copper Coins
+                            </div>
+                         </div>
+                    </div>
+                    <div class='col-12 col-xl col-sm-6'>
+                        <div class='row'>
+                            {$link}
+                         </div>
+                    </div>
+                  </div>
+                <br />";
+        }
+        echo "</div></div>";
     }
-    echo "</table>";
+    echo "<br /><form method='post' action='?action=bet'><div class='card'>
+                <div class='card-header'>
+                    Submit Challenge
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6 col-xl'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Challenger</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . user_dropdown('user', $userid) . "
+                                </div>
+                             </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-xl'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Wager</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='number' name='bet' min='0' value='0' max='{$maxbet}' required='1' class='form-control'>
+                                </div>
+                             </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-xl'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Confirm</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='submit' class='btn btn-primary btn-block' value='Send Challenge'>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>";
     $h->endpage();
 }
 
