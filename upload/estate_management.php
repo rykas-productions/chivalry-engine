@@ -72,9 +72,9 @@ switch ($_GET['action']) {
 function home()
 {
 	global $db, $ir, $userid, $estate, $edb;
-	$gardenLevel = ($estate['gardenUpgrade'] > 0) ? number_format($estate['gardenUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>N/A</i>";
-	$sleepLevel = ($estate['sleepUpgrade'] > 0) ? number_format($estate['sleepUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>N/A</i>";
-	$vaultLevel = ($estate['vaultUpgrade'] > 0) ? number_format($estate['vaultUpgrade']) . " / " . number_format($edb['upgradeLevel']) : "<i>N/A</i>";
+	$gardenLevel = ($estate['gardenUpgrade'] > 0) ? shortNumberParse($estate['gardenUpgrade']) . " / " . shortNumberParse($edb['upgradeLevel']) : "<i>N/A</i>";
+	$sleepLevel = ($estate['sleepUpgrade'] > 0) ? shortNumberParse($estate['sleepUpgrade']) . " / " . shortNumberParse($edb['upgradeLevel']) : "<i>N/A</i>";
+	$vaultLevel = ($estate['vaultUpgrade'] > 0) ? shortNumberParse($estate['vaultUpgrade']) . " / " . shortNumberParse($edb['upgradeLevel']) : "<i>N/A</i>";
 	$gLink = ($estate['gardenUpgrade'] > 0) ? "<a href='?action=upgradeGarden'>Upgrade</a>" : "<a href='?action=constructGarden'>Construct</a>" ;
 	$vLink = ($estate['vaultUpgrade'] > 0) ? "<a href='?action=upgradeVault'>Upgrade</a>" : "<a href='?action=constructVault'>Construct</a>" ;
 	$sLink = ($estate['sleepUpgrade'] > 0) ? "<a href='?action=upgradeSleep'>Upgrade</a>" : "<a href='?action=constructSleep'>Construct</a>" ;
@@ -528,17 +528,17 @@ function construct_garden()
 	{
 		if (!$api->UserHasItem($userid, 296, $waterCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($waterCost) . " Bucket(s) of Water to construct a garden at this estate.", true, 'estate_management.php');
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($waterCost) . " Buckets of Water to construct a zen garden at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 296)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
 		if (!$api->UserHasItem($userid, 2, $stoneCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($stoneCost) . " Heavy Rock(s) to construct a garden at this estate.", true, 'estate_management.php');
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($stoneCost) . " Heavy Rocks to construct a zen garden at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 2)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
 		if (!$api->UserHasItem($userid, 1, $stickCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($stickCost) . " Sharpened Stick(s) to construct a garden at this estate.", true, 'estate_management.php');
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($stickCost) . " Sharpened Sticks to construct a zen garden at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 1)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
 		$newWill = calcExtraWill($gardenLevel+1, $edb['house_will']);
@@ -547,26 +547,31 @@ function construct_garden()
 		$api->UserTakeItem($userid, 1, $stickCost);
 		$db->query("UPDATE `user_estates` SET `gardenUpgrade` = 1 WHERE `ue_id` = {$estate['ue_id']}");
 		$db->query("UPDATE `users` SET `maxwill` = `maxwill` + {$newWill} WHERE `userid` = {$userid}");
-		$api->SystemLogsAdd($userid, "estate", "Constructed Garden at Estate ID: {$estate['ue_id']}. ({$waterCost} Water Buckets, {$stoneCost} Heavy Rocks, {$stickCost} Sharpened Sticks.)");
-		alert("success","Success!","You have traded " . number_format($waterCost) . " Bucket(s) of Water, " . number_format($stoneCost) . " Heavy Rock(s), and " . number_format($stickCost) . " Sharpened Stick(s) to construct your garden.", true, 'estate_management.php');
+		$api->SystemLogsAdd($userid, "estate", "Constructed Garden at Estate ID: {$estate['ue_id']}. (" . shortNumberParse($waterCost) . " Buckets of Water, " . shortNumberParse($stoneCost) . " Heavy Rocks, and " . shortNumberParse($stickCost) . " Sharpened Sticks)");
+		alert("success","Success!","You have traded " . shortNumberParse($waterCost) . " Buckets of Water, " . shortNumberParse($stoneCost) . " Heavy Rocks, and " . shortNumberParse($stickCost) . " Sharpened Sticks to construct your garden.", true, 'estate_management.php');
 	}
 	else
 	{
-		echo "Are you sure you wish to construct a garden? You need " . number_format($waterCost) . " Bucket(s) of Water, 
-		" . number_format($stoneCost) . " Heavy Rock(s), and " . number_format($stickCost) . " Sharpened Stick(s). You will 
-		gain an extra 10% maxium will per garden level. Each garden level will increase your estate's sell value by roughly 6%.
-		<hr />
-		<form method='post'>
-		<input type='hidden' name='construct' value='yes'>
-			<div class='row'>
-				<div class='col-6'>
-					<input type='submit' class='btn btn-block btn-success' value='Construct Garden'>
-				</div>
-				<div class='col-6'>
-					<a href='?action=propertyList' class='btn btn-danger btn-block'>Go Back</a>
-				</div>
-			</div>
-		</form>";
+	    echo "<div class='card'>
+                <div class='card-header'>
+                    Zen Garden
+                </div>
+                <div class='card-body'>
+                    You must construct a Zen Garden before you gain extra will. Each upgrade increases your Maximum Will by 10%. Your estate's value will appreciate by 7.5%.<br />
+                    To initially construct the zen garden, you will need " . shortNumberParse($waterCost) . " Buckets of Water " . shortNumberParse($stoneCost) . " Heavy Rocks, and " . shortNumberParse($stickCost) . " Sharpened Sticks.
+                    <form method='post'>
+            		<input type='hidden' name='construct' value='yes'>
+            			<div class='row'>
+            				<div class='col-12 col-sm-6'>
+            					<input type='submit' class='btn btn-block btn-success' value='Construct Garden'>
+            				</div>
+            				<div class='col-12 col-sm-6'>
+            					<a href='estate_management.php' class='btn btn-danger btn-block'>Go Back</a>
+            				</div>
+            			</div>
+            		</form>
+                </div>
+            </div>";
 	}
 }
 
@@ -577,6 +582,8 @@ function upgrade_garden()
 	$waterCost = calcWaterCosts($gardenLevel, $edb['house_will']);
 	$stoneCost = calcStoneCosts($gardenLevel, $edb['house_will']);
 	$stickCost = calcStickCosts($gardenLevel, $edb['house_will']);
+	
+	$newWill = calcExtraWill($gardenLevel+1, $edb['house_will']);
 	if ($gardenLevel >= $edb['upgradeLevel'])
 	{
 		alert('danger',"Uh Oh!","You cannot upgrade your garden anymore at this estate.", true, 'estate_management.php');
@@ -589,7 +596,7 @@ function upgrade_garden()
 	}
 	if ($estate['estate'] <= 1)
 	{
-		alert('danger',"Uh Oh!","You must purchase an estate before you can construct a garden.", true, 'estate_management.php');
+		alert('danger',"Uh Oh!","You must purchase an estate before you can construct a zen garden.", true, 'estate_management.php');
 		die($h->endpage());
 	}
 	if (countEstateTotalUpgrades($estate['ue_id']) >= $edb['upgradeLevel'])
@@ -601,46 +608,50 @@ function upgrade_garden()
 	{
 		if (!$api->UserHasItem($userid, 296, $waterCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($waterCost) . " Bucket(s) of Water to upgrade your garden at this estate.", true, 'estate_management.php');
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($waterCost) . " Buckets of Water to upgrade your zen garden at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 296)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
 		if (!$api->UserHasItem($userid, 2, $stoneCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($stoneCost) . " Heavy Rock(s) to upgrade your garden at this estate.", true, 'estate_management.php');
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($stoneCost) . " Heavy Rocks to upgrade your zen garden at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 2)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
 		if (!$api->UserHasItem($userid, 1, $stickCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($stickCost) . " Sharpened Stick(s) to upgrade your garden at this estate.", true, 'estate_management.php');
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($stickCost) . " Sharpened Sticks to upgrade your zen garden at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 1)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
-		$newWill = calcExtraWill($gardenLevel+1, $edb['house_will']);
 		consumeBucket($userid, 296, $waterCost);
 		$api->UserTakeItem($userid, 2, $stoneCost);
 		$api->UserTakeItem($userid, 1, $stickCost);
 		$db->query("UPDATE `users` SET `maxwill` = `maxwill` + {$newWill} WHERE `userid` = {$userid}");
 		$db->query("UPDATE `user_estates` SET `gardenUpgrade` = `gardenUpgrade` + 1 WHERE `ue_id` = {$estate['ue_id']}");
-		$api->SystemLogsAdd($userid, "estate", "Upgraded garden at Estate ID: {$estate['ue_id']} to level " . ($gardenLevel + 1) . ". ({$waterCost} Water Buckets, {$stoneCost} Heavy Rocks, {$stickCost} Sharpened Sticks.)");
-		alert("success","Success!","You have traded " . number_format($waterCost) . " Bucket(s) of Water, " . number_format($stoneCost) . " Heavy Rock(s), and " . number_format($stickCost) . " Sharpened Stick(s) to upgrade your garden to level " . number_format($gardenLevel+1) . ".", true, 'estate_management.php');
+		$api->SystemLogsAdd($userid, "estate", "Upgraded garden at Estate ID: {$estate['ue_id']} to level " . ($gardenLevel + 1) . ". (" . shortNumberParse($waterCost) . " Buckets of Water, " . shortNumberParse($stoneCost) . " Heavy Rocks, and " . shortNumberParse($stickCost) . " Sharpened Sticks)");
+		alert("success","Success!","You have traded " . shortNumberParse($waterCost) . " Buckets of Water, " . shortNumberParse($stoneCost) . " Heavy Rocks, and " . shortNumberParse($stickCost) . " Sharpened Sticks to upgrade your garden to level " . shortNumberParse($gardenLevel+1) . ".", true, 'estate_management.php');
 	}
 	else
 	{
-		echo "Are you sure you wish to upgrade your garden? You need " . number_format($waterCost) . " Bucket(s) of Water, 
-		" . number_format($stoneCost) . " Heavy Rock(s), and " . number_format($stickCost) . " Sharpened Stick(s). You will 
-		gain an extra 10% maxium will per garden level. Each garden level will increase your estate's sell value by roughly 6%.<br />
-		<b>Your garden is level {$gardenLevel}.</b>
-		<hr />
-		<form method='post'>
-		<input type='hidden' name='construct' value='yes'>
-			<div class='row'>
-				<div class='col-6'>
-					<input type='submit' class='btn btn-block btn-success' value='Upgrade Garden'>
-				</div>
-				<div class='col-6'>
-					<a href='?action=propertyList' class='btn btn-danger btn-block'>Go Back</a>
-				</div>
-			</div>
-		</form>";
+		echo "<div class='card'>
+                <div class='card-header'>
+                    Zen Garden
+                </div>
+                <div class='card-body'>
+                    Your Zen Garden is level {$gardenLevel} and can be upgraded further to gain additional maximum will. Each upgrade increases your Maximum Will by 10%. Your estate's value will appreciate by 7.5%.<br />
+                    For the next upgrade, you will need " . shortNumberParse($waterCost) . " Buckets of Water " . shortNumberParse($stoneCost) . " Heavy Rocks, and " . shortNumberParse($stickCost) . " Sharpened Sticks.<br />
+                    Your new Maximum Will (after upgrade) will be " . shortNumberParse($newWill) . ".
+                    <form method='post'>
+            		<input type='hidden' name='construct' value='yes'>
+            			<div class='row'>
+            				<div class='col-6'>
+            					<input type='submit' class='btn btn-block btn-success' value='Upgrade Garden'>
+            				</div>
+            				<div class='col-6'>
+            					<a href='estate_management.php' class='btn btn-danger btn-block'>Go Back</a>
+            				</div>
+            			</div>
+            		</form>
+                </div>
+            </div>";
 	}
 }
 
@@ -668,31 +679,36 @@ function construct_vault()
 	{
 		if (!$api->UserHasItem($userid, 23, $ironCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($ironCost) . " Copper Flakes to construct a vault at this estate.", true, 'estate_management.php');
+		    alert('danger',"Uh Oh!","You need " . shortNumberParse($ironCost) . " Copper Flakes to construct a vault at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 23)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
 		$api->UserTakeItem($userid, 23, $ironCost);
 		$db->query("UPDATE `user_estates` SET `vaultUpgrade` = 1 WHERE `ue_id` = {$estate['ue_id']}");
-		$api->SystemLogsAdd($userid, "estate", "Constructed vault at Estate ID: {$estate['ue_id']}. ({$ironCost} Copper Flakes.)");
-		alert("success","Success!","You have traded " . number_format($ironCost) . " Copper Flakes to construct your vault.", true, 'estate_management.php');
+		$api->SystemLogsAdd($userid, "estate", "Constructed vault at Estate ID: {$estate['ue_id']}. (" . shortNumberParse($ironCost) . " Copper Flakes.)");
+		alert("success","Success!","You have traded " . shortNumberParse($ironCost) . " Copper Flakes to construct your vault.", true, 'estate_management.php');
 	}
 	else
 	{
-		echo "Are you sure you wish to construct a vault? You need " . number_format($ironCost) . " Copper Flakes. You will gain 
-		roughly 18% vault capacity each upgrade, relative to the estate's purchase value. Each vault level will increase
-		your estate's sell value by roughly 6%.
-		<hr />
-		<form method='post'>
-		<input type='hidden' name='construct' value='yes'>
-			<div class='row'>
-				<div class='col-6'>
-					<input type='submit' class='btn btn-block btn-success' value='Construct Vault'>
-				</div>
-				<div class='col-6'>
-					<a href='?action=propertyList' class='btn btn-danger btn-block'>Go Back</a>
-				</div>
-			</div>
-		</form>";
+	    echo "<div class='card'>
+                <div class='card-header'>
+                    Private Vault
+                </div>
+                <div class='card-body'>
+                    You must construct a Private Vault before you can store Copper Coins on the premises. Each upgrade increases the maximum you may store by 18%, relative to the estate's purchase value. Your estate's value will appreciate 6%<br />
+                    To initially construct the private vault, you will need " . shortNumberParse($ironCost) . " Copper Flakes.
+                    <form method='post'>
+            		<input type='hidden' name='construct' value='yes'>
+            			<div class='row'>
+            				<div class='col-12 col-sm-6'>
+            					<input type='submit' class='btn btn-block btn-success' value='Construct Vault'>
+            				</div>
+            				<div class='col-12 col-sm-6'>
+            					<a href='estate_management.php' class='btn btn-danger btn-block'>Go Back</a>
+            				</div>
+            			</div>
+            		</form>
+                </div>
+            </div>";
 	}
 }
 
@@ -725,32 +741,38 @@ function upgrade_vault()
 	{
 		if (!$api->UserHasItem($userid, 23, $ironCost))
 		{
-			alert('danger',"Uh Oh!","You need " . number_format($ironCost) . " Copper Flakes to upgrade your vault at this estate.", true, 'estate_management.php');
+			alert('danger',"Uh Oh!","You need " . shortNumberParse($ironCost) . " Copper Flakes to upgrade your vault at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 23)) . ".", true, 'estate_management.php');
 			die($h->endpage());
 		}
 		$api->UserTakeItem($userid, 23, $ironCost);
-		$db->query("UPDATE `user_estates` SET `sleepUpgrade` = `sleepUpgrade` + 1 WHERE `ue_id` = {$estate['ue_id']}");
-		$api->SystemLogsAdd($userid, "estate", "Upgraded vault at Estate ID: {$estate['ue_id']} to level " . ($gardenLevel + 1) . ". ({$ironCost} Copper Flakes.)");
-		alert("success","Success!","You have traded " . number_format($ironCost) . " Copper Flakes to upgrade your vault.", true, 'estate_management.php');
+		$db->query("UPDATE `user_estates` SET `vaultUpgrade` = `vaultUpgrade` + 1 WHERE `ue_id` = {$estate['ue_id']}");
+		$api->SystemLogsAdd($userid, "estate", "Upgraded vault at Estate ID: {$estate['ue_id']} to level " . ($gardenLevel + 1) . ". (" . shortNumberParse($ironCost) . " Copper Flakes.)");
+		alert("success","Success!","You have traded " . shortNumberParse($ironCost) . " Copper Flakes to upgrade your vault.", true, 'estate_management.php');
 	}
 	else
 	{
-		echo "Are you sure you wish to upgrade your vault? You need " . number_format($ironCost) . " Copper Flakes. You will gain 
-		roughly 18% vault capacity each upgrade, relative to the estate's purchase value. Each vault level will increase
-		your estate's sell value by roughly 6%<br />
-		<b>Your vault is level {$gardenLevel}. Maximum Store: " . number_format(calcVaultCapacity($gardenLevel, $edb['house_price'])) . " Copper Coins.</b>
-		<hr />
-		<form method='post'>
-		<input type='hidden' name='construct' value='yes'>
-			<div class='row'>
-				<div class='col-6'>
-					<input type='submit' class='btn btn-block btn-success' value='Upgrade Vault'>
-				</div>
-				<div class='col-6'>
-					<a href='?action=propertyList' class='btn btn-danger btn-block'>Go Back</a>
-				</div>
-			</div>
-		</form>";
+		echo "<div class='card'>
+                <div class='card-header'>
+                    Private Vault
+                </div>
+                <div class='card-body'>
+                    Your Private Vault is level {$gardenLevel} and may be further upgraded to store even more Copper Coins on the premises. <br />
+                    To upgrade your personal vault further, you will need " . shortNumberParse($ironCost) . " Copper Flakes. <br />
+                    Each upgrade increases the maximum you may store by 18%, relative to the estate's purchase value. Your estate's value will appreciate 7%.<br />
+                    You can currently store " . shortNumberParse(calcVaultCapacity($gardenLevel, $edb['house_price'])) . " Copper Coins in your Personal Vault. After upgrading, you will be able to store a total of " . shortNumberParse(calcVaultCapacity($gardenLevel+1, $edb['house_price'])) . " Copper Coins.
+                    <form method='post'>
+            		<input type='hidden' name='construct' value='yes'>
+            			<div class='row'>
+            				<div class='col-12 col-sm-6'>
+            					<input type='submit' class='btn btn-block btn-success' value='Upgrade Vault'>
+            				</div>
+            				<div class='col-12 col-sm-6'>
+            					<a href='estate_management.php' class='btn btn-danger btn-block'>Go Back</a>
+            				</div>
+            			</div>
+            		</form>
+                </div>
+            </div>";
 	}
 }
 
@@ -779,37 +801,44 @@ function construct_sleep()
     {
         if (!$api->UserHasItem($userid, 1, $waterCost))
         {
-            alert('danger',"Uh Oh!","You need " . number_format($waterCost) . " Sharpened Sticks to construct a garden at this estate.", true, 'estate_management.php');
+            alert('danger',"Uh Oh!","You need " . shortNumberParse($waterCost) . " Sharpened Sticks to construct the sleeping quarters at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 1)) . ".", true, 'estate_management.php');
             die($h->endpage());
         }
         if (!$api->UserHasItem($userid, 23, $stoneCost))
         {
-            alert('danger',"Uh Oh!","You need " . number_format($stoneCost) . " Copper Flakes to construct a garden at this estate.", true, 'estate_management.php');
+            alert('danger',"Uh Oh!","You need " . shortNumberParse($stoneCost) . " Copper Flakes to construct the sleeping quarters at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 23)) . ".", true, 'estate_management.php');
             die($h->endpage());
         }
         $api->UserTakeItem($userid, 1, $waterCost);
         $api->UserTakeItem($userid, 23, $stoneCost);
         $db->query("UPDATE `user_estates` SET `sleepUpgrade` = 1 WHERE `ue_id` = {$estate['ue_id']}");
-        $api->SystemLogsAdd($userid, "estate", "Constructed sleeping quarters at Estate ID: {$estate['ue_id']}. ({$waterCost} Sharpened Sticks, {$stoneCost} Copper Flakes.)");
-        alert("success","Success!","You have traded " . number_format($waterCost) . " Sharpened Sticks and " . number_format($stoneCost) . "Copper Flakes to construct your sleeping quarters.", true, 'estate_management.php');
+        $api->SystemLogsAdd($userid, "estate", "Constructed sleeping quarters at Estate ID: {$estate['ue_id']}. (" . shortNumberParse($waterCost) . " Sharpened Sticks and " . shortNumberParse($stoneCost) . "Copper Flakes)");
+        alert("success","Success!","You have traded " . shortNumberParse($waterCost) . " Sharpened Sticks and " . shortNumberParse($stoneCost) . "Copper Flakes to construct your sleeping quarters.", true, 'estate_management.php');
     }
     else
     {
-        echo "Are you sure you wish to construct your sleeping quarters? You need " . number_format($waterCost) . " Sharpened Sticks and 
-        " . number_format($stoneCost) . " Copper Flakes. Your sleeping quarters will start with an effiency of 
-        " . calcSleepEfficiency(1, $edb['house_will']) . " / Minute.
-		<hr />
-		<form method='post'>
-		<input type='hidden' name='construct' value='yes'>
-			<div class='row'>
-				<div class='col-6'>
-					<input type='submit' class='btn btn-block btn-success' value='Construct Quarters'>
-				</div>
-				<div class='col-6'>
-					<a href='?action=propertyList' class='btn btn-danger btn-block'>Go Back</a>
-				</div>
-			</div>
-		</form>";
+        echo "<div class='card'>
+                <div class='card-header'>
+                    Sleeping Quarters
+                </div>
+                <div class='card-body'>
+                    Sleeping Quarters allow you to rest and quickly regenerate your regnerative stats. (Energy, will, hp, etc.)<br />
+                    Once constructed, your sleeping quarters will have an efficiency of " . calcSleepEfficiency(1, $edb['house_will']) . "/minute.
+                    If you decide to rest, you will be unable to access the game for the duration you are resting. Your stats will regenerate once per minute.<br />
+                    To initially construct your sleeping quarters, you will need " . shortNumberParse($waterCost) . " Sharpened Sticks and " . shortNumberParse($stoneCost) . " Copper Flakes.
+                    <form method='post'>
+            		<input type='hidden' name='construct' value='yes'>
+            			<div class='row'>
+            				<div class='col-12 col-sm-6'>
+            					<input type='submit' class='btn btn-block btn-success' value='Construct Quarters'>
+            				</div>
+            				<div class='col-12 col-sm-6'>
+            					<a href='estate_management.php' class='btn btn-danger btn-block'>Go Back</a>
+            				</div>
+            			</div>
+            		</form>
+                </div>
+            </div>";
     }
 }
 
@@ -843,38 +872,43 @@ function upgrade_sleep()
     {
         if (!$api->UserHasItem($userid, 1, $waterCost))
         {
-            alert('danger',"Uh Oh!","You need " . number_format($waterCost) . " Sharpened Sticks to upgrade your sleeping quarters at this estate.", true, 'estate_management.php');
+            alert('danger',"Uh Oh!","You need " . shortNumberParse($waterCost) . " Sharpened Sticks to upgrade your sleeping quarters at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 1)) . ".", true, 'estate_management.php');
             die($h->endpage());
         }
         if (!$api->UserHasItem($userid, 23, $stoneCost))
         {
-            alert('danger',"Uh Oh!","You need " . number_format($stoneCost) . " Copper Flakes to upgrade your sleeping quarters at this estate.", true, 'estate_management.php');
+            alert('danger',"Uh Oh!","You need " . shortNumberParse($stoneCost) . " Copper Flakes to upgrade your sleeping quarters at this estate. You only have " . shortNumberParse($api->UserCountItem($userid, 23)) . ".", true, 'estate_management.php');
             die($h->endpage());
         }
         $api->UserTakeItem($userid, 1, $waterCost);
         $api->UserTakeItem($userid, 23, $stoneCost);
         $db->query("UPDATE `user_estates` SET `sleepUpgrade` = `sleepUpgrade` + 1 WHERE `ue_id` = {$estate['ue_id']}");
-        $api->SystemLogsAdd($userid, "estate", "Upgraded sleeping quarters at Estate ID: {$estate['ue_id']} to level " . ($gardenLevel + 1) . ". ({$waterCost} Sharpened Sticks, {$stoneCost} Copper Flakes.)");
-        alert("success","Success!","You have traded " . number_format($waterCost) . " Sharpened Sticks and " . number_format($stoneCost) . " Copper Flakes to upgrade your sleeping quarters to level " . number_format($gardenLevel+1) . ".", true, 'estate_management.php');
+        $api->SystemLogsAdd($userid, "estate", "Upgraded sleeping quarters at Estate ID: {$estate['ue_id']} to level " . ($gardenLevel + 1) . ". (" . shortNumberParse($waterCost) . " Sharpened Sticks and " . shortNumberParse($stoneCost) . " Copper Flakes)");
+        alert("success","Success!","You have traded " . shortNumberParse($waterCost) . " Sharpened Sticks and " . shortNumberParse($stoneCost) . " Copper Flakes to upgrade your sleeping quarters to level " . number_format($gardenLevel+1) . ".", true, 'estate_management.php');
     }
     else
     {
-        echo "Are you sure you wish to upgrade your sleeping quarters? You need " . number_format($waterCost) . " Sharpened Sticks and 
-        " . number_format($stoneCost) . " Copper Flakes. Your sleeping quarters will have an effiency of 
-        " . calcSleepEfficiency(($gardenLevel+1), $edb['house_will']) . " / Minute once upgraded.<br />
-		<b>Your sleeping quarters is level {$gardenLevel}.</b>
-		<hr />
-		<form method='post'>
-		<input type='hidden' name='construct' value='yes'>
-			<div class='row'>
-				<div class='col-6'>
-					<input type='submit' class='btn btn-block btn-success' value='Upgrade Quarters'>
-				</div>
-				<div class='col-6'>
-					<a href='?action=propertyList' class='btn btn-danger btn-block'>Go Back</a>
-				</div>
-			</div>
-		</form>";
+        echo "<div class='card'>
+                <div class='card-header'>
+                    Sleeping Quarters
+                </div>
+                <div class='card-body'>
+                    Further upgrades to your sleeping quarters will improve the efficiency resting.
+                    To upgrade the sleeping quarters, you will need " . shortNumberParse($waterCost) . " Sharpened Sticks and " . shortNumberParse($stoneCost) . " Copper Flakes.<br />
+                    Your sleeping quarters will have an efficiency of " . calcSleepEfficiency(($gardenLevel+1), $edb['house_will']) . "/minute once upgraded.
+                    <form method='post'>
+            		<input type='hidden' name='construct' value='yes'>
+            			<div class='row'>
+            				<div class='col-12 col-sm-6'>
+            					<input type='submit' class='btn btn-block btn-success' value='Upgrade Quarters'>
+            				</div>
+            				<div class='col-12 col-sm-6'>
+            					<a href='estate_management.php' class='btn btn-danger btn-block'>Go Back</a>
+            				</div>
+            			</div>
+            		</form>
+                </div>
+            </div>";
     }
 }
 
@@ -901,7 +935,7 @@ function doSleep()
     else
     {
         echo "Are you sure you wish to sleep? Your sleeping quarters has an effiency of " . calcSleepEfficiency(($gardenLevel), $edb['house_will']) . "
-         / Minute. You will not be able to do most actions until you wake up. You will sleep for 8 hours, however, you may make yourself up at any time.<br />
+        /minute. You will not be able to do most actions until you wake up. You will sleep for 8 hours, however, you may make yourself up at any time.<br />
         Being attacked while sleeping opens the possiblity to property damage or losses.
 		<hr />
 		<form method='post'>
