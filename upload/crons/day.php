@@ -67,7 +67,6 @@ $ur=$db->fetch_single($uq);
 item_add($ur,154,1);*/
 runMarketTick(1);   //low risk market
 runMarketTick(2);   //low risk market
-backupDatabase();
 purgeOldLogs();
 
 $month = date('n');
