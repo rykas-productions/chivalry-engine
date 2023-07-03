@@ -220,10 +220,10 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
     $json = json_decode(get_cached_file($url, returnCacheDir() . "update_check.json"), true);
     if (is_null($json))
         return "Update checker failed.";
-        if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
-            return "Chivalry Engine is up to date.";
-            else
-                return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
+    if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
+        return "Chivalry Engine is up to date.";
+    else
+        return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
 
 function getVPSData()
