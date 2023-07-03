@@ -429,7 +429,7 @@ function returnMaxInterest($user)
  * @param string    $defaultValue Default value if player doesn't have preference set.
  * @return mixed    Preference value
  */
-function getCurrentUerPref($prefName, $defaultValue)
+function getCurrentUserPref($prefName, $defaultValue)
 {
 	global $userid;
 	return getUserPref($userid, $prefName, $defaultValue);
