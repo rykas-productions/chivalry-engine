@@ -1105,3 +1105,27 @@ function npcboss_dropdown($ddname = "bot", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+
+function timezone_dropdown($ddname = "timezone", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $timezones = DateTimeZone::listIdentifiers();
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    foreach ($timezones as $tz)
+    {
+        $ret .= "\n<option value='{$tz}'";
+        if (($selected == $tz) || ($first == 0))
+        {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$tz}</option>";
+    }
+    $ret .= "\n</select>";
+    return $ret;
+}
