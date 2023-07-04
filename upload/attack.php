@@ -91,9 +91,9 @@ function landingpage()
     $levelClass = ($ir['level'] >= $odata['level']) ? "text-success" : "text-danger";
     if ($_GET['user'] == 20)
     {
-        if ($votecount != 5)
+        if ($votecount != 3)
         {
-            $attackable = "Vote 5 times.";
+            $attackable = "Vote 3 times.";
             $attBool = false;
         }
         elseif ($ir['att_dg'] == 1)

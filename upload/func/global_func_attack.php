@@ -132,7 +132,7 @@ function preFightChecks()
         alert("danger", "Uh Oh!", "You cannot start another attack after you ran from the last one.", true, "{$ref}.php");
         die($h->endpage());
     }
-	else if ($_GET['user'] == 20 && $votecount != 5)
+	else if ($_GET['user'] == 20 && $votecount != 3)
 	{
 		alert("danger", "Uh Oh!", "You cannot attack Your Doppleganger until you've voted completely for the day.", true, "{$ref}.php");
         die($h->endpage());
