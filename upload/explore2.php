@@ -258,7 +258,6 @@ echo "
 				    <a href='dungeon.php'><i class='game-icon game-icon-cage'></i> Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
 					<a href='infirmary.php'><i class='game-icon game-icon-hospital-cross'></i> Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
 					<a href='forums.php'><i class='far fa-comments'></i> CID Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a><br />
-					<a href='/chat/?userName={$ir['username']}'><i class='fas fa-comment-dots'></i> CID Chat</a><br />
 					<a href='newspaper.php'><i class='game-icon game-icon-scroll-unfurled'></i> CID Newspaper <span class='badge badge-pill badge-primary'>{$paperads}</span></a><br />
 					<a href='polling.php'><i class='game-icon game-icon-vote'></i> Polling Center</a><br />
 					<a href='halloffame.php'><i class='game-icon game-icon-crown'></i> Hall of Fame</a><br />

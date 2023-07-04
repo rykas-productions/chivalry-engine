@@ -382,9 +382,6 @@ echo"
 					<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-12 col-xxxl-6'>
 						<a href='forums.php'>" . loadImageAsset("explore/forums.svg") . " Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a>
 					</div>
-					<div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-12 col-xxxl-6'>
-						<a href='/chat/?userName={$ir['username']}'>" . loadImageAsset("explore/forum.svg") . " CID Chat</a>
-					</div>
 					<div class='col-12 col-sm-6 col-md-4 col-lg-12 col-xxxl-6'>
 						<a href='newspaper.php'>" . loadImageAsset("explore/cid_newspaper.svg") . " Newspaper <span class='badge badge-pill badge-primary'>{$paperads}</span></a>
 					</div>
