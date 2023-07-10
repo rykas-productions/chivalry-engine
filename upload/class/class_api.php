@@ -18,7 +18,7 @@ class api
     */
     function SystemReturnAPIVersion()
     {
-        return "17.10.4";    //Last Updated 10/13/2017
+        return "23.7.1";    //Last Updated 7/9/2023
     }
 
     /*
@@ -35,6 +35,9 @@ class api
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
+		$acceptableType = array("primary","secondary");
+        if (!in_array($type, $acceptableType))
+            trigger_error("Unacceptable currency type '{$type}'.");
         $userexist = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
         if ($userexist) {
             if ($type == 'primary' || $type == 'secondary') {
@@ -98,6 +101,9 @@ class api
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
+		$acceptableType = array("primary","secondary");
+        if (!in_array($type, $acceptableType))
+            trigger_error("Unacceptable currency type '{$type}'.");
         $userexist = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
         if ($userexist) {
             if ($type == 'primary' || $type == 'secondary') {
@@ -121,6 +127,9 @@ class api
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
+		$acceptableType = array("primary","secondary");
+        if (!in_array($type, $acceptableType))
+            trigger_error("Unacceptable currency type '{$type}'.");
         $userexist = $db->fetch_single($db->query("SELECT `username` FROM `users` WHERE `userid` = {$user}"));
         if ($userexist) {
             if ($type == 'primary' || $type == 'secondary') {
@@ -144,6 +153,9 @@ class api
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $slot = $db->escape(stripslashes(strtolower($slot)));
+		$acceptableType = array("primary","secondary","armor");
+        if (!in_array($slot, $acceptableType))
+            trigger_error("Unacceptable equipment slot '{$slot}'.");
         if ($slot == 'primary' || $slot == 'secondary' || $slot == 'armor') {
             //Any item equipped
             if ($itemid == -1) {
@@ -199,6 +211,9 @@ class api
     function UserStatusSet($user, $place, $time, $reason)
     {
         global $db;
+		$acceptableType = array("infirmary","dungeon");
+        if (!in_array($place, $acceptableType))
+            trigger_error("Unacceptable place type '{$place}'.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $reason = $db->escape(stripslashes($reason));
         $place = $db->escape(stripslashes(strtolower($place)));
