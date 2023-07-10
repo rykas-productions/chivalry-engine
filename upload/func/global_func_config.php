@@ -58,3 +58,15 @@ function getConfigForPHP(string $moduleName)
 {
     return unformatConfig(readConfigFromDB($moduleName));
 }
+
+function updateGameSetting($settingName, $settingValue)
+{
+    global $db;
+    $settingName = $db->escape($settingName);
+    $settingValue = $db->escape($settingValue);
+    $q = $db->query("SELECT `setting_id` FROM `settings` WHERE `setting_name` = '{$settingName}'");
+    if ($db->num_rows($q) == 0)
+        $db->query("INSERT INTO `settings` (`setting_name`, `setting_value`) VALUES ('{$settingName}', '{$settingValue}')");
+    else
+        $db->query("UPDATE `settings` SET `setting_value` = '{$settingValue}' WHERE `setting_name` = '{$settingName}'");
+}
