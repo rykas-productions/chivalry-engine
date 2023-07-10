@@ -121,6 +121,9 @@ class api
     function UserTakeCurrency($user, $type, $quantity)
     {
         global $db;
+        $acceptableType = array("primary","secondary");
+        if (!in_array($type, $acceptableType))
+            trigger_error("Unacceptable currency type '{$type}'.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $quantity = (isset($quantity) && is_numeric($quantity)) ? abs(intval($quantity)) : 0;
