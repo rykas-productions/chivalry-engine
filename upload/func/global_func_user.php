@@ -787,7 +787,7 @@ function deleteUser($user)
 
 /**
  * @param string $name
- * @param atring $email
+ * @param string $email
  * @param string $pw
  * @param string $gender
  * @param string $class
@@ -1513,4 +1513,22 @@ function generateMerchantData($userid)
     else
         $db->query("UPDATE `merchant_user_data` SET `mu_stock` = '{$stockJson}', `mu_time` = '{$time}', `mu_stage` = 0 WHERE `mu_user` = {$userid}");
     return $stock;
+}
+
+function getRandomUserID()
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT `userid` FROM `users` ORDER BY RAND() LIMIT 1"));
+}
+
+function getRandomActiveUserID($time)
+{
+    global $db;
+    $cutOff = time() - $time;
+    return $db->fetch_single($db->query("SELECT `userid` FROM `users` WHERE `laston` >= '{$cutOff}' ORDER BY RAND() LIMIT 1"));
+}
+
+function getRandomDailyActiveUserID()
+{
+    return getRandomActiveUserID(86400);
 }

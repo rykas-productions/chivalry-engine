@@ -27,21 +27,11 @@ function home()
     }
     else
     {
-        echo "<table class='table table-bordered table-striped'>
-        <thead>
-            <tr>
-                <th>
-                    Bounty
-                </th>
-                <th>
-                    Payout
-                </th>
-                <th>
-                    Poster
-                </th>
-            </tr>
-        </thead>
-        <tbody>";
+        echo "<div class='card'>
+                <div class='card-header'>
+                    Active Bounty Listings
+                </div>
+                <div class='card-body'>";
         while ($r=$db->fetch_row($q))
         {
             $ud=$db->fetch_row($db->query("/*qc=on*/SELECT `username`, `vip_days`, `display_pic`, `vipcolor`, `level` FROM `users` WHERE `userid` = {$r['bh_user']}"));
@@ -58,30 +48,68 @@ function home()
                 $cd['username']='[Redacted]';
                 $cd['display_pic']='';
                 $cd['vip_color']='text-danger';
-                $cd['level']='Unknown';
+                $cd['level']=0;
             }
-            echo "<tr>
-            <td align='left'>
-                {$ud['display_pic']}<br />
-                <a href='profile.php?user={$r['bh_user']}'>{$ud['username']}</a><br />
-                Level: {$ud['level']}
-            </td>
-            <td>
-                " . number_format($r['bh_bounty']) . " Copper Coins
-            </td>
-            <td align='left'>
-                {$cd['display_pic']}<br />
-                <a href='profile.php?user={$r['bh_creator']}'>{$cd['username']}</a><br />
-                Level: {$cd['level']}
-            </td>
-            </tr>";
+            echo "<div class='row'>
+                    <div class='col-12 col-lg-4 col-xxl'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Target</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12 col-sm col-lg-12 col-xxl'>
+                                        {$ud['display_pic']}
+                                    </div>
+                                    <div class='col-12 col-sm col-lg-12 col-xxl'>
+                                        <a href='profile.php?user={$r['bh_user']}'>{$ud['username']}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-lg-4 col-xxl'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Payout</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($r['bh_bounty']) . " Copper Coins
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-lg-4 col-xxl'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Poster</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>";
+                                    if (!empty($cd['display_pic']))
+                                    {   echo"
+                                        <div class='col-12 col-sm col-lg-12 col-xxl'>
+                                            {$cd['display_pic']}
+                                        </div>";
+                                    }
+                                    echo"
+                                    <div class='col-12 col-sm col-lg-12 col-xxl'>
+                                        <a href='profile.php?user={$r['bh_creator']}'>{$cd['username']}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />";
         }
-        echo"</tbody></table>";
+        echo "</div></div>";
     }
 }
 function add_bounty()
 {
     global $db,$userid,$api,$h,$ir;
+    $minCost = 250000 + (250000 * levelMultiplier($ir['level'], $ir['reset']));
+    $maxCost = 1500000000 + (1500000000 * levelMultiplier($ir['level'], $ir['reset']));
     if (isset($_POST['user']))
     {
         $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : '';
@@ -97,27 +125,27 @@ function add_bounty()
             alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
             die($h->endpage());
         }
-        if ($_POST['payout'] < 250000)
+        if ($_POST['payout'] < $minCost)
         {
-            alert('danger',"Uh Oh!","Bounty postings must have a payout of, at least, 250,000 Copper Coins.",true);
+            alert('danger',"Uh Oh!","At your level and experience in the game, your bounties must have a minimum payout of at least " . shortNumberParse($minCost) . " Copper Coins.",true);
             die($h->endpage());
         }
-        if ($_POST['payout'] > 1500000000)
+        if ($_POST['payout'] > $maxCost)
         {
-            alert('danger',"Uh Oh!","Bounty postings must have a payout of, at most, 1.5B Copper Coins.",true);
+            alert('danger',"Uh Oh!","At your level and experience in the game, you may only post bounties that have a maximum payout of " . shortNumberParse($maxCost) . " Copper Coins.",true);
             die($h->endpage());
         }
-        $cost=$_POST['payout']+($_POST['hide']*500000);
-        $costnumber=number_format($cost);
-        $prim_format=number_format($ir['primary_currency']);
+        $cost = $_POST['payout'] + ($_POST['hide'] * calcHideCost());
+        $costnumber=shortNumberParse($cost);
+        $prim_format=shortNumberParse($ir['primary_currency']);
         if ($ir['primary_currency'] < $cost)
         {
-            alert('danger',"Uh Oh!","You do not have enough Copper Coins to create this bounty. You need " . shortNumberParse($costnumber) . ", but only have " . shortNumberParse($prim_format) . ".",true);
+            alert('danger',"Uh Oh!","You do not have enough Copper Coins to create this bounty. You need {$costnumber} Copper Coins, but only have {$prim_format} Copper Coins.",true);
             die($h->endpage());
         }
-        if ($_POST['user'] == $userid)
+        if (($_POST['user'] == $userid) && ($_POST['hide'] == 0))
         {
-            alert('danger',"Uh Oh!","You may not open a bounty on yourself!",true);
+            alert('danger',"Uh Oh!","If you're going to post a bounty on yourself, why don't you at least hide your desperation by anonymizing your hit?",true);
             die($h->endpage());
         }
         $q=$db->query("/*qc=on*/SELECT * FROM `bounty_hunter` WHERE `bh_user` = {$_POST['user']}");
@@ -132,7 +160,7 @@ function add_bounty()
             alert('danger',"Uh Oh!","You target does not exist.",true);
             die($h->endpage());
         }
-        $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` - {$cost} WHERE `userid` = {$userid}");
+        $api->UserTakeCurrency($userid, "primary", $cost);
         if ($_POST['hide'] == 0)
             $id=$userid;
         else
@@ -141,53 +169,84 @@ function add_bounty()
         $db->query("INSERT INTO `bounty_hunter` 
                     (`bh_creator`, `bh_user`, `bh_time`, `bh_bounty`) 
                     VALUES ('{$id}', '{$_POST['user']}', '{$expired}', '{$_POST['payout']}')");
-        alert('success',"Success!","Bounty has been opened successfully. {$costnumber} Copper Coins have been taken from your account.",true,'bounty.php');
+        alert('success',"Success!","You have successfully posted a {$costnumber} Bounty offer on {$api->SystemUserIDtoName($_POST['user'])}.",true,'bounty.php');
         die($h->endpage());
     }
     else
     {
 		$_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : $userid;
         $csrf=request_csrf_html('bounty_add');
-        echo "You may open a bounty on another player here. Bounties must be worth at least 250,000 Copper Coins. A 
-        player may only have one bounty opened on their-self at a time. Bounties will be removed after 3 days 
-        if the hit is not carried out. You will not receive a refund if this is the case.<br />
+        echo "
         <form method='post'>
-            <table class='table table-bordered'>
-                <tr>
-                    <th>
-                        Target
-                    </th>
-                    <td>
-                        " . user_dropdown('user', $_GET['user']) . "
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Payout
-                    </th>
-                    <td>
-                        <input type='number' min='250000' max='1500000000' name='payout' class='form-control' value='{$ir['primary_currency']}' required='1'>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        Remove identification?<br />
-                        <small>Add 500K Copper Coins</small>
-                    </th>
-                    <td align='left'>
-                        <input type='radio' name='hide' value='0' checked> Don't Remove<br />
-                        <input type='radio' name='hide' value='1'> Remove<br />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan='2'>
-                        <input type='submit' class='btn btn-success' value='Submit Bounty'>
-                    </td>
-                </tr>
-            </table>
-            {$csrf}
+        <div class='card'>
+            <div class='card-header'>
+                Create Bounty
+            </div>
+            <div class='card-body'>
+                <div class='row'><div class='col-12'>";
+                    alert('info',"","You may post a bounty on another player here. At your experience, your minimum bounty posting is " . shortNumberParse($minCost) . " Copper Coins
+                         and your maximum is " . shortNumberParse($maxCost) . " Copper Coins.
+                        You may hide your information on thie hit for an additional " . shortNumberParse(calcHideCost()) . " Copper Coins. <b>Hits expire and are removed 
+                        after 3 days of posting. If this happens to yours, you will not be refunded.</b>",false);
+                echo "</div></div>
+                <div class='row'>
+                    <div class='col-12 col-lg'>
+                        <div class='row'>
+                            <div class='col-12 col-lg-4'>
+                                <b><small>Target</small></b>
+                            </div>
+                            <div class='col-12'>
+                                " . user_dropdown('user', $_GET['user']) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-lg'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <b><small>Payout</small></b>
+                            </div>
+                            <div class='col-12'>
+                                <input type='number' min='{$minCost}' max='{$maxCost}' name='payout' class='form-control' value='{$minCost}' required='1'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-lg'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <b><small>Anonymous Hit?</small></b>
+                            </div>
+                            <div class='col-12'>
+                                <select name='hide' id='class' class='form-control' type='dropdown'>
+                					<option value='0'>Non-Anonymous</option>
+                					<option value='1'>Anonymous</option>
+                				</select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-xxl'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <b><small>&nbsp;</small></b>
+                            </div>
+                            <div class='col-12'>
+                                <input type='submit' class='btn btn-success btn-block' value='Submit Bounty'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {$csrf}
         </form>";
     }
+}
+
+function calcHideCost()
+{
+    global $ir;
+    $mainCost = 500000;
+    $mainCost += ($mainCost * levelMultiplier($ir['level'], $ir['reset']));
+    return $mainCost;
 }
 include('forms/bounty_popup.php');
 $h->endpage();

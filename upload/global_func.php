@@ -223,7 +223,23 @@ function updateStats()
     
     //Delete from newspaper when needed.
     $db->query("DELETE FROM `newspaper_ads` WHERE `news_end` < {$time}");
-	$db->query("DELETE FROM `bounty_hunter` WHERE `bh_time` < {$time}");
+	updateBountyHunter();
+}
+
+function updateBountyHunter()
+{
+    global $db, $api;
+    $time = time();
+    $q = $db->query("SELECT * FROM `bounty_hunter` WHERE `bh_time` < {$time}");
+    if ($db->num_rows($q) > 0)
+    {
+        while ($r = $db->fetch_row($q))
+        {
+            addToEconomyLog("Bounty Hunter Fees", "copper", $r['bh_bounty']*-1);
+            $api->GameAddNotification($r['bh_creator'], "Your " . shortNumberParse($r['bh_bounty']) . " Copper Coins bounty on {$api->SystemUserIDtoName($r['bh_user'])} has expired.");
+            $db->query("DELETE FROM `bounty_hunter` WHERE `bh_id` = {$r['bh_id']}");
+        }
+    }
 }
 
 

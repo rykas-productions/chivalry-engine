@@ -68,38 +68,17 @@ item_add($ur,154,1);*/
 runMarketTick(1);   //low risk market
 runMarketTick(2);   //low risk market
 purgeOldLogs();
+addAutoBountyListing();
 
 $month = date('n');
 $day = date('j');
 $year = date('Y');
-
-if ($year == 2023)
-{
-	if ($month == 6)
-	{
-		if ($day >= 26 && $day <= 30)
-			$db->query("UPDATE `users` SET `hexbags` = `hexbags` + 100, `bor` = `bor` + 1000");
-	}
-}
 
 if ($month == 12)
 {
     if ($day == 1)
     {
         $api->GameAddAnnouncement("That concludes the turkey hunting season for " . date('Y') . "! The top five players who bagged the most kills are now visible on the Milestone page on explore. With that in mind, we're rolling right into Christmas season with the reintroduction of the CID Advent Calendar, Christmas Tree and Christmas Wish! See them on the explore page! Happy Holidays! :)");
-    }
-}
-
-if ($month == 4)
-{
-    if ($day == 20)
-    {
-        $api->GameAddAnnouncement("Greetings warriors! I know today isn't techincally a holiday, but it is sorta a 
-                                    holiday to some. I figured, to make up for missing Easter and St. Patties 
-                                    (life, sorry!), I'd throw in a small, unexpected event today.<br />
-                                    I know it isn't much, but logging in will give you a new badge, and a 
-                                    random amount of Copper Coins and Chivalry Tokens. I can't stress enough, I appreciate 
-                                    and thank each and everyone who logs in and plays Chivalry is Dead.");
     }
 }
 ?>

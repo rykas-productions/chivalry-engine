@@ -6,8 +6,18 @@ function addTokenMarketListing()
     $totaltokens    = $db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));
     $avgprice       = $totalcost / $totaltokens;
     $listprice      = $avgprice * (Random(90,110) / 100);   //Randomize the price of this listing between 90-110% of market price
-    $q = $db->query("SELECT * FROM `sec_market` WHERE `sec_user` = 0");
     $tokens = Random(round(75000/2), round(75000*1.5));
     $db->query("DELETE FROM `sec_market` WHERE `sec_user` = 0");
     $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`, `sec_deposit`) VALUES ('0', '{$listprice}', '{$tokens}', 'false')");
+}
+
+function addAutoBountyListing()
+{
+    global $db;
+    $db->query("DELETE FROM `bounty_hunter` WHERE `bh_creator` = 0");
+    
+    $targetPlayer = getRandomDailyActiveUserID();
+    $expired = time() + 259200;
+    $bounty = Random(250000,250000000);
+    $db->query("INSERT INTO `bounty_hunter` (`bh_creator`, `bh_user`, `bh_time`, `bh_bounty`) VALUES ('0', '{$targetPlayer}', '{$expired}', '{$bounty}')");
 }
