@@ -164,7 +164,10 @@ function add_bounty()
         if ($_POST['hide'] == 0)
             $id=$userid;
         else
+        {
             $id=0;
+            addToEconomyLog("Bounty Hunter Fees", "copper", calcHideCost());
+        }
         $expired=time()+259200;
         $db->query("INSERT INTO `bounty_hunter` 
                     (`bh_creator`, `bh_user`, `bh_time`, `bh_bounty`) 
