@@ -591,7 +591,7 @@ function returnForticationLevel($district_id)
     elseif ($q == 10)
         return "X";
     else
-        return "∅";
+        return $q;
 }
 
 /**
@@ -606,6 +606,11 @@ function countTowns()
     return countMarkets();
 }
 
+function countGuildTowns($guild_id)
+{
+    return countGuildMarkets($guild_id);
+}
+
 /**
  * Function to count all tiles considered a market, owned by the current user's guild.
  * @return int Markets owned
@@ -618,6 +623,12 @@ function countMarkets()
     return $db->fetch_single($db->query("SELECT COUNT(`district_id`) FROM `guild_districts` WHERE `district_type` = 'market' AND `district_owner` = {$ir['guild']}"));
 }
 
+function countGuildMarkets($guild_id)
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT COUNT(`district_id`) FROM `guild_districts` WHERE `district_type` = 'market' AND `district_owner` = {$guild_id}"));
+}
+
 /**
  * Counts all tiles considered an outpost, owned by the current user's guild.
  * @internal
@@ -628,6 +639,12 @@ function countOutposts()
 {
     global $db, $ir;
     return $db->fetch_single($db->query("SELECT COUNT(`district_id`) FROM `guild_districts` WHERE `district_type` = 'outpost' AND `district_owner` = {$ir['guild']}"));
+}
+
+function countGuildOutposts($guild_id)
+{
+    global $db, $ir;
+    return $db->fetch_single($db->query("SELECT COUNT(`district_id`) FROM `guild_districts` WHERE `district_type` = 'outpost' AND `district_owner` = {$guild_id}"));
 }
 
 /**

@@ -57,7 +57,7 @@ function menu()
         $appacc = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Accepting Applications</span>" : "<span class='text-danger'>Recruitment Closed.</span>";
         $indebt = ($gd['guild_primcurr'] > 0) ? "" : "<span class='text-danger'>In Debt</span>";
 		$gd['guild_pic'] = ($gd['guild_pic']) ? "<img src='" . parseImage($gd['guild_pic']) . "' class='img-fluid' style='max-width: 75px;'>" : '';
-		$cnt = number_format($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`)
+		$cnt = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`)
                     										FROM `users`
                     										WHERE `guild` = {$gd['guild_id']}")));
 		$gd['username']=parseUsername($gd['userid']);
@@ -101,7 +101,7 @@ function menu()
                         <div class='col-12'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    {$cnt} / {$gd['guild_capacity']}
+                                    {$cnt} / " . shortNumberParse($gd['guild_capacity']) . "
                                 </div>
                             </div>
                         </div>
@@ -341,7 +341,7 @@ function view()
                                         <small>Level</small>
                                     </div>
                                     <div class='col-12'>
-                                        " . number_format($gd['guild_level']) . "
+                                        " . shortNumberParse($gd['guild_level']) . "
                                     </div>
                                 </div>
                             </div>
@@ -351,7 +351,7 @@ function view()
                                         <small>Members</small>
                                     </div>
                                     <div class='col-12'>
-                                        " . number_format($memberCount) . " / " . number_format($maxMembers) . "
+                                        " . shortNumberParse($memberCount) . " / " . shortNumberParse($maxMembers) . "
                                     </div>
                                 </div>
                             </div>
@@ -454,7 +454,7 @@ function view()
                                                 <small>Guild Members</small>
                                             </div>
                                             <div class='col-12'>
-                                                " . number_format(countGuildMembers($otheralliance)) . "
+                                                " . shortNumberParse(countGuildMembers($otheralliance)) . "
                                             </div>
                                         </div>
                                     </div>
@@ -526,7 +526,7 @@ function memberlist()
 					<a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a>
 				</td>
         		<td>
-					{$r['level']}
+					" . shortNumberParse($r['level']) . "
 				</td>
 			</tr>";
     }

@@ -292,7 +292,7 @@ function summary()
 							<b>Members</b>
 						</div>
 						<div class='col'>
-							" . shortNumberParse($db->fetch_single($cnt)) . " / " . shortNumberParse($gd['guild_level'] * 5) . "
+							" . shortNumberParse($db->fetch_single($cnt)) . " / " . shortNumberParse(calculateGuildMemberCapacity($gd['guild_id'])) . "
 						</div>
 					</div>
 					<div class='row'>

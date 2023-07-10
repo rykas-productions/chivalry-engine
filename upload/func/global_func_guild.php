@@ -340,9 +340,9 @@ function guildnotificationadd($guild_id, $text)
 
 function calculateGuildMemberCapacity($guild_id)
 {
-    global $db;
+    global $db, $set;
     $guild_level = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$guild_id}"));
-    return $guild_level * 5;
+    return $guild_level * $set['GUILD_MBR_PR_LVL'];
 }
 
 function countGuildMembers($guild_id)
@@ -404,24 +404,26 @@ function calculateMaxGuildVaultCopper($guild_id)
 {
     global $set, $db;
     $guild_level = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$guild_id}"));
-    $return = ($guild_level * $set['GUILD_PRICE']) * 20;
+    $return = $guild_level * $set['GUILD_CPR_PR_LVL'];
+    $multi = 1.0;
     if (guildOwnsAsset($guild_id, "guild_upgrade_vault1"))
-    {
-        $return = $return * 1.08;
-    }
-    return $return;
+        $multi= $multi + 0.08;
+    if (countGuildTowns($guild_id) > 0)
+        $multi = $multi + (0.04 * countGuildTowns($guild_id));
+    return $return * $multi;
 }
 
 function calculateMaxGuildVaultTokens($guild_id)
 {
     global $set, $db;
     $guild_level = $db->fetch_single($db->query("SELECT `guild_level` FROM `guild` WHERE `guild_id` = {$guild_id}"));
-    $return = ($guild_level * $set['GUILD_PRICE']) / 125;
+    $return = $guild_level * $set['GUILD_TKN_PR_LVL'];
+    $multi = 1.0;
     if (guildOwnsAsset($guild_id, "guild_upgrade_vault1"))
-    {
-        $return = $return * 1.08;
-    }
-    return $return;
+        $multi= $multi + 0.08;
+    if (countGuildTowns($guild_id) > 0)
+       $multi = $multi + (0.04 * countGuildTowns($guild_id));
+    return $return * $multi;
 }
 
 function guildOwnsAsset($guild_id, $asset_name)
