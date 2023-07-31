@@ -580,25 +580,19 @@ function attackfromtile()
 		$attBuff = 1.0;
 		$defBuff = 1.0;
 		if ($r['district_type'] == 'elevated')
-		{
 			$attBuff=$attBuff + 0.25;
-		}
 		if ($r2['district_type'] == 'elevated')
-		{
 			$defBuff=$defBuff + 0.25;
-		}
 		if ($r2['district_type'] == 'lowered')
-		{
 			$attBuff=$attBuff + 0.25;
-		}
 		if ($r['district_type'] == 'lowered')
-		{
 			$defBuff=$defBuff + 0.25;
-		}
 		if ($r2['district_fortify'] > 0)
-		{
 			$defBuff = $defBuff + ($r2['district_fortify'] * $districtConfig['fortifyBuffMulti']);
-		}
+		if (guildOwnsAsset($ir['guild'], "guild_upgrade_district_trophy"))
+		    $attBuff = $attBuff + 0.05;
+	    if (guildOwnsAsset($r2['district_owner'], "guild_upgrade_district_trophy"))
+	        $defBuff = $defBuff + 0.05;
 		$results=json_decode(doAttack($warriors,$archers,$captains,$r2['district_melee'],$r2['district_range'], $r2['district_general'], $attBuff, $defBuff), true);
 		updateTileTroops($r2['district_id'],
 					$results['defense_warrior_lost']*-1,
@@ -628,17 +622,17 @@ function attackfromtile()
 		    $r2['district_range'], $results['defense_warrior_lost'], $results['defense_archer_lost'], 
 		    $r2['district_general'], $r2['district_fortify'], $results['defense_luck']);
 		
-		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers, lead by " . number_format($captains) . " Captains, to take on
-		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers and 
-		" . number_format($r2['district_general']) . " enemy generals.<br />
+		echo "You deploy " . shortNumberParse($warriors) . " Warriors and " . shortNumberParse($archers) . " Archers, lead by " . shortNumberParse($captains) . " Captains, to take on
+		" . shortNumberParse($r2['district_melee']) . " Warriors and " . shortNumberParse($r2['district_range']) . " Archers and 
+		" . shortNumberParse($r2['district_general']) . " enemy generals.<br />
 		<b>Battle-log</b><br />
 		<i>You {$status}!</i><br />
-		Friendly Warriors Killed: " . number_format($results['attack_warrior_lost']) . "<br />
-		Friendly Archers Killed: " . number_format($results['attack_archer_lost']) . "<br />
-        Friendly Captains Executed: " . number_format($results['attack_captain_lost']) . "<br />
-		Enemy Warriors Killed: " . number_format($results['defense_warrior_lost']) . "<br />
-		Enemy Archers Killed: " . number_format($results['defense_archer_lost']) . "<br />
-		Enemy Generals Executed: " . number_format($results['defense_general_lost']) . "<br />";
+		Friendly Warriors Killed: " . shortNumberParse($results['attack_warrior_lost']) . "<br />
+		Friendly Archers Killed: " . shortNumberParse($results['attack_archer_lost']) . "<br />
+        Friendly Captains Executed: " . shortNumberParse($results['attack_captain_lost']) . "<br />
+		Enemy Warriors Killed: " . shortNumberParse($results['defense_warrior_lost']) . "<br />
+		Enemy Archers Killed: " . shortNumberParse($results['defense_archer_lost']) . "<br />
+		Enemy Generals Executed: " . shortNumberParse($results['defense_general_lost']) . "<br />";
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		if ($status == 'won')
 		{
@@ -647,14 +641,14 @@ function attackfromtile()
 			setTileOwnership($r2['district_id'], $ir['guild']);
 			$api->GuildAddNotification($ir['guild'],"Your guild attacked district tile (" . resolveCoordinates($r2['district_id']) . ") and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->GuildAddNotification($r2['district_owner'],"A tile controlled by your guild (" . resolveCoordinates($r2['district_id']) . ") was attacked and lost.  View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r['district_id']) . ". Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . shortNumberParse($warriors) . " Warriors (Lost " . shortNumberParse($results['attack_warrior_lost']) . ") and " . shortNumberParse($archers) . " Archers (Lost " . shortNumberParse($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r['district_id']) . ". Enemy lost " . shortNumberParse($results['defense_warrior_lost']) . " Warriors, " . shortNumberParse($results['defense_archer_lost']) . " Archers and " . shortNumberParse($results['defense_general_lost']) . " Generals.");
 		}
 		if ($status == 'lost')
 		{
 			echo "<i>You have failed to capture this tile. Rebuild your army and try again.</i>";
 			$api->GuildAddNotification($ir['guild'],"Your guild attacked district tile (" . resolveCoordinates($r2['district_id']) . ") and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->GuildAddNotification($r2['district_owner'],"A tile controlled by your guild (" . resolveCoordinates($r2['district_id']) . ") was attacked and  and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . shortNumberParse($warriors) . " Warriors (Lost " . shortNumberParse($results['attack_warrior_lost']) . ") and " . shortNumberParse($archers) . " Archers (Lost " . shortNumberParse($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . shortNumberParse($results['defense_warrior_lost']) . " Warriors, " . shortNumberParse($results['defense_archer_lost']) . " Archers and " . shortNumberParse($results['defense_general_lost']) . " Generals.");
 		}
 	}
 	else
@@ -671,7 +665,7 @@ function attackfromtile()
                     <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Warriors (vs " . number_format($r2['district_melee']) . ")</b>
+                                <b>Warriors (vs " . shortNumberParse($r2['district_melee']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='warriors' class='form-control' value='{$r['district_melee']}' max='{$r['district_melee']}' min='0'>
@@ -681,7 +675,7 @@ function attackfromtile()
                     <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Archers (vs " . number_format($r2['district_range']) . ")</b>
+                                <b>Archers (vs " . shortNumberParse($r2['district_range']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='archers' class='form-control' value='{$r['district_range']}' max='{$r['district_range']}' min='0'>
@@ -830,17 +824,17 @@ function attackfrombarracks()
 		    $r2['district_range'], $results['defense_warrior_lost'], $results['defense_archer_lost'],
 		    $r2['district_general'], $r2['district_fortify'], $results['defense_luck']);
 		
-		echo "You deploy " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers, lead by " . number_format($captains) . " Captains, to take on 
-		" . number_format($r2['district_melee']) . " Warriors and " . number_format($r2['district_range']) . " Archers. There is 
-		" . number_format($r2['district_general']) . " enemy generals on the battlefield today.<br />
+		echo "You deploy " . shortNumberParse($warriors) . " Warriors and " . shortNumberParse($archers) . " Archers, lead by " . shortNumberParse($captains) . " Captains, to take on 
+		" . shortNumberParse($r2['district_melee']) . " Warriors and " . shortNumberParse($r2['district_range']) . " Archers. There is 
+		" . shortNumberParse($r2['district_general']) . " enemy generals on the battlefield today.<br />
 		<b>Battle-log</b><br />
 		<i>You {$status}!</i><br />
-		Friendly Warriors Killed: " . number_format($results['attack_warrior_lost']) . "<br />
-		Friendly Archers Killed: " . number_format($results['attack_archer_lost']) . "<br />
-        Friendly Captains Executed: " . number_format($results['attack_captain_lost']) . "<br />
-		Enemy Warriors Killed: " . number_format($results['defense_warrior_lost']) . "<br />
-		Enemy Archers Killed: " . number_format($results['defense_archer_lost']) . "<br />
-		Enemy Generals Executed: " . number_format($results['defense_general_lost']) . "<br />";
+		Friendly Warriors Killed: " . shortNumberParse($results['attack_warrior_lost']) . "<br />
+		Friendly Archers Killed: " . shortNumberParse($results['attack_archer_lost']) . "<br />
+        Friendly Captains Executed: " . shortNumberParse($results['attack_captain_lost']) . "<br />
+		Enemy Warriors Killed: " . shortNumberParse($results['defense_warrior_lost']) . "<br />
+		Enemy Archers Killed: " . shortNumberParse($results['defense_archer_lost']) . "<br />
+		Enemy Generals Executed: " . shortNumberParse($results['defense_general_lost']) . "<br />";
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		if ($status == 'won')
 		{
@@ -849,14 +843,14 @@ function attackfrombarracks()
 			setTileOwnership($r2['district_id'], $ir['guild']);
 			$api->GuildAddNotification($ir['guild'],"Your guild attacked a tile (" . resolveCoordinates($r2['district_id']) . ") and emerged victorious! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->GuildAddNotification($r2['district_owner'],"Your guild's tile (" . resolveCoordinates($r2['district_id']) . ") attacked and lost. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . ". Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->SystemLogsAdd($userid,"district","Conquered tile  " . resolveCoordinates($r2['district_id']) . " using " . shortNumberParse($warriors) . " Warriors (Lost " . shortNumberParse($results['attack_warrior_lost']) . ") and " . shortNumberParse($archers) . " Archers (Lost " . shortNumberParse($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . ". Enemy lost " . shortNumberParse($results['defense_warrior_lost']) . " Warriors, " . shortNumberParse($results['defense_archer_lost']) . " Archers and " . shortNumberParse($results['defense_general_lost']) . " Generals.");
 		}
 		if ($status == 'lost')
 		{
 			echo "<i>You have failed to capture this tile. Rebuild your army and try again.</i>";
 			$api->GuildAddNotification($ir['guild'],"Your guild attacked a tile (" . resolveCoordinates($r2['district_id']) . ") and lost! View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
 			$api->GuildAddNotification($r2['district_owner'],"Your guild's tile (" . resolveCoordinates($r2['district_id']) . ") was attacked and your guild emerged victorious. View the battle report <a href='guild_district.php?action=viewreport&id={$i}'>here</a>.");
-			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . number_format($warriors) . " Warriors (Lost " . number_format($results['attack_warrior_lost']) . ") and " . number_format($archers) . " Archers (Lost " . number_format($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . number_format($results['defense_warrior_lost']) . " Warriors, " . number_format($results['defense_archer_lost']) . " Archers and " . number_format($results['defense_general_lost']) . " Generals.");
+			$api->SystemLogsAdd($userid,"district","Lost attacking tile  " . resolveCoordinates($r2['district_id']) . " using " . shortNumberParse($warriors) . " Warriors (Lost " . shortNumberParse($results['attack_warrior_lost']) . ") and " . shortNumberParse($archers) . " Archers (Lost " . shortNumberParse($results['attack_archer_lost']) . "), launched from tile " . resolveCoordinates($r2['district_id']) . " . Enemy lost " . shortNumberParse($results['defense_warrior_lost']) . " Warriors, " . shortNumberParse($results['defense_archer_lost']) . " Archers and " . shortNumberParse($results['defense_general_lost']) . " Generals.");
 		}
 	}
 	else
@@ -873,7 +867,7 @@ function attackfrombarracks()
                     <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Warriors (vs " . number_format($r2['district_melee']) . ")</b>
+                                <b>Warriors (vs " . shortNumberParse($r2['district_melee']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='warriors' class='form-control' value='{$gdi['barracks_warriors']}' max='{$gdi['barracks_warriors']}' min='0'>
@@ -883,7 +877,7 @@ function attackfrombarracks()
                     <div class='col-12 col-md-6 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Archers (vs " . number_format($r2['district_range']) . ")</b>
+                                <b>Archers (vs " . shortNumberParse($r2['district_range']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='archers' class='form-control' value='{$gdi['barracks_archers']}' max='{$gdi['barracks_archers']}' min='0'>
@@ -1067,11 +1061,11 @@ function movefromtile()
 			}
 		}*/
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
-		$api->SystemLogsAdd($userid,"district","Moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and  " . number_format($generals) . " Generals from Tile " . resolveCoordinates($r2['district_id']) . " to Tile " . resolveCoordinates($r['district_id']) .".");
+		$api->SystemLogsAdd($userid,"district","Moved " . shortNumberParse($warriors) . " Warriors, " . shortNumberParse($archers) . " Archers and  " . shortNumberParse($generals) . " Generals from Tile " . resolveCoordinates($r2['district_id']) . " to Tile " . resolveCoordinates($r['district_id']) .".");
 		updateTileTroops($r2['district_id'], $warriors*-1, $archers*-1, $generals*-1);
 		updateTileTroops($r['district_id'], $warriors, $archers, $generals);
-		alert('success',"","You have successfully moved " . number_format($warriors) . " Warriors, 
-                " . number_format($archers) . " Archers and " . number_format($generals) . " Generals to (" . resolveCoordinates($r['district_id']) . ") from (" . resolveCoordinates($r2['district_id']) . ").");
+		alert('success',"","You have successfully moved " . shortNumberParse($warriors) . " Warriors, 
+                " . shortNumberParse($archers) . " Archers and " . shortNumberParse($generals) . " Generals to (" . resolveCoordinates($r['district_id']) . ") from (" . resolveCoordinates($r2['district_id']) . ").");
 	}
 	else
 	{
@@ -1088,7 +1082,7 @@ function movefromtile()
                     <div class='col-12 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Warriors (Have " . number_format($r2['district_melee']) . ")</b>
+                                <b>Warriors (Have " . shortNumberParse($r2['district_melee']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='warriors' class='form-control' value='{$r2['district_melee']}' max='{$r2['district_melee']}' min='0'>
@@ -1098,7 +1092,7 @@ function movefromtile()
                     <div class='col-12 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Archers (Have " . number_format($r2['district_range']) . ")</b>
+                                <b>Archers (Have " . shortNumberParse($r2['district_range']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='archers' class='form-control' value='{$r2['district_range']}' max='{$r2['district_range']}' min='0'>
@@ -1108,7 +1102,7 @@ function movefromtile()
                     <div class='col-12 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Generals (Have " . number_format($r2['district_general']) . ")</b>
+                                <b>Generals (Have " . shortNumberParse($r2['district_general']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='generals' class='form-control' value='{$r2['district_general']}' max='{$r2['district_general']}' min='0'>
@@ -1207,13 +1201,13 @@ function fortify()
 		    }
 		}
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
-		$api->SystemLogsAdd($userid,"district","Spent " . number_format($neededXP) . " Guild Experience and " . number_format($neededTokens) . " Chivalry Tokens to fortify tile " . resolveCoordinates($attack_to) .".");
+		$api->SystemLogsAdd($userid,"district","Spent " . shortNumberParse($neededXP) . " Guild Experience and " . shortNumberParse($neededTokens) . " Chivalry Tokens to fortify tile " . resolveCoordinates($attack_to) .".");
 		$api->GuildRemoveXP($ir['guild'],$neededXP);
 		$db->query("UPDATE `guild` SET `guild_seccurr` = `guild_seccurr` - {$neededTokens} WHERE `guild_id` = {$ir['guild']}");
 		addToEconomyLog('Districts','token', $neededTokens*-1);
 		$db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` + 1 WHERE `district_id` = {$attack_to}");
-		alert('success',"","You have successfully fortified this tile at the cost of " . number_format($neededXP) . " Guild XP and " . number_format($neededTokens) . " Chivalry Tokens.",true,'guild_district.php');
-	   $api->GuildAddNotification($ir['guild'], "Your guild has spent " . number_format($neededTokens) . " Chivalry Tokens and " . number_format($neededXP) . " Guild Experience to fortify district tile (" . resolveCoordinates($attack_to) .").");
+		alert('success',"","You have successfully fortified this tile at the cost of " . shortNumberParse($neededXP) . " Guild XP and " . shortNumberParse($neededTokens) . " Chivalry Tokens.",true,'guild_district.php');
+	   $api->GuildAddNotification($ir['guild'], "Your guild has spent " . shortNumberParse($neededTokens) . " Chivalry Tokens and " . shortNumberParse($neededXP) . " Guild Experience to fortify district tile (" . resolveCoordinates($attack_to) .").");
 	}
 	else
 	{
@@ -1312,9 +1306,9 @@ function movefrombarracks()
 		$db->query("UPDATE `guild_district_info` SET `moves` = `moves` - 1 WHERE `guild_id` = {$ir['guild']}");
 		updateBarracksTroops($ir['guild'], $warriors*-1, $archers*-1, $generals*-1, 0);
 		updateTileTroops($attack_to, $warriors, $archers, $generals);
-		alert('success',"","You have successfully moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and " . number_format($generals) . " Generals from your barracks to this tile.", true, 'guild_district.php');
-		$api->SystemLogsAdd($userid,"district","Moved " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers to Tile " . resolveCoordinates($attack_to) . " from their barracks.");
-		$api->GuildAddNotification($ir['guild'], "<a href='profile.php?user=1'>{$ir['username']}</a> has moved " . number_format($warriors) . " Warriors, " . number_format($archers) . " Archers and " . number_format($generals) . " Generals to Tile " . resolveCoordinates($attack_to) . " from the barracks.");
+		alert('success',"","You have successfully moved " . shortNumberParse($warriors) . " Warriors, " . shortNumberParse($archers) . " Archers and " . shortNumberParse($generals) . " Generals from your barracks to this tile.", true, 'guild_district.php');
+		$api->SystemLogsAdd($userid,"district","Moved " . shortNumberParse($warriors) . " Warriors and " . shortNumberParse($archers) . " Archers to Tile " . resolveCoordinates($attack_to) . " from their barracks.");
+		$api->GuildAddNotification($ir['guild'], "<a href='profile.php?user=1'>{$ir['username']}</a> has moved " . shortNumberParse($warriors) . " Warriors, " . shortNumberParse($archers) . " Archers and " . shortNumberParse($generals) . " Generals to Tile " . resolveCoordinates($attack_to) . " from the barracks.");
 	}
 	else
 	{
@@ -1331,7 +1325,7 @@ function movefrombarracks()
                     <div class='col-12 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Warriors (Have " . number_format($gdi['barracks_warriors']) . ")</b>
+                                <b>Warriors (Have " . shortNumberParse($gdi['barracks_warriors']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='warriors' class='form-control' value='{$gdi['barracks_warriors']}' max='{$gdi['barracks_warriors']}' min='0'>
@@ -1341,7 +1335,7 @@ function movefrombarracks()
                     <div class='col-12 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Archers (Have " . number_format($gdi['barracks_archers']) . ")</b>
+                                <b>Archers (Have " . shortNumberParse($gdi['barracks_archers']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='archers' class='form-control' value='{$gdi['barracks_archers']}' max='{$gdi['barracks_archers']}' min='0'>
@@ -1351,7 +1345,7 @@ function movefrombarracks()
                     <div class='col-12 col-xl-4'>
                         <div class='row'>
                             <div class='col-12'>
-                                <b>Generals (Have " . number_format($gdi['barracks_generals']) . ")</b>
+                                <b>Generals (Have " . shortNumberParse($gdi['barracks_generals']) . ")</b>
                             </div>
                             <div class='col-12'>
                                 <input type='number' name='generals' class='form-control' value='{$gdi['barracks_generals']}' max='{$gdi['barracks_generals']}' min='0'>
@@ -1400,25 +1394,25 @@ function guild_info()
                             Warriors
                         </div>
                         <div class='col-3 col-md-6'>
-                            " . number_format($gdi['barracks_warriors']) . "
+                            " . shortNumberParse($gdi['barracks_warriors']) . "
                         </div>
                         <div class='col-3 col-md-6'>
                             Archers
                         </div>
                         <div class='col-3 col-md-6'>
-                            " . number_format($gdi['barracks_archers']) . "
+                            " . shortNumberParse($gdi['barracks_archers']) . "
                         </div>
                         <div class='col-3 col-md-6'>
                             Generals
                         </div>
                         <div class='col-3 col-md-6'>
-                            " . number_format($gdi['barracks_generals']) . "
+                            " . shortNumberParse($gdi['barracks_generals']) . "
                         </div>
                         <div class='col-3 col-md-6'>
                             Captains
                         </div>
                         <div class='col-3 col-md-6'>
-                            " . number_format($gdi['barracks_captains']) . "
+                            " . shortNumberParse($gdi['barracks_captains']) . "
                         </div>
                         <div class='col-12'>
                             <span class='text-muted'><i><small>Troops in the barracks don't count towards daily upkeep.</small></i></span>
@@ -1487,19 +1481,19 @@ function guild_info()
                             Warriors
                         </div>
                         <div class='col-8 col-sm-6'>
-                            " . number_format(countDeployedWarriors($gdi['guild_id'])) . "
+                            " . shortNumberParse(countDeployedWarriors($gdi['guild_id'])) . "
                         </div>
                         <div class='col-4 col-sm-6'>
                             Archers
                         </div>
                         <div class='col-8 col-sm-6'>
-                            " . number_format(countDeployedArchers($gdi['guild_id'])) . "
+                            " . shortNumberParse(countDeployedArchers($gdi['guild_id'])) . "
                         </div>
                         <div class='col-4 col-sm-6'>
                             Generals
                         </div>
                         <div class='col-8 col-sm-6'>
-                            " . number_format(countDeployedGenerals($gdi['guild_id'])) . "
+                            " . shortNumberParse(countDeployedGenerals($gdi['guild_id'])) . "
                         </div>
                     </div>
                 </div>
@@ -1517,25 +1511,25 @@ function guild_info()
                             Moves Available
                         </div>
                         <div class='col-6 col-md-5 col-lg-4 col-xl-2 col-xxl-4'>
-                            " . number_format($gdi['moves']) . "
+                            " . shortNumberParse($gdi['moves']) . "
                         </div>
                         <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
                             Districts Controlled
                         </div>
                         <div class='col-6 col-md-5 col-lg-4 col-xl-3 col-xxl-4'>
-                            " . number_format($districtOwn) . "
+                            " . shortNumberParse($districtOwn) . "
                         </div>
                         <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
                             Warriors Bought
                         </div>
                         <div class='col-6 col-md-5 col-lg-4'>
-                            " . number_format($gdi['warriors_bought']) . "
+                            " . shortNumberParse($gdi['warriors_bought']) . "
                         </div>
                         <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
                             Archers Bought
                         </div>
                         <div class='col-6 col-md-5 col-lg-4'>
-                            " . number_format($gdi['archers_bought']) . "
+                            " . shortNumberParse($gdi['archers_bought']) . "
                         </div>
                     </div>
                 </div>
@@ -1605,24 +1599,24 @@ function guild_buy()
 		//Recruited warriors and current barracks is over maximum barracks size
 		if (($warriors + $gdi['barracks_warriors']) > $districtConfig['BarracksMaxWarriors'])
 		{
-			alert('danger',"Uh Oh!","You do not have enough room in your barracks for " . number_format($warriors) . " more warriors. The maximum your barracks may support is " . number_format($districtConfig['BarracksMaxWarriors']) . " Warriors.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","You do not have enough room in your barracks for " . shortNumberParse($warriors) . " more warriors. The maximum your barracks may support is " . shortNumberParse($districtConfig['BarracksMaxWarriors']) . " Warriors.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		//Recruited archer and current barracks is over maximum barracks size
 		if (($archers + $gdi['barracks_archers']) > $districtConfig['BarracksMaxArchers'])
 		{
-			alert('danger',"Uh Oh!","You do not have enough room in your barracks for " . number_format($archers) . " more warriors. The maximum your barracks may support is " . number_format($districtConfig['BarracksMaxArchers']) . " Archers.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","You do not have enough room in your barracks for " . shortNumberParse($archers) . " more warriors. The maximum your barracks may support is " . shortNumberParse($districtConfig['BarracksMaxArchers']) . " Archers.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		//Recruited warriors and current barracks is over maximum barracks size
 		if ($warriors > $currentBuyWarriors)
 		{
-			alert('danger',"Uh Oh!","You cannot buy " . number_format($warriors) . " Warriors right now. You may only buy " . number_format($currentBuyWarriors) . " Warriors right now.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","You cannot buy " . shortNumberParse($warriors) . " Warriors right now. You may only buy " . shortNumberParse($currentBuyWarriors) . " Warriors right now.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		if ($archers > $currentBuyArchers)
 		{
-			alert('danger',"Uh Oh!","You cannot buy " . number_format($archers) . "Archers right now. You may only buy " . number_format($currentBuyArchers) . " Archers right now.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","You cannot buy " . shortNumberParse($archers) . "Archers right now. You may only buy " . shortNumberParse($currentBuyArchers) . " Archers right now.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		$archerTotal=$archers*$districtConfig['ArcherCost'];
@@ -1630,7 +1624,7 @@ function guild_buy()
 		$allTotal = $warriorTotal + $archerTotal;
 		if ($gi['guild_primcurr'] < $allTotal)
 		{
-			alert('danger',"Uh Oh!","Your guild needs " . number_format($allTotal) . " Copper Coins in it's vault before you can purchase that many units.",true,'guild_district.php');
+			alert('danger',"Uh Oh!","Your guild needs " . shortNumberParse($allTotal) . " Copper Coins in it's vault before you can purchase that many units.",true,'guild_district.php');
 			die($h->endpage());
 		}
 		$db->query("UPDATE `guild_district_info` SET 
@@ -1639,9 +1633,9 @@ function guild_buy()
 					WHERE `guild_id` = {$ir['guild']}");
 		updateBarracksTroops($ir['guild'], $warriors, $archers, 0, 0);
 		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$allTotal} WHERE `guild_id` = {$ir['guild']}");
-		alert('success',"Success!","You have spent " . shortNumberParse($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers for your guild.",true,'guild_district.php');
-		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers.");
-		$api->SystemLogsAdd($userid,"district","spent " . shortNumberParse($allTotal) . " Copper Coins for " . number_format($warriors) . " Warriors and " . number_format($archers) . " Archers");
+		alert('success',"Success!","You have spent " . shortNumberParse($allTotal) . " Copper Coins for " . shortNumberParse($warriors) . " Warriors and " . shortNumberParse($archers) . " Archers for your guild.",true,'guild_district.php');
+		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($allTotal) . " Copper Coins for " . shortNumberParse($warriors) . " Warriors and " . shortNumberParse($archers) . " Archers.");
+		$api->SystemLogsAdd($userid,"district","spent " . shortNumberParse($allTotal) . " Copper Coins for " . shortNumberParse($warriors) . " Warriors and " . shortNumberParse($archers) . " Archers");
 		addToEconomyLog('Districts', 'copper', $allTotal*-1);
 	}
 	else
@@ -1657,8 +1651,8 @@ function guild_buy()
                     <div class='card-body'>
                         How many troops do you wish to buy? Fill and submit the form to confirm. Your guild 
                         has " . shortNumberParse($gi['guild_primcurr']) . " Copper Coins in its vault. Warriors have 
-                        a daily upkeep fee of " . number_format($districtConfig['WarriorCostDaily']) . " Copper Coins, and
-                        Archers have a daily upkeep fee of " . number_format($districtConfig['ArcherCostDaily']) . " Copper Coins.
+                        a daily upkeep fee of " . shortNumberParse($districtConfig['WarriorCostDaily']) . " Copper Coins, and
+                        Archers have a daily upkeep fee of " . shortNumberParse($districtConfig['ArcherCostDaily']) . " Copper Coins.
                         This fee is taken from your guild's vault every day at midnight gametime.
                         <hr />
                         <div class='row'>
@@ -1666,7 +1660,7 @@ function guild_buy()
                                 Warriors
                             </div>
                             <div class='col-8 col-md-4 col-xl-3'>
-                                <small>" . number_format($districtConfig['WarriorCost']) . " Copper Coins each</small>
+                                <small>" . shortNumberParse($districtConfig['WarriorCost']) . " Copper Coins each</small>
                             </div>
                             <div class='col-12 col-md-6 col-xl-7'>
                                 <input type='number' name='warriors' value='{$currentBuyWarriors}' max='{$currentBuyWarriors}' min='0' required='1' class='form-control'>
@@ -1675,7 +1669,7 @@ function guild_buy()
                                 Archers
                             </div>
                             <div class='col-8 col-md-4 col-xl-3'>
-                                <small>" . number_format($districtConfig['ArcherCost']) . " Copper Coins each</small>
+                                <small>" . shortNumberParse($districtConfig['ArcherCost']) . " Copper Coins each</small>
                             </div>
                             <div class='col-12 col-md-6 col-xl-7'>
                                 <input type='number' name='archers' value='{$currentBuyArchers}' max='{$currentBuyArchers}' min='0' required='1' class='form-control'>
@@ -1749,9 +1743,9 @@ function hireGeneral()
 		}
 		updateBarracksTroops($ir['guild'], 0, 0, $generals, $captains);
 		$db->query("UPDATE `guild` SET `guild_primcurr` = `guild_primcurr` - {$totalCost} WHERE `guild_id` = {$ir['guild']}");
-		alert('success',"Success!","You have spent " . shortNumberParse($totalCost) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your guild.",true,'guild_district.php');
-		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($totalCost) . " Copper Coins and hired " . number_format($generals) . " Generals and " . number_format($captains) . " Captains for your Guild District.");
-		$api->SystemLogsAdd($userid,"district","Spent " . shortNumberParse($totalCost) . " Copper Coins for " . number_format($generals) . " Generals and " . number_format($captains) . " Captains.");
+		alert('success',"Success!","You have spent " . shortNumberParse($totalCost) . " Copper Coins and hired " . shortNumberParse($generals) . " Generals and " . shortNumberParse($captains) . " Captains for your guild.",true,'guild_district.php');
+		$api->GuildAddNotification($ir['guild'],"<a href='profile.php?user={$userid}'>{$ir['username']}</a> has spent " . shortNumberParse($totalCost) . " Copper Coins and hired " . shortNumberParse($generals) . " Generals and " . shortNumberParse($captains) . " Captains for your Guild District.");
+		$api->SystemLogsAdd($userid,"district","Spent " . shortNumberParse($totalCost) . " Copper Coins for " . shortNumberParse($generals) . " Generals and " . shortNumberParse($captains) . " Captains.");
 		addToEconomyLog('Districts', 'copper', $generalsTotal*-1);
 	}
 	else
@@ -1811,7 +1805,7 @@ function hireGeneral()
 	}
 }
 include('forms/district_popup.php');
-include('forms/district_stats.php');
+//include('forms/district_stats.php');
 include('forms/popup_district_new.php');
 $h->endpage();
 echo "<link rel='stylesheet' href='css/modules/districts.css'>";
