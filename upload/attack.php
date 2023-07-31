@@ -332,7 +332,7 @@ function landingpage()
                                                 <small>Level</small>
                                             </div>
                                             <div class='col-12'>
-                                                <span class='{$levelClass}'>" . number_format($odata['level']) . "</span>
+                                                <span class='{$levelClass}'>" . shortNumberParse($odata['level']) . "</span>
                                             </div>
                                         </div>
                                     </div>
@@ -933,7 +933,7 @@ function attacking()
                     else
                     {
                         $api->GameAddNotification($_GET['user'],"You ran out of {$wep} while in combat.", 'fas fa-exclamation-circle', 'red');
-                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you, but missed. You have " . number_format($youdata['hp']) . " HP remaining.", false);
+                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you, but missed. You have " . shortNumberParse($youdata['hp']) . " HP remaining.", false);
                         unequipUserSlot($_GET['user'], "equip_potion");
                     }
                 }
@@ -1051,7 +1051,7 @@ function attacking()
 				<div class='col'>
 					<div class='progress' style='height: 1rem;'>
 						<div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' style='width:{$vars['hpperc']}%' aria-valuemin='0' aria-valuemax='{$youdata['maxhp']}'>
-							<span>{$vars['hpperc']}% (" . number_format($youdata['hp']) . " / " .  number_format($youdata['maxhp']) . ")</span>
+							<span>{$vars['hpperc']}% (" . shortNumberParse($youdata['hp']) . " / " .  shortNumberParse($youdata['maxhp']) . ")</span>
 						</div>
 					</div>
 				</div>
@@ -1066,7 +1066,7 @@ function attacking()
 					<div class='progress' style='height: 1rem;'>
 						<div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' style='width:{$vars2['hpperc']}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'>
 							<span>
-								{$vars2['hpperc']}% (" . number_format($odata['hp']) . " / " . number_format($odata['maxhp']) . ")
+								{$vars2['hpperc']}% (" . shortNumberParse($odata['hp']) . " / " . shortNumberParse($odata['maxhp']) . ")
 							</span>
 						</div>
 					</div>
@@ -1119,13 +1119,13 @@ function beat()
         $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
         //Give opponent notification that they were attacked.
         $api->GameAddNotification($r['userid'], "You were hospitalized by <a href='profile.php?user=$userid'>{$ir['username']}</a>
-                                                    for " . number_format($hosptime) . " minutes.", 'game-icon game-icon-internal-injury', 'red');
+                                                    for " . shortNumberParse($hosptime) . " minutes.", 'game-icon game-icon-internal-injury', 'red');
         //Log that the user won the fight.
         $api->SystemLogsAdd($userid, 'attacking', "Hospitalized <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$_GET['ID']}]
-                                                for " . number_format($hosptime) . " minutes.");
+                                                for " . shortNumberParse($hosptime) . " minutes.");
         //Log that the opponent lost the fight.
         $api->SystemLogsAdd($_GET['ID'], 'attacking', "Hospitalized by <a href='profile.php?user={$userid}'>{$ir['username']}</a>
-                                                    [{$userid}] for " . number_format($hosptime) . " minutes.");
+                                                    [{$userid}] for " . shortNumberParse($hosptime) . " minutes.");
         $_SESSION['attackwon'] = false;
         $additionaltext = "";
         //Both players are in a guild.
@@ -1159,13 +1159,13 @@ function beat()
             put_infirmary($r['userid'], $hosptime, $hospreason);
             $api->GameAddNotification($r['userid'], "Your infirmary time was doubled since you had a bounty on your head.", 'game-icon game-icon-coins', '#B87333');
             $api->UserGiveCurrency($userid,'primary',$bhr['bh_bounty']);
-            $bounty_format=number_format($bhr['bh_bounty']);
+            $bounty_format=shortNumberParse($bhr['bh_bounty']);
             $db->query("DELETE FROM `bounty_hunter` WHERE `bh_id` = {$bhr['bh_id']}");
 			addToEconomyLog('Bounty Hunter', 'copper', $bhr['bh_bounty']);
             $additionaltext .= " You have received {$bounty_format} Copper Coins for hospitalizing this user while they had a bounty on their head. They also received double infirmary time.";
         }
         //Tell player they won and ended the fight, and if they gained a guild war point.
-        alert('success', "You've Bested {$r['username']}!!", "Your actions have caused {$r['username']} " . number_format($hosptime) . " minutes in the infirmary. {$additionaltext}", true, "{$ref}.php");
+        alert('success', "You've Bested {$r['username']}!!", "Your actions have caused {$r['username']} " . shortNumberParse($hosptime) . " minutes in the infirmary. {$additionaltext}", true, "{$ref}.php");
 		attacklog($userid,$r['userid'],'beatup');
         $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
         $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
@@ -1282,8 +1282,8 @@ function lost()
     $qe2 = $r['level'] * $r['level'] * $r['level'];
     $expgain2 = Random($qe2 / 4, $qe2);
     $expgainp2 = $expgain2 / $r['xp_needed'] * 100;
-	$api->SystemLogsAdd($_GET['ID'], 'xp_gain', "+" . number_format($expgain2) . "XP");
-	$api->SystemLogsAdd($ir['userid'], 'xp_gain', "-" . number_format($expgain) . "XP");
+	$api->SystemLogsAdd($_GET['ID'], 'xp_gain', "+" . shortNumberParse($expgain2) . "XP");
+	$api->SystemLogsAdd($ir['userid'], 'xp_gain', "-" . shortNumberParse($expgain) . "XP");
     $expperc2 = round($expgainp2 / $r['xp_needed'] * 100);
     //Tell opponent that they were attacked by user, and emerged victorious.
     $api->GameAddNotification($_GET['ID'], "<a href='profile.php?user=$userid'>{$ir['username']}</a>
@@ -1319,7 +1319,7 @@ function lost()
     }
 	doExtraBomb($_GET['ID'], $userid);
     //Tell user they lost, and if they gave the other guild a point.
-    alert('danger', "You lost to {$r['username']}!", "You have lost a fight, and lost " . number_format($expgainp) . "% experience! {$additionaltext}", true, "{$ref}.php");
+    alert('danger', "You lost to {$r['username']}!", "You have lost a fight, and lost " . shortNumberParse($expgainp) . "% experience! {$additionaltext}", true, "{$ref}.php");
     $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$_GET['ID']}");
     $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$userid}");
 	//Mission update
@@ -1406,7 +1406,7 @@ function xp()
             $hosptime = Random(5, 15) + floor($ir['level'] / 10);
             //Give user XP.
 			attacklog($userid,$_GET['ID'],'xp');
-			$api->SystemLogsAdd($ir['userid'], 'xp_gain', "+" . number_format($expgain) . "XP");
+			$api->SystemLogsAdd($ir['userid'], 'xp_gain', "+" . shortNumberParse($expgain) . "XP");
 			$expgain=autoDonateXP($userid, $expgain, $ir['guild']);
             $db->query("UPDATE `users` SET `xp` = `xp` + {$expgain} WHERE `userid` = {$userid}");
             $hospreason = $db->escape("Used for Experience by <a href='profile.php?user={$userid}'>{$ir['username']}</a>");
@@ -1447,7 +1447,7 @@ function xp()
             }
             //Tell user they won, and if they received a point or not.
             alert('success', "You've bested {$r['username']}!", "You decide to finish the fight the honorable way. You
-			    have gained (" . number_format($expperc) . "%, " . number_format($expgain) . ") experience for this. {$xploststat} {$xplostequip} {$additionaltext}", true, "{$ref}.php");
+			    have gained (" . shortNumberParse($expperc) . "%, " . shortNumberParse($expgain) . ") experience for this. {$xploststat} {$xplostequip} {$additionaltext}", true, "{$ref}.php");
 
             $db->query("UPDATE `users` SET `kills` = `kills` + 1 WHERE `userid` = {$userid}");
             $db->query("UPDATE `users` SET `deaths` = `deaths` + 1 WHERE `userid` = {$r['userid']}");
@@ -1539,7 +1539,7 @@ function xp()
                                 `agility` = `agility` - {$loss},
                                 `guard` = `guard` - {$loss}
                                 WHERE `userid` = {$r['userid']}");
-                    $api->GameAddNotification($r['userid'],"You have lost " . number_format($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.", 'game-icon game-icon-crucifix', 'red');
+                    $api->GameAddNotification($r['userid'],"You have lost " . shortNumberParse($loss) . " strength, agility and guard for allowing yourself to be used for experience too frequently.", 'game-icon game-icon-crucifix', 'red');
                 }
             }
 			doExtraBomb($userid, $r['userid']);
@@ -1594,11 +1594,11 @@ function mug()
             //Place opponent in infirmary.
             $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
             //Tell opponent they were mugged, and for how much, by user.
-            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . number_format($stole) . " Copper Coins.", 'game-icon game-icon-robber', 'red');
+            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> mugged you and stole " . shortNumberParse($stole) . " Copper Coins.", 'game-icon game-icon-robber', 'red');
             //Log that the user won and stole some Copper Coins, and that
             //the opponent lost and lost Copper Coins.
-            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole " . number_format($stole) . " Copper Coins.");
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost " . number_format($stole) . " Copper Coins.");
+            $api->SystemLogsAdd($userid, 'attacking', "Mugged <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole " . shortNumberParse($stole) . " Copper Coins.");
+            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Mugged by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost " . shortNumberParse($stole) . " Copper Coins.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
@@ -1709,7 +1709,7 @@ function mug()
         }
 		//Tell user they won the fight, and how much currency they took.
             alert('success', "You have bested {$r['username']}!", "You have knocked them out and taken out their wallet.
-			    You grab their wallet and take " . number_format($stole) . " Copper Coins! {$additionaltext}", true, "{$ref}.php");
+			    You grab their wallet and take " . shortNumberParse($stole) . " Copper Coins! {$additionaltext}", true, "{$ref}.php");
 			doExtraBomb($userid, $r['userid']);
 	}
 }
@@ -1768,11 +1768,11 @@ function home_invasion()
             //Place opponent in infirmary.
             $api->UserStatusSet($r['userid'], 'infirmary', $hosptime, $hospreason);
             //Tell opponent they were mugged, and for how much, by user.
-            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> started a home invasion while you were sleeping. You were harmed in the process and they stole " . number_format($stole) . " Copper Coins from your estate's vault.", 'game-icon game-icon-robber', 'red');
+            $api->GameAddNotification($r['userid'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> started a home invasion while you were sleeping. You were harmed in the process and they stole " . shortNumberParse($stole) . " Copper Coins from your estate's vault.", 'game-icon game-icon-robber', 'red');
             //Log that the user won and stole some Copper Coins, and that
             //the opponent lost and lost Copper Coins.
-            $api->SystemLogsAdd($userid, 'attacking', "Home invasioned <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole " . number_format($stole) . " Copper Coins.");
-            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Home invasioned by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost " . number_format($stole) . " Copper Coins.");
+            $api->SystemLogsAdd($userid, 'attacking', "Home invasioned <a href='../profile.php?user={$_GET['ID']}'>{$r['username']}</a> [{$r['userid']}] and stole " . shortNumberParse($stole) . " Copper Coins.");
+            $api->SystemLogsAdd($_GET['ID'], 'attacking', "Home invasioned by <a href='../profile.php?user={$userid}'>{$ir['username']}</a> [{$userid}] and lost " . shortNumberParse($stole) . " Copper Coins.");
             $_SESSION['attackwon'] = 0;
             $additionaltext = "";
             //Both players are in a guild.
@@ -1818,7 +1818,7 @@ function home_invasion()
         }
         //Tell user they won the fight, and how much currency they took.
         alert('success', "You have bested {$r['username']}!", "{$r['username']} is asleep while you attack them, 
-            so you decide its best to help yourself to their vault, taking " . number_format($stole) . " Copper Coins! 
+            so you decide its best to help yourself to their vault, taking " . shortNumberParse($stole) . " Copper Coins! 
             {$additionaltext}", true, "{$ref}.php");
         doExtraBomb($userid, $r['userid']);
     }

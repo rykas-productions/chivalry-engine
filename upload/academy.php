@@ -152,10 +152,10 @@ function menu()
                                         <small><i>{$academy['ac_desc']}</i></small>
                                     </div>
                                     <div class='col-6 col-md-3 col-lg-6 col-xl-3'>
-                                        <small><i>Graduates " . number_format($graduates) . "</i></small>
+                                        <small><i>Graduates " . shortNumberParse($graduates) . "</i></small>
                                     </div>
                                     <div class='col-6 col-md-3 col-lg-6 col-xl-4'>
-                                        <small><i>Course Length " . number_format($academy['ac_days']) . " Days</i></small>
+                                        <small><i>Course Length " . shortNumberParse($academy['ac_days']) . " Days</i></small>
                                     </div>
                                     <div class='col col-md-4 col-lg'>
                                         <small><i {$costClass}>Cost " . shortNumberParse($academy['ac_cost']) . " Copper Coins</i></small>
@@ -164,7 +164,7 @@ function menu()
                                     {
                                         echo "
                                         <div class='col-4 col-sm-6 col-md-2 col-lg-4 col-xxl-2'>
-                                            <small><i {$lvlClass}>Level " . number_format($academy['ac_level']) . "</i></small>
+                                            <small><i {$lvlClass}>Level " . shortNumberParse($academy['ac_level']) . "</i></small>
                                         </div>";
                                     }
                                 echo"
@@ -205,8 +205,8 @@ function start()
     }
     //If the user doesn't have enough Copper Coins for this course.
     if ($course['ac_cost'] > $ir['primary_currency']) {
-        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to take this course. You need " . number_format($course['ac_cost']) . " Copper Coins 
-                                yet you only have " . number_format($ir['primary_currency']) . " Copper Coins.", true, 'academy.php');
+        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to take this course. You need " . shortNumberParse($course['ac_cost']) . " Copper Coins 
+                                yet you only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", true, 'academy.php');
         die($h->endpage());
     }
     $cdo = $db->query("/*qc=on*/SELECT COUNT(`userid`)

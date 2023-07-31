@@ -17,9 +17,9 @@ else
 	//Update user's bank and Copper Coins info.
 	$api->UserTakeCurrency($userid, 'secondary', $gain);
 	$api->UserInfoSetStatic($userid, "tokenbank", $ir['tokenbank']);
-	alert('success', "Success!", "You hand over " . number_format($gain) . " Chivalry Tokens to be
-	deposited. You now have " . number_format($ir['tokenbank']) . " in your account.", true, 'tokenbank.php');
+	alert('success', "Success!", "You hand over " . shortNumberParse($gain) . " Chivalry Tokens to be
+	deposited. You now have " . shortNumberParse($ir['tokenbank']) . " in your account.", true, 'tokenbank.php');
 	//Log bank transaction.
-	$api->SystemLogsAdd($userid, 'tokenbank', "Deposited " . number_format($gain) . " Chivalry tokens.");
+	$api->SystemLogsAdd($userid, 'tokenbank', "Deposited " . shortNumberParse($gain) . " Chivalry tokens.");
 	$h->endpage();
 }

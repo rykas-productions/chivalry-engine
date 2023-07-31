@@ -228,7 +228,7 @@ function summary()
 	$gym = (guildOwnsAsset($gd['guild_id'], "guild_gym")) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>Not purchased</span>";
 	$recruit = ($gd['guild_ba'] == 0) ? "<span class='text-success'>Open</span>" : "<span class='text-danger'>Closed</span>";
 	$debt = ($gd['guild_primcurr'] > 0) ? "<span class='text-success'>No Debt</span>" : "<span class='text-danger'>In Debt!!</span>" ;
-	$wars = ($db->fetch_single($wq) == 0) ? "<span class='text-success'>No active wars</span>" : "<span class='text-danger'> " . number_format($db->fetch_single($wq)) . " active wars</span>";
+	$wars = ($db->fetch_single($wq) == 0) ? "<span class='text-success'>No active wars</span>" : "<span class='text-danger'> " . shortNumberParse($db->fetch_single($wq)) . " active wars</span>";
     //List all the guild's information
 	echo "
 	<div class='row'>
@@ -444,7 +444,7 @@ function guild_donatexp()
 		}
 		if ($_POST['xp'] < $xpformula)
 		{
-			alert('danger',"Uh Oh!","You need to donate, at minimum, " . number_format($xpformula) . " experience points.");
+			alert('danger',"Uh Oh!","You need to donate, at minimum, " . shortNumberParse($xpformula) . " experience points.");
 			die($h->endpage());
 		}
 		$points=floor($_POST['xp']/$xpformula);
@@ -917,11 +917,11 @@ function warview()
         echo "<tr align='left'>
 				<td>
 					<a href='guilds.php?action=view&id={$r['gw_declarer']}'>{$api->GuildFetchInfo($r['gw_declarer'],'guild_name')}</a><br />
-						(Points: " . number_format($r['gw_drpoints']) . ")
+						(Points: " . shortNumberParse($r['gw_drpoints']) . ")
 				</td>
 				<td>
 					<a href='guilds.php?action=view&id={$r['gw_declaree']}'>{$api->GuildFetchInfo($r['gw_declaree'],'guild_name')}</a><br />
-						(Points: " . number_format($r['gw_depoints']) . ")
+						(Points: " . shortNumberParse($r['gw_depoints']) . ")
 				</td>
 				<td>
 					" . TimeUntil_Parse($r['gw_end']) . "
@@ -1102,7 +1102,7 @@ function gym()
 	$ir['labrank'] = get_rank($ir['labor'], 'labor');
 	$ir['all_four'] = ($ir['labor'] + $ir['strength'] + $ir['agility'] + $ir['guard']);
 	$ir['af_rank'] = get_rank($ir['all_four'], 'all');
-	echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to <span id='trainTimesTotal'>" . number_format($ir['energy']) . "</span> times.<br />
+	echo "Choose the stat you wish to train, and enter how many times you wish to train it. You can train up to <span id='trainTimesTotal'>" . shortNumberParse($ir['energy']) . "</span> times.<br />
 	Your guild's gym will give you " . number_format($multiplier*100) . "% the stats you'd gain at the Normal Gym.
 	<form method='post' id='gymTrainGuild'>
 		<div class='card'>
@@ -1313,7 +1313,7 @@ function guild_polls()
 								<h5>Total Votes</h5>
 							</div>
 							<div class='col-sm-1'>
-								<h6>" . number_format($r['votes']) . "</h6>
+								<h6>" . shortNumberParse($r['votes']) . "</h6>
 							</div>
 							<div class='col-sm-3'>
 								<h5>Your Vote</h5>
@@ -1421,7 +1421,7 @@ function guild_oldpolls()
 								<h5>Total Votes</h5>
 							</div>
 							<div class='col-sm-1'>
-								<h6>" . number_format($r['votes']) . "</h6>
+								<h6>" . shortNumberParse($r['votes']) . "</h6>
 							</div>
 						</div>
 						</div></div></br />";
@@ -3472,7 +3472,7 @@ function staff_armory()
 			
 			if (!($api->GuildHasItem($ir['guild'],$_POST['item'],$_POST['qty'])))
 			{
-				alert('danger',"Uh Oh!","Your guild does not have " . number_format($_POST['qty']) . " {$api->SystemItemIDtoName($_POST['item'])}(s) in its armory.",true,'guild_district.php');
+				alert('danger',"Uh Oh!","Your guild does not have " . shortNumberParse($_POST['qty']) . " {$api->SystemItemIDtoName($_POST['item'])}(s) in its armory.",true,'guild_district.php');
 				die($h->endpage());
 			}
 
@@ -4078,7 +4078,7 @@ function staff_sword_guild()
 {
 	global $db,$gd,$userid,$api,$ir,$h,$set;
 	//Check if user is the owner of the guild.
-	echo "<h4>Guild Branded Weapons</h4><hr />";
+	echo "<h4>Guild Weapons</h4><hr />";
 	$cost = $set['GUILD_PRICE'] * 100;
     if (isGuildLeader()) 
 	{
@@ -4093,7 +4093,7 @@ function staff_sword_guild()
 			}
 			if ($gd['guild_sword_item'] == 0)
 			{
-				$name="{$gd['guild_name']}-Branded Sword";
+				$name="{$gd['guild_name']} Guild Sword";
 				$desc="A weapon created for the {$gd['guild_name']} guild. This weapon was created " . date('l, F j, Y g:i:s a') . ".";
 				for ($i = 1; $i <= 3; $i++) 
 				{

@@ -21,9 +21,9 @@ else
 	//Update user's bank and Copper Coins info.
 	$api->UserTakeCurrency($userid, 'primary', $ir['primary_currency']);
 	$api->UserInfoSetStatic($userid, "bank", $ir['bank']);
-	alert('success', "Success!", "You hand over " . number_format($ir['primary_currency']) . " Copper Coins to be deposited. You now have " . number_format($ir['bank']) . " Copper Coins 
+	alert('success', "Success!", "You hand over " . shortNumberParse($ir['primary_currency']) . " Copper Coins to be deposited. You now have " . shortNumberParse($ir['bank']) . " Copper Coins 
 	in your City Bank.", true, 'bank.php');
 	//Log bank transaction.
-	$api->SystemLogsAdd($userid, 'bank', "[City Bank] Deposited " . number_format($ir['primary_currency']) . " Copper Coins.");
+	$api->SystemLogsAdd($userid, 'bank', "[City Bank] Deposited " . shortNumberParse($ir['primary_currency']) . " Copper Coins.");
 	 die($h->endpage());
 }

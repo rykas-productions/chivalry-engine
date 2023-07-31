@@ -84,17 +84,17 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 		$fedbank = ($r['bigbank'] > -1) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>N/A</span>"; 
 		$vaultbank = ($r['vaultbank'] > -1) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>N/A</span>"; 
 		$tokenbank = ($r['tokenbank'] > -1) ? "<span class='text-success'>Purchased</span>" : "<span class='text-danger'>N/A</span>"; 
-		$strength = ($r['strength'] >= $ir['strength']) ? "<span class='text-danger'>" . number_format($r['strength']) . "</span>" : "<span class='text-success'>" . number_format($r['strength']) . "</span>"; 
-		$agility = ($r['agility'] >= $ir['agility']) ? "<span class='text-danger'>" . number_format($r['agility']) . "</span>" : "<span class='text-success'>" . number_format($r['agility']) . "</span>"; 
-        $guard = ($r['guard'] >= $ir['guard']) ? "<span class='text-danger'>" . number_format($r['guard']) . "</span>" : "<span class='text-success'>" . number_format($r['guard']) . "</span>"; 
-		$labor = ($r['labor'] >= $ir['labor']) ? "<span class='text-danger'>" . number_format($r['labor']) . "</span>" : "<span class='text-success'>" . number_format($r['labor']) . "</span>"; 
-		$iq = ($r['iq'] >= $ir['iq']) ? "<span class='text-danger'>" . number_format($r['iq']) . "</span>" : "<span class='text-success'>" . number_format($r['iq']) . "</span>"; 
-		$luck = ($r['luck'] >= $ir['luck']) ? "<span class='text-danger'>" . number_format($r['luck']) . "%</span>" : "<span class='text-success'>" . number_format($r['luck']) . "%</span>"; 
+		$strength = ($r['strength'] >= $ir['strength']) ? "<span class='text-danger'>" . shortNumberParse($r['strength']) . "</span>" : "<span class='text-success'>" . shortNumberParse($r['strength']) . "</span>"; 
+		$agility = ($r['agility'] >= $ir['agility']) ? "<span class='text-danger'>" . shortNumberParse($r['agility']) . "</span>" : "<span class='text-success'>" . shortNumberParse($r['agility']) . "</span>"; 
+        $guard = ($r['guard'] >= $ir['guard']) ? "<span class='text-danger'>" . shortNumberParse($r['guard']) . "</span>" : "<span class='text-success'>" . shortNumberParse($r['guard']) . "</span>"; 
+		$labor = ($r['labor'] >= $ir['labor']) ? "<span class='text-danger'>" . shortNumberParse($r['labor']) . "</span>" : "<span class='text-success'>" . shortNumberParse($r['labor']) . "</span>"; 
+		$iq = ($r['iq'] >= $ir['iq']) ? "<span class='text-danger'>" . shortNumberParse($r['iq']) . "</span>" : "<span class='text-success'>" . shortNumberParse($r['iq']) . "</span>"; 
+		$luck = ($r['luck'] >= $ir['luck']) ? "<span class='text-danger'>" . shortNumberParse($r['luck']) . "%</span>" : "<span class='text-success'>" . shortNumberParse($r['luck']) . "%</span>"; 
 		$necklace = getEquippedNecklace($r['userid']);
 		$pendant = getEquippedPendant($r['userid']);
 		$primary_ring = getEquippedPrimaryRing($r['userid']);
 		$secondary_ring = getEquippedSecondaryRing($r['userid']);
-		alert("success", "Success!", "You have paid " . number_format(500 * $r['level']) . " Copper Coins to hire a spy upon
+		alert("success", "Success!", "You have paid " . shortNumberParse(500 * $r['level']) . " Copper Coins to hire a spy upon
 		    {$r['username']}. Here is that information.", false);
 			echo "<div class='row'>
 				<div class='col-md'>
@@ -403,7 +403,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 								<div class='col-md'>
 									{$i['itmname']}";
 									if ($i['inv_qty'] > 1) 
-										echo "<b> x " . number_format($i['inv_qty']) . "</b>";
+										echo "<b> x " . shortNumberParse($i['inv_qty']) . "</b>";
 									echo "
 								</div>
 							</div>
@@ -452,19 +452,19 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 						<div class='row'>
 							<div class='col-md'>
 								<b>Buy</b><br />
-								<small>" . number_format($i['itmbuyprice']) . " Copper Coins</small>
+								<small>" . shortNumberParse($i['itmbuyprice']) . " Copper Coins</small>
 							</div>
 							<div class='col-md'>
 								<b>Sell</b><br />
-								<small>" . number_format($i['itmsellprice']) . " Copper Coins</small>
+								<small>" . shortNumberParse($i['itmsellprice']) . " Copper Coins</small>
 							</div>
 							<div class='col-md'>
 								<b>Total Value</b><br />
-								<small>" . number_format($i['inv_qty_value']) . " Copper Coins</small>
+								<small>" . shortNumberParse($i['inv_qty_value']) . " Copper Coins</small>
 							</div>
 							<div class='col-md'>
 								<b>Circulating</b><br />
-								<small>" . number_format($total) . "</small>
+								<small>" . shortNumberParse($total) . "</small>
 							</div>
 						</div>
 						<hr />
@@ -474,7 +474,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 								echo "
 								<div class='col-md'>
 									<b>Weapon</b><br />
-									<small>" . number_format($i['weapon']) . "</small>
+									<small>" . shortNumberParse($i['weapon']) . "</small>
 								</div>";
 							}
 							if ($i['ammo'] > 0)
@@ -490,7 +490,7 @@ if (isset($_POST['do']) && (isset($_GET['user']))) {
 								echo "
 								<div class='col-md'>
 									<b>Armor</b><br />
-									<small>" . number_format($i['armor']) . "</small>
+									<small>" . shortNumberParse($i['armor']) . "</small>
 								</div>";
 							}
 							echo "
