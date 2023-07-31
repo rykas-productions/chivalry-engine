@@ -126,52 +126,58 @@ echo "<div class='row'>
         <a href='?stat=profit' class='btn btn-primary btn-block'>Asset Profit</a><br />
     </div>
 </div>";
-echo "<br />Listing the {$hofCount} players with the highest {$_GET['stat']}.";
-echo "<table class='table table-bordered'>
-<tr>
-    <th width='10%'>
-        Rank
-    </th>
-    <th width='45%'>
-        User
-    </th>";
-if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-    || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
-    || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest' || $_GET['stat'] == 'farm_level' 
-    || $_GET['stat'] == 'profit'
-) {
-    echo "<th width='45%'>
-                Value
-               </th>";
-}
-echo "
-</tr>";
+echo "<div class='card'>
+        <div class='card-header'>
+            Listing the {$hofCount} players with the highest {$_GET['stat']}
+        </div>
+        <div class='card-body'>";
 $rank = 1;
 if ($_GET['stat'] != 'crypto')
 {
     //Loop through the top 20 users.
     while ($r = $db->fetch_row($q)) {
-        echo "
-        <tr>
-            <td>
-                {$rank}
-            </td>
-            <td>
-                <a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
-            </td>";
-        if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-            || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
-            || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest' || $_GET['stat'] == 'farm_level'
-            || $_GET['stat'] == 'profit'
-        ) {
-            echo "<td>
-                    " . shortNumberParse($r[$_GET['stat']]) . "
-               </td>";
-        }
-        echo "
-        </tr>";
+        echo "<div class='row'>
+                <div class='col-2'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Rank</b></small>
+                        </div>
+                        <div class='col-12'>
+                            {$rank}
+                        </div>
+                    </div>
+                </div>
+                <div class='col'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Player</b></small>
+                        </div>
+                        <div class='col-12'>
+                            <a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
+                        </div>
+                    </div>
+                </div>";
+            if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
+                || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
+                || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest' || $_GET['stat'] == 'farm_level'
+                || $_GET['stat'] == 'profit') 
+                {
+                    echo"
+                    <div class='col'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>{$_GET['stat']}</b></small>
+                        </div>
+                        <div class='col-12'>
+                            " . shortNumberParse($r[$_GET['stat']]) . "
+                        </div>
+                    </div>
+                </div>";
+                }
+                echo "</div>";
         $rank++;
     }
+    echo "</div>
+            </div>";
 }
-echo "</table>";
 $h->endpage();
