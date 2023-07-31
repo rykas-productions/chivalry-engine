@@ -180,15 +180,20 @@ function crime()
 					$sucrate=$sucrate+($sucrate*0.1);
             $ir['brave'] -= $r['crimeBRAVE'];
             $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
+            $lvlMulti = levelMultiplier($ir['level'], $ir['reset']);
             if (Random(1, 100) <= $sucrate) {
                 if (!empty($r['crimePRICURMIN'])) {
                     $prim_currency = Random($r['crimePRICURMIN'], $r['crimePRICURMAX']);
+                    if ($lvlMulti > 0)
+                        $prim_currency = $prim_currency * levelMultiplier($ir['level'], $ir['reset']);
                     $api->UserGiveCurrency($userid, 'primary', $prim_currency);
 					crime_log($_GET['c'],true,'copper',$prim_currency);
 					addToEconomyLog('Criminal Activities', 'copper', $prim_currency);
                 }
                 if (!empty($r['crimeSECCURMIN'])) {
                     $sec_currency = Random($r['crimeSECCURMIN'], $r['crimeSECURMAX']);
+                    if ($lvlMulti > 0)
+                        $sec_currency = $sec_currency * levelMultiplier($ir['level'], $ir['reset']);
                     $api->UserGiveCurrency($userid, 'secondary', $sec_currency);
 					crime_log($_GET['c'],true,'token',$sec_currency);
 					addToEconomyLog('Criminal Activities', 'token', $sec_currency);
@@ -217,7 +222,7 @@ function crime()
 						$db->query("UPDATE `user_settings` SET `skill_points` = `skill_points` + 1 WHERE `userid` = {$userid}");
 					}
 				}
-                $text = str_ireplace(array("{money}","{secondary}","{item}"), array(number_format($prim_currency),number_format($sec_currency),$api->SystemItemIDtoName($r['crimeITEMSUC'])), $r['crimeSTEXT']);
+				$text = str_ireplace(array("{money}","{secondary}","{item}"), array(shortNumberParse($prim_currency),shortNumberParse($sec_currency),$api->SystemItemIDtoName($r['crimeITEMSUC'])), $r['crimeSTEXT']);
                 $title = "Success!";
                 $type = 'success';
                 $api->UserInfoSetStatic($userid, "xp", $ir['xp'] + $r['crimeXP']);
