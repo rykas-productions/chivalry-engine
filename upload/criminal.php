@@ -211,6 +211,8 @@ function crime()
                 if (empty($r['crimeITEMSUC'])) {
                     $r['crimeITEMSUC'] = 0;
                 }
+                if ($lvlMulti > 0)
+                    $r['crimeXP'] = $r['crimeXP']  * levelMultiplier($ir['level'], $ir['reset']);
 				if ($_GET['c'] == 18)
 				{
 					$achieved=$db->query("/*qc=on*/SELECT * FROM `achievements_done` WHERE `userid` = {$userid} and `achievement` = 86");

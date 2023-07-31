@@ -4485,6 +4485,7 @@ function staff_asset_management()
     $gymOwned = (guildOwnsAsset($ir['guild'], "guild_gym")) ? "<span class='text-success'>Owned</span>" : "<span class='text-danger'>Not owned</span>";
     $armoryOwned = (guildOwnsAsset($ir['guild'], "guild_armory")) ? "<span class='text-success'>Owned</span>" : "<span class='text-danger'>Not owned</span>";
     $vaultUpgrade1Owned = (guildOwnsAsset($ir['guild'], "guild_upgrade_vault1")) ? "<span class='text-success'>Owned</span>" : "<span class='text-danger'>Not owned</span>";
+    $districtTrophyOwned = (guildOwnsAsset($ir['guild'], "guild_upgrade_district_trophy")) ? "<span class='text-success'>Owned</span>" : "<span class='text-danger'>Not owned</span>";
     echo "<div class='row'>
             <div class='col-12'>
                 <div class='card'>
@@ -4590,6 +4591,40 @@ function staff_asset_management()
                                 </div>
                             </div>
                         </div>
+                        <hr />
+                        <div class='row'>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Name</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        District Trophy
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Description</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        <i>Given to guilds who 'win' a round in the districts. Grants guild troops an additional 5% effectiveness in future district rounds.</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <b><small>Asset Ownership</small></b>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$districtTrophyOwned}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
                     </div>
                 </div>
             </div>
