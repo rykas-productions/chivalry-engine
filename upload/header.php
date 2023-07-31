@@ -25,6 +25,7 @@ class headers
 		$extras['forum_class'] = ($extras['forum_count'] == 0) ? "" : "text-info font-weight-bold";
 		$extras['infirm_class'] = (!$api->UserStatus($ir['userid'], 'infirmary')) ? "" : "text-danger font-weight-bold";
 		$extras['dung_class'] = (!$api->UserStatus($ir['userid'], 'dungeon')) ? "" : "text-danger font-weight-bold";
+		cslog('log', "Your level multiplier is " . levelMultiplier($ir['level'], $ir['reset']));
 		return $extras;
 	}
 	
