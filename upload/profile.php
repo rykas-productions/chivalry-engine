@@ -252,41 +252,21 @@ $r['description']=$parser->parse($r['description']);
 $r['description']=$parser->getAsHtml();
 
 //Active / Online button
-$activeText = "Offline";
-$activeColor = "text-danger";
 $cardColor = "";
 if ($active == 1)
-{
-	$activeText = "Online";
-	$activeColor = "text-success";
-	$cardColor = "text-white bg-success";
-}
+    $activityBadge = createSuccessBadge("Active now!");
 elseif ($active == 2)
-{
-	$activeText = "Idle";
-	$activeColor = "text-warning";
-	$cardColor = "text-white bg-warning";
-}
+    $activityBadge = createWarningBadge("Idle");
+else
+    $activityBadge = createDangerBadge("Offline");
 
 //Gender icon / color
 if ($r['gender'] == 'Male')
-{
-	$genderIcon = "fas fa-mars";
-	$genderTxt = "Male";
-	$genderClr = "text-info";
-}
+    $genderBadge = createInfoBadge("Male");
 elseif ($r['gender'] == 'Female')
-{
-	$genderIcon = "fas fa-venus";
-	$genderTxt = "Female";
-	$genderClr = "text-warning";
-}
+    $genderBadge = createInfoBadge("Male");
 else
-{
-	$genderIcon = "fas fa-transgender";
-	$genderTxt = "Other";
-	$genderClr = "text-muted";
-}
+    $genderBadge = createSecondaryBadge("Other");
 $rhpperc = round($r['hp'] / $r['maxhp'] * 100);
 if ($_GET['user'] == 21)
 {
@@ -444,78 +424,73 @@ echo "<h3>{$user_name}'s Profile</h3>
 			<div class='card-body'>
 				<div class='row'>
 					<div class='col'>
-						<i class='fas fa-circle {$activeColor}' data-toggle='tooltip' data-placement='top' title='" . htmlentities($activeText, ENT_QUOTES, 'ISO-8859-1') . "' style='font-size: 1.75rem;'></i>
+						{$activityBadge}
 					</div>
 					<div class='col'>
-						<i class='{$genderIcon} {$genderClr}' data-toggle='tooltip' data-placement='top' title='" . htmlentities($genderTxt, ENT_QUOTES, 'ISO-8859-1') . "' style='font-size: 1.75rem;'></i>
+                        {$genderBadge}
 					</div>";
 					if ($r['vip_days'] > 0)
 					{
 						echo "
 						<div class='col'>
-							<i class='fa fa-shield-alt text-danger' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Donator", ENT_QUOTES, 'ISO-8859-1') . "' style='font-size: 1.75rem;'></i>
+							" . createDangerBadge("VIP Days: " . shortNumberParse($r['vip_days'])) . "
+						</div>";
+					}
+					if ($api->UserMemberLevelGet($r['userid'], "forum moderator"))
+					{
+					    echo "
+						<div class='col'>
+                            " . createBadge($r['user_level']) . "
 						</div>";
 					}
 					if ($married != "N/A")
 					{
 						echo "
 						<div class='col'>
-							<i class='fas fa-heart' data-toggle='tooltip' data-placement='top' title='Married to {$event['username']} [{$event['userid']}]' style='font-size: 1.75rem; color: pink;'></i>
+                            " . createPrimaryBadge("Married to {$event['username']} [{$event['userid']}]") . "
 						</div>";
 					}
 					if ($r['job'] > 0)
 					{
 						$jobTitle = $db->fetch_single($db->query("SELECT `jNAME` from `jobs` WHERE `jRANK` = {$r['job']}"));
 						$jobRank = $db->fetch_single($db->query("SELECT `jrRANK` from `job_ranks` WHERE `jrID` = {$r['jobrank']}"));
-						if ($r['job'] == 1)
-							$jobIcon = "game-icon game-icon-anvil";
-						elseif ($r['job'] == 2)
-							$jobIcon = "game-icon game-icon-rally-the-troops";
-						elseif ($r['job'] == 3)
-							$jobIcon = "game-icon game-icon-teacher";
-						elseif ($r['job'] == 4)
-							$jobIcon = "game-icon game-icon-shop";
-						elseif ($r['job'] == 5)
-							$jobIcon = "game-icon game-icon-farmer";
-						elseif ($r['job'] == 6)
-							$jobIcon = "game-icon game-icon-guards";
 						echo "
 						<div class='col'>
-							<i class='{$jobIcon}' data-toggle='tooltip' data-placement='top' title='" . htmlentities("{$jobRank} at {$jobTitle}", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+                            " . createSecondaryBadge(htmlentities("{$jobRank} at {$jobTitle}", ENT_QUOTES)) . "
 						</div>";
 					}
 					if (isUserDungeon($r['userid']))
 					{
 						echo "
 						<div class='col'>
-							<i class='fas fa-lock text-secondary' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Dungeon: {$r['dungeon_reason']} for " . TimeUntil_Parse($r['dungeon_out']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+                            " . createDangerBadge(htmlentities("Dungeon for " . TimeUntil_Parse($r['dungeon_out']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
 					if (isUserInfirmary($r['userid']))
 					{
 						echo "
 						<div class='col'>
-							<i class='fas fa-medkit text-primary' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Infirmary: {$r['infirmary_reason']} for " . TimeUntil_Parse($r['infirmary_out']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+                            " . createDangerBadge(htmlentities("Infirmary for " . TimeUntil_Parse($r['infirmary_out']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
 					if ($r['guild'] > 0)
 					{
 						$gR=$db->fetch_row($db->query("SELECT * from `guild` WHERE `guild_id` = {$r['guild']}"));
 						if ($gR['guild_owner'] == $r['userid'])
-							$guildRank = "Leader";
+							$guildRank = "Guild Leader";
 						elseif ($gR['guild_coowner'] == $r['userid'])
-							$guildRank = "Co-Leader";
+							$guildRank = "Guild Co-Leader";
 						elseif ($gR['guild_app_manager'] == $r['userid'])
-							$guildRank = "Application Manager";
+							$guildRank = "Guild App Manager";
 						elseif ($gR['guild_vault_manager'] == $r['userid'])
-							$guildRank = "Vault Manager";
+							$guildRank = "Guild Vault Manager";
 						elseif ($gR['guild_crime_lord'] == $r['userid'])
-							$guildRank = "Crime Lord";
+							$guildRank = "Guild Crime Lord";
 						else
-							$guildRank = "Member";
+							$guildRank = "Guild Member";
 						echo "
 						<div class='col'>
-							<i class='fas fa-fist-raised' data-toggle='tooltip' data-placement='top' title='" . htmlentities("{$guildRank} of {$gR['guild_name']}.", ENT_QUOTES) . "' style='font-size: 1.75rem; color: magenta;'></i>
+                            " . createInfoBadge(htmlentities("{$guildRank} of {$gR['guild_name']}", ENT_QUOTES)) . "
 						</div>";
 					}
 					if ($r['fedjail'])
@@ -529,21 +504,21 @@ echo "<h3>{$user_name}'s Profile</h3>
 					{
 						echo "
 						<div class='col'>
-							<i class='game-icon game-icon-banging-gavel text-success' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Mail Banned: {$r['mbREASON']} for " . TimeUntil_Parse($r['mbTIME']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+                            " . createDangerBadge(htmlentities("Mail Banned: {$r['mbREASON']} for " . TimeUntil_Parse($r['mbTIME']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
 					if ($r['fb_time'])
 					{
 						echo "
 						<div class='col'>
-							<i class='game-icon game-icon-gavel text-danger' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Forum Banned: {$r['fb_reason']} for " . TimeUntil_Parse($r['fb_time']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
+                            " . createDangerBadge(htmlentities("Forum Banned: {$r['fb_reason']} for " . TimeUntil_Parse($r['fb_time']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
 					echo"
 				</div>
 				<hr />
                     <div class='row'>
-                    <div class='col-12 col-sm-6 col-xxxl'>
+                    <div class='col-12 col-sm-6 col-xxxl-3'>
                         <div class='row'>
                             <small>Name</small>
                         </div>
@@ -551,15 +526,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                             " . parseUsername($r['userid']) . " [{$r['userid']}]
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-3'>
-                        <div class='row'>
-                            <small>Rank</small>
-                        </div>
-                        <div class='row'>
-                            {$r['user_level']}
-                        </div>
-                    </div>
-                    <div class='col-12 col-sm-6 col-xl-3'>
+                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
                         <div class='row'>
                             <small>Guild</small>
                         </div>
@@ -571,19 +538,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 					        echo"
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-3'>
-                        <div class='row'>
-                            <small>Job</small>
-                        </div>
-                        <div class='row'>";
-					        if ($r['job'] == 0)
-					            echo "N/A";
-				            else
-				                echo $jobTitle;
-					        echo"
-                        </div>
-                    </div>
-                    <div class='col-12 col-sm-6 col-xl-3'>
+                    <div class='col-12 col-sm-6 col-xl-2'>
                         <div class='row'>
                             <small>Health</small>
                         </div>
@@ -591,7 +546,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                             " . shortNumberParse($r['hp']) . " / " . shortNumberParse($r['maxhp']) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-6 col-xxxl-3'>
+                    <div class='col-12 col-sm-6 col-xl-6 col-xxxl-4'>
                         <div class='row'>
                             <small>Property</small>
                         </div>
@@ -599,7 +554,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            {$r['house_name']}
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-5 col-xxxl-4'>
+                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-3'>
                         <div class='row'>
                             <small>Marital Status</small>
                         </div>
@@ -613,39 +568,39 @@ echo "<h3>{$user_name}'s Profile</h3>
                                    echo"
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
+                    <div class='col-12 col-sm-6 col-xl-3 col-xxl-2 col-xxxl-2'>
                         <div class='row'>
                             <small>Achievements</small>
                         </div>
                         <div class='row'>";
-                           echo number_format($db->fetch_single($db->query("SELECT COUNT(`achievement`) FROM `achievements_done` WHERE `userid` = {$r['userid']}")));
+                                   echo shortNumberParse($db->fetch_single($db->query("SELECT COUNT(`achievement`) FROM `achievements_done` WHERE `userid` = {$r['userid']}")));
                         echo"</div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl'>
+                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
                         <div class='row'>
                             <small>Friends</small>
                         </div>
                         <div class='row'>
-                           " . number_format($friend) . "
+                           " . shortNumberParse($friend) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl'>
+                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
                         <div class='row'>
                             <small>Enemies</small>
                         </div>
                         <div class='row'>
-                           " . number_format($enemy) . "
+                           " . shortNumberParse($enemy) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl'>
+                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
                         <div class='row'>
                             <small>Referrals</small>
                         </div>
                         <div class='row'>
-                           " . number_format($ref) . "
+                           " . shortNumberParse($ref) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-6'>
+                    <div class='col-12 col-sm-6 col-xl-6 col-xxl-3'>
                         <div class='row'>
                             <small>Last Action</small>
                         </div>
@@ -653,7 +608,7 @@ echo "<h3>{$user_name}'s Profile</h3>
                            {$ula}
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-6'>
+                    <div class='col-12 col-sm-6 col-xl-6 col-xxl-3'>
                         <div class='row'>
                             <small>Last Login</small>
                         </div>

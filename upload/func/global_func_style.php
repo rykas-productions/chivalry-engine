@@ -69,3 +69,38 @@ function loadGamblingAlert()
     global $ir;
     alert('info',"","You have won " . shortNumberParse($ir['winnings_this_hour']) . " / " . shortNumberParse((calculateUserMaxBet($ir['userid']) * 15) * 20) . " Copper Coins this hour.", false);
 }
+
+function createBadge($text, $theme = 'primary')
+{
+    return "<span class='badge badge-{$theme}'>{$text}</span>";
+}
+
+function createDangerBadge($text)
+{
+    return createBadge($text, 'danger');
+}
+
+function createPrimaryBadge($text)
+{
+    return createBadge($text, 'primary');
+}
+
+function createSecondaryBadge($text)
+{
+    return createBadge($text, 'secondary');
+}
+
+function createWarningBadge($text)
+{
+    return createBadge($text, 'warning');
+}
+
+function createSuccessBadge($text)
+{
+    return createBadge($text, 'success');
+}
+
+function createInfoBadge($text)
+{
+    return createBadge($text, 'info');
+}
