@@ -44,5 +44,5 @@ echo "Here is the information on the crime.
 <br />
 <b>Result:</b> " . ucfirst($r['gclRESULT']) . "
 <br />
-<b>Copper Coins Earned:</b> " . number_format($r['gclWINNING']);
+<b>Copper Coins Earned:</b> " . shortNumberParse($r['gclWINNING']);
 $h->endpage();
