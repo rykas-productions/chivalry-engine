@@ -105,6 +105,13 @@ function TimeUntil_Parse($time_stamp)
  */
 function shortNumberParse($n)
 {
+    $symbol="";
+    if ($n < 0)
+    {
+        $neg = 1;
+        $n = $n * -1;
+        $symbol="-";
+    }
     if ($n < 1000)
         $n_format = number_format($n);
     elseif ($n < 10000)
@@ -118,14 +125,14 @@ function shortNumberParse($n)
     elseif ($n < 1000000000000000)
         $n_format = number_format($n / 1000000000000, 1) . "T";
     elseif ($n < 1000000000000000000)
-        $n_format = number_format($n / 1000000000000000, 1) . " Quadrillion";
+        $n_format = number_format($n / 1000000000000000, 1) . " Q";
     elseif ($n < 1000000000000000000000)
-        $n_format = number_format($n / 1000000000000000000, 1) . " Sextillion";
+        $n_format = number_format($n / 1000000000000000000, 1) . " S";
     elseif ($n < 1000000000000000000000000)
         $n_format = number_format($n / 1000000000000000000000, 1) . " Sextillion";
     else
         $n_format = number_format($n);
-    return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$n_format}</span>";
+    return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$symbol}{$n_format}</span>";
 }
 
 function numberToByteParse($n)
