@@ -97,10 +97,45 @@ function simulateGym($userTrain, $statToTrain, $energyToTrain, $statMultiplier =
 	}
 	$gain *= $statMultiplier;
 	$gain = floor($gain);
-	$db->query("UPDATE `users_stats` 
-				SET `{$statToTrain}` = `{$statToTrain}` + {$gain},
-				`will` = {$userData['will']},
-				`energy` = `energy` - {$energyToTrain}
-				WHERE `userid` = '{$userTrain}'");
+
+	updatePlayerStat($userTrain, $statToTrain, $gain);
+	updatePlayerStat($userTrain, "energy", $energyToTrain * -1);
+	setPlayerStat($userTrain, "will", $userData['will']);
 	return $gain;
+}
+
+/**
+ * @desc            Update a user's stat.
+ * @internal 
+ * @param string    $uuid      User UUID to update stat upon.
+ * @param string   $stat     Stat in stat table to update.
+ * @param number   $change   Change in stat (+/-)
+ */
+function updatePlayerStat($uuid, $stat, $change)
+{
+    global $db;
+    $uuid = makeSafeText($uuid);
+    $change = makeSafeInt($change);
+    $mod = ($change < 0) ? 1 : -1;
+    $change = $change * $mod;
+    $db->query("UPDATE `user_stats` 
+                SET `{$stat}` = `{$stat}` + (){$change}) 
+                WHERE `userid` = {$uuid}");
+}
+
+/**
+ * @desc            Set a user's stat.
+ * @internal 
+ * @param string    $uuid      User UUID to update stat upon.
+ * @param string   $stat     Stat in stat table to update.
+ * @param number   $change   Change in stat (+/-)
+ */
+function setPlayerStat($uuid, $stat, $set)
+{
+    global $db;
+    $uuid = makeSafeText($uuid);
+    $change = makeSafeInt($change);
+    $db->query("UPDATE `user_stats`
+                SET `{$stat}` = '{$set}'
+                WHERE `userid` = {$uuid}");
 }
