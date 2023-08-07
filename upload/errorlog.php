@@ -26,8 +26,19 @@ $logfile = "error.log";
 require('globals_nonauth.php');
 if (isset($_GET['clearlog']))
 {
-    unlink($logfile);
-    success("Error log cleared.");
+    if (file_exists($logfile))
+    {
+        unlink($logfile);
+        insertErrorLog("Error log cleared.");
+        success("Error log cleared.");
+    }
+    else
+        danger("Error log doesn't exist or is already cleared.");
+}
+if (isset($_GET['breakpoint']))
+{
+    insertLogBreakpoint();
+    success("Breakpoint inserted in log");
 }
 $styl->createCard("Error Log");
 if (file_exists($logfile))
@@ -36,6 +47,6 @@ else
     $output = info("No errors in the log at this time.");
 echo "<pre class='pre-scrollable'>{$output}</pre>";
 $col1 = "<a href='?clearlog' class='btn btn-primary btn-block'>Clear Log</a>";
-$col2 = "";
+$col2 = "<a href='?breakpoint' class='btn btn-secondary btn-block'>Insert break</a>";
 createTwoCols($col1, $col2);
 $styl->endCard();
