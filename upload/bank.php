@@ -53,7 +53,7 @@ if ($ir['primaryCurrencyBank'] == -1)
 		if (returnPlayerPrimaryCurrency($userid) >= $moduleConfig['bankOpeningFee'])
 		{
 			removePlayerPrimaryCurrency($userid, $moduleConfig['bankOpeningFee']);
-			$db->query("UPDATE `user_stats` SET `primaryCurrencyBank` = 0 WHERE `userid` = {$userid}");
+			$db->query("UPDATE `users_stats` SET `primaryCurrencyBank` = 0 WHERE `userid` = '{$userid}'");
 			successRedirect("You have successfully bought a bank account for " . number_format($moduleConfig['bankOpeningFee']) . " " . constant("primary_currency") . ".");
 			
 		}
