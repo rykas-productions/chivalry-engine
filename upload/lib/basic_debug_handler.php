@@ -40,3 +40,8 @@ function displayBacktrace()
         echo "</pre>";
     }
 }
+
+function insertLogBreakpoint()
+{
+    insertErrorLog("Debug breakpoint inserted.");
+}
