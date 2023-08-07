@@ -66,12 +66,19 @@ if (isset($_POST['bet']))
 	}
 	if ($bet > $playerMaxBet)
 	{
-		dangerRedirect("You do not have cannot bet that high of a bet.");
+		dangerRedirect("You do not have cannot bet that high of a bet.  <br />
+		You can only bet: " . $playerMaxBet);
 		die($h->endHeaders());
 	}
 	if ($bet > $moduleConfig['maxBetHardCap'])
 	{
-		dangerRedirect("You do not have cannot bet that high of a bet.");
+		dangerRedirect("You do not have cannot bet that high of a bet. <br />
+		Max bet here is " . $playerMaxBet);
+		die($h->endHeaders());
+	}
+	if ($bet <= 0)
+	{
+		dangerRedirect("Uh-Oh! You didn't make a bet!");
 		die($h->endHeaders());
 	}
 	removePlayerPrimaryCurrency($userid, $bet);
