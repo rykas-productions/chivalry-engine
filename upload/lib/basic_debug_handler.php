@@ -28,11 +28,14 @@ define('DUMP_GET', false);
 define('DUMP_USERDATA', false);
 define('ENABLE_BACKTRACE', false);
 
+/**
+ * @desc Place at breakpoints to view backtrace to error.
+ */
 function displayBacktrace()
 {
     if (ENABLE_BACKTRACE)
     {
-        echo "<b>Dumping backtrace</b><br /><pre>";
+        echo "<b>Dumping backtrace</b><br /><pre class='pre-scrollable'>";
         debug_print_backtrace();
         echo "</pre>";
     }
