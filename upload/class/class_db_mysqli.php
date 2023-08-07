@@ -145,9 +145,7 @@ class database
             $result = $this->result;
         }
         //Ugly hack here
-        mysqli_data_seek($result, 0);
-        $temp = mysqli_fetch_array($result);
-        return $temp[0];
+        return $this->fetch_row($result)[0];
     }
 
     function easy_insert($table, $data)
