@@ -45,7 +45,6 @@ function initialize()
         headerRedirect("bank.php");
     }
 }
-
 if ($ir['primaryCurrencyBank'] == -1)
 {
 	if (isset($_GET['buy']))
@@ -115,7 +114,7 @@ function deposit()
 		removePlayerPrimaryCurrency($ir['userid'], $deposit);
 		$db->query("UPDATE `users_stats` 
 					SET `primaryCurrencyBank` = `primaryCurrencyBank` + {$deposit} 
-					WHERE `userid` = {$ir['userid']}");
+					WHERE `userid` = '{$ir['userid']}'");
 		successRedirect("You have deposited " . number_format($deposit) . " into your bank account.","bank.php","Back");
 	}
 }
@@ -134,7 +133,7 @@ function withdraw()
 		addPlayerPrimaryCurrency($ir['userid'], $withdraw);
 		$db->query("UPDATE `users_stats` 
 					SET `primaryCurrencyBank` = `primaryCurrencyBank` - {$withdraw} 
-					WHERE `userid` = {$ir['userid']}");
+					WHERE `userid` = '{$ir['userid']}'");
 		successRedirect("You have withdrawn " . number_format($withdraw) . " from your bank account.","bank.php","Back");
 	}
 }
