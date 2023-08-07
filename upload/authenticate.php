@@ -31,7 +31,7 @@ if (empty($userid))
 	dangerRedirect('Invalid account creditials.', 'login.php', 'Back');
 	die($h->endHeaders());
 }
-$accountPassword=getPasswordByUserID($userid);
+$accountPassword=getPasswordByUUID($userid);
 if (!(checkUserPassword($safePassword, $accountPassword)))
 {
 	dangerRedirect('Invalid account creditials.', 'login.php', 'Back');
