@@ -35,7 +35,7 @@ function getEngineVersion()
  */
 function getEngineUpdate(string $currentVersion, string $url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
-    $json = json_decode(getCachedFile($url, "cev3_update.json"), true);
+    $json = json_decode(getRemoteFile($url, "cev3_update.json"), true);
     if (empty($currentVersion))
         $currentVersion = getEngineVersion();
     if (is_null($json))
@@ -56,7 +56,7 @@ function getEngineUpdate(string $currentVersion, string $url = 'https://raw.gith
 function getRemoteFile(string $url, string $fileName, $cacheHour = 24)
 {
     $cacheExpireTime = $cacheHour * 60 * 60;
-    $fileAbs=__DIR__ . "/assets/temp/$fileName";
+    $fileAbs=returnCacheDir() . $fileName;
     if (file_exists($fileAbs)) 
     {
         $fileTime = filemtime($fileAbs);
@@ -94,4 +94,14 @@ function remoteConnect(string $url)
     $content = curl_exec($curl);
     curl_close($curl);
     return $content;
+}
+
+/**
+ * @desc Internal function to quickly return the cache directory.
+ * @internal
+ * @return String Currently set cache directory.
+ */
+function returnCacheDir()
+{
+    return dirname(__DIR__) . "/assets/temp/";
 }
