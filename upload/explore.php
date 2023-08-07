@@ -36,7 +36,7 @@ createThreeCols(createCard("Markets and Shops",
 							<a href='#'>Academy</a><br />
 							<a href='#'>Work</a>"));
 createThreeCols(createCard("Game Administration",
-							"<a href='#'>Player List</a><br />
+							"<a href='users.php'>Player List</a><br />
 							<a href='#'>Game Staff</a><br />
 							<a href='#'>Federal Dungeon</a><br />
 							<a href='#'>Game Statis</a><br />
