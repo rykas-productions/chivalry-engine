@@ -26,6 +26,14 @@ require('globals_nonauth.php');
 $styl->createCard("Update Checker");
 echo "<pre class='pre-scrollable'>" . getEngineUpdate(getEngineVersion()) . "</pre>";
 $styl->endCard();
+
 $styl->createCard("Engine Version");
 echo "<pre class='pre-scrollable'>" . getEngineVersion() . "</pre>";
+$styl->endCard();
+
+$styl->createCard("Version Control");
+$col1 = "PHP: " . phpversion();
+$col2 = "Database: " . $db->fetch_single($db->query("SELECT VERSION()"));
+$col3 = "DB Driver: " . constant("db_driver");
+createThreeCols($col1, $col2, $col3);
 $styl->endCard();
