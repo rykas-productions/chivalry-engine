@@ -26,23 +26,28 @@ $moduleID=('bank');
 require('./globals_auth.php');
 function initialize()
 {
-	global $moduleID;
-	if (!readConfigFromDB($moduleID))
-	{
-		$moduleConfigArray=array(
-		'moduleID' => $moduleID,
-		'moduleAuthor' => 'TheMasterGeneral',
-		'moduleURL' => 'https://github.com/rykas-productions/chivalry-engine',
-		'moduleVersion' => 1,
-		'bankOpeningFee' => 5000,
-		'bankWithdrawPercent' => 5,
-		'bankWithdrawMaxFee' => 1000
-		);
-		$defaultConfig = formatConfig($moduleConfigArray);
-		writeConfigToDB($moduleID, $defaultConfig);
-		echo "Installing default config...";
-		headerRedirect("bank.php");
-	}
+    global $moduleID, $moduleConfig;
+
+    if (!readConfigFromDB($moduleID))
+    {
+        $moduleConfigArray = array(
+            'moduleID' => $moduleID,
+            'moduleAuthor' => 'TheMasterGeneral',
+            'moduleURL' => 'https://github.com/rykas-productions/chivalry-engine',
+            'moduleVersion' => 1,
+            'bankOpeningFee' => 5000,
+            'bankWithdrawPercent' => 5,
+            'bankWithdrawMaxFee' => 1000
+        );
+
+        // Set the $moduleConfig variable with $moduleConfigArray
+        $moduleConfig = $moduleConfigArray;
+
+        $defaultConfig = formatConfig($moduleConfigArray);
+        writeConfigToDB($moduleID, $defaultConfig);
+        echo "Installing default config...";
+        headerRedirect("bank.php");
+    }
 }
 if ($ir['primaryCurrencyBank'] == -1)
 {
