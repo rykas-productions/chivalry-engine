@@ -76,7 +76,7 @@ function returnPlayerPrimaryCurrency($userid)
 function simulateGym($userTrain, $statToTrain, $energyToTrain, $statMultiplier = 1)
 {
 	global $db;
-	$userTrain = makeSafeInt($userTrain);
+	$userTrain = makeSafeText($userTrain);
 	$statToTrain = makeSafeText($statToTrain);
 	$energyToTrain = makeSafeInt($energyToTrain);
 	$statMultiplier = makeSafeInt($statMultiplier);
