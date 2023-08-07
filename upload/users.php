@@ -52,7 +52,7 @@ echo pagination(100, $membs, $st, "?by={$by}&ord={$ord}&st=");
 echo "Order By:
 <a href='?st={$st}&by=userid&ord={$ord}'>User ID</a>&nbsp;|
 <a href='?st={$st}&by=level&ord={$ord}'>Level</a>&nbsp;|
-<a href='?st={$st}&by=primaryCurrencyHeld&ord={$ord}'>Primary Currency Held</a>
+<a href='?st={$st}&by=primaryCurrencyHeld&ord={$ord}'>" . constant("primary_currency") . " Held</a>
 <br />
 <a href='?st={$st}&by={$by}&ord=asc'>Ascending</a> |
 <a href='?st={$st}&by={$by}&ord=desc'>Descending</a>
@@ -75,7 +75,7 @@ Showing users {$no1} to {$no2} by order of {$by} {$ord}.
 		    <h4>User</h4>
 		</div>
 		<div class='col-sm'>
-		    <h4>Primary Currency Held</h4>
+		    <h4>" . constant("primary_currency") . " Held</h4>
 		</div>
 		<div class='col-sm'>
 		    <h4>Level</h4>

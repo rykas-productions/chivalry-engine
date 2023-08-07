@@ -50,7 +50,7 @@ if ($moduleConfig['itemRequired'] > 0)
 {
 	//TODO: Add code to check for item in inventory... when inventory is added.
 }
-$statNames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor");
+$statNames = array(constant("stat_strength") => "strength", constant("stat_agility") => "agility", constant("stat_guard") => "guard", constant("stat_labor") => "labor");
 echo "<h3>Gym</h3><br />
 Select the stat you wish to train, and enter how many times you would like to train. You may increase your gains by buying better estates.<hr />
 ";
@@ -85,8 +85,8 @@ if (isset($_POST['stat']))
 			" . number_format($ir['energy']) . " energy remaining.");
 	}
 }
-createFourCols(createPostForm('gym.php',array(array('hidden','stat','','Strength'), array('number','train','Strength: ' . number_format($ir['strength']),$ir['energy'])), 'Train Strength'),
-				createPostForm('gym.php',array(array('hidden','stat','','Agility'), array('number','train','Agility: ' . number_format($ir['agility']),$ir['energy'])), 'Train Agility'),
-				createPostForm('gym.php',array(array('hidden','stat','','Guard'), array('number','train','Guard: ' . number_format($ir['guard']),$ir['energy'])), 'Train Guard'),
-				createPostForm('gym.php',array(array('hidden','stat','','Labor'), array('number','train','Labor: ' . number_format($ir['labor']),$ir['energy'])), 'Train Labor'));
+createFourCols(createPostForm('gym.php',array(array('hidden','stat','',constant("stat_strength")), array('number','train',constant("stat_strength") . ': ' . number_format($ir['strength']),$ir['energy'])), 'Train ' . constant("stat_strength")),
+    createPostForm('gym.php',array(array('hidden','stat','',constant("stat_agility")), array('number','train',constant("stat_agility") . ': ' . number_format($ir['agility']),$ir['energy'])), 'Train ' . constant("stat_agility")),
+    createPostForm('gym.php',array(array('hidden','stat','',constant("stat_guard")), array('number','train',constant("stat_guard") . ': ' . number_format($ir['guard']),$ir['energy'])), 'Train ' . constant("stat_guard")),
+    createPostForm('gym.php',array(array('hidden','stat','',constant("stat_labor")), array('number','train',constant("stat_labor") . ': ' . number_format($ir['labor']),$ir['energy'])), 'Train ' . constant("stat_labor")));
 $h->endHeaders();

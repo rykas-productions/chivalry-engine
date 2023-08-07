@@ -116,7 +116,7 @@ class headers
 		$accBar="{$ir['username']} [{$ir['userid']}]<br />
 		Level: {$ir['level']}<br />
 		Experience: {$ir['experience']}<br />
-		Primary Currency: {$ir['primaryCurrencyHeld']}<br />
+		" . constant("primary_currency") . ": {$ir['primaryCurrencyHeld']}<br />
 		[<a href='logout.php'>Logout</a>]";
 		$infoBar=returnFormattedUnreadMail() . "" . returnFormattedInfirmary() . "" . returnFormattedAnnouncement();
 		$infoBar=returnFormattedUnreadMail() . "" . returnFormattedAnnouncement();

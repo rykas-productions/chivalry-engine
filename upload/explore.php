@@ -25,7 +25,7 @@
 require('./globals_auth.php');
 createThreeCols(createCard("Markets and Shops",
 							"<a href='#'>Item Market</a><br />
-							<a href='#'>Secondary Currency Market</a>"),
+							<a href='#'>" . constant("secondary_currency") . " Market</a>"),
 				createCard("Accounting and Money",
 							"<a href='bank.php'>Bank</a><br />
 							<a href='#'>Estate Agent</a><br />
@@ -39,7 +39,7 @@ createThreeCols(createCard("Game Administration",
 							"<a href='users.php'>Player List</a><br />
 							<a href='#'>Game Staff</a><br />
 							<a href='#'>Federal Dungeon</a><br />
-							<a href='#'>Game Statis</a><br />
+							<a href='#'>Game Stats</a><br />
 							<a href='#'>Player Report</a><br />
 							<a href='announcements.php'>Announcements</a><br />
 							<a href='#'>Item Appendix</a><br />"),
