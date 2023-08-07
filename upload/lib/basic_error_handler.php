@@ -59,7 +59,7 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         }
     }
     error_log($debug_error);
-    $logged_error = $debug_error . " ({$action})\n";
+    $logged_error = $debug_error . " ({$action})";
 	insertErrorLog($logged_error);
     exit;
 }
