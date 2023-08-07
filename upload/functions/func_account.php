@@ -203,16 +203,26 @@ function returnUnreadMailCount(string $uuid = '')
  * @param string    $uuid User UUID
  * @return boolean  User is in the infirmary
  */
- function checkInfirmary(string $uuid = '') 
- {
-	global $db, $userid;
-	if (empty($uuid))
-		$uuid = $userid;
-	$q=$db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$uuid}'");
-	if ($db->fetch_single($q) < returnUnixTimestamp())
-		return false;
-	else
-		return true;
+function checkInfirmary(string $uuid = '') 
+{
+    global $db, $userid;
+
+    if (empty($uuid)) {
+        $uuid = $userid;
+    }
+
+	$nr = $db->num_rows($db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$uuid}'"));
+    $q = $db->query("SELECT `infirmaryOut` FROM `users_infirmary` WHERE `infirmaryUserid` = '{$uuid}'");
+    
+    if ($nr >0 ) {
+        $infirmaryOut = $db->fetch_single($q);
+
+        if ($infirmaryOut !== null && $infirmaryOut >= returnUnixTimestamp()) {
+            return true; // User is still in the infirmary or hasn't left yet
+        }
+    }
+
+    return false; // No result or user has already left the infirmary*/
 }
 
 /**
