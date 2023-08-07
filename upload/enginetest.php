@@ -26,3 +26,6 @@ require('globals_nonauth.php');
 $styl->createCard("Update Checker");
 echo "<pre class='pre-scrollable'>" . getEngineUpdate(getEngineVersion()) . "</pre>";
 $styl->endCard();
+$styl->createCard("Engine Version");
+echo "<pre class='pre-scrollable'>" . getEngineVersion() . "</pre>";
+$styl->endCard();
