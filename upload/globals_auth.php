@@ -22,10 +22,10 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-require('functions/func_startup.php');
+require('./functions/func_startup.php');
 register_shutdown_function('shutdown');
 enableErrorOutput();    //Comment out to disable raw PHP errors.
-if (!checkDirectAccess('globals_nonauth.php'))
+if (!checkDirectAccess('./globals_auth.php'))
 {
 	die('This file may not be accessed directly.');
 }
@@ -37,6 +37,7 @@ require('./headers_auth.php');
 require('./config.php');
 define('MONO_ON', 1);
 require("./class/class_db_mysqli.php");
+require("./class/class_style.php");
 require('./functions/global_functions.php');
 $db = new database;
 $db->configure(constant("db_host"), constant("db_username"), constant("db_password"), constant("db_database"), 0);
@@ -44,10 +45,11 @@ $db->connect();
 $dbConnectionID = $db->connection_id;
 autoSessionCheck();
 $_SESSION['last_active'] = returnUnixTimestamp();
-$userid = isset($_SESSION['userid']) ? $_SESSION['userid'] : 0;
+$userid = isset($_SESSION['uuid']) ? $_SESSION['uuid'] : 0;
 $ir=returnCurrentUserData($userid);
 $h = new headers;
 $h->startHeaders();
+$styl = new style();
 if (isset($moduleID) && !empty($moduleID))
 {
 	if (function_exists('initialize'))

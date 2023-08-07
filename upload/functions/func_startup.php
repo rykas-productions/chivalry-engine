@@ -28,6 +28,12 @@
 	Returns true if its being directly accessed.
 	Returns false if it is not being directly accessed.
 */
+/**
+ * @desc            Internal function to test if file is being directly accessed. 
+ *                  Returns true if being accessed by URL, false if not.
+ * @param string    $file Name of file/dir to test if being directly accessed.
+ * @return boolean
+ */
 function checkDirectAccess($file)
 {
 	if (strpos($_SERVER['PHP_SELF'], $file) !== false)
@@ -35,6 +41,11 @@ function checkDirectAccess($file)
 	else
 		return true;
 }
+/**
+ * @desc            Internal function to set the current user's session and optionally
+ *                  a name for the session.
+ * @param string    $sessionName Name to set for the session
+ */
 function setSession($sessionName)
 {
 	session_name($sessionName);
@@ -46,6 +57,10 @@ function setSession($sessionName)
 	}
 	ob_start();
 }
+/**
+ * @desc            Internal function to be called whenever you wish to display PHP/Engine
+ *                  errors to the client.
+ */
 function enableErrorOutput()
 {
 	ini_set('display_startup_errors',1); 

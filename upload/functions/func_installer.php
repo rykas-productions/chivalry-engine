@@ -24,25 +24,34 @@
 */
 function refuseInstall()
 {
-    if (file_exists('./installer.lock'))
+    if (file_exists('installer.lock'))
         exit;
 }
+
+/**
+ * @deprecated
+ */
 function getInstallVersion()
 {
-    return "3.0.0-alpha2";
+    return getEngineVersion();
 }
 function loadFunc()
 {
-    include('func_startup.php');
     include('func_escape.php');
+    
+    include('func_alerts.php');
     include('func_template.php');
     include('func_format.php');
-    include('func_alerts.php');
+    include('func_config.php');
+    
+    include('func_auth.php');
+    include('func_startup.php');
+    include('func_system.php');
 }
 function doInstallerChecks()
 {
     $op=array();
-    $op['phpValidVersion'] = (version_compare(phpversion(), '7.0.0') > 0) ? true : false;
+    $op['phpValidVersion'] = (version_compare(phpversion(), '7.2.0') > 0) ? true : false;
     $op['writable'] = (is_writable('./')) ? true : false;
     $op['openssl'] = (function_exists('openssl_random_pseudo_bytes')) ? true : false;
     $op['password'] = (function_exists('password_hash')) ? true : false;
@@ -65,8 +74,7 @@ function checkPass($bool)
 //Installer Styling functions
 function startHeaders()
 {
-    global $set;
-        ?>
+       echo '
 		<!DOCTYPE html>
 			<html>
 				<head>
@@ -74,15 +82,15 @@ function startHeaders()
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 				<!-- Site Properties -->
-				<title>Chivalry Engine Installer</title>
-    	<?php
+				<title>Chivalry Engine Installer (v' . getInstallVersion() . ')</title>';
     	loadCSS();
     	loadTopMenu();
 }
 	
 function loadCSS()
 {
-	echo '<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
+	echo '
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 	<style type="text/css">
 		main > .container 
 		{
@@ -93,9 +101,8 @@ function loadCSS()
 
 function loadJS()
 {
-	echo '<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-	<script src="../assets/js/bootstrap.js"></script>
+	echo '
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 	</head>';
 }
 function loadTopMenu()
@@ -110,6 +117,9 @@ function loadTopMenu()
 			</button>
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+						<a class="nav-link" href="http://chivalryengine.com">Website</a>
+					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="https://github.com/rykas-productions/chivalry-engine/releases">Releases</a>
 					</li>
@@ -141,4 +151,22 @@ function endHeaders()
 	endBody();
 	startFooter();
 	//endFooter();
+}
+
+function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/ce-analytics.php')
+{
+    global $Version;
+    $postdata = "domain=" . getGameURL() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6");
+    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_REFERER, $url);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    curl_exec ($ch);
+    curl_close($ch);
 }

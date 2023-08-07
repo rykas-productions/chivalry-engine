@@ -51,5 +51,5 @@ function makeSafeInt(int $int)
  */
 function stripAll(string $text)
 {
-	return $db->escape(strip_tags(stripslashes($text)));
+    return htmlentities(strip_tags(stripslashes($text)), ENT_QUOTES, 'ISO-8859-1');
 }

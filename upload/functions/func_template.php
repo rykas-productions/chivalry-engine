@@ -22,6 +22,9 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createTwoCols($col1, $col2)
 {
 	echo "
@@ -34,6 +37,10 @@ function createTwoCols($col1, $col2)
 		</div>
 	</div>";
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createThreeCols($col1, $col2, $col3)
 {
 	echo "
@@ -49,6 +56,10 @@ function createThreeCols($col1, $col2, $col3)
 		</div>
 	</div>";
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createFourCols($col1, $col2, $col3, $col4)
 {
 	echo "
@@ -67,6 +78,10 @@ function createFourCols($col1, $col2, $col3, $col4)
 		</div>
 	</div>";
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createFiveCols($col1, $col2, $col3, $col4, $col5)
 {
 	echo "
@@ -88,6 +103,10 @@ function createFiveCols($col1, $col2, $col3, $col4, $col5)
 		</div>
 	</div>";
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createSixCols($col1, $col2, $col3, $col4, $col5, $col6)
 {
 	echo "
@@ -112,6 +131,10 @@ function createSixCols($col1, $col2, $col3, $col4, $col5, $col6)
 		</div>
 	</div>";
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createCard($cardTitle,$cardBody)
 {
 	return "
@@ -122,6 +145,10 @@ function createCard($cardTitle,$cardBody)
 		</div>
 	</div>";
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createTitlelessCard($cardBody)
 {
 	return "
@@ -131,14 +158,59 @@ function createTitlelessCard($cardBody)
 		</div>
 	</div>";
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createProgressBar($filledPercentage)
 {
 	return createProgressBarLabel($filledPercentage, "{$filledPercentage}%");
 }
+
+/**
+ * @deprecated Please use alternative in ./class/class_style.php
+ */
 function createProgressBarLabel($filledPercentage, $label)
 {
 	return "
 	<div class='progress'>
 		<div class='progress-bar bg-success' role='progressbar' style='width: {$filledPercentage}%'>{$label}</div>
 	</div>";
+}
+
+function pagination(int $perpage, int $total, int $currentpage, string $url)
+{
+    global $db;
+    $pages = ceil($total / $perpage);
+    $output = "<ul class='pagination justify-content-center'>";
+    if ($currentpage <= 0) {
+        $output .= "<li class='page-item disabled'><a class='page-link'>&laquo;</a></li>";
+        $output .= "<li class='page-item disabled'><a class='page-link'>Back</a></li>";
+    } else {
+        $link = $currentpage - $perpage;
+        $output .= "<li class='page-item'><a class='page-link' href='{$url}0'>&laquo;</a></li>";
+        $output .= "<li class='page-item'><a class='page-link' href='{$url}{$link}'>Back</a></li>";
+    }
+    for ($i = 1; $i <= $pages; $i++) {
+        $s = ($i - 1) * $perpage;
+        if (!((($currentpage - 3 * $perpage) > $s) || (($currentpage + 3 * $perpage) < $s))) {
+            if ($s == $currentpage) {
+                $output .= "<li class='page-item active'>";
+            } else {
+                $output .= "<li class='page-item'>";
+            }
+            $output .= "<a class='page-link' href='{$url}{$s}'>{$i}</li></a>";
+        }
+    }
+    $maxpage = ($pages * $perpage) - $perpage;
+    if ($currentpage >= $maxpage) {
+        $output .= "<li class='page-item disabled'><a class='page-link'>Next</a></li>";
+        $output .= "<li class='page-item disabled'><a class='page-link'>&raquo;</a></li>";
+    } else {
+        $link = $currentpage + $perpage;
+        $output .= "<li class='page-item'><a class='page-link' href='{$url}{$link}'>Next</a></li>";
+        $output .= "<li class='page-item'><a class='page-link' href='{$url}{$maxpage}'>&raquo;</a></li>";
+    }
+    $output .= "</ul></nav>";
+    return $output;
 }
