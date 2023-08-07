@@ -22,12 +22,11 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
-$set['gameName']='Chivalry Engine v3.0.0-alpha1';
 class headers
 {
 	function startHeaders()
 	{
-		global $set;
+	    $set['gameName']='Chivalry Engine ' . getEngineVersion();
 		?>
 			<!DOCTYPE html>
 				<html>
@@ -62,7 +61,7 @@ class headers
 	}
 	function loadTopMenu()
 	{
-		global $set;
+	    $set['gameName']='Chivalry Engine ' . getEngineVersion();
 		echo '
 		<header>
 			<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
