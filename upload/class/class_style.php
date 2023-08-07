@@ -60,4 +60,42 @@ class style
     {
         echo "</p></div></div>";
     }
+    
+    /**
+     * @desc            Parses a number into a shorter version of the number.
+     * @example         2,010,313 parses to 2.01M
+     * @param           number $n
+     * @since           8/07/2024
+     */
+    function number_format($n)
+    {
+        $symbol="";
+        if ($n < 0)
+        {
+            $neg = 1;
+            $n = $n * -1;
+            $symbol="-";
+        }
+        if ($n < 1000)
+            $n_format = number_format($n);
+            elseif ($n < 10000)
+            $n_format = number_format($n / 1000, 2) . "K";
+            elseif ($n < 1000000)
+            $n_format = number_format($n / 1000, 1) . "K";
+            elseif ($n < 1000000000)
+            $n_format = number_format($n / 1000000, 1) . "M";
+            elseif ($n < 1000000000000)
+            $n_format = number_format($n / 1000000000, 1) . "B";
+            elseif ($n < 1000000000000000)
+            $n_format = number_format($n / 1000000000000, 1) . "T";
+            elseif ($n < 1000000000000000000)
+            $n_format = number_format($n / 1000000000000000, 1) . " Q";
+            elseif ($n < 1000000000000000000000)
+            $n_format = number_format($n / 1000000000000000000, 1) . " S";
+            elseif ($n < 1000000000000000000000000)
+            $n_format = number_format($n / 1000000000000000000000, 1) . " Sextillion";
+            else
+                $n_format = number_format($n);
+        return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$symbol}{$n_format}</span>";
+    }
 }
