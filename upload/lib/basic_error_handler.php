@@ -59,8 +59,8 @@ function error_critical($human_error, $debug_error, $action, $context = array())
         }
     }
     error_log($debug_error);
-    $logged_error = date('F j, Y, g:i:s a', time()) . " " . $debug_error . "\n";
-	file_put_contents('./error.log', $logged_error, FILE_APPEND);
+    $logged_error = $debug_error . " ({$action})\n";
+	insertErrorLog($logged_error);
     exit;
 }
 
@@ -120,4 +120,10 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = a
             echo "</pre>";
         }
     }
+}
+
+function insertErrorLog($logTxt)
+{
+    $logged_error = date('m-d-Y, G:i:s', time()) . ": {$logTxt}\n";
+    file_put_contents('./error.log', $logged_error, FILE_APPEND);
 }
