@@ -22,6 +22,20 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
+$logfile = "error.log";
 require('globals_nonauth.php');
-$file = file_get_contents('error.log');
-echo "<pre>{$file}</pre>";
+if (isset($_GET['clearlog']))
+{
+    unlink($logfile);
+    success("Error log cleared.");
+}
+$styl->createCard("Error Log");
+if (file_exists($logfile))
+    $output = file_get_contents($logfile);
+else
+    $output = info("No errors in the log at this time.");
+echo "<pre class='pre-scrollable'>{$output}</pre>";
+$col1 = "<a href='?clearlog' class='btn btn-primary btn-block'>Clear Log</a>";
+$col2 = "";
+createTwoCols($col1, $col2);
+$styl->endCard();
