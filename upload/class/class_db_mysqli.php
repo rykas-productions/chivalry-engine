@@ -144,7 +144,8 @@ class database
         if (!$result) {
             $result = $this->result;
         }
-        return mysqli_field_seek($result, 0);
+         $row = mysqli_fetch_row($result);
+        return $row[0];
     }
 
     function easy_insert($table, $data)

@@ -39,16 +39,13 @@ function initialize()
             'bankWithdrawPercent' => 5,
             'bankWithdrawMaxFee' => 1000
         );
-
-        // Set the $moduleConfig variable with $moduleConfigArray
-        $moduleConfig = $moduleConfigArray;
-
         $defaultConfig = formatConfig($moduleConfigArray);
         writeConfigToDB($moduleID, $defaultConfig);
         echo "Installing default config...";
         headerRedirect("bank.php");
     }
 }
+
 if ($ir['primaryCurrencyBank'] == -1)
 {
 	if (isset($_GET['buy']))
