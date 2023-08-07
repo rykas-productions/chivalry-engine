@@ -56,8 +56,11 @@ function error_critical($human_error, $debug_error, $action, $context = array())
             echo '<br />' . $human_error;
         }
     }
+    echo "Dumping Session Data...<br />";
+    var_dump($_SESSION);
     error_log($debug_error);
-	file_put_contents('./error.log', $debug_error, FILE_APPEND);
+    $logged_error = date('F j, Y, g:i:s a', time()) . " " . $debug_error . "\n";
+	file_put_contents('./error.log', $logged_error, FILE_APPEND);
     exit;
 }
 
