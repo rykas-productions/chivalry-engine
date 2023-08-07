@@ -66,8 +66,9 @@ function enableErrorOutput()
 	ini_set('display_startup_errors',1); 
 	ini_set('display_errors',1);
 	error_reporting(-1);
+	displayBacktrace();
 }
 function shutdown()
 {
-	
+	echo "<br /><p class='text-muted'><i>We also have a shutdown function that's always ran, even on failure, inside of `functions\\func_startup.php`</i></p>";
 }

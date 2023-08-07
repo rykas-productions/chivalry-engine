@@ -22,6 +22,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
+require('./lib/basic_debug_handler.php');
 require('./functions/func_startup.php');
 register_shutdown_function('shutdown');
 enableErrorOutput();    //Comment out to disable raw PHP errors.
