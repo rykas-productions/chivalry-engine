@@ -22,9 +22,24 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 */
+/**
+ * @desc            Returns the currently installed version of Chivalry Engine.
+ * @internal
+ * @return string   Chivalry Engine's current install version.
+ */
 function getEngineVersion()
 {
     return "3.0.0-alpha2";
+}
+
+/**
+ * @desc            Lazy function to easily change the name in the URL/title bar.
+ * @internal
+ * @return string   Game Title for URL
+ */
+function returnGameTitle()
+{
+    return "Chivalry Engine v" . getEngineVersion();
 }
 
 /**
