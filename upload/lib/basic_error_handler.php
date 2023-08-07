@@ -35,11 +35,13 @@ function error_critical($human_error, $debug_error, $action, $context = array())
 {
     echo "<title>Chivalry Engine V3 Error</title>";
         echo '<h1>Internal Engine Error</h1>';
-    if (DEBUG) {
+    if (DEBUG) 
+    {
         echo 'A critical error has occurred, and page execution has stopped. If this issue persists, please notify an admin or web developer right away!<br />'
             . 'Below are the details:<br /><pre>' . $debug_error
             . '<br /><br />' . '<strong>Action taken:</strong> ' . $action
             . '<br /><br /></pre>';
+        displayBacktrace();
         // Only uncomment the below if you know what you're doing,
         // for debug purposes.
         /*
@@ -56,8 +58,6 @@ function error_critical($human_error, $debug_error, $action, $context = array())
             echo '<br />' . $human_error;
         }
     }
-    echo "Dumping Session Data...<br />";
-    var_dump($_SESSION);
     error_log($debug_error);
     $logged_error = date('F j, Y, g:i:s a', time()) . " " . $debug_error . "\n";
 	file_put_contents('./error.log', $logged_error, FILE_APPEND);
