@@ -4,3 +4,5 @@ upload/test.php
 *.log
 upload/cache/
 /.metadata/
+upload/cev3L/.env
+upload/cev3L/node_modules/
