@@ -5,69 +5,64 @@
         </h2>
     </x-slot>
 
-    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-s sm:rounded-lg">
+    <div class="container mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-        <b><center>Work In Progress</center></b>
-
-    </div>
-
-    <div class="container mx-auto">    
-            <div class="grid grid-cols-4 grid-flow-row gap-4">
-
-                <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-s sm:rounded-lg">
-                    <h3><center>Markets and Shops</center></h3>
-                    <a href="#">Item Market</a><br />
-                    <a href="#">Market</a>
-                </div>
-
-                <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-s sm:rounded-lg">
-                    <h3><center>Accounting and Money</center></h3>
-                    <a href="bank.php">Bank</a><br />
-                    <a href="#">Estate Agent</a><br />
-                    <a href="#">Travel Agent</a>
-                </div>
-
-                <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-s sm:rounded-lg">
-                    <h3><center>Personal Work</center></h3>
-                    <a href="gym.php">Gym</a><br />
-                    <a href="#">Crimes</a><br />
-                    <a href="#">Academy</a><br />
-                    <a href="#">Work</a>
-                </div>
-
-                <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-s sm:rounded-lg">
-                    <h3><center>Game Administration</center></h3>
-                    <a href="users.php">Player List</a><br />
-                    <a href="#">Game Staff</a><br />
-                    <a href="#">Federal Dungeon</a><br />
-                    <a href="#">Game Stats</a><br />
-                    <a href="#">Player Report</a><br />
-                    <a href="announcements.php">Announcements</a><br />
-                    <a href="#">Item Appendix</a><br />
-                </div>
-
-                <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-s sm:rounded-lg">
-                    <h3><center>High Risk Gambling</center></h3>
-                    <a href="slots.php">Slots</a><br />
-                    <a href="#">Roulette</a><br />
-                </div>
-
-                <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-s sm:rounded-lg">
-                    <h3><center>Guild Territory</center></h3>
-                    <a href="#">Known Guilds</a><br />
-                    <a href="#">Known Guild Wars</a>
-                </div>
-
-                <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-s sm:rounded-lg">
-                    <h3><center>Social</center></h3>
-                    <a href="#">Dungeon</a><br />
-                    <a href="infirmary.php">Infirmary</a><br />
-                    <a href="#">In-Game Forums</a><br />
-                    <a href="#">Newspaper</a><br />
-                    <a href="#">Hall of Fame</a><br />
-                    <a href="#">Polling Center</a><br />
-                    <a href="#">Game Tutorial</a><br />
-                </div>
+            <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg flex flex-col p-4">
+                <h3 class="text-center">Markets and Shops</h3>
+                <div><a href="{{ url('/ItemMarket') }}">Item Market</a></div>
+                <div><a href="{{ url('/Market') }}">Market</a></div>
             </div>
+
+            <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg flex flex-col p-4">
+                <h3 class="text-center">Accounting and Money</h3>
+                <div><a href="{{ url('/Bank') }}">Bank</a></div>
+                <div><a href="{{ url('/Estate') }}">Estate Agent</a></div>
+                <div><a href="{{ url('/Travel') }}">Travel Agent</a></div>
+            </div>
+
+            <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg flex flex-col p-4">
+                <h3 class="text-center">Personal Work</h3>
+                <div><a href="{{ url('/Gym') }}">Gym</a></div>
+                <div><a href="{{ url('/Crimes') }}">Crimes</a></div>
+                <div><a href="{{ url('/Academy') }}">Academy</a></div>
+                <div><a href="{{ url('/Work') }}">Work</a></div>
+            </div>
+
+            <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg flex flex-col p-4">
+                <h3 class="text-center">Game Administration</h3>
+                <div><a href="{{ url('/Users') }}">Player List</a></div>
+                <div><a href="{{ url('/GameStaff') }}">Game Staff</a></div>
+                <div><a href="{{ url('/FederalDungeon') }}">Federal Dungeon</a></div>
+                <div><a href="{{ url('/GameStats') }}">Game Stats</a></div>
+                <div><a href="{{ url('/PlayerReport') }}">Player Report</a></div>
+                <div><a href="{{ url('/Announcements') }}">Announcements</a></div>
+                <div><a href="{{ url('/ItemAppendix') }}">Item Appendix</a></div>
+            </div>
+
+            <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg flex flex-col p-4">
+                <h3 class="text-center">High Risk Gambling</h3>
+                <div><a href="{{ url('/Slots') }}">Slots</a></div>
+                <div><a href="{{ url('/Roulette') }}">Roulette</a></div>
+            </div>
+
+            <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg flex flex-col p-4">
+                <h3 class="text-center">Guild Territory</h3>
+                <div><a href="{{ url('/Guilds') }}">Known Guilds</a></div>
+                <div><a href="{{ url('/GuildWars') }}">Known Guild Wars</a></div>
+            </div>
+
+            <div class="col-auto bg-white dark:bg-gray-400 overflow-hidden shadow-sm sm:rounded-lg flex flex-col p-4">
+                <h3 class="text-center">Social</h3>
+                <div><a href="{{ url('/Dungeon') }}">Dungeon</a></div>
+                <div><a href="{{ url('/Infirmary') }}">Infirmary</a></div>
+                <div><a href="{{ url('/Forums') }}">In-Game Forums</a></div>
+                <div><a href="{{ url('/Newspaper') }}">Newspaper</a></div>
+                <div><a href="{{ url('/HallOfFame') }}">Hall Of Fame</a></div>
+                <div><a href="{{ url('/{PollingCenter}') }}">Polling Center</a></div>
+                <div><a href="{{ url('/GameTutorial') }}">Game Tutorial</a></div>
+            </div>
+
+        </div>
     </div>
 </x-app-layout>
