@@ -49,11 +49,11 @@ class BankController extends Controller
         $depositAmount = (int) $request->input('deposit');
 
         if ($depositAmount <= 0) {
-            return redirect()->route('bank.index')->with('error', 'Invalid deposit amount.');
+            return redirect()->route('bank.index')->with('error', 'Invalid deposit amount.')->with('title', 'Deposit Failed');
         }
 
         if ($userStats->primaryCurrencyHeld < $depositAmount) {
-            return redirect()->route('bank.index')->with('error', 'You do not have enough currency to deposit.');
+            return redirect()->route('bank.index')->with('error', 'You do not have enough currency to deposit.')->with('title', 'Deposit Failed');
         }
 
         // Update the user's primary currency held and bank values
@@ -67,7 +67,7 @@ class BankController extends Controller
                 'primaryCurrencyBank' => $newBankCurrency,
             ]);
 
-        return redirect()->route('bank.index')->with('success', 'You have successfully deposited ' . $depositAmount . ' into your bank account.');
+        return redirect()->route('bank.index')->with('success', 'You have successfully deposited ' . $depositAmount . ' into your bank account.')->with('title', 'Deposit Successful');
     }
 
     public function withdraw(Request $request)
@@ -77,11 +77,11 @@ class BankController extends Controller
         $withdrawAmount = (int) $request->input('withdraw');
 
         if ($withdrawAmount <= 0) {
-            return redirect()->route('bank.index')->with('error', 'Invalid withdraw amount.');
+            return redirect()->route('bank.index')->with('error', 'Invalid withdraw amount.')->with('title', 'Withdrawal Failed');
         }
 
         if ($userStats->primaryCurrencyBank < $withdrawAmount) {
-            return redirect()->route('bank.index')->with('error', 'You do not have enough currency in your bank account to withdraw.');
+            return redirect()->route('bank.index')->with('error', 'You do not have enough currency in your bank account to withdraw.')->with('title', 'Withdrawal Failed');
         }
 
         // Update the user's primary currency held and bank values
@@ -95,7 +95,7 @@ class BankController extends Controller
                 'primaryCurrencyBank' => $newBankCurrency,
             ]);
 
-        return redirect()->route('bank.index')->with('success', 'You have successfully withdrawn ' . $withdrawAmount . ' from your bank account.');
+        return redirect()->route('bank.index')->with('success', 'You have successfully withdrawn ' . $withdrawAmount . ' from your bank account.')->with('title', 'Withdrawal Successful');
     }
 
     public function purchase(Request $request)
@@ -125,10 +125,12 @@ class BankController extends Controller
                 ->first();
 
             return view('bank.index', compact('user', 'userStats', 'moduleConfig'))
-                ->with('success', 'You have successfully bought a bank account.');
+                ->with('success', 'You have successfully bought a bank account.')
+                ->with('title', 'Bank Account Purchased'); // Add this line
         } else {
             return view('bank.index', compact('user', 'userStats', 'moduleConfig'))
-                ->with('error', 'You need at least ' . number_format($moduleConfig['bankOpeningFee']) . ' currency to purchase a bank account.');
+                ->with('error', 'You need at least ' . number_format($moduleConfig['bankOpeningFee']) . ' currency to purchase a bank account.')
+                ->with('title', 'Bank Account Purchase Failed'); // Add this line
         }
     }
 }
