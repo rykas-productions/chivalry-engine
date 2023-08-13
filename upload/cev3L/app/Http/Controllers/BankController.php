@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -41,8 +42,7 @@ class BankController extends Controller
         return view('bank.index', compact('user', 'userStats', 'moduleConfig'));
     }
 
-
-   public function deposit(Request $request)
+    public function deposit(Request $request)
     {
         $user = Auth::user();
         $userStats = $user->userStats;
@@ -52,7 +52,7 @@ class BankController extends Controller
             return redirect()->route('bank.index')->with('error', 'Invalid deposit amount.');
         }
 
-        if ($user->primaryCurrencyHeld < $depositAmount) {
+        if ($userStats->primaryCurrencyHeld < $depositAmount) {
             return redirect()->route('bank.index')->with('error', 'You do not have enough currency to deposit.');
         }
 
@@ -60,14 +60,15 @@ class BankController extends Controller
         $newHeldCurrency = $userStats->primaryCurrencyHeld - $depositAmount;
         $newBankCurrency = $userStats->primaryCurrencyBank + $depositAmount;
 
-        $user->update([
-            'primaryCurrencyHeld' => $newHeldCurrency,
-            'primaryCurrencyBank' => $newBankCurrency,
-        ]);
+        DB::table('user_stats')
+            ->where('user_id', $user->id)
+            ->update([
+                'primaryCurrencyHeld' => $newHeldCurrency,
+                'primaryCurrencyBank' => $newBankCurrency,
+            ]);
 
         return redirect()->route('bank.index')->with('success', 'You have successfully deposited ' . $depositAmount . ' into your bank account.');
     }
-
 
     public function withdraw(Request $request)
     {
@@ -87,10 +88,12 @@ class BankController extends Controller
         $newHeldCurrency = $userStats->primaryCurrencyHeld + $withdrawAmount;
         $newBankCurrency = $userStats->primaryCurrencyBank - $withdrawAmount;
 
-        $userStats->update([
-            'primaryCurrencyHeld' => $newHeldCurrency,
-            'primaryCurrencyBank' => $newBankCurrency,
-        ]);
+        DB::table('user_stats')
+            ->where('user_id', $user->id)
+            ->update([
+                'primaryCurrencyHeld' => $newHeldCurrency,
+                'primaryCurrencyBank' => $newBankCurrency,
+            ]);
 
         return redirect()->route('bank.index')->with('success', 'You have successfully withdrawn ' . $withdrawAmount . ' from your bank account.');
     }

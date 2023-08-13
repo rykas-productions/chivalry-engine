@@ -68,8 +68,5 @@
         function hideModal() {
             document.getElementById('buyConfirmationModal').style.display = 'none';
         }
-        function confirmPurchase() {
-        document.getElementById('confirmPurchase').value = 1; // Set the value to 1 when confirmed
-        }   
     </script>
 </x-app-layout>
