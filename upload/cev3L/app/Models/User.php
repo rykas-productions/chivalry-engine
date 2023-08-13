@@ -58,4 +58,49 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * Get the user's statistics.
+     */
+    public function userStats()
+    {
+        return $this->hasOne(UserStats::class, 'user_id');
+    }
+
+    /**
+     * Deposit currency into the user's bank account.
+     */
+    public function depositToBank($amount)
+    {
+        $this->update([
+            'primaryCurrencyHeld' => $this->primaryCurrencyHeld - $amount,
+            'primaryCurrencyBank' => $this->primaryCurrencyBank + $amount,
+        ]);
+    }
+
+    /**
+     * Withdraw currency from the user's bank account.
+     */
+    public function withdrawFromBank($amount)
+    {
+        $this->update([
+            'primaryCurrencyHeld' => $this->primaryCurrencyHeld + $amount,
+            'primaryCurrencyBank' => $this->primaryCurrencyBank - $amount,
+        ]);
+    }
+
+    /**
+     * Buy a bank account.
+     */
+    public function buyBankAccount($openingFee)
+    {
+        if ($this->primaryCurrencyHeld >= $openingFee) {
+            $this->update([
+                'primaryCurrencyHeld' => $this->primaryCurrencyHeld - $openingFee,
+                'primaryCurrencyBank' => 0,
+            ]);
+            return true;
+        }
+        return false;
+    }
 }

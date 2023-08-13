@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,10 +38,10 @@ Route::middleware([
         return view('Market');
     })->name('Market');
 
-
-    Route::get('/Bank', function () {
-        return view('Bank');
-    })->name('Bank');
+    Route::get('/Bank', [BankController::class, 'index'])->name('bank.index');
+    Route::post('/Bank/deposit', [BankController::class, 'deposit'])->name('bank.Deposit');
+    Route::post('/Bank/withdraw', [BankController::class, 'withdraw'])->name('bank.Withdraw');
+    Route::post('/bank/purchase', [BankController::class, 'purchase'])->name('bank.purchase');
 
     Route::get('/Estate', function () {
         return view('Estate');
@@ -71,6 +72,11 @@ Route::middleware([
     Route::get('/Users', function () {
         return view('Users');
     })->name('Users');
+
+
+    Route::get('/UserManagement', [UserController::class, 'userManagement'])->name('user.management');
+
+    Route::post('/UserManagement/updateCurrency/{id}', [UserController::class, 'updateCurrency'])->name('user.updateCurrency');
 
     Route::get('/GameStaff', function () {
         return view('GameStaff');
