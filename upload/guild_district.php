@@ -40,34 +40,34 @@ ALTER TABLE `guild_district_battlelog` ADD `attack_captains` INT(11) UNSIGNED NO
 ALTER TABLE `guild_district_info` ADD `barracks_captains` INT(11) UNSIGNED NOT NULL AFTER `barracks_generals`;
 */
 require('globals.php');
-echo "<h3>Guild Districts</h3><hr />
-    <div class='row'>
-        <div class='col-12 col-sm-6 col-md-4 col-xl-12 col-xxl'>
-            <a href='#' data-toggle='modal' data-target='#district_info' class='btn btn-info btn-block'>Info</a>
-            <br />
-        </div>
-        <div class='col-12 col-sm-6 col-md-4 col-xl-12 col-xxl'>
-            <a href='#' data-toggle='modal' data-target='#district_stats' class='btn btn-info btn-block'>Stats</a>
-            <br />
-        </div>
-        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
-            <a href='guild_district.php' class='btn btn-primary btn-block'>Home</a>
-            <br />
-        </div>
-        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
-            <a href='?action=guildinfo' class='btn btn-success btn-block'>Your Guild Info</a>
-            <br />
-        </div>
-        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
-            <a href='?action=buy' class='btn btn-danger btn-block'>Buy Troops</a>
-            <br />
-        </div>
-        <div class='col-12  col-sm-6 col-md-4 col-xl-3 col-xxl'>
-            <a href='?action=general' class='btn btn-secondary btn-block'>Unique Units</a>
-            <br />
+echo "
+<div class='card'>
+    <div class='card-header'>
+        " . loadImageAsset("explore/guild_district.svg") . " Guild Districts
+    </div>
+    <div class='card-body'>
+        <div class='row'>
+            <div class='col-auto'>
+                <a href='#' data-toggle='modal' data-target='#district_info' class='btn btn-info'>Info</a>
+            </div>
+            <div class='col-auto'>
+                <a href='#' data-toggle='modal' data-target='#district_stats' class='btn btn-info'>Stats</a>
+            </div>
+            <div class='col-auto'>
+                <a href='guild_district.php' class='btn btn-primary'>Home</a>
+            </div>
+            <div class='col-auto'>
+                <a href='?action=guildinfo' class='btn btn-success'>Your Guild Info</a>
+            </div>
+            <div class='col-auto'>
+                <a href='?action=buy' class='btn btn-danger'>Buy Troops</a>
+            </div>
+            <div class='col-auto'>
+                <a href='?action=general' class='btn btn-secondary'>Unique Units</a>
+            </div>
         </div>
     </div>
-    <hr />";
+</div><br />";
 if ($ir['guild'] > 0)
 {
 	$distQ=$db->query("/*qc=on*/SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}");
@@ -172,7 +172,7 @@ function home2()
                         </div>
                         <div class='card-body'>
                             <div class='row'>
-                                <div class='col-12 col-xxxl-4'>
+                                <div class='col-auto'>
                                     Guild
                                 </div>
                                 <div class='col-12 col-xxxl-8'>
@@ -1386,33 +1386,49 @@ function guild_info()
         <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
             <div class='card'>
                 <div class='card-header'>
-                    Barracks
+                    <b>Barracks</b>
                 </div>
                 <div class='card-body'>
                     <div class='row'>
-                        <div class='col-3 col-md-6'>
-                            Warriors
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Warriors</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($gdi['barracks_warriors']) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-3 col-md-6'>
-                            " . shortNumberParse($gdi['barracks_warriors']) . "
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Archers</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($gdi['barracks_archers']) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-3 col-md-6'>
-                            Archers
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Generals</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($gdi['barracks_generals']) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-3 col-md-6'>
-                            " . shortNumberParse($gdi['barracks_archers']) . "
-                        </div>
-                        <div class='col-3 col-md-6'>
-                            Generals
-                        </div>
-                        <div class='col-3 col-md-6'>
-                            " . shortNumberParse($gdi['barracks_generals']) . "
-                        </div>
-                        <div class='col-3 col-md-6'>
-                            Captains
-                        </div>
-                        <div class='col-3 col-md-6'>
-                            " . shortNumberParse($gdi['barracks_captains']) . "
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Captains</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($gdi['barracks_captains']) . "
+                                </div>
+                            </div>
                         </div>
                         <div class='col-12'>
                             <span class='text-muted'><i><small>Troops in the barracks don't count towards daily upkeep.</small></i></span>
@@ -1425,45 +1441,69 @@ function guild_info()
         <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
             <div class='card'>
                 <div class='card-header'>
-                    Upkeep
+                    <b>Upkeep (Copper Coins)</b>
                 </div>
                 <div class='card-body'>
                     <div class='row'>
-                        <div class='col-4'>
-                            Warriors
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Warriors</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($warriorCost) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-8'>
-                            " . shortNumberParse($warriorCost) . " Copper
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Archers</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($archerCost) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-4'>
-                            Archers
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Generals</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($generalCost) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-8'>
-                            " . shortNumberParse($archerCost) . " Copper
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Captains</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(0) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-4'>
-                            Generals
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Tile Upkeep</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($tileCost) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-8'>
-                            " . shortNumberParse($generalCost) . " Copper
-                        </div>
-                        <div class='col-4'>
-                            Captains
-                        </div>
-                        <div class='col-8'>
-                            0 Copper
-                        </div>
-                        <div class='col-4'>
-                            Tiles
-                        </div>
-                        <div class='col-8'>
-                            " . shortNumberParse($tileCost) . " Copper
-                        </div>
-                        <div class='col-4'>
-                            Total
-                        </div>
-                        <div class='col-8'>
-                            " . shortNumberParse($totalDailyCost) . " Copper
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Total Costs</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($totalDailyCost) . "
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1477,23 +1517,35 @@ function guild_info()
                 </div>
                 <div class='card-body'>
                     <div class='row'>
-                        <div class='col-4 col-sm-6'>
-                            Warriors
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Warriors</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(countDeployedWarriors($gdi['guild_id'])) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-8 col-sm-6'>
-                            " . shortNumberParse(countDeployedWarriors($gdi['guild_id'])) . "
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Archers</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(countDeployedArchers($gdi['guild_id'])) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-4 col-sm-6'>
-                            Archers
-                        </div>
-                        <div class='col-8 col-sm-6'>
-                            " . shortNumberParse(countDeployedArchers($gdi['guild_id'])) . "
-                        </div>
-                        <div class='col-4 col-sm-6'>
-                            Generals
-                        </div>
-                        <div class='col-8 col-sm-6'>
-                            " . shortNumberParse(countDeployedGenerals($gdi['guild_id'])) . "
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Generals</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse(countDeployedGenerals($gdi['guild_id'])) . "
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1507,29 +1559,45 @@ function guild_info()
                 </div>
                 <div class='card-body'>
                     <div class='row'>
-                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
-                            Moves Available
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Moves Available</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($gdi['moves']) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-6 col-md-5 col-lg-4 col-xl-2 col-xxl-4'>
-                            " . shortNumberParse($gdi['moves']) . "
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Tiles Controlled</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($districtOwn) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
-                            Districts Controlled
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Warriors Bought</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($gdi['warriors_bought']) . "
+                                </div>
+                            </div>
                         </div>
-                        <div class='col-6 col-md-5 col-lg-4 col-xl-3 col-xxl-4'>
-                            " . shortNumberParse($districtOwn) . "
-                        </div>
-                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
-                            Warriors Bought
-                        </div>
-                        <div class='col-6 col-md-5 col-lg-4'>
-                            " . shortNumberParse($gdi['warriors_bought']) . "
-                        </div>
-                        <div class='col-6 col-md-7 col-lg-8 col-xl-6 col-xxl-8'>
-                            Archers Bought
-                        </div>
-                        <div class='col-6 col-md-5 col-lg-4'>
-                            " . shortNumberParse($gdi['archers_bought']) . "
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Archerss Bought</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . shortNumberParse($gdi['archers_bought']) . "
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
