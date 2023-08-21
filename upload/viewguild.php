@@ -239,44 +239,56 @@ function summary()
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col'>
-							<b>Leader</b>
-						</div>
-						<div class='col'>
-							<a href='profile.php?user={$gd['guild_owner']}'>{$ldrnm}</a>
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Co-Leader</b>
-						</div>
-						<div class='col'>
-							<a href='profile.php?user={$gd['guild_coowner']}'>{$vldrnm}</a>
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Application Manager</b>
-						</div>
-						<div class='col'>
-							<a href='profile.php?user={$gd['guild_app_manager']}'>{$appnm}</a>
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Vault Manager</b>
-						</div>
-						<div class='col'>
-							<a href='profile.php?user={$gd['guild_vault_manager']}'>{$vaultnm}</a>
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Crime Lord</b>
-						</div>
-						<div class='col'>
-							<a href='profile.php?user={$gd['guild_crime_lord']}'>{$crlonm}</a>
-						</div>
+                        <div class='col-12 col-sm-6 col-xxl-4 col-xxxl-3'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Leader</small></b>
+        						</div>
+        						<div class='col-12'>
+        							<a href='profile.php?user={$gd['guild_owner']}'>{$ldrnm}</a>
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-xxl-4 col-xxxl-3'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Co-Leader</small></b>
+        						</div>
+        						<div class='col-12'>
+        							<a href='profile.php?user={$gd['guild_coowner']}'>{$vldrnm}</a>
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-xxl-4 col-xxxl-3'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>App Manager</small></b>
+        						</div>
+        						<div class='col-12'>
+        							<a href='profile.php?user={$gd['guild_app_manager']}'>{$appnm}</a>
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-xxl-4 col-xxxl-3'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Vault Manager</small></b>
+        						</div>
+        						<div class='col-12'>
+        							<a href='profile.php?user={$gd['guild_vault_manager']}'>{$vaultnm}</a>
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6 col-xxl-4 col-xxxl-3'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Crime Lord</small></b>
+        						</div>
+        						<div class='col-12'>
+        							<a href='profile.php?user={$gd['guild_crime_lord']}'>{$crlonm}</a>
+        						</div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>
@@ -287,51 +299,58 @@ function summary()
 					Guild Information
 				</div>
 				<div class='card-body text-left'>
-					<div class='row'>
-						<div class='col'>
-							<b>Members</b>
-						</div>
-						<div class='col'>
-							" . shortNumberParse($db->fetch_single($cnt)) . " / " . shortNumberParse(calculateGuildMemberCapacity($gd['guild_id'])) . "
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Level</b>
-						</div>
-						<div class='col'>
-							" . shortNumberParse($gd['guild_level']) . "
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>XP</b>
-						</div>
-						<div class='col'>
-							" . shortNumberParse($gd['guild_xp']) . " / " . shortNumberParse($gd['xp_needed']) . "
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-						[<a href='?action=donatexp'>Donate Experience</a>]
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Copper Coins*</b>
-						</div>
-						<div class='col'>
-							" . shortNumberParse($gd['guild_primcurr']) . " / " . shortNumberParse(calculateMaxGuildVaultCopper($ir['guild'])) . "
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Chivalry Tokens</b>
-						</div>
-						<div class='col'>
-							" . shortNumberParse($gd['guild_seccurr']) . " / " . shortNumberParse(calculateMaxGuildVaultTokens($ir['guild'])) . "
-						</div>
-					</div>
+                    <div class='row'>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Guild Members</small></b>
+        						</div>
+        						<div class='col-12'>
+        							" . shortNumberParse($db->fetch_single($cnt)) . " / " . shortNumberParse(calculateGuildMemberCapacity($gd['guild_id'])) . "
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Guild Level</small></b>
+        						</div>
+        						<div class='col-12'>
+        							" . shortNumberParse($gd['guild_level']) . "
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Guild XP</small></b>
+        						</div>
+        						<div class='col-12'>
+        							" . shortNumberParse($gd['guild_xp']) . " / " . shortNumberParse($gd['xp_needed']) . "
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Copper Coins</small></b>
+        						</div>
+        						<div class='col-12'>
+        							" . shortNumberParse($gd['guild_primcurr']) . " / " . shortNumberParse(calculateMaxGuildVaultCopper($ir['guild'])) . "
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Chivalry Tokens</small></b>
+        						</div>
+        						<div class='col-12'>
+        							" . shortNumberParse($gd['guild_seccurr']) . " / " . shortNumberParse(calculateMaxGuildVaultTokens($ir['guild'])) . "
+        						</div>
+                            </div>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -371,59 +390,74 @@ function summary()
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-						<div class='col'>
-							<b>Armory</b>
-						</div>
-						<div class='col'>
-							{$armory}
-						</div>
-					</div>
-                    <div class='row'>
-						<div class='col'>
-							<b>Gym</b>
-						</div>
-						<div class='col'>
-							{$gym}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Recruitment</b>
-						</div>
-						<div class='col'>
-							{$recruit}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Finances</b>
-						</div>
-						<div class='col'>
-							{$debt}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Active Wars</b>
-						</div>
-						<div class='col'>
-							{$wars}
-						</div>
-					</div>
-					<div class='row'>
-						<div class='col'>
-							<b>Daily Upkeep</b>
-						</div>
-						<div class='col'>
-							" . shortNumberParse(calculateUpkeep($ir['guild'])) . " Copper Coins
-						</div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Armory</small></b>
+        						</div>
+        						<div class='col-12'>
+        							{$armory}
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Gym</small></b>
+        						</div>
+        						<div class='col-12'>
+        							{$gym}
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Recruitment</small></b>
+        						</div>
+        						<div class='col-12'>
+        							{$recruit}
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Finances</small></b>
+        						</div>
+        						<div class='col-12'>
+        							{$debt}
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Active Wars</small></b>
+        						</div>
+        						<div class='col-12'>
+        							{$wars}
+        						</div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+        						<div class='col-12'>
+        							<b><small>Upkeep</small></b>
+        						</div>
+        						<div class='col-12'>
+        							" . shortNumberParse(calculateUpkeep($ir['guild'])) . " Copper Coins
+        						</div>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	  * = Increased every night by 2%.
-	  <a href='viewguild.php'>Go Back</a>";
+	</div>";
+      alert("info","","Copper Coins in vault receive 2% interest daily.", false);
+      echo "
+	  <a href='viewguild.php' class='btn btn-primary btn-block'>Guild Main Page</a>";
 }
 
 function guild_donatexp()
@@ -437,6 +471,11 @@ function guild_donatexp()
 	if (isset($_POST['xp']))
 	{
 		$_POST['xp'] = (isset($_POST['xp']) && is_numeric($_POST['xp'])) ? abs(intval($_POST['xp'])) : 0;
+		if (!isset($_POST['verf']) || !verify_csrf_code('guild_donate_xp', stripslashes($_POST['verf']))) 
+		{
+		    alert('danger', "Action Blocked!", "Forms expire fairly quickly. Be quicker next time.");
+		    die($h->endpage());
+		}
 		if (empty($_POST['xp']))
 		{
 			alert('danger',"Uh Oh!","You need to input the amount of experience you wish to donate.");
@@ -464,13 +503,30 @@ function guild_donatexp()
 	}
 	else
 	{
-	    echo "Here you may donate your experience points to your guild at a ratio of " . shortNumberParse($xpformula) . " experience points for 1 Guild 
-		Experience Point. You currently have " . shortNumberParse($ir['xp']) . " experience points which you can donate. <b>This tool will only take even 
-		amounts of experience (Only in groups of " . shortNumberParse($xpformula) . ".)</b> How many do you wish to donate to your guild? Experience points donate cannot be given back.<br />
-		<form method='post'>
-			<input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' class='form-control'>
-			<input type='submit' class='btn btn-primary' value='Donate XP'>
-		</form>";
+	    $csrf = request_csrf_html('guild_donate_xp');
+	    alert('info',"Current Ratio",shortNumberParse($xpformula) . " Player XP : 1 Guild XP",false);
+	    echo "<div class='card'>
+                <div class='card-header'>
+                    Donating Guild XP
+                </div>
+                <div class='card-body'>
+                    You currently have " . shortNumberParse($ir['xp']) . " experience points which you can donate. 
+                    You will only donate in groups of " . shortNumberParse($xpformula) . ".<br />
+                    How much XP would you like to donate?<br />
+                    <form method='post'>
+                        <input type='number' name='xp' min='{$xpformula}' value='{$ir['xp']}' class='form-control'>
+                        <div class='row'>
+                            <div class='col-auto'>
+                                <a href='?action=donate' class='btn btn-danger btn-block'>Go Back</a>
+                            </div>
+                            <div class='col-auto'>
+                                <input type='submit' class='btn btn-primary btn-block' value='Donate XP'>
+                            </div>
+                        </div>
+                        {$csrf}
+                    </form>
+                </div>
+        </div>";
 	}
 }
 
@@ -3587,15 +3643,16 @@ function staff_crimes()
             alert('danger', "Uh Oh!", "You cannot commit this crime as you need {$cr} guild members. You only have {$membs}.");
             die($h->endpage());
         }
-        //Select time 24 hours from now.
-        $ttc = time() + 86400;
+        //Time to complete crime is +6 hours per crime member required.
+        $ttc = time() + (21600 * $cr);
+        $hrsComplete = 6 * $cr;
 
         //Set guild's crime.
         $db->query("UPDATE `guild`
                     SET `guild_crime` = {$_POST['crime']},
                     `guild_crime_done` = {$ttc}
                     WHERE `guild_id` = {$ir['guild']}");
-        alert('success', "Success!", "You have started to plan this crime. It will take 24 hours to commit.", true, '?action=staff&act2=idx');
+        alert('success', "Success!", "You have started to plan this crime. It will take {$hrsComplete} hours to commit.", true, '?action=staff&act2=idx');
     } else {
         //Select the crimes from database, based on how many members the guild has.
         $q = $db->query("/*qc=on*/SELECT *
@@ -4576,7 +4633,7 @@ function staff_asset_management()
                                         <b><small>Asset Description</small></b>
                                     </div>
                                     <div class='col-12'>
-                                        <i>Increases the guild's vault capacity by 8%.</i>
+                                        <i>Increases the guild's vault capacity by 25%.</i>
                                     </div>
                                 </div>
                             </div>
