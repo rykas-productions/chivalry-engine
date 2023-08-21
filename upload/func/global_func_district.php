@@ -782,7 +782,7 @@ function parseTile(int $districtID, $extra = '')
                         <div class='col-12'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    Guild
+                                    <small><b>Guild</b></small>
                                 </div>
                                 <div class='col-12'>
                                     <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a>
@@ -791,40 +791,40 @@ function parseTile(int $districtID, $extra = '')
                         </div>";
                         if (isDistrictAccessible($r['district_id']))
                         {
-                            echo "<div class='col-12 col-xl-6'>
+                            echo "<div class='col-auto'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            Warriors
+                                            <small><b>Warriors</b></small>
                                         </div>
                                         <div class='col-12'>
                                             " . shortNumberParse($r['district_melee']) . "
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-xl-6'>
+                                <div class='col-auto'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            Archers
+                                            <small><b>Archers</b></small>
                                         </div>
                                         <div class='col-12'>
                                             " . shortNumberParse($r['district_range']) . "
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-xl-6'>
+                                <div class='col-auto'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            Generals
+                                            <small><b>Generals</b></small>
                                         </div>
                                         <div class='col-12'>
                                             " . shortNumberParse($r['district_general']) . "
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-xl-6'>
+                                <div class='col-auto'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            Fortification
+                                            <small><b>Fortification</b></small>
                                         </div>
                                         <div class='col-12'>
                                             " . returnForticationLevel($r['district_id']) . "
