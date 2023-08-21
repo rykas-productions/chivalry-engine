@@ -407,7 +407,7 @@ function calculateMaxGuildVaultCopper($guild_id)
     $return = $guild_level * $set['GUILD_CPR_PR_LVL'];
     $multi = 1.0;
     if (guildOwnsAsset($guild_id, "guild_upgrade_vault1"))
-        $multi= $multi + 0.08;
+        $multi = $multi + 0.25;
     if (countGuildTowns($guild_id) > 0)
         $multi = $multi + (0.04 * countGuildTowns($guild_id));
     return $return * $multi;
