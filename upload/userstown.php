@@ -50,64 +50,65 @@ $q = $db->query("/*qc=on*/SELECT `vip_days`, `username`, `userid`, `primary_curr
 $no1 = $st + 1;
 $no2 = min($st + 100, $membs);
 echo "
-Showing users in your town, {$no1} to {$no2} by order of {$by} {$ord}.";
+<div class='card'>
+    <div class='card-header'>
+        Showing players " . shortNumberParse($no1) . " to " . shortNumberParse($no2) . ", in your current town, ordering by {$by} {$ord}
+    </div>
+    <div class='card-body'>";
 //Display the users info.
-while ($r = $db->fetch_row($q)) 
+while ($r = $db->fetch_row($q))
 {
     $r['username'] = parseUsername($r['userid']);
-	$un = $api->SystemUserIDtoName($r['userid']);
-	$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' alt='{$un}&#39;s Display picture.' title='{$un}&#39;s Display picture'>";
-	$active = parseActivity($r['userid']);
-	echo "
-	<div class='card'>
-		<div class='card-body'>
-			<div class='row'>
-				<div class='col-12 col-sm-4'>
+    $un = $api->SystemUserIDtoName($r['userid']);
+    $displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' class='hidden-sm-down' alt='{$un}&#39;s Display picture.' title='{$un}&#39;s Display picture'>";
+    $active = parseActivity($r['userid']);
+    echo "
+            <div class='row'>
+                <div class='col-auto col-md-5 col-xl-5 col-xxl-4'>
                     <div class='row'>
-                        <div class='col-12'>
+                        <div class='col-12 col-md-auto col-lg-12 col-xl'>
 				            {$displaypic}
                         </div>
-                        <div class='col-12'>
+                        <div class='col-12 col-md-auto col-lg-12 col-xl'>
 				            <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
                         </div>
                     </div>
-				</div>
-                <div class='col-12 col-sm-2'>
+                </div>
+                <div class='col-auto col-md-2 col-xl'>
 					<div class='row'>
                         <div class='col-12'>
-				            <small>Level</small>
+				            <small><b>Level</b></small>
                         </div>
                         <div class='col-12'>
-				            " . number_format($r['level']) . "
+				            " . shortNumberParse($r['level']) . "
                         </div>
                     </div>
 				</div>
-                <div class='col-12 col-sm-3'>
+                <div class='col-auto col-md-3 col-xl'>
 					<div class='row'>
                         <div class='col-12'>
-				            <small>Copper Coins</small>
+				            <small><b>Copper Coins</b></small>
                         </div>
                         <div class='col-12'>
 				            " . shortNumberParse($r['primary_currency']) . "
                         </div>
                     </div>
 				</div>
-                <div class='col-12 col-sm-3'>
+                <div class='col-auto col-md-2 col-xl'>
 					<div class='row'>
                         <div class='col-12'>
-				            <small>Activity</small>
+				            <small><b>Activity</b></small>
                         </div>
                         <div class='col-12'>
 				            {$active}
                         </div>
                     </div>
 				</div>
-			</div>
-		</div>
-	</div>";
+            </div>
+            <hr />";
 }
-$db->free_result($q);
-echo '</table>';
+echo "</div>
+	</div>";
 //Pagination function!
 echo pagination(100, $membs, $st, "?by={$by}&ord={$ord}&st=");
 $h->endpage();
