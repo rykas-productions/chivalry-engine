@@ -6,62 +6,63 @@
 	Website: 	https://chivalryisdeadgame.com/
 */
 
-function createProgressBar($barValue, $barMin = 0, $barMax = 100, $barType = 'primary')
+function createProgressBar($barValue, $barMin = 0, $barMax = 100, $barType = 'primary', $hideBonus = false)
 {
     $percent = round($barValue / $barMax * 100);
+    $txt = ($hideBonus) ? "{$percent}%" : "{$percent}% (" . number_format($barValue) . " / " . number_format($barMax). ")";
     return "<div class='progress' style='height: 1rem;'>
 				<div class='progress-bar bg-{$barType} progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$barValue}' style='width:{$percent}%' aria-valuemin='0' aria-valuemax='{$barMax}'>
 					<span>
-						{$percent}% (" . number_format($barValue) . " / " . number_format($barMax). ")
+						{$txt}
 					</span>
 				</div>
 			</div>";
 }
 
-function successProgressBar($barValue, $barMin, $barMax)
+function successProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
-    return createProgressBar($barValue, $barMin, $barMax, 'success');
+    return createProgressBar($barValue, $barMin, $barMax, 'success', $hideBonus);
 }
 
-function dangerProgressBar($barValue, $barMin, $barMax)
+function dangerProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
-    return createProgressBar($barValue, $barMin, $barMax, 'danger');
+    return createProgressBar($barValue, $barMin, $barMax, 'danger', $hideBonus);
 }
 
-function warningProgressBar($barValue, $barMin, $barMax)
+function warningProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
-    return createProgressBar($barValue, $barMin, $barMax, 'warning');
+    return createProgressBar($barValue, $barMin, $barMax, 'warning', $hideBonus);
 }
 
-function infoProgressBar($barValue, $barMin, $barMax)
+function infoProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
-    return createProgressBar($barValue, $barMin, $barMax, 'info');
+    return createProgressBar($barValue, $barMin, $barMax, 'info', $hideBonus);
 }
 
-function secondaryProgressBar($barValue, $barMin, $barMax)
+function secondaryProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
-    return createProgressBar($barValue, $barMin, $barMax, 'secondary');
+    return createProgressBar($barValue, $barMin, $barMax, 'secondary', $hideBonus);
 }
 
-function lightProgressBar($barValue, $barMin, $barMax)
+function lightProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
-    return createProgressBar($barValue, $barMin, $barMax, 'light');
+    return createProgressBar($barValue, $barMin, $barMax, 'light', $hideBonus);
 }
 
-function darkProgressBar($barValue, $barMin, $barMax)
+function darkProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
-    return createProgressBar($barValue, $barMin, $barMax, 'dark');
+    return createProgressBar($barValue, $barMin, $barMax, 'dark', $hideBonus);
 }
 
-function scaledColorProgressBar($barValue, $barMin, $barMax)
+function scaledColorProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
     $percent = round($barValue / $barMax * 100);
     if ($percent <= 33)
-        return dangerProgressBar($barValue, $barMin, $barMax);
+        return dangerProgressBar($barValue, $barMin, $barMax, $hideBonus);
     elseif (($percent > 33) && ($percent <= 66))
-        return warningProgressBar($barValue, $barMin, $barMax);
+        return warningProgressBar($barValue, $barMin, $barMax, $hideBonus);
     else
-        return successProgressBar($barValue, $barMin, $barMax);
+        return successProgressBar($barValue, $barMin, $barMax, $hideBonus);
 }
 
 function loadGamblingAlert()
@@ -103,4 +104,9 @@ function createSuccessBadge($text)
 function createInfoBadge($text)
 {
     return createBadge($text, 'info');
+}
+
+function parseUserID($userid)
+{
+    return createBadge($userid);
 }
