@@ -85,7 +85,7 @@ function home()
 											{$r[$k]}
 										</div>
 										<div class='col-1'>
-											{$r[$ke]}
+											" . shortNumberParse($r[$ke]) . "
 										</div>
 										<div class='col'>
 											<div class='progress' style='height: 1rem;'>
@@ -109,7 +109,7 @@ function home()
 								<h5>Total Votes</h5>
 							</div>
 							<div class='col-1'>
-								<h6>" . number_format($r['votes']) . "</h6>
+								<h6>" . shortNumberParse($r['votes']) . "</h6>
 							</div>
 							<div class='col-3'>
 								<h5>Your Vote</h5>
@@ -200,7 +200,7 @@ function viewpolls()
 								{$r[$k]}
 							</div>
 							<div class='col-1'>
-								{$r[$ke]}
+								" . shortNumberParse($r[$ke]) . "
 							</div>
 							<div class='col'>
 								<div class='progress' style='height: 1rem;'>
@@ -216,7 +216,7 @@ function viewpolls()
 								<h5>Total Votes</h5>
 							</div>
 							<div class='col-1'>
-								<h6>" . number_format($r['votes']) . "</h6>
+								<h6>" . shortNumberParse($r['votes']) . "</h6>
 							</div>
 						</div>
 						</div></div><br />";
