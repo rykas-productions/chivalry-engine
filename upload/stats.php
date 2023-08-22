@@ -15,90 +15,90 @@ require("stats/stats.php");
 //This is... messy.
 echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 <div class='row'>
-	<div class='col-12 col-lg-6'>
+	<div class='col-12 col-lg-6 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 				Player Stats
 			</div>
 			<div class='card-body text-left'>
 				<div class='row'>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Known Players</b></small>
                             </div>
                             <div class='col-12'>
-                                " . number_format($TotalUserCount) . "
+                                " . shortNumberParse($TotalUserCount) . "
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Males</b></small>
                             </div>
                             <div class='col-12'>
-                                " . number_format($Male) . "
+                                " . shortNumberParse($Male) . "
                             </div>
                         </div>
                     </div>
-					<div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+					<div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
         						<small><b>Females</b></small>
         					</div>
                             <div class='col-12'>
-        						" . number_format($Female) . "
+        						" . shortNumberParse($Female) . "
         					</div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
         						<small><b>Other</b></small>
         					</div>
                             <div class='col-12'>
-        						" . number_format($OtherGender) . "
+        						" . shortNumberParse($OtherGender) . "
         					</div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
         						<small><b>Owned Estates</b></small>
         					</div>
                             <div class='col-12'>
-        						" . number_format($TotalEstatesOwned) . "
+        						" . shortNumberParse($TotalEstatesOwned) . "
         					</div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
         						<small><b>Warriors</b></small>
         					</div>
                             <div class='col-12'>
-        						" . number_format($Warrior) . "
+        						" . shortNumberParse($Warrior) . "
         					</div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
         						<small><b>Rogues</b></small>
         					</div>
                             <div class='col-12'>
-        						" . number_format($Rogue) . "
+        						" . shortNumberParse($Rogue) . "
         					</div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
         						<small><b>Guardians</b></small>
         					</div>
                             <div class='col-12'>
-        						" . number_format($Defender) . "
+        						" . shortNumberParse($Defender) . "
         					</div>
                         </div>
                     </div>
@@ -107,14 +107,14 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 		</div>
         <br />
 	</div>
-	<div class='col-12 col-lg-6'>
+	<div class='col-12 col-lg-6 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 					Game Stats
 			</div>
 			<div class='card-body text-left'>
                 <div class='row'>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Notifications</b></small>
@@ -124,7 +124,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Messages</b></small>
@@ -134,7 +134,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Guilds</b></small>
@@ -144,7 +144,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Day Reset</b></small>
@@ -154,7 +154,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Active Polls</b></small>
@@ -169,14 +169,14 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 		</div>
         <br />
 	</div>
-    <div class='col-12 col-lg-6'>
+    <div class='col-12 col-lg-6 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 					Copper Coins
 			</div>
 			<div class='card-body text-left'>
                 <div class='row'>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Withdrawn</b></small>
@@ -186,7 +186,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Avg Withdrawn</b></small>
@@ -196,7 +196,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>City Bank</b></small>
@@ -206,7 +206,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Avg City Bank</b></small>
@@ -216,7 +216,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Federal Bank</b></small>
@@ -226,7 +226,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Avg Fed Bank</b></small>
@@ -236,7 +236,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Vault Bank</b></small>
@@ -246,7 +246,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Avg Vault Bank</b></small>
@@ -256,7 +256,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Estate Vaults</b></small>
@@ -266,7 +266,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xxl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Total Circulating</b></small>
@@ -281,14 +281,14 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 		</div>
         <br />
 	</div>
-    <div class='col-12 col-lg-6'>
+    <div class='col-12 col-lg-6 col-xxxl-3'>
 		<div class='card'>
 			<div class='card-header'>
 					Chivalry Tokens
 			</div>
 			<div class='card-body text-left'>
                 <div class='row'>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Withdrawn</b></small>
@@ -298,7 +298,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Avg Withdrawn</b></small>
@@ -308,7 +308,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Token Vault</b></small>
@@ -318,7 +318,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Avg Token Vault</b></small>
@@ -328,7 +328,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xxl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Avg Market Price</b></small>
@@ -338,7 +338,7 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
                             </div>
                         </div>
                     </div>
-                    <div class='col-6 col-sm-4 col-lg-6 col-xxl-4 col-xxxl-3'>
+                    <div class='col-auto'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small><b>Total Circulating</b></small>
