@@ -7,21 +7,32 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require('globals_nonauth.php');
-//List all the game rules.
-echo "<h3>{$set['WebsiteName']} Game Rules</h3>
-<hr />";
-alert('danger',"","You are expected to follow these rules. You are also expected to check back on these fairly frequently as these rules
-may change without notice. Staff will not accept ignorance as an excuse if you break one of these rules.",false);
+alert('info', "", "You are expected to follow this rules. You are also expected to check back on these fairly frequently as these rules
+may change without notice. Staff will not accept ignorance as an excuse if you break one of these rules.",  false);
+echo "<div class='card'>
+        <div class='card-header'>
+            {$set['WebsiteName']} Game Rules
+        </div>
+        <div class='card-body'>";
 $q = $db->query("/*qc=on*/SELECT * FROM `gamerules` ORDER BY `rule_id` ASC");
-$rule = 1;
-while ($r = $db->fetch_row($q)) 
+$rulenumber = 1;
+//List game rules.
+while ($r = $db->fetch_row($q))
 {
-    echo "<div class='card'>
-            <div class='card-body'>
-                {$rule}) {$r['rule_text']}
+    echo "  <div class='row'>
+    <div class='col-12'>
+        <div class='row'>
+            <div class='col-12'>
+                <small><b>Rule #{$rulenumber}</b></small>
             </div>
-          </div><div class='row'>
-    </div>";
-    $rule++;
+            <div class='col-12'>
+                {$r['rule_text']}
+            </div>
+        </div>
+        <br />
+    </div>
+</div>";
+                $rulenumber = $rulenumber + 1;
 }
+echo "</div></div>";
 $h->endpage();
