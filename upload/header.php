@@ -97,7 +97,7 @@ class headers
 								</li>
 								<li>
 									<a href='#' class='updateHoverBtn' data-toggle='modal' data-target='#userInfo'>
-										<span class='menu-text'><i class='fas fa-user-cog'></i> {$ir['username']} <span class='badge badge-pill badge-primary'>{$userid}</span></span>
+										<span class='menu-text'><i class='fas fa-user-cog'></i> " . parseUsername($userid)  . " " . parseUserID($userid) . "</span>
 									</a>
 								</li>
 								<li>
@@ -197,7 +197,9 @@ class headers
 								    {
 								        echo "<li>
     									<a href='profile.php?user={$r['userid']}' class='updateHoverBtn'>
-    										  <span class='menu-text'>{$r['username']} <span class='badge badge-pill badge-primary'>{$r['userid']}</span></span>
+    										  <span class='menu-text'>
+                                                    " . parseUsername($r['userid'])  . " " . parseUserID($r['userid']) . "
+                                                </span>
         									</a>
         								</li>";
 								    }
