@@ -117,7 +117,7 @@ function calculateUpkeep($guild)
     global $db, $gd, $set, $ir, $api, $districtConfig;
     //Default starter upkeep. before the districts.
     $upkeepFee = $set['GUILD_PRICE'];
-    $q=$db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$guild}");
+    /*$q=$db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$guild}");
     while ($r=$db->fetch_row($q))
     {
         $upkeepFee=$upkeepFee;
@@ -130,7 +130,7 @@ function calculateUpkeep($guild)
                 $upkeepFee=$upkeepFee + ($archers * $districtConfig['ArcherCostDaily']);
                 if ($generals > 0)
                     $upkeepFee=$upkeepFee + ($generals * $districtConfig['GeneralCostDaily']);
-    }
+    }*/
     return $upkeepFee;
 }
 
