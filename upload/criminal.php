@@ -41,23 +41,12 @@ function home()
     }
     $db->free_result($q2);
     $q = $db->query("/*qc=on*/SELECT `cgID`, `cgNAME` FROM `crimegroups` ORDER BY `cgORDER` ASC");
-	echo "<div class='card'>
-        <div class='card-body'><div class='row'>
-			<div class='col'>
-				<h5>Crime</h5>
-			</div>
-			<div class='col'>
-				<h5>Success Chance</h5>
-			</div>
-		</div>
-		<hr />";
     while ($r = $db->fetch_row($q)) {
-        echo "<div class='row'>
-				<div class='col'>
-					<h3>{$r['cgNAME']} Crimes</h3> 
-				</div>
-			</div>
-			<hr />";
+        echo "<div class='card'>
+                <div class='card-header'>
+                    {$r['cgNAME']} Crimes
+                </div>
+                <div class='card-body'>";
         foreach ($crimes as $v) {
             if ($v['crimeGROUP'] == $r['cgID']) {
 				//Fix from Kyle Massacre. Thanks!
@@ -96,27 +85,41 @@ function home()
 				if ($v['sucrate'] > 100)
 					$v['sucrate']=100;
 				$v['sucrate']=round($v['sucrate']);
-				echo "<div class='row'>
-			<div class='col'>
-				<a href='?action=crime&c={$v['crimeID']}'>{$v['crimeNAME']}</a><br />
-				Needed Brave: {$v['crimeBRAVE']}
-			</div>
-			<div class='col'>
-				<div class='progress' style='height: 1rem;'>
-					<div class='progress-bar bg-primary' role='progressbar' aria-valuenow='{$v['sucrate']}' style='width:{$v['sucrate']}%' aria-valuemin='0' aria-valuemax='100'>
-						<span>
-							{$v['sucrate']}%
-						</span>
-					</div>
-				</div>
-			</div>
-			</div>
-			<hr />";
+				echo "  <div class='row'>
+                            <div class='col-auto col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Crime</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$v['crimeNAME']}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-auto col-sm-6 col-md-4 col-xl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Success Chance</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . scaledColorProgressBar($v['sucrate'], 0, 100, true) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-auto col-sm-6 col-md-4 col-xl-3 col-xxl-auto'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <a href='?action=crime&c={$v['crimeID']}' class='btn btn-primary btm-sm'>Commit - " . shortNumberParse($v['crimeBRAVE']) . " Brave</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />";
             }
         }
-    }
-    echo "</div>
+        echo "</div>
 			</div>";
+    }
     $db->free_result($q);
     $h->endpage();
 }
@@ -233,7 +236,7 @@ function crime()
                 $title = "Uh Oh!";
                 $type = 'danger';
                 $dtime = Random($r['crimeDUNGMIN'], $r['crimeDUNGMAX']);
-                $text = str_replace("{time}", number_format($dtime), $r['crimeFTEXT']);
+                $text = str_replace("{time}", shortNumberParse($dtime), $r['crimeFTEXT']);
                 $api->UserStatusSet($userid, 'dungeon', $dtime, $r['crimeDUNGREAS']);
                 $api->SystemLogsAdd($userid, 'crime', "Failed to commit the {$r['crimeNAME']} crime.");
 				crime_log($_GET['c'],false,0,0);
