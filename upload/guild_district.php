@@ -87,7 +87,7 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action']) 
 {
-    case 'view':
+    /*case 'view':
         view();
         break;
 	case 'attackform':
@@ -137,7 +137,15 @@ switch ($_GET['action'])
 	     break;
 	default:
         home2();
-        break;
+        break;*/
+	default:
+	   tempclosed();
+	   break;
+}
+
+function tempclosed()
+{
+    alert('danger','','This round of this districts has concluded. CID Admin is currently tweaking the districts for a new launch.', true, 'explore.php');
 }
 function test()
 {
