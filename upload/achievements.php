@@ -351,7 +351,7 @@ function home()
 	//this # for next achievement number
 	while ($count != 110)
 	{
-		$class[$count]= (userHasAchievement($count)) ? "class='text-success'" : "class='text-danger font-weight-bold'" ;
+		$class[$count]= (userHasAchievement($count)) ? "class='text-success updateHoverBtn'" : "class='text-danger font-weight-bold updateHoverBtn'" ;
 		$count=$count+1;
 	}
 	echo "
