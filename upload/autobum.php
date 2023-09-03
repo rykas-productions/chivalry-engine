@@ -103,31 +103,31 @@ if (isset($_POST['open']))
             <div class='card-body'>
                 <i>You've gained the following...</i>
                 <div class='row'>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($copper) . " Copper Coins
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($tokens) . " Chivalry Tokens
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($fish) . " Fish
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($apple) . " Apples
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($ham) . " Ham Shanks
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($choco) . " Chocolate Bars
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($rock) . " Heavy Rocks
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($bucket) . " Empty Buckets
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                    <div class='col-auto'>
                         " . shortNumberParse($log) . " Wood Logs
                     </div>
                 </div>

@@ -152,46 +152,46 @@ if (isset($_POST['open']))
             <div class='card-body'>
                 <i>You've gained the following...</i>
                 <div class='row'>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($copper) . " Copper Coins
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($tokens) . " Chivalry Tokens
                     </div>
-                    <div class='text-danger col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='text-danger col-auto'>
                         " . shortNumberParse($dungeon) . " Dungeon minutes
                     </div>
-                    <div class='text-danger col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='text-danger col-auto'>
                         " . shortNumberParse($infirmary) . " Infirmary minutes
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($leeches) . " Leeches
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($lockpicks) . " Lockpicks
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($rocks) . " Heavy Rocks
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($sticks) . " Sharpened Sticks
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                    <div class='col-auto'>
                         " . shortNumberParse($strength) . " Strength
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                    <div class='col-auto'>
                         " . shortNumberParse($agility) . " Agility
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+                    <div class='col-auto'>
                         " . shortNumberParse($guard) . " Guard
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($borg) . " Boxes of Random
                     </div>
-                    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto'>
                         " . shortNumberParse($notes) . " Assassination Notes
                     </div>
-                    <div class='text-danger col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+                    <div class='text-danger col-auto'>
                         " . shortNumberParse($nothing) . " Empty Hexbags
                     </div>
                 </div>

@@ -180,7 +180,7 @@ if (isset($_POST['open']))
 	echo "<div class='row'>";
 	if ($copper > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 			<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(157, 8) . "<br />
@@ -195,7 +195,7 @@ if (isset($_POST['open']))
 	}
 	if ($tokens > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(156, 8) . "<br />
@@ -210,7 +210,7 @@ if (isset($_POST['open']))
 	}
 	if ($infirmary > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . loadImageAsset("explore/infirmary.svg", 8) . "<br />
@@ -224,7 +224,7 @@ if (isset($_POST['open']))
 	}
 	if ($wraps > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(6, 8) . "<br />
@@ -238,7 +238,7 @@ if (isset($_POST['open']))
 	}
 	if ($keys > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(30, 8) . "<br />
@@ -252,7 +252,7 @@ if (isset($_POST['open']))
 	}
 	if ($bread > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(19, 8) . "<br />
@@ -266,7 +266,7 @@ if (isset($_POST['open']))
 	}
 	if ($venison > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(20, 8) . "<br />
@@ -280,7 +280,7 @@ if (isset($_POST['open']))
 	}
 	if ($potion > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(7, 8) . "<br />
@@ -294,7 +294,7 @@ if (isset($_POST['open']))
 	}
 	if ($explosives > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(28, 8) . "<br />
@@ -308,7 +308,7 @@ if (isset($_POST['open']))
 	}
 	if ($gymscroll > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(18, 8) . "<br />
@@ -322,7 +322,7 @@ if (isset($_POST['open']))
 	}
 	if ($attackscroll > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(90, 8) . "<br />
@@ -336,7 +336,7 @@ if (isset($_POST['open']))
 	}
 	if ($needle > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(100, 8) . "<br />
@@ -350,7 +350,7 @@ if (isset($_POST['open']))
 	}
 	if ($mystery > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(123, 8) . "<br />
@@ -364,7 +364,7 @@ if (isset($_POST['open']))
 	}
 	if ($hexbags > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . loadImageAsset("explore/hexbags.svg") . "<br />
@@ -378,7 +378,7 @@ if (isset($_POST['open']))
 	}
 	if ($rickitybomb > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 		<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(149, 8) . "<br />
@@ -392,7 +392,7 @@ if (isset($_POST['open']))
 	}
 	if ($herbofminer > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 			<div class='card'>
 			<div class='card-body'>
 				" . returnIcon(177, 8) . "<br />
@@ -406,7 +406,7 @@ if (isset($_POST['open']))
 	}
 	if ($nothing > 0)
 	{
-		echo "<div class='col-md-3'>
+		echo "<div class='col-auto'>
 			<div class='card'>
 			<div class='card-body'>
 				" . number_format($nothing) . " boxes of random had no contents.

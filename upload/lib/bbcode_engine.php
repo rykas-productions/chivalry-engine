@@ -12,12 +12,12 @@ $parser = new JBBCode\Parser();
 $parser->addCodeDefinitionSet(new JBBCode\DefaultCodeDefinitionSet());
 
 //URL with option
-$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{option}">{param} <i class="fas fa-external-link-alt"></i></a>');
+$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{option}" class="updateHoverBtn">{param} <i class="fas fa-external-link-alt"></i></a>');
 $builder->setUseOption(true);
 $parser->addCodeDefinition($builder->build());
 
 //URL
-$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{param}">{param} <i class="fas fa-external-link-alt"></i></a>');
+$builder = new JBBCode\CodeDefinitionBuilder('url', '<a href="{param}" class="updateHoverBtn">{param} <i class="fas fa-external-link-alt"></i></a>');
 $parser->addCodeDefinition($builder->build());
 
 //Quote with option 
