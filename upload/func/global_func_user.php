@@ -1532,3 +1532,31 @@ function getRandomDailyActiveUserID()
 {
     return getRandomActiveUserID(86400);
 }
+
+function userCalculateNetworth($userid)
+{
+    global $db, $api;
+    $estates = $db->fetch_single($db->query("SELECT SUM(`vault`) FROM `user_estates` WHERE `userid` = {$userid}")); //copper in user's estates
+    
+    //get average token cost from the market
+    $totalcost=$db->fetch_single($db->query("SELECT SUM(`token_total`) FROM `token_market_avg`"));
+    $totaltokens=$db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));
+    $avgTokenPrice = $totalcost / $totaltokens; //average price per token
+    
+    $r = $db->fetch_row($db->query("SELECT * FROM `users` WHERE `userid` = {$userid}"));
+    $worth = 0; //starting net worth of 0... because scrub
+    $worth += $estates; //add the estates vaults' copper
+    $worth += $api->UserInfoGet($userid, "bank", false);    //add user's bank
+    $worth += $api->UserInfoGet($userid, "vaultbank", false);   //add vault bank
+    $worth += $api->UserInfoGet($userid, "bigbank", false);   //add fed bank
+    $worth += $api->UserInfoGet($userid, "primary_currency", false);    //add held copper
+    $worth += ($api->UserInfoGet($userid, "secondary_currency", false) * $avgTokenPrice);   //add tokens * average market price
+    $worth += ($api->UserInfoGet($userid, "tokenbank", false) * $avgTokenPrice);   //add token bank * average market price
+    
+    $q = $db->query("SELECT `ue_id` FROM `user_estates` WHERE `userid` = {$userid}");
+    while ($r2 = $db->fetch_row($q))
+    {
+        $worth += calculateSellPrice($r2['ue_id']);
+    }
+    return $worth;
+}

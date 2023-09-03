@@ -217,10 +217,10 @@ switch ($_GET['action']) {
 	    worth(25000000000,107);
 	    break;
 	case 'worth9':
-	    worth(10000000000,108);
+	    worth(100000000000,108);
 	    break;
 	case 'worth10':
-	    worth(100000000000,109);
+	    worth(1000000000000,109);
 	    break;
 	case 'posts1':
         posts(5,52);
@@ -337,12 +337,13 @@ function home()
 	$ir['actual_reset'] = $ir['reset'] - 1;
 	$ir['courses_done']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `academy_done` WHERE `userid` = {$userid}"));
 	$ir['forum_posts']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$userid}"));
-	$estates = $db->fetch_single($db->query("SELECT SUM(`vault`) FROM `user_estates` WHERE `userid` = {$userid}"));
-	$ir['net_worth']=$estates+$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*$set['token_minimum'])+($ir['tokenbank']*$set['token_minimum'])+$ir['vaultbank'];
+	$ir['net_worth'] = userCalculateNetworth($userid);
 	$ir['dmg_dlt']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'dmgdone'"));
 	$ir['travel_times']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`value`) FROM `user_logging` WHERE `userid` = {$userid} AND `log_name` = 'travel'"));
 	$ir['crime_copper']=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`crimecopper`) FROM `crime_logs` WHERE `userid` = {$userid}"));
 	$ir['referral_count']=$ref=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`referalid`) FROM `referals` WHERE `referal_userid` = {$userid}"));
+	
+	
 	
 	echo "Here's a list of in-game achievements. Click on an achievement to be rewarded with it. You may only 
 	be rewarded once per achievement. Each achievement you complete will get you 1 skill point.";
@@ -355,440 +356,596 @@ function home()
 	}
 	echo "
 	<div class='row'>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Level
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['level']) . "
+						<div class='col-auto'>
+							Level " . createPrimaryBadge(shortNumberParse($ir['level'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
 					<div class='row'>
-						<div class='col'>
-							<a {$class[1]} href='?action=level1'>Level 5</a><br />
-							<a {$class[2]} href='?action=level2'>Level 25</a><br />
-							<a {$class[49]} href='?action=level6'>Level 50</a><br />
-							<a {$class[3]} href='?action=level3'>Level 100</a><br />
-							<a {$class[50]} href='?action=level7'>Level 150</a><br />
-							<a {$class[4]} href='?action=level4'>Level 200</a><br />
-							<a {$class[5]} href='?action=level5'>Level 300</a>
+						<div class='col-auto'>
+							<a {$class[1]} href='?action=level1'>Level 5</a>
 						</div>
-						<div class='col'>
-							<a {$class[51]} href='?action=level8'>Level 500</a><br />
-							<a {$class[87]} href='?action=level9'>Level 750</a><br />
-							<a {$class[88]} href='?action=level10'>Level 1,000</a><br />
-							<a {$class[89]} href='?action=level11'>Level 1,500</a><br />
-							<a {$class[90]} href='?action=level12'>Level 2,000</a><br />
+                        <div class='col-auto'>
+                            <a {$class[2]} href='?action=level2'>Level 25</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[49]} href='?action=level6'>Level 50</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[3]} href='?action=level3'>Level 100</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[50]} href='?action=level7'>Level 150</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[4]} href='?action=level4'>Level 200</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[5]} href='?action=level5'>Level 300</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[51]} href='?action=level8'>Level 500</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[87]} href='?action=level9'>Level 750</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[88]} href='?action=level10'>Level 1K</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[89]} href='?action=level11'>Level 1.5K</a>
+                        </div>
+						<div class='col-auto'>
+							<a {$class[90]} href='?action=level12'>Level 2K</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Mining Level
-						</div>
-						<div class='col-6'>
-						" . shortNumberParse($MUS['mining_level']) . "
+						<div class='col-auto'>
+							Mining Level " . createPrimaryBadge(shortNumberParse($MUS['mining_level'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
 					<div class='row'>
-						<div class='col'>
-							<a {$class[11]} href='?action=mine1'>Level 10</a><br />
-							<a {$class[12]} href='?action=mine2'>Level 20</a><br />
-							<a {$class[13]} href='?action=mine3'>Level 50</a><br />
-							<a {$class[82]} href='?action=mine4'>Level 75</a><br />
-							<a {$class[83]} href='?action=mine5'>Level 100</a><br />
-							<a {$class[84]} href='?action=mine6'>Level 200</a><br />
+                        <div class='col-auto'>
+							<a {$class[11]} href='?action=mine1'>Level 10</a>
 						</div>
-						<div class='col'>
-							<a {$class[96]} href='?action=mine7'>Level 300</a><br />
-							<a {$class[97]} href='?action=mine8'>Level 500</a><br />
-							<a {$class[98]} href='?action=mine9'>Level 750</a><br />
-							<a {$class[99]} href='?action=mine8'>Level 1,000</a><br />
-						</div>
+                        <div class='col-auto'>
+                            <a {$class[12]} href='?action=mine2'>Level 20</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[13]} href='?action=mine3'>Level 50</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[82]} href='?action=mine4'>Level 75</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[83]} href='?action=mine5'>Level 100</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[84]} href='?action=mine6'>Level 200</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[96]} href='?action=mine7'>Level 300</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[97]} href='?action=mine8'>Level 500</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[98]} href='?action=mine9'>Level 750</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[99]} href='?action=mine8'>Level 1K</a>
+                        </div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Dungeon Busts
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['busts']) . "
-						</div>
-					</div>
-				</div>
-				<div class='card-body'>
-					<a {$class[6]} href='?action=bust1'>25 Busts</a><br />
-					<a {$class[7]} href='?action=bust2'>100 Busts</a><br />
-					<a {$class[8]} href='?action=bust3'>250 Busts</a><br />
-					<a {$class[9]} href='?action=bust4'>500 Busts</a><br />
-					<a {$class[10]} href='?action=bust5'>1,000 Busts</a><br />
-				</div>
-			</div>
-		</div>
-	</div>
-	<br />
-	<div class='row'>
-		<div class='col-sm'>
-			<div class='card'>
-				<div class='card-header'>
-					<div class='row'>
-						<div class='col-6'>
-							Kills
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['kills']) . "
-						</div>
-					</div>
-				</div>
-				<div class='card-body'>
-					<div class='row'>
-						<div class='col'>
-							<a {$class[14]} href='?action=kill1'>10 Kills</a><br />
-							<a {$class[15]} href='?action=kill2'>50 Kills</a><br />
-							<a {$class[16]} href='?action=kill3'>100 Kills</a><br />
-							<a {$class[17]} href='?action=kill4'>500 Kills</a><br />
-							<a {$class[18]} href='?action=kill5'>1,000 Kills</a><br />
-						</div>
-						<div class='col'>
-							<a {$class[100]} href='?action=kill6'>2,500 Kills</a><br />
-							<a {$class[101]} href='?action=kill7'>5,000 Kills</a><br />
-							<a {$class[102]} href='?action=kill8'>10,000 Kills</a><br />
-							<a {$class[103]} href='?action=kill9'>25,000 Kills</a><br />
-							<a {$class[104]} href='?action=kill10'>50,000 Kills</a><br />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class='col-sm'>
-			<div class='card'>
-				<div class='card-header'>
-					<div class='row'>
-						<div class='col-6'>
-							Deaths
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['deaths']) . "
-						</div>
-					</div>
-				</div>
-				<div class='card-body'>
-					<div class='row'>
-						<div class='col'>
-							<a {$class[19]} href='?action=death1'>10 Deaths</a><br />
-							<a {$class[20]} href='?action=death2'>50 Deaths</a><br />
-							<a {$class[21]} href='?action=death3'>100 Deaths</a><br />
-							<a {$class[22]} href='?action=death4'>500 Deaths</a><br />
-							<a {$class[23]} href='?action=death5'>1,000 Deaths</a><br />
-						</div>
-						
-						<div class='col'>
-						
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class='col-sm'>
-			<div class='card'>
-				<div class='card-header'>
-					<div class='row'>
-						<div class='col-6'>
-							Referrals
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['referral_count']) . "
-						</div>
-					</div>
-				</div>
-				<div class='card-body'>
-					<a {$class[24]} href='?action=refer1'>1 Referral</a><br />
-					<a {$class[25]} href='?action=refer2'>5 Referrals</a><br />
-					<a {$class[26]} href='?action=refer3'>10 Referrals</a><br />
-					<a {$class[27]} href='?action=refer4'>50 Referrals</a><br />
-					<a {$class[28]} href='?action=refer5'>100 Referrals</a><br />
-				</div>
-			</div>
-		</div>
-	</div>
-	<br />
-	<div class='row'>
-		<div class='col-sm'>
-			<div class='card'>
-				<div class='card-header'>
-					<div class='row'>
-						<div class='col-6'>
-							Crime Copper
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['crime_copper']) . "
-						</div>
-					</div>
-				</div>
-				<div class='card-body'>
-					<a {$class[29]} href='?action=crimec1'>500K</a><br />
-					<a {$class[30]} href='?action=crimec2'>1M</a><br />
-					<a {$class[31]} href='?action=crimec3'>5M</a><br />
-					<a {$class[32]} href='?action=crimec4'>25M</a><br />
-					<a {$class[33]} href='?action=crimec5'>100M</a><br />
-				</div>
-			</div>
-		</div>
-		<div class='col-sm'>
-			<div class='card'>
-				<div class='card-header'>
-					<div class='row'>
-						<div class='col-6'>
-							Times Travelled
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['travel_times']) . "
-						</div>
-					</div>
-				</div>
-				<div class='card-body'>
-					<a {$class[34]} href='?action=travel1'>1 Time</a><br />
-					<a {$class[35]} href='?action=travel2'>5 Times</a><br />
-					<a {$class[36]} href='?action=travel3'>10 Times</a><br />
-					<a {$class[37]} href='?action=travel4'>50 Times</a><br />
-					<a {$class[38]} href='?action=travel5'>100 Times</a><br />
-				</div>
-			</div>
-		</div>
-		<div class='col-sm'>
-			<div class='card'>
-				<div class='card-header'>
-					<div class='row'>
-						<div class='col-6'>
-							Damage Dealt
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['dmg_dlt']) . "
-						</div>
-					</div>
-				</div>
-				<div class='card-body'>
-					<a {$class[39]} href='?action=dam1'>1K</a><br />
-					<a {$class[40]} href='?action=dam2'>2K</a><br />
-					<a {$class[41]} href='?action=dam3'>1K</a><br />
-					<a {$class[42]} href='?action=dam4'>1M</a><br />
-					<a {$class[43]} href='?action=dam5'>25M</a><br />
-				</div>
-			</div>
-		</div>
-	</div>
-	<br />
-	<div class='row'>
-		<div class='col-sm'>
-			<div class='card'>
-				<div class='card-header'>
-					<div class='row'>
-						<div class='col-6'>
-							Networth
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['net_worth']) . "
+						<div class='col-auto'>
+							Dungeon Busts " . createPrimaryBadge(shortNumberParse($ir['busts'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
                     <div class='row'>
-						<div class='col'>
-        					<a {$class[44]} href='?action=worth1'>500K</a><br />
-        					<a {$class[45]} href='?action=worth2'>5M</a><br />
-        					<a {$class[46]} href='?action=worth3'>50M</a><br />
-        					<a {$class[47]} href='?action=worth4'>500M</a><br />
-        					<a {$class[48]} href='?action=worth5'>1B</a><br />
+                        <div class='col-auto'>
+							<a {$class[6]} href='?action=bust1'>25 Busts</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[7]} href='?action=bust2'>100 Busts</a>
                         </div>
-                        <div class='col'>
-                            <a {$class[105]} href='?action=worth6'>5B</a><br />
-        					<a {$class[106]} href='?action=worth7'>10B</a><br />
-        					<a {$class[107]} href='?action=worth8'>25B</a><br />
-                            <a {$class[108]} href='?action=worth9'>100B</a><br />
-                            <a {$class[109]} href='?action=worth10'>1T</a><br />
+                        <div class='col-auto'>
+                            <a {$class[8]} href='?action=bust3'>250 Busts</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[9]} href='?action=bust4'>500 Busts</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[10]} href='?action=bust5'>1K Busts</a>
                         </div>
                     </div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Forum Posts
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['forum_posts']) . "
+						<div class='col-auto'>
+							Kills " . createPrimaryBadge(shortNumberParse($ir['kills'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[52]} href='?action=posts1'>5 Posts</a><br />
-					<a {$class[53]} href='?action=posts2'>25 Posts</a><br />
-					<a {$class[54]} href='?action=posts3'>75 Posts</a><br />
-					<a {$class[55]} href='?action=posts4'>500 Posts</a><br />
-					<a {$class[56]} href='?action=posts5'>1,000 Posts</a><br />
+					<div class='row'>
+                        <div class='col-auto'>
+							<a {$class[14]} href='?action=kill1'>10 Kills</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[15]} href='?action=kill2'>50 Kills</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[16]} href='?action=kill3'>100 Kills</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[17]} href='?action=kill4'>500 Kills</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[18]} href='?action=kill5'>1K Kills</a>
+                        </div>
+                        <div class='col-auto'>
+							<a {$class[100]} href='?action=kill6'>2.5K Kills</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[101]} href='?action=kill7'>5K Kills</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[102]} href='?action=kill8'>10K Kills</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[103]} href='?action=kill9'>25K Kills</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[104]} href='?action=kill10'>50K Kills</a>
+                        </div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-auto'>
+							Deaths " . createPrimaryBadge(shortNumberParse($ir['deaths'])) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+					<div class='row'>
+                        <div class='col-auto'>
+							<a {$class[19]} href='?action=death1'>10 Deaths</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[20]} href='?action=death2'>50 Deaths</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[21]} href='?action=death3'>100 Deaths</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[22]} href='?action=death4'>500 Deaths</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[23]} href='?action=death5'>1K Deaths</a>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-auto'>
+							Referrals " . createPrimaryBadge(shortNumberParse($ir['referral_count'])) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[24]} href='?action=refer1'>1 Referral</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[25]} href='?action=refer2'>5 Referrals</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[26]} href='?action=refer3'>10 Referrals</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[27]} href='?action=refer4'>50 Referrals</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[28]} href='?action=refer5'>100 Referrals</a>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-auto'>
+							Crime Copper " . createPrimaryBadge(shortNumberParse($ir['crime_copper'])) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[29]} href='?action=crimec1'>500K</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[30]} href='?action=crimec2'>1M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[31]} href='?action=crimec3'>5M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[32]} href='?action=crimec4'>25M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[33]} href='?action=crimec5'>100M</a>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-auto'>
+							Times Traveled " . createPrimaryBadge(shortNumberParse($ir['travel_times'])) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[34]} href='?action=travel1'>1 Time</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[35]} href='?action=travel2'>5 Times</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[36]} href='?action=travel3'>10 Times</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[37]} href='?action=travel4'>50 Times</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[38]} href='?action=travel5'>100 Times</a>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-auto'>
+							Damage Dealt " . createPrimaryBadge(shortNumberParse($ir['dmg_dlt'])) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[39]} href='?action=dam1'>1K</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[40]} href='?action=dam2'>2K</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[41]} href='?action=dam3'>100K</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[42]} href='?action=dam4'>1M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[43]} href='?action=dam5'>25M</a>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-auto'>
+							Networth " . createPrimaryBadge(shortNumberParse($ir['net_worth'])) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[44]} href='?action=worth1'>500K</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[45]} href='?action=worth2'>5M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[46]} href='?action=worth3'>50M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[47]} href='?action=worth4'>500M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[48]} href='?action=worth5'>1B</a>
+                        </div>
+                        <div class='col-auto'>
+							<a {$class[105]} href='?action=worth6'>5B</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[106]} href='?action=worth7'>10B</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[107]} href='?action=worth8'>25B</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[108]} href='?action=worth9'>100B</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[109]} href='?action=worth10'>1T</a>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
+			<div class='card'>
+				<div class='card-header'>
+					<div class='row'>
+						<div class='col-auto'>
+							Forum Posts " . createPrimaryBadge(shortNumberParse($ir['forum_posts'])) . "
+						</div>
+					</div>
+				</div>
+				<div class='card-body'>
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[52]} href='?action=posts1'>5 Posts</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[53]} href='?action=posts2'>25 Posts</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[54]} href='?action=posts3'>75 Posts</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[55]} href='?action=posts4'>500 Posts</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[56]} href='?action=posts5'>1,000 Posts</a>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
             <div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Days Logged In
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['dayslogged']) . "
+						<div class='col-auto'>
+							Days Logged In " . createPrimaryBadge(shortNumberParse($ir['dayslogged'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[57]} href='?action=dayslogged1'>7 Days</a><br />
-					<a {$class[58]} href='?action=dayslogged2'>14 Days</a><br />
-					<a {$class[59]} href='?action=dayslogged3'>30 Days</a><br />
-					<a {$class[60]} href='?action=dayslogged4'>120 Days</a><br />
-					<a {$class[61]} href='?action=dayslogged5'>365 Days</a><br />
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[57]} href='?action=dayslogged1'>7 Days</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[58]} href='?action=dayslogged2'>14 Days</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[59]} href='?action=dayslogged3'>30 Days</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[60]} href='?action=dayslogged4'>120 Days</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[61]} href='?action=dayslogged5'>365 Days</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<br />
-    <div class='row'>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							IQ
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['iq']) . "
+						<div class='col-auto'>
+							IQ " . createPrimaryBadge(shortNumberParse($ir['iq'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[62]} href='?action=iq1'>10K</a><br />
-					<a {$class[63]} href='?action=iq2'>25K</a><br />
-					<a {$class[64]} href='?action=iq3'>100K</a><br />
-					<a {$class[65]} href='?action=iq4'>1M</a><br />
-					<a {$class[66]} href='?action=iq5'>5M</a><br />
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[62]} href='?action=iq1'>10K</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[63]} href='?action=iq2'>25K</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[64]} href='?action=iq3'>100K</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[65]} href='?action=iq4'>1M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[66]} href='?action=iq5'>5M</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							VIP Days
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['vip_days']) . "
+						<div class='col-auto'>
+							VIP Days " . createPrimaryBadge(shortNumberParse($ir['vip_days'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[67]} href='?action=vip1'>10 VIP Days</a><br />
-					<a {$class[68]} href='?action=vip2'>30 VIP Days</a><br />
-					<a {$class[69]} href='?action=vip3'>90 VIP Days</a><br />
-					<a {$class[70]} href='?action=vip4'>180 VIP Days</a><br />
-					<a {$class[71]} href='?action=vip5'>365 VIP Days</a><br />
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[67]} href='?action=vip1'>10 VIP Days</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[68]} href='?action=vip2'>30 VIP Days</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[69]} href='?action=vip3'>90 VIP Days</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[70]} href='?action=vip4'>180 VIP Days</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[71]} href='?action=vip5'>365 VIP Days</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
             <div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Labor
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['labor']) . "
+						<div class='col-auto'>
+							Labor " . createPrimaryBadge(shortNumberParse($ir['labor'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[72]} href='?action=labor1'>100K</a><br />
-					<a {$class[73]} href='?action=labor2'>500K</a><br />
-					<a {$class[74]} href='?action=labor3'>1M</a><br />
-					<a {$class[75]} href='?action=labor4'>10M</a><br />
-					<a {$class[76]} href='?action=labor5'>50M</a><br />
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[72]} href='?action=labor1'>100K</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[73]} href='?action=labor2'>500K</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[74]} href='?action=labor3'>1M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[75]} href='?action=labor4'>10M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[76]} href='?action=labor5'>50M</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<br />
-    <div class='row'>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Courses Done
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['courses_done']) . "
+						<div class='col-auto'>
+							Courses Done " . createPrimaryBadge(shortNumberParse($ir['courses_done'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[77]} href='?action=course1'>1 Course</a><br />
-					<a {$class[78]} href='?action=course2'>5 Courses</a><br />
-					<a {$class[79]} href='?action=course3'>10 Courses</a><br />
-					<a {$class[80]} href='?action=course4'>20 Courses</a><br />
-					<a {$class[81]} href='?action=course5'>40 Courses</a><br />
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[77]} href='?action=course1'>1 Course</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[78]} href='?action=course2'>5 Courses</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[79]} href='?action=course3'>10 Courses</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[80]} href='?action=course4'>20 Courses</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[81]} href='?action=course5'>40 Courses</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					<div class='row'>
-						<div class='col-6'>
-							Mastery Rank
-						</div>
-						<div class='col-6'>
-							" . shortNumberParse($ir['actual_reset']) . "
+						<div class='col-auto'>
+							Mastery Rank " . createPrimaryBadge(shortNumberParse($ir['actual_reset'])) . "
 						</div>
 					</div>
 				</div>
 				<div class='card-body'>
-					<a {$class[91]} href='?action=mastery'>Mastery Rank I</a><br />
-					<a {$class[92]} href='?action=mastery2'>Mastery Rank II</a><br />
-					<a {$class[93]} href='?action=mastery3'>Mastery Rank III</a><br />
-					<a {$class[94]} href='?action=mastery4'>Mastery Rank IV</a><br />
-					<a {$class[95]} href='?action=mastery5'>Mastery Rank V</a><br />
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[91]} href='?action=mastery'>Mastery Rank I</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[92]} href='?action=mastery2'>Mastery Rank II</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[93]} href='?action=mastery3'>Mastery Rank III</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[94]} href='?action=mastery4'>Mastery Rank IV</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[95]} href='?action=mastery5'>Mastery Rank V</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
-		<div class='col-sm'>
+		<div class='col-sm-6 col-xl-4 col-xxl-3 col-xxxl-2'>
 			<div class='card'>
 				<div class='card-header'>
 					Misc Achievements
 				</div>
 				<div class='card-body'>
-					<a {$class[85]}>Chump Change</a><br />
-					<a {$class[86]}>King of the World</a><br />
+                    <div class='row'>
+                        <div class='col-auto'>
+							<a {$class[85]}>Chump Change</a>
+						</div>
+                        <div class='col-auto'>
+                            <a {$class[86]}>King of the World</a>
+                        </div>
+                    </div>
 				</div>
 		</div>
 	</div>";
@@ -1017,13 +1174,12 @@ function worth($level,$id)
 		alert('danger',"Uh Oh!","You can only receive each achievement once.",true,'achievements.php');
 		die($h->endpage());
 	}
-	$estates = $db->fetch_single($db->query("SELECT SUM(`vault`) FROM `user_estates` WHERE `userid` = {$userid}"));
-	$worth=$estates+$ir['primary_currency']+$ir['bank']+$ir['bigbank']+($ir['secondary_currency']*$set['token_minimum'])+($ir['tokenbank']*$set['token_minimum'])+$ir['vaultbank'];
+	$worth = userCalculateNetworth($userid);
 	if (empty($worth))
 		$worth=0;
 	if ($worth < $level)
 	{
-		alert('danger',"Uh Oh!","Your worth is too low to recieve this achievement. You only have " . shortNumberParse($worth) . " net worth. Remember, this only values Chivalry Tokens at 1,000 Copper Coins each. This also counts your held Copper Coins and Chivalry Tokens, along with all in your bank accounts.",true,'achievements.php');
+	    alert('danger',"Uh Oh!","Your worth is too low to recieve this achievement. You only have " . shortNumberParse($worth) . " net worth. Remember, this only values Chivalry Tokens at their average market price. This also counts your held Copper Coins and Chivalry Tokens, along with all in your bank accounts, along with the sell value of ALL your owned estates.",true,'achievements.php');
 		die($h->endpage());
 	}
 	userCompleteAchievement($userid, $id);
