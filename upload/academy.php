@@ -85,7 +85,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
         					</span>
 				        </div>
 			         </div>
-                    Do you wish to <a href='?dropout=yes'>dropout</a>?
+                    Do you wish to <a href='?dropout=yes' class='updateHoverBtn'>dropout</a>?
                 </div>
             </div>
         </div>
@@ -122,14 +122,14 @@ function menu()
                              WHERE `course` = {$academy['ac_id']}"));
         //If user has already completed the course.
         if ($db->fetch_single($cdo) > 0)
-            $do = "<a href='#' class='disabled btn-success btn btn-block'>Graduated</a>";
+            $do = "<a href='#' class='disabled btn-success btn btn-block updateHoverBtn'>Graduated</a>";
         elseif ($ir['level'] < $academy['ac_level'])
-            $do = "<a href='#' class='disabled btn-danger btn btn-block'>Level too low</a>";
+            $do = "<a href='#' class='disabled btn-danger btn btn-block updateHoverBtn'>Level too low</a>";
             
 		elseif ($ir['primary_currency'] < $academy['ac_cost'])
-			$do = "<a href='#' class='disabled btn-danger btn btn-block'>Not enough Copper</a>";
+			$do = "<a href='#' class='disabled btn-danger btn btn-block updateHoverBtn'>Not enough Copper</a>";
 		else
-            $do = "<a href='?action=start&id={$academy['ac_id']}' class='btn btn-primary btn-block'>Start Course</a>";
+            $do = "<a href='?action=start&id={$academy['ac_id']}' class='btn btn-primary btn-block updateHoverBtn'>Start Course</a>";
 		
         $costClass='';
         $lvlClass='';
@@ -240,7 +240,7 @@ function start()
     $api->UserTakeCurrency($userid, 'primary', $course['ac_cost']); //Take user's money.
 	addToEconomyLog('Academy', 'copper', ($course['ac_cost'])*-1);
     alert('success', "Success!", "You have successfully enrolled yourself in the {$course['ac_name']} course. It will
-	                            complete in {$course['ac_days']} days.", true, 'index.php');
+	                            complete in " . shortNumberParse($course['ac_days']) . " days.", true, 'index.php');
 }
 
 $h->endpage();
