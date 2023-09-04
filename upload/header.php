@@ -217,13 +217,13 @@ class headers
 						<div class="dropdown">
 							<a href="notifications.php" class="updateHoverBtn">
 								<i class="fa fa-bell"></i>
-								<span class="badge badge-pill badge-success notification" id="ui_notif"><?php echo $ir['notifications']; ?></span>
+								<span class="badge badge-pill badge-success notification" id="ui_notif"><?php echo shortNumberParse($ir['notifications']); ?></span>
 							</a>
 						</div>
 						<div class="dropdown">
 							<a href="inbox.php" class="updateHoverBtn">
 								<i class="fa fa-envelope"></i>
-								<span class="badge badge-pill badge-success notification" id="ui_mail"><?php echo $ir['mail']; ?></span>
+								<span class="badge badge-pill badge-success notification" id="ui_mail"><?php echo shortNumberParse($ir['mail']); ?></span>
 							</a>
 						</div>
 						<div class="dropdown">
@@ -472,21 +472,21 @@ class headers
 		echo "<div class='row' id='socialRow'>";
 		if ($ir['mail'] > 0) 
 		{
-			echo "<div class='col-lg'>";
+			echo "<div class='col-auto'>";
 				alert('info', "", "You have " . number_format($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
 			echo "</div>";
         }
         //Tell user they have unread notifcations when they do.
         if ($ir['notifications'] > 0) 
 		{
-			echo "<div class='col-lg'>";
+			echo "<div class='col-auto'>";
 				alert('info', "", "You have " . number_format($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
 			echo "</div>";
         }
 		//Tell user they have unread game announcements when they do.
 		if ($ir['announcements'] > 0) 
 		{
-			echo "<div class='col-lg'>";
+			echo "<div class='col-auto'>";
 				alert('info', "", "You have " . number_format($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
 			echo "</div>";
 		}
