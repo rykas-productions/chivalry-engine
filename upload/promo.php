@@ -58,13 +58,13 @@ if ($db->num_rows($q2) > 0)
                     <div class='card-header'>
                         Redeemed Promo Codes
                     </div>
-                    <div class='card-body'>";
+                    <div class='card-body'><div class='row'>";
                             while ($r = $db->fetch_row($q2))
                             {
                                 $promoname = $db->fetch_single($db->query("SELECT `promo_code` FROM `promo_codes` WHERE `promo_id` = {$r['promo_id']}"));
-                                echo "<div class='row'><div class='col-12'>" . strtoupper($promoname). "</div></div>"; 
+                                echo "<div class='col-auto'>" . strtoupper($promoname). "</div>"; 
                             }
-                   echo" </div>
+                   echo" </div></div>
                 </div>
             </div>
            </div>";
