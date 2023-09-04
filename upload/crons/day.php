@@ -51,7 +51,7 @@ $db->query("UPDATE `settings` SET `setting_value` = '{$tenday}' WHERE `setting_n
 $db->query("UPDATE `settings` SET `setting_value` = '{$twentyday}' WHERE `setting_name` = '20day'");
 $db->query("UPDATE `settings` SET `setting_value` = '{$thirtyday}' WHERE `setting_name` = '30day'");
 $db->query("TRUNCATE TABLE `votes`");
-doDailyDistrictTick();
+//doDailyDistrictTick();
 doDailyGuildFee();
 //Banks daily interest
 doDailyBankInterest();
@@ -74,11 +74,4 @@ $month = date('n');
 $day = date('j');
 $year = date('Y');
 
-if ($month == 12)
-{
-    if ($day == 1)
-    {
-        $api->GameAddAnnouncement("That concludes the turkey hunting season for " . date('Y') . "! The top five players who bagged the most kills are now visible on the Milestone page on explore. With that in mind, we're rolling right into Christmas season with the reintroduction of the CID Advent Calendar, Christmas Tree and Christmas Wish! See them on the explore page! Happy Holidays! :)");
-    }
-}
 ?>
