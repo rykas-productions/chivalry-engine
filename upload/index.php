@@ -10,27 +10,27 @@
 */
 require_once('globals.php');
 
-$citybank = ($ir['bank'] > -1) ? number_format($ir['bank']) : "<span class='text-danger'>N/A</span>"; 
-$fedbank = ($ir['bigbank'] > -1) ? number_format($ir['bigbank']) : "<span class='text-danger'>N/A</span>"; 
-$vaultbank = ($ir['vaultbank'] > -1) ? number_format($ir['vaultbank']) : "<span class='text-danger'>N/A</span>"; 
-$tokenbank = ($ir['tokenbank'] > -1) ? number_format($ir['tokenbank']) : "<span class='text-danger'>N/A</span>";
+$citybank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "<span class='text-danger'>N/A</span>"; 
+$fedbank = ($ir['bigbank'] > -1) ? shortNumberParse($ir['bigbank']) : "<span class='text-danger'>N/A</span>"; 
+$vaultbank = ($ir['vaultbank'] > -1) ? shortNumberParse($ir['vaultbank']) : "<span class='text-danger'>N/A</span>"; 
+$tokenbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "<span class='text-danger'>N/A</span>";
 
 if (!isset($MUS))
     $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 
 //Get the stat ranks. Players like this apparently.
 $StrengthRank = get_rank($ir['strength'], 'strength');
-$StrengthFormat = number_format($ir['strength']);
+$StrengthFormat = shortNumberParse($ir['strength']);
 $AgilityRank = get_rank($ir['agility'], 'agility');
-$AgilityFormat = number_format($ir['agility']);
+$AgilityFormat = shortNumberParse($ir['agility']);
 $GuardRank = get_rank($ir['guard'], 'guard');
-$GuardFormat = number_format($ir['guard']);
+$GuardFormat = shortNumberParse($ir['guard']);
 $IQRank = get_rank($ir['iq'], 'iq');
-$IQFormat = number_format($ir['iq']);
+$IQFormat = shortNumberParse($ir['iq']);
 $LaborRank = get_rank($ir['labor'], 'labor');
-$LaborFormat = number_format($ir['labor']);
+$LaborFormat = shortNumberParse($ir['labor']);
 $AllStatRank= get_rank($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq'], 'all');
-$AllFourFormat = number_format($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq']);
+$AllFourFormat = shortNumberParse($ir['strength'] + $ir['agility'] + $ir['guard'] + $ir['labor'] + $ir['iq']);
 //Player is attempting to update their personal notepad.
 if (isset($_POST['pn_update'])) {
     //Sanitize the notepad entry
@@ -49,45 +49,45 @@ if (isset($_POST['pn_update'])) {
     }
 }
 echo "<div class='row'>
-	<div class='col-lg'>";
+	<div class='col-auto'>";
 		alert('info','',"Welcome back, {$ir['username']}!!",false);
 		echo"
 	</div>
-	<div class='col-lg'>";
+	<div class='col-auto'>";
 		alert('info','',"You were last active {$lv}!",false);
 		echo"
 	</div>
 </div>";
 echo "
 	<div class='row'>
-		<div class='col-md'>
+		<div class='col-12 col-md-6 col-xxl-3 col-xxxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					General Info
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-                        <div class='col-12 col-sm-4 col-xxl-3 col-xxxl-2'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Level</b></small>
                                 </div>
                                 <div class='col-12'>
-                                    " . number_format($ir['level']) . "
+                                    " . shortNumberParse($ir['level']) . "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-xxl-3 col-xxxl-2'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>VIP Days</b></small>
                                 </div>
                                 <div class='col-12'>
-                                    " . number_format($ir['vip_days']) . "
+                                    " . shortNumberParse($ir['vip_days']) . "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-xxl-3 col-xxxl-2'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Class</b></small>
@@ -97,7 +97,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-xxl-3 col-xxxl-2'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Busts</b></small>
@@ -107,7 +107,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-lg'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Kills:Deaths</b></small>
@@ -119,10 +119,10 @@ echo "
                         </div>
 					</div>
 					<div class='row'>
-						<div class='col'>
+						<div class='col-auto'>
 							<a href='skills.php' class='btn btn-primary btn-block'>Skills</a>
 						</div>
-						<div class='col'>
+						<div class='col-auto'>
 							<a href='achievements.php' class='btn btn-primary btn-block'>Achievements</a>
 						</div>
 					</div>
@@ -130,34 +130,34 @@ echo "
 			</div>
 		</div>
 		<br />
-		<div class='col-md'>
+		<div class='col-12 col-md-6 col-xxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					Finances
 				</div>
 				<div class='card-body text-left'>
 					<div class='row'>
-                        <div class='col-12 col-sm-4 col-md-6 col-xl-4 col-xxxl-3'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Copper Coins</b></small>
                                 </div>
                                 <div class='col-12'>
-                                    " . number_format($ir['primary_currency']) . "
+                                    " . shortNumberParse($ir['primary_currency']) . "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-md-6 col-xl-4 col-xxxl-3'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Chivalry Tokens</b></small>
                                 </div>
                                 <div class='col-12'>
-                                    " . number_format($ir['secondary_currency']) . "
+                                    " . shortNumberParse($ir['secondary_currency']) . "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-md-6 col-xl-4 col-xxxl-3'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>City Bank</b></small>
@@ -167,7 +167,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-md-6 col-xl-4 col-xxxl-3'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Federal Bank</b></small>
@@ -177,7 +177,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-md-6 col-xl-4 col-xxxl-3'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Vault Bank</b></small>
@@ -187,7 +187,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-4 col-md-6 col-xl-4 col-xxxl-3'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Token Bank</b></small>
@@ -201,10 +201,7 @@ echo "
 				</div>
 			</div>
 		</div>
-	</div>
-	<br />
-	<div class='row'>
-		<div class='col-md'>
+		<div class='col-12 col-md-6 col-xxl-5 col-xxxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					Regenerative Stats
@@ -213,70 +210,70 @@ echo "
 					<div class='row'>
                         <div class='col-12 col-sm-6 col-md-12 col-xl-6'>
                             <div class='row'>
-                                <div class='col-12 col-md col-xl-12'>
+                                <div class='col-12'>
                                     <small><b>Energy</b></small>
                                 </div>
-                                <div class='col-12 col-md-9 col-lg-8 col-xl-12'>
+                                <div class='col-12'>
                                      " . scaledColorProgressBar($ir['energy'], 0, $ir['maxenergy']) . "
                                 </div>
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xl-6'>
                             <div class='row'>
-                                <div class='col-12 col-md col-xl-12'>
+                                <div class='col-12 '>
                                     <small><b>Will</b></small>
                                 </div>
-                                <div class='col-12 col-md-9 col-lg-8 col-xl-12'>
+                                <div class='col-12'>
                                      " . scaledColorProgressBar($ir['will'], 0, $ir['maxwill']) . "
                                 </div>
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xl-6'>
                             <div class='row'>
-                                <div class='col-12 col-md col-xl-12'>
+                                <div class='col-12'>
                                     <small><b>Brave</b></small>
                                 </div>
-                                <div class='col-12 col-md-9 col-lg-8 col-xl-12'>
+                                <div class='col-12'>
                                      " . scaledColorProgressBar($ir['brave'], 0, $ir['maxbrave']) . "
                                 </div>
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xl-6'>
                             <div class='row'>
-                                <div class='col-12 col-md col-xl-12'>
+                                <div class='col-12'>
                                     <small><b>Health</b></small>
                                 </div>
-                                <div class='col-12 col-md-9 col-lg-8 col-xl-12'>
+                                <div class='col-12'>
                                      " . scaledColorProgressBar($ir['hp'], 0, $ir['maxhp']) . "
                                 </div>
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xl-6'>
                             <div class='row'>
-                                <div class='col-12 col-md col-xl-12'>
+                                <div class='col-12'>
                                     <small><b>XP</b></small>
                                 </div>
-                                <div class='col-12 col-md-9 col-lg-8 col-xl-12'>
+                                <div class='col-12'>
                                      " . scaledColorProgressBar($ir['xp'], 0, $ir['xp_needed']) . "
                                 </div>
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xl-6'>
                             <div class='row'>
-                                <div class='col-12 col-md col-xl-12'>
+                                <div class='col-12'>
                                     <small><b>Mining</b></small>
                                 </div>
-                                <div class='col-12 col-md-9 col-lg-8 col-xl-12'>
+                                <div class='col-12'>
                                      " . scaledColorProgressBar($MUS['miningpower'], 0, $MUS['max_miningpower']) . "
                                 </div>
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xl-6'>
                             <div class='row'>
-                                <div class='col-12 col-md col-xl-12'>
+                                <div class='col-12'>
                                     <small><b>Luck</b></small>
                                 </div>
-                                <div class='col-12 col-md-9 col-lg-8 col-xl-12'>
+                                <div class='col-12'>
                                      " . scaledColorProgressBar($ir['luck'], 0, 100) . "
                                 </div>
                             </div>
@@ -285,14 +282,14 @@ echo "
 				</div>
 			</div>
 		</div>
-		<div class='col-md'>
+		<div class='col-12 col-md-6 col-xxl-3 col-xxxl-4'>
 			<div class='card'>
 				<div class='card-header'>
 					Combat Stats
 				</div>
 				<div class='card-body text-left'>
                     <div class='row'>
-                        <div class='col-12 col-sm-6 col-xxl-4'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Strength</b> (Rank {$StrengthRank})</small>
@@ -302,7 +299,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6 col-xxl-4'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Agility</b> (Rank {$AgilityRank})</small>
@@ -312,7 +309,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6 col-xxl-4'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Guard</b> (Rank {$GuardRank})</small>
@@ -322,7 +319,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6 col-xxl-4'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Labor</b> (Rank {$LaborRank})</small>
@@ -332,7 +329,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6 col-xxl-4'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>IQ</b> (Rank {$IQRank})</small>
@@ -342,7 +339,7 @@ echo "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6 col-xxl-4'>
+                        <div class='col-auto'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Overall</b> (Rank {$AllStatRank})</small>
@@ -357,10 +354,7 @@ echo "
 			</div>
 		</div>
 		<br />
-	</div>
-	<br />
-<div class='row'>
-    <div class='col-12'>
+    <div class='col-12 col-md'>
         <div class='card'>
             <div class='card-header'>
                 Personal Notepad
