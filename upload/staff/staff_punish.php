@@ -47,6 +47,9 @@ switch ($_GET['action']) {
     case 'massemail':
         massemail();
         break;
+    case 'directemail':
+        directemail();
+        break;
     case 'banip':
         banip();
         break;
@@ -1036,6 +1039,86 @@ function massemail()
 		{$csrf}
 		</form>
 		</table>";
+    }
+}
+
+function directemail()
+{
+    global $db, $userid, $api, $h, $set;
+    $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : 0;
+    if (isset($_POST['user'])) 
+    {
+        $_POST['user'] = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs($_POST['user']) : 0;
+        $msg = $_POST['msg'];
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_direct_email', stripslashes($_POST['verf']))) 
+        {
+            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
+            die($h->endpage());
+        }
+        if (empty($msg) || empty($_POST['user'])) 
+        {
+            alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.");
+            die($h->endpage());
+        }
+        $check = $db->query("/*qc=on*/SELECT `email` FROM `users` WHERE `userid` = {$_POST['user']} LIMIT 1");
+        if ($db->num_rows($check) == 0) 
+        {
+            alert('danger', "Uh Oh!", "The user you are attempting to email does not exist.");
+            die($h->endpage());
+        }
+        $r=$db->fetch_row($check);
+        $api->SystemSendEmail($r['email'], $msg, "{$set['WebsiteName']} Email", $set['sending_email']);
+        $api->GameAddNotification($_POST['user'], "The game adminsistration has externally emailed you. Please check your email address.");
+        alert('success', "Success!", "You have emailed {$api->SystemUserIDtoName($_POST['user'])}.");
+    } 
+    else 
+    {
+        $csrf = request_csrf_html('staff_direct_email');
+        echo "  <div class='card'>
+                    <div class='card-header'>
+                        Direct Email
+                    </div>
+                    <div class='card-body'>";
+                    alert('info',"","Use this form to directly email a player.",false);
+                    
+                    echo"
+                        <form method='post'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>User</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . user_dropdown('user', $_GET['user']) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Email (HTML)</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <textarea class='form-control' name='msg' required='1'></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>&nbsp;</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Forum Warn'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {$csrf}
+                </form>";
     }
 }
 
