@@ -58,8 +58,8 @@ function energy()
 				//Refill the user's energy and take their Chivalry Tokens.
 				$api->UserInfoSet($userid, 'energy', 100, true);
 				$api->UserTakeCurrency($userid, 'secondary', $set['energy_refill_cost']);
-				alert('success', "Success!", "You have paid {$set['energy_refill_cost']} Chivalry Tokens to refill your energy.", false);
-				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['energy_refill_cost']} Chivalry Tokens to refill their Energy.");
+				alert('success', "Success!", "You have paid " . shortNumberParse($set['energy_refill_cost']) . " Chivalry Tokens to refill your energy.", false);
+				$api->SystemLogsAdd($userid, 'temple', "Traded " . shortNumberParse($set['energy_refill_cost']) . " Chivalry Tokens to refill their Energy.");
 				addToEconomyLog('Temple of Fortune', 'token', ($set['energy_refill_cost'])*-1);
 			}
         }
@@ -92,8 +92,8 @@ function brave()
 				//Refill the user's bravery by 5% and take their Chivalry Tokens.
 				$api->UserInfoSet($userid, 'brave', 5, true);
 				$api->UserTakeCurrency($userid, 'secondary', $set['brave_refill_cost']);
-				alert('success', "Success!", "You have paid {$set['brave_refill_cost']} to regenerate 5% Bravery.", false);
-				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['brave_refill_cost']} Chivalry Tokens to regenerate 5% Brave.");
+				alert('success', "Success!", "You have paid " . shortNumberParse($set['brave_refill_cost']) . " to regenerate 5% Bravery.", false);
+				$api->SystemLogsAdd($userid, 'temple', "Traded " . shortNumberParse($set['brave_refill_cost']) . " Chivalry Tokens to regenerate 5% Brave.");
 				addToEconomyLog('Temple of Fortune', 'token', ($set['brave_refill_cost'])*-1);
 			}
         }
@@ -125,8 +125,8 @@ function will()
 			else
 			{
 				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']);
-				alert('success', "Success!", "You have paid {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will. You now have " . number_format($api->UserInfoGet($userid, 'will', true) + 5) . "% Will.", false);
-				$api->SystemLogsAdd($userid, 'temple', "Traded {$set['will_refill_cost']} Chivalry Tokens to regenerate 5% Will.");
+				alert('success', "Success!", "You have paid " . shortNumberParse($set['will_refill_cost']) . " Chivalry Tokens to regenerate 5% Will. You now have " . number_format($api->UserInfoGet($userid, 'will', true) + 5) . "% Will.", false);
+				$api->SystemLogsAdd($userid, 'temple', "Traded " . shortNumberParse($set['will_refill_cost']) . " Chivalry Tokens to regenerate 5% Will.");
 				addToEconomyLog('Temple of Fortune', 'token', ($set['will_refill_cost'])*-1);
 			}
 			$db->query("UPDATE `users` SET `will` = `will` + (`maxwill`/20) WHERE `userid` = {$userid}");
@@ -157,8 +157,8 @@ function willall()
 				//Refill the user's will by 5% and take their Chivalry Tokens.
 				$api->UserInfoSet($userid, 'will', 100, true);
 				$api->UserTakeCurrency($userid, 'secondary', $set['will_refill_cost']*20);
-				alert('success', "Success!", "You have paid " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to fill your will.", false);
-				$api->SystemLogsAdd($userid, 'temple', "Traded " . number_format($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will.");
+				alert('success', "Success!", "You have paid " . shortNumberParse($set['will_refill_cost']*20) . " Chivalry Tokens to fill your will.", false);
+				$api->SystemLogsAdd($userid, 'temple', "Traded " . shortNumberParse($set['will_refill_cost']*20) . " Chivalry Tokens to regenerate 100% Will.");
 				addToEconomyLog('Temple of Fortune', 'token', ($set['will_refill_cost']*20)*-1);
 			}
         }
