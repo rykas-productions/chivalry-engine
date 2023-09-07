@@ -8,7 +8,7 @@
 */
 require('sglobals.php');
 echo "<h3>Staff Polling</h3><hr />";
-if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+if ($api->UserMemberLevelGet($userid, 'Assistant') == false) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
 }

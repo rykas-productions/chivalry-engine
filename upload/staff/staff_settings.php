@@ -8,7 +8,7 @@
 */
 require('sglobals.php');
 echo "<h3>Admin Settings</h3><hr />";
-if ($api->UserMemberLevelGet($userid, 'Admin') == false) {
+if (!$api->UserMemberLevelGet($userid, 'Assistant')) {
     alert('danger', "Uh Oh!", "You do not have permission to be here.");
     die($h->endpage());
 }
@@ -42,6 +42,10 @@ switch ($_GET['action']) {
 function basicsettings()
 {
     global $h, $db, $set, $api, $userid;
+    if (!$api->UserMemberLevelGet($userid, 'Admin')) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     if (!isset($_POST['WebsiteName'])) {
         $csrf = request_csrf_html('staff_sett_1');
         echo "
@@ -733,6 +737,10 @@ function announce()
 function diagnostics()
 {
     global $h, $userid, $api;
+    if (!$api->UserMemberLevelGet($userid, 'Admin')) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     $dir = substr(__DIR__, 0, strpos(__DIR__, "\staff"));
     if (is_writable('./')) {
         $wv = "<span style='color: green'>Writable.</span>";
@@ -841,6 +849,11 @@ function restore()
 function errlog()
 {
     global $api, $userid, $h;
+    
+    if (!$api->UserMemberLevelGet($userid, 'Admin')) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     $api->SystemLogsAdd($userid, 'staff', "Viewed the error log.");
     echo "
 	<textarea class='form-control' rows='20' readonly='1'>" . file_get_contents("../error_log") . "</textarea>";
@@ -849,7 +862,11 @@ function errlog()
 
 function staff()
 {
-    global $db, $api, $h;
+    global $db, $api, $h, $userid;
+    if (!$api->UserMemberLevelGet($userid, 'Admin')) {
+        alert('danger', "Uh Oh!", "You do not have permission to be here.");
+        die($h->endpage());
+    }
     if (isset($_POST['user'])) {
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_priv', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for your security. Please fill out the form quickly next time.");
