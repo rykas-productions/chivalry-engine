@@ -78,12 +78,28 @@ function removeUserShares($userid, $assetID, $totalShares)
 function assetsOwnedCleanup()
 {
     global $db;
-    $fiftyDays = (((60 * 60) * 24) * 50);
-    $historyDelTime = time() - $fiftyDays;
+    $q = $db->query("SELECT `am_id`, `am_risk` FROM `asset_market`");
+    while ($r = $db->fetch_row($q))
+    {
+        if ($r['am_risk'] == 5)         //High risk / 1 minute
+            $purgeTime = 60 * 50;           //keep 50 minutes worth of log
+        elseif ($r['am_risk'] == 4)     //med high risk / 5 minute
+            $purgeTime = 60 * 250;          //keep 250 minutes worth of log
+        elseif ($r['am_risk'] == 3)     //med risk / 1 hour
+            $purgeTime = 60 * 60 * 50;      //Keep 50 hours worth of log
+        elseif ($r['am_risk'] == 2)     //low med risk / 6 hour
+            $purgeTime = 60 * 60 * 250;      //Keep 250 hours worth of log
+        elseif ($r['am_risk'] == 1)     //low risk / 24 hour
+            $purgeTime = 60 * 60 * 24 * 50;      //Keep 50 days worth of log
+    }
+    $historyDelTime = time() - $purgeTime;
     $db->query("DELETE FROM `asset_market_owned` WHERE `shares_owned` <= 0");
     $db->query("DELETE FROM `asset_market_history` WHERE `timestamp` < {$historyDelTime}");
 }
 
+/**
+ * @param int $riskLevel 1-5
+ */
 function runMarketTick($riskLevel)
 {
     global $db, $api;

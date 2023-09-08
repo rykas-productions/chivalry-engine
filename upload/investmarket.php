@@ -113,8 +113,34 @@ function home()
     <div class='card-body'>";
     while ($r = $db->fetch_row($q))
     {
-        $q2=$db->query("SELECT * FROM `asset_market_history` WHERE `am_id` = {$r['am_id']} ORDER BY `timestamp` DESC LIMIT 1");
-        $r2=$db->fetch_row($q2);
+        switch($r['am_risk'])
+        {
+            case 5:
+                $cacheTime = 30 + Random(-5,5);
+                break;
+            case 4:
+                $cacheTime = 150 + Random(-25,25);
+                break;
+            case 3:
+                $cacheTime = 3600 + Random(-600,600);
+                break;
+            case 2:
+                $cacheTime = 21600 + Random(-3600,3600);
+                break;
+            case 1:
+                $cacheTime = 86400 + Random(-14400,14400);
+                break;
+        }
+        $query = "/*qc=on*/SELECT `new_value`, `old_value`, `difference` FROM `asset_market_history` WHERE `am_id` = {$r['am_id']} ORDER BY `timestamp` DESC LIMIT 1";
+        $cache = fetchCachedQuery($query, 'query', $cacheTime);
+        if (!empty($cache))
+            $r2 = $cache;
+        else
+        {
+            $r2=$db->fetch_row($db->query($query));
+            cacheQuery($query, $r2);
+            $db->free_result($db->query($query));
+        }
         $change = ($r2['old_value'] < $r2['new_value']) ? "text-success" : "text-danger";
         echo "<div class='row'>
             <div class='col-6 col-lg-2'>
@@ -122,10 +148,10 @@ function home()
             </div>
             <div class='col-6 col-lg-4'>
                 <div class='col-12'>
-                    Current Value
+                    <small><b>Current Value</b></small>
                 </div>
                 <div class='col-12'>
-                    <small>" . shortNumberParse($r['am_cost']) . " Copper Coins <span class='{$change}'>(" . number_format($r2['difference']) . ")</span></small>
+                    " . shortNumberParse($r['am_cost']) . " Copper Coins <span class='{$change}'>(" . shortNumberParse($r2['difference']) . ")</span>
                 </div>
             </div>
             <div class='col-12 col-lg-6'>
@@ -143,6 +169,7 @@ function home()
             </div>
         </div>";
     }
+    $db->free_result($q);
     echo "</div></div>";
 }
 
@@ -401,7 +428,7 @@ function history()
         		lineThickness: 1
         	},
         	axisX: {
-        		title: "<?php echo $tick; ?>s ago"
+        		title: "<?php echo "X " . $tick; ?>s ago"
         	},
         	data: data  // random data
         };
@@ -452,7 +479,7 @@ function history()
                                         <small><b>Risk Level</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . number_format($r['am_risk']) . "
+                                        " . shortNumberParse($r['am_risk']) . "
                                     </div>
                                 </div>
                             </div>
@@ -724,7 +751,7 @@ function portfolio()
                                         <small><b>Total Shares</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . number_format($totalShares) . "
+                                        " . shortNumberParse($totalShares) . "
                                     </div>
                                 </div>
                             </div>
