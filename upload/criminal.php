@@ -76,7 +76,7 @@ function home()
 					alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
 					die($h->endpage());
 				}
-				$specialnumber=((getSkillLevel($userid,17)*20)/100);
+				$specialnumber = ((getUserSkill($userid, 16) * getSkillBonus(16)) / 100);
 				$v['sucrate']=$v['sucrate']+($v['sucrate']*$specialnumber);
 				if (hasNecklaceEquipped($userid,284))
 				{
@@ -177,7 +177,7 @@ function crime()
                 alert('danger',"Uh Oh!","There's an issue with this crime. Please contact the game administration.",true,'criminal.php');
                 die($h->endpage());
             }
-			$specialnumber=((getSkillLevel($userid,17)*20)/100);
+            $specialnumber = ((getUserSkill($userid, 16) * getSkillBonus(16)) / 100);
 			$sucrate=$sucrate+($sucrate*$specialnumber);
 			if (hasNecklaceEquipped($userid,284))
 					$sucrate=$sucrate+($sucrate*0.1);

@@ -554,8 +554,10 @@ function slept()
 		alert('danger',"Uh Oh!","You must have 50% bravery to even attempt to sleep with your spouse.",true,'marriage.php');
 		die($h->endpage());
 	}
-	$outcome=Random(1,3);
-	if ($outcome == 1)
+	$outcome=Random(1,100);
+	if (getUserSkill($userid, 19))
+	    $outcome = Random(1,100 - (getUserSkill($userid, 19) * getSkillBonus(19)));
+	if ($outcome <= 33)
 	{
 		alert('success',"Success!","You and your spouse enjoy snuggling each other in bed. You both wake up feeling well rested. This increases your marriage's happiness by one point.",true,'marriage.php');
 		$db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` + 1 WHERE `marriage_id` = {$mt['marriage_id']}");
@@ -563,22 +565,22 @@ function slept()
 		$api->SystemLogsAdd($userid,'marriage',"Slept with their spouse.");
 		$api->SystemLogsAdd($event,'marriage',"Slept with their spouse.");
 	}
-	if ($outcome == 2)
+	elseif (($outcome > 33) && ($outcome <= 66))
+	{
+	    alert('success',"Success!","You and your spouse attempt to fall asleep. Except, there's very little sleeping! ;) Time flies, and you're drained, and they're super happy. Morning comes, and you still question what happened, but you both are full of energy! This increases your marriage happiness by two points!",true,'marriage.php');
+	    $db->query("UPDATE `users` SET `energy` = 0 WHERE `userid` = {$userid} AND {$mt['marriage_id']}");
+	    $db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` + 2 WHERE `marriage_id` = {$mt['marriage_id']}");
+	    $api->GameAddNotification($event,"Your spouse, {$ir['username']}, slept with you. You both had a very fun evening. Your marriage happiness increases by two!");
+	    $api->SystemLogsAdd($userid,'marriage',"Slept with their spouse and stayed up all night.");
+	    $api->SystemLogsAdd($event,'marriage',"Slept with their spouse and stayed up all night.");
+	}
+	else
 	{
 		alert('success',"Success!","You and your spouse attempt to fall asleep on your crappy mattress. It takes you bother forever to fall asleep, but once you do, its only for an hour. Time to get up. You both lose all your energy.",true,'marriage.php');
 		$db->query("UPDATE `users` SET `energy` = 0 WHERE `userid` = {$userid} AND {$mt['marriage_id']}");
 		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, slept with you. You both had a hard time falling asleep. You have no energy for this upcoming day.");
 		$api->SystemLogsAdd($userid,'marriage',"Slept with their spouse and got no sleep.");
 		$api->SystemLogsAdd($event,'marriage',"Slept with their spouse and got no sleep.");
-	}
-	if ($outcome == 3)
-	{
-		alert('success',"Success!","You and your spouse attempt to fall asleep. Except, there's very little sleeping! ;) Time flies, and you're drained, and they're super happy. Morning comes, and you still question what happened, but you both are full of energy! This increases your marriage happiness by two points!",true,'marriage.php');
-		$db->query("UPDATE `users` SET `energy` = 0 WHERE `userid` = {$userid} AND {$mt['marriage_id']}");
-		$db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` + 2 WHERE `marriage_id` = {$mt['marriage_id']}");
-		$api->GameAddNotification($event,"Your spouse, {$ir['username']}, slept with you. You both had a very fun evening. Your marriage happiness increases by two!");
-		$api->SystemLogsAdd($userid,'marriage',"Slept with their spouse and stayed up all night.");
-		$api->SystemLogsAdd($event,'marriage',"Slept with their spouse and stayed up all night.");
 	}
 	$api->UserInfoSet($userid,'brave',-50,true);
 }
@@ -617,15 +619,12 @@ function letter()
 			die($h->endpage());
 		}
 		$api->GameAddMail($event,"Spouse Love Letter", $msg, $userid);
-		if (getSkillLevel($userid,24) != 0)
+		if (getUserSkill($userid, 22) > 0)
 		{
 		    //Flirty Words
-		    $specialnumber=((getSkillLevel($userid,24)*2)/100);
-		    $chance = $chance+($chance*$specialnumber);
+		    $chance = getUserSkill($userid, 22) * getSkillBonus(22);
 		    if (Random(1,100) <= $chance)
-		    {
 		        $db->query("UPDATE `marriage_tmg` SET `happiness` = `happiness` + 1 WHERE `marriage_id` = {$mt['marriage_id']}");
-		    }
 		}
 		alert('success',"Success!","You have successfully sent your love letter. May their knees tremble at what you have said.",true,'marriage.php');
 	}

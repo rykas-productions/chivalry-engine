@@ -192,11 +192,9 @@ function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
 function calcMineIQ($userid, $mineID)
 {
     global $db;
-    $specialnumber = ((getSkillLevel($userid, 15) * 10) / 100); //less mining iq skill
+    $specialnumber = ((getUserSkill($userid, 14) * getSkillBonus(14)) / 100);
     $mineIQ = $db->fetch_single($db->query("SELECT `mine_iq` FROM `mining_data` WHERE `mine_id` = {$mineID}"));
-    
-    $mineIQ = $mineIQ - ($mineIQ * $specialnumber);
-    
+    $mineIQ -= $mineIQ;
     return $mineIQ;
 }
 

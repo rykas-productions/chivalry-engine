@@ -19,13 +19,19 @@ function calculateLuck($user)
 		return true;
 	}
 }
-function getSkillLevel($user,$id)
+/**
+ * @desc Get the Current player's skill level by ID.
+ * @param User ID $userid
+ * @param Skill ID $skillID
+ * @return Number
+ */
+function getUserSkill($userid, $skillID)
 {
 	global $db;
 	$q = $db->query("/*qc=on*/SELECT `skill_lvl` 
 					FROM `user_skills` 
-					WHERE `userid` = {$user} 
-					AND `skill_id` = {$id}");
+					WHERE `userid` = {$userid} 
+					AND `skill_id` = {$skillID}");
 	if ($db->num_rows($q) == 0)
 		return 0;
 	else
@@ -209,8 +215,7 @@ function put_infirmary($user, $time, $reason)
     //Since the time is in minutes, lets multiply the $time by 60. (Otherwise we would be adding seconds)
     $TimeMath = ($time * 60)+Random(-59,59);
     //Time Reduction Skill
-    $specialnumber=((getSkillLevel($user,22)*5)/100);
-    $TimeMath = $TimeMath-($TimeMath*$specialnumber);
+    $TimeMath = $TimeMath - ($TimeMath * (getUserSkill($user, 20) * getSkillBonus(20)) / 100);
     //If $user is currently not in the infirmary, lets add the time! (Their out time is the Unix Timestamp plus $TimeMath)
     if ($Infirmary <= $CurrentTime) {
         $db->query("UPDATE `infirmary` SET `infirmary_out` = {$CurrentTime} + {$TimeMath}, `infirmary_in` = {$CurrentTime},
@@ -253,8 +258,7 @@ function put_dungeon($user, $time, $reason)
     //Since we're dealing with minutes, lets multiply $time by 60.
     $TimeMath = ($time * 60)+Random(-59,59);
     //Time Reduction Skill
-    $specialnumber=((getSkillLevel($user,22)*5)/100);
-    $TimeMath = $TimeMath-($TimeMath*$specialnumber);
+    $TimeMath = $TimeMath - ($TimeMath * (getUserSkillLevel($user, 20) * getSkillBonus(20)) / 100);
     //If $user is not in the dungeon already, lets set their exit time to $CurrentTime + $TimeMath
     if ($Dungeon <= $CurrentTime) {
         $db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime},
@@ -1385,13 +1389,12 @@ function calculateUserMaxBet($userid)
 {
     global $db;
     $r = $db->fetch_row($db->query("SELECT `level` FROM `users` WHERE `userid` = {$userid}"));
-    $gamblingManBuff = ((getSkillLevel($userid, 29) * 33) / 100);
+    $gamblingManBuff = ((getUserSkill($userid, 27) * getSkillBonus(27)) / 100);
     $maxbet = 0;
     $maxbet += $r['level'] * 500;   //base
+    $maxbet += ($maxbet * levelMultiplier($r['level'], $r['reset']));    //add level multipler at the end.
+    
     $maxbet += ($maxbet * $gamblingManBuff);    //buff for gambling man
-    $maxbet += ($maxbet * levelMultiplier($r['level']));    //add level multipler at the end.
-    
-    
     return round($maxbet);
 }
 

@@ -137,8 +137,7 @@ function home()
     $minesql = $db->query("/*qc=on*/SELECT * FROM `mining_data` ORDER BY `mine_level` ASC");
     while ($mines = $db->fetch_row($minesql)) 
 	{
-		$specialnumber=((getSkillLevel($ir['userid'],15)*10)/100);
-		$mines['mine_iq']=$mines['mine_iq']-($mines['mine_iq']*$specialnumber);
+		$mines['mine_iq'] -= calcMineIQ($userid, $mines['mine_id']);
 		
 		$mininglevel = ($MUS['mining_level'] >= $mines['mine_level']) ? "<span class='text-success'>Level: {$mines['mine_level']}</span>" : "<span class='text-danger'>Level: {$mines['mine_level']}</span>";
 		$iq = ($ir['iq'] >= $mines['mine_iq']) ? "<span class='text-success'>IQ: " . number_format($mines['mine_iq']) . "</span>" : "<span class='text-danger'>IQ: " . number_format($mines['mine_iq']) . "</span>";

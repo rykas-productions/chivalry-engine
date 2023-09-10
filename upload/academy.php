@@ -25,7 +25,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
     $coud = $db->fetch_row($cd);
     $db->free_result($cd);
 	$daystoseconds=$coud['ac_days']*86400;
-	if (getSkillLevel($userid,18))
+	if (getUserSkill($userid,17) > 0)
 	{
 	    $iq=round($ir['iq']/5000);
 	    if ($iq > 15)
@@ -219,7 +219,7 @@ function start()
         die($h->endpage());
     }
 	$timestamp=$course['ac_days'] * 86400;
-	if (getSkillLevel($userid,18))
+	if (getUserSkill($userid,17) > 0)
 	{
 		$iq=round($ir['iq']/5000);
 		if ($iq > 15)

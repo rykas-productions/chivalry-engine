@@ -55,7 +55,9 @@ function dobum()
 	}
 	elseif (($rand <= 8) && ($rand > 6))
 	{
-		$copper=Random(10,24);
+	    $min = 10 + (10 * (getUserSkill($userid, 10) * getSkillBonus(10)) / 100);
+	    $max = 24 + (24 * (getUserSkill($userid, 10) * getSkillBonus(10)) / 100);
+	    $copper = Random($min, $max);
 		$txt = "You stumble upon " . number_format($copper) . " Chivalry Tokens while begging on the street.";
 		$api->UserGiveCurrency($userid, 'secondary', $copper);
 		addToEconomyLog('Begging', 'token', $copper);

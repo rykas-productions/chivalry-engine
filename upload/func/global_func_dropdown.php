@@ -1129,3 +1129,32 @@ function timezone_dropdown($ddname = "timezone", $selected = -1)
     $ret .= "\n</select>";
     return $ret;
 }
+
+function skills_dropdown($ddname = "skill", $selected = -1)
+{
+    global $db;
+    $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
+    $q =
+    $db->query("/*qc=on*/SELECT * FROM `user_skills_define` ORDER BY `skID` ASC");
+    if ($selected < 1) {
+        $ret .= "<option value='0' selected='selected'>-- None --</option>";
+    } else {
+        $ret .= "<option value='0'>-- None --</option>";
+    }
+    if ($selected == -1) {
+        $first = 0;
+    } else {
+        $first = 1;
+    }
+    while ($r = $db->fetch_row($q)) {
+        $ret .= "\n<option value='{$r['skID']}'";
+        if ($selected == $r['skID'] || $first == 0) {
+            $ret .= " selected='selected'";
+            $first = 1;
+        }
+        $ret .= ">{$r['skName']} | Cost: {$r['skCost']}</option>";
+    }
+    $db->free_result($q);
+    $ret .= "\n</select>";
+    return $ret;
+}

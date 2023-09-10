@@ -35,7 +35,7 @@ if (permission('CanSellToGame', $userid) == true) {
             } else {
                 $price = $r['itmsellprice'] * $_POST['qty'];
                 //Scammer skill
-                $specialnumber=((getSkillLevel($userid,16)*2)/100);
+                $specialnumber = ((getUserSkill($userid, 15) * getSkillBonus(15)) / 100);
                 $price = $price+($price*$specialnumber);
                 $api->UserTakeItem($userid, $r['itmid'], $_POST['qty']);
                 $api->UserGiveCurrency($userid, 'primary', $price);

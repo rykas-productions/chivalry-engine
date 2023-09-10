@@ -12,8 +12,9 @@ function calcWeaponEffectiveness($weapID, $attacker)
     global $db, $api;
     $q1 = $db->query("SELECT `weapon`, `ammo` FROM `items` WHERE `itmid` = {$weapID}");
     $r = $db->fetch_row($q1);
-    $sharperBladersSkill = ((getSkillLevel($attacker, 9) * 20) / 100);  //20% per skill level
-    $r['weapon'] += ($r['weapon'] * $sharperBladersSkill);
+    //Sharper Blade Skill
+    if (getUserSkill($attacker, 9) > 0)
+        $r['weapon'] += ($r['weapon'] * ((getUserSkill($userid, 8) * getSkillBonus(8))/100));
     if ($weapID == 235)
         $r['weapon'] = ($r['weapon'] * 0.25) * $api->UserInfoGet($attacker, "level");
     return $r['weapon'];
@@ -30,7 +31,7 @@ function calcArmorEffectiveness($armorID, $attacker)
     global $db;
     $q1 = $db->query("SELECT `armor`, `ammo` FROM `items` WHERE `itmid` = {$armorID}");
     $r = $db->fetch_row($q1);
-    $thickenedSkinSkill = ((getSkillLevel($attacker, 6) * 6.5) / 100);  //6.5% per skill level
+    $thickenedSkinSkill = ((getUserSkill($attacker, 6) * 6.5) / 100);  //6.5% per skill level
     $r['armor'] += ($r['armor'] * $thickenedSkinSkill);
     return $r['armor'];
     
@@ -54,11 +55,32 @@ function returnEffectiveUserGuard($userid)
 function returnUserEffectiveStat($userid, $stat)
 {
     global $db;
+    $class = $db->fetch_single($db->query("SELECT `class` FROM `users` WHERE `userid` = {$userid}"));
     $return = $db->fetch_single($db->query("SELECT `{$stat}` FROM `userstats` WHERE `userid` = {$userid}"));
+    //User has stat potion
     if (userHasEffect($userid, $stat))
     {
         $effectLvl = returnEffectMultiplier($userid, $stat);
         $return = $return + ($return * ((5 * $effectLvl) / 100));
+    }
+    //User has perfection stat
+    if (getUserSkill($userid, 1) > 0)
+    {
+        if ($class == 'Warrior')
+        {
+            if ($stat == 'strength')
+                $return = $return + ($return * (getSkillBonus(1) * getUserSkill($userid, 1)));
+        }
+        if ($class == 'Rogue')
+        {
+            if ($stat == 'agility')
+                $return = $return + ($return * (getSkillBonus(1) * getUserSkill($userid, 1)));
+        }
+        if ($class == 'Guardian')
+        {
+            if ($stat == 'guard')
+                $return = $return + ($return * (getSkillBonus(1) * getUserSkill($userid, 1)));
+        }
     }
     return $return;
 }
@@ -218,7 +240,7 @@ function handleAttackScrollLogic()
 function handlePerfectionStatBonuses()
 {
     global $ir, $userid, $odata;
-    $specialnumber=((getSkillLevel($ir['userid'],1)*3)/100);
+    $specialnumber=((getUserSkill($ir['userid'],1)*3)/100);
     if ($ir['class'] == 'Warrior')
         $ir['strength'] += ($ir['strength']*$specialnumber);
     if ($ir['class'] == 'Rogue')
@@ -226,7 +248,7 @@ function handlePerfectionStatBonuses()
     if ($ir['class'] == 'Guardian')
         $ir['guard'] += $ir['guard']*$specialnumber;
     
-    $specialnumber2=((getSkillLevel($_GET['user'],1)*3)/100);    //this is the problem line e_e
+    $specialnumber2=((getUserSkill($_GET['user'],1)*3)/100);    //this is the problem line e_e
     if ($odata['class'] == 'Warrior')
         $odata['strength'] += ($odata['strength']*$specialnumber2);
     if ($odata['class'] == 'Rogue')

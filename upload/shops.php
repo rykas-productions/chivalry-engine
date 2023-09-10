@@ -80,7 +80,8 @@ function shop()
         $shopdata = $db->fetch_row($sd);
         if ($shopdata['shopLOCATION'] == $ir['location']) 
 		{
-			$specialnumber=((getSkillLevel($userid,13)*5)/100);
+		    //Bargaining Skill
+			$specialnumber = ((getUserSkill($userid, 12) * getSkillBonus(12)) / 100);
             echo "You begin browsing the stock at {$shopdata['shopNAME']}<br />";
             $qtwo =
                 $db->query(
@@ -225,7 +226,7 @@ function shop()
 								echo "
 								<div class='col'>
 									<b>Weapon</b><br />
-									<small>" . number_format($r['weapon']) . "</small>
+									<small>" . shortNumberParse($r['weapon']) . "</small>
 								</div>";
 							}
 							if ($r['ammo'] > 0)
@@ -241,7 +242,7 @@ function shop()
 								echo "
 								<div class='col'>
 									<b>Armor</b><br />
-									<small>" . number_format($r['armor']) . "</small>
+									<small>" . shortNumberParse($r['armor']) . "</small>
 								</div>";
 							}
 							echo"
@@ -285,7 +286,7 @@ function buy()
                 alert('danger', "Uh Oh!", "You are trying to buy from a non-existent shop.", true, "shops.php");
             } else {
                 $itemd = $db->fetch_row($q);
-				$specialnumber = ((getSkillLevel($userid, 13) * 5) / 100);
+                $specialnumber = ((getUserSkill($userid, 12) * getSkillBonus(12)) / 100);
 				$itemd['itmbuyprice'] = $itemd['itmbuyprice'] - ($itemd['itmbuyprice'] * $specialnumber);
 				$price = ($api->SystemReturnTax($itemd['itmbuyprice']) * $_POST['qty']);
 				if ($ir['primary_currency'] < $price) {

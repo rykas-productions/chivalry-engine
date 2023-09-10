@@ -48,7 +48,7 @@ if ($chance <= 35)
 elseif (($chance > 35) && ($chance <= 46))
 {
     $cash=Random(5,20)*$multipler;
-	$specialnumber=((getSkillLevel($userid,11)*5)/100);
+    $specialnumber=((getUserSkill($userid, 10) * getSkillBonus(10))/100);
 	$cash=round($cash+($cash*$specialnumber));
 	$cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
 	$string = "You quickly open this hexbag and pull out " . number_format($cash) . " Chivalry Tokens.";

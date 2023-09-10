@@ -36,7 +36,7 @@ $statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => 
 if (!isset($_GET["amnt"])) {
     $_GET["amnt"] = 0;
 }
-$labgain=((getSkillLevel($userid,23)*0.05));
+$labgain=((getUserSkill($userid, 21) * (getSkillBonus(21) / 100)));
 $multi=$multi+$labgain;
 //Convert POST values to Stat Names.
 $statnames = array("Strength" => "strength", "Agility" => "agility", "Guard" => "guard", "Labor" => "labor", "All" => "all");

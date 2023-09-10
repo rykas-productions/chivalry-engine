@@ -86,7 +86,7 @@ if (isset($_POST['open']))
 		elseif (($chance > 35) && ($chance <= 40))
 		{
 			$cash=Random(5,20)*$multipler;
-			$specialnumber=((getSkillLevel($userid,11)*5)/100);
+			$specialnumber=((getUserSkill($userid, 10) * getSkillBonus(10))/100);
 			$cash=round($cash+($cash*$specialnumber));
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$tokens=$tokens+$cash;

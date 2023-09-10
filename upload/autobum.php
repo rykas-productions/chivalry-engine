@@ -60,7 +60,9 @@ if (isset($_POST['open']))
 		}
 		elseif (($chance <= 8) && ($chance > 6))
 		{
-			$tokens = $tokens + Random(10, 24);
+		    $min = 10 + (10 * (getUserSkill($userid, 10) * getSkillBonus(10)) / 100);
+		    $max = 24 + (24 * (getUserSkill($userid, 10) * getSkillBonus(10)) / 100);
+			$tokens = $tokens + Random($min, $max);
 		}
 		elseif ($chance == 9)
 		{

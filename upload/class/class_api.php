@@ -609,7 +609,7 @@ class api
         if ($ir['guild'] != $guild)
             return $number + ($number * ($tax / 100));
         else
-            if (getSkillLevel($userid,19) == 0)
+            if (getUserSkill($userid, 18) == 0)
                 return $number + ($number * ($tax / 100));
             else
                 return $number;
@@ -794,25 +794,26 @@ class api
         $userdata = $db->fetch_row($udq);
         $gain = 0;
 		$reset = $db->fetch_single($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$userid}"));
-		$optTraining = getSkillLevel($userid, 8);
+		$optTraining = getUserSkill($userid, 8);
         //Do while value is less than the user's energy input, then add one to value.
         for ($i = 0; $i < $times; $i++) 
         {
-            $gain += mt_rand(1, 4) / mt_rand(600, 1000) * mt_rand(500, 1000) * (($userdata['will'] + 25) / 175);
-                if ($optTraining == 0)
-                    $userdata['will'] -= mt_rand(1, 3);
-                else
-                {
-                    if (mt_rand(1,2) != 1)
-                        $userdata['will'] -= mt_rand(1, 3);
-                }
+            $gain += Random(1, 4) / Random(600, 1000) * Random(500, 1000) * (($userdata['will'] + 25) / 175);
+            //Skill optimized training
+            if ($optTraining == 0)
+                $userdata['will'] -= Random(1, 3);
+            else
+            {
+                if (Random(1,100) > ($optTraining * getSkillBonus(8)))
+                    $userdata['will'] -= Random(1, 3);
+            }
             //User's will ends up negative, set to zero.
             if ($userdata['will'] < 0) {
                 $userdata['will'] = 0;
             }
         }
-		$modifier=((getSkillLevel($userid,2)*2.5)/100);
-		$nmodifier=((getSkillLevel($userid,2)*1)/100);
+		$modifier=((getUserSkill($userid,2)*getSkillBonus(2))/100);
+		$nmodifier=((getUserSkill($userid,2)*getSkillBonus(2))/100);
         //User's class is warrior
         if ($userdata['class'] == 'Warrior') {
             //Trained stat is strength, double its output.

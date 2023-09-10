@@ -54,7 +54,8 @@ if (isset($_POST['rob'])) {
     $api->UserInfoSet($userid, 'brave', -10, true);
     $minimum = round($r * 0.05);
     $maximum = round($r * 0.1);
-	$specialnumber=((getSkillLevel($userid,14)*5)/100);
+	$specialnumber = ((getUserSkill($userid, 13) * getSkillBonus(13)) / 100);
+	
     $stolen = Random($minimum, $maximum);
 	$stolen = $stolen+($stolen*$specialnumber);
 	$stolenn = shortNumberParse($stolen);

@@ -54,13 +54,13 @@ function checkPlotInfo()
 function checkFarmXP()
 {
 	global $db, $userid, $FU, $ir;
-	$wellSkill = getSkillLevel($userid,30);
+	$wellSkill = getUserSkill($userid,28);
 	if (!isset($ir['reset']))
 	    $ir['reset'] = 0;
 	    $FU['xp_needed'] = round((($FU['farm_level'] + 1.1) * ($FU['farm_level'] + 1.1) * ($FU['farm_level'] + 1.1) * 0.8) * (1 - ($ir['reset'] * 0.1)));
     if ($FU['farm_xp'] >= $FU['xp_needed'])
     {
-        $extraWell = 0 + ($wellSkill * 5);
+        $extraWell = 0 + ($wellSkill * getSkillBonus(28));
         $expu = $FU['farm_xp'] - $FU['xp_needed'];
         $FU['farm_level'] += 1;
         $FU['farm_xp'] = $expu;

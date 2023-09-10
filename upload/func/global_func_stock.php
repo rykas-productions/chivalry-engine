@@ -212,9 +212,8 @@ function returnUserMaxShares($userid)
     $level = $api->UserInfoGet($userid, "level");
     $masterRank = $db->fetch_single($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$userid}"));
     
-    $ret = 5000;
-    $ret = $ret * levelMultiplier($level);
-    $ret = $ret * $masterRank;
+    $ret = 10000;
+    $ret = $ret * levelMultiplier($level, $masterRank);
     
     return $ret;
 }

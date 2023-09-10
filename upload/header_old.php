@@ -281,7 +281,7 @@ class headers
 				{
 					$minimumluck=1;
 					//Lucky Day
-					$specialnumber=((getSkillLevel($userid,26)*1)/100);
+					$specialnumber=((getUserSkill($userid,24) * getSkillBonus(24))/100);
 					$minimumluck=$minimumluck+$specialnumber;
 					while ($thisrng == 0)
 					{

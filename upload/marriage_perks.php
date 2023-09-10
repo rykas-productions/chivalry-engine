@@ -93,10 +93,10 @@ if ($mt['happiness'] > 9)
             $newmarriage=time();
             if (($proposedlo > time()-600) && ($proposerlo > time()-600))
             {
-                if (getSkillLevel($mt['proposed_id'],27) != 0)
-                    $increase2=$increase2+10;
-                if (getSkillLevel($mt['proposer_id'],27) != 0)
-                    $increase=$increase+10;
+                if (getUserSkill($mt['proposed_id'], 25) > 0)
+                    $increase2+=10;
+                if (getUserSkill($mt['proposer_id'], 25) > 0)
+                    $increase+=10;
                 if ($rng < 6)
                 {
                     $api->UserInfoSet($mt['proposed_id'],$stat2,$increase2);

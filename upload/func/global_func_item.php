@@ -236,7 +236,7 @@ function consumeItem($userid, $itemID, $qty = 1)
 {
     global $db, $api;
     $i = $db->query("/*qc=on*/SELECT `effect1`, `effect2`, `effect3`,  `effect1_on`, `effect2_on`, `effect3_on`,
-                     `itmname`, `weapon`, `armor` FROM `items` WHERE `itmid` = {$itemID}");
+                     `itmname`, `weapon`, `itmtype`, `armor` FROM `items` WHERE `itmid` = {$itemID}");
     $consumed = 0;
     $ir = returnUserInfoRow($userid);
     $r = $db->fetch_row($i);
@@ -280,7 +280,19 @@ function consumeItem($userid, $itemID, $qty = 1)
                     {
                         $inc = $einfo['inc_amount'];
                     }
-                    $inc=$inc+($inc*((getSkillLevel($userid,25)*3)/100));   //Item potency skill.
+                    //$return = $return + ($return * ((5 * $effectLvl) / 100));
+                    //Player has Potent Potion Skill
+                    if (getUserSkill($userid, 3) > 0)
+                        $inc = $inc + ($inc * (getUserSkill($userid, 3) * getSkillBonus(3)) / 100);
+                    if (getUserSkill($userid, 23) > 0)
+                        $inc += ($inc * (getUserSkill($userid, 23) * getSkillBonus(23)) / 100); //Item potency skill.
+                    
+                    //Metabolism Skill
+                    if (getUserSkill($userid, 26) > 0)
+                    {
+                        if (Random(1,100) >= getSkillBonus(26) * getUserSkill($userid, 26))
+                            $db->query("UPDATE `users` SET `energy` = `energy` + (`maxenergy` / 10) WHERE `userid` = {$userid}");
+                    } 
                     //Effect is positive
                     if ($einfo['dir'] == "pos") 
                     {

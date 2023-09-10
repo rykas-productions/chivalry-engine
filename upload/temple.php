@@ -29,8 +29,9 @@ if (Random(1,100) == 6)
 $month = date('n');
 $day = date('j');
 
-$extraiq=(getSkillLevel($userid,12)*5)/100;
-$set['iq_per_sec'] = $set['iq_per_sec'] + ($set['iq_per_sec'] * $extraiq);
+//Deep Reading Skill
+$extraiq=(getUserSkill($userid, 11) * getSkillBonus(11)) / 100;
+$set['iq_per_sec'] += $set['iq_per_sec'] * $extraiq;
 
 $totalcost=$db->fetch_single($db->query("SELECT SUM(`token_total`) FROM `token_market_avg`"));
 $totaltokens=$db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));

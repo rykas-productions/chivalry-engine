@@ -619,15 +619,13 @@ function attacking()
 			else
 			{
 			    //Ammo dispensery skill
-			    if (getSkillLevel($userid,7) == 0)
-				    $api->UserTakeItem($userid,$r1['ammo'],1);
-			    else
+			    if (getUserSkill($userid, 7) > 0)
 			    {
-			        if (Random(1,4) <= 2)
-			        {
+			        if (Random(1,100) > (getUserSkill($userid, 7) * getSkillBonus(7)))
 			            $api->UserTakeItem($userid,$r1['ammo'],1);
-			        }
 			    }
+			    else
+			        $api->UserTakeItem($userid,$r1['ammo'],1);
 				$ttu="You take aim with your {$api->SystemItemIDtoName($_GET['weapon'])} and fire.";
 			}
 		}
@@ -643,8 +641,7 @@ function attacking()
 					//Check that the armor is valid.
 					if ($db->num_rows($q3) > 0) {
 					    //Thickened Skin skill
-						$specialnumb=((getSkillLevel($odata['userid'],6)*6.5)/100);
-						$mydamage -= $db->fetch_single($q3)-($db->fetch_single($q3)*$specialnumb);
+						$mydamage -= $db->fetch_single($q3) - ($db->fetch_single($q3) * ((getUserSkill($_GET['user'], 6) * getSkillBonus(6)) / 100));
 					}
 					$db->free_result($q3);
 				}
@@ -675,8 +672,8 @@ function attacking()
 				if ($r1['ammo'] > 0)
 				{
     				//True Shot skill
-    				$yourbowdamage=((getSkillLevel($userid,4)*5)/100);
-    				$mydamage=$mydamage+($mydamage*$yourbowdamage);
+    				if (getUserSkill($userid, 4) > 0)
+    				    $mydamage = $mydamage + ($mydamage * (getUserSkill($userid, 4) * getSkillBonus(4)) / 100);
 				}
 			}
 			else
@@ -823,15 +820,13 @@ function attacking()
 					else
 					{
 						//Ammo dispensery skill
-						if (getSkillLevel($_GET['user'],7) == 0)
-							$api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
-						else
+						if (getUserSkill($_GET['user'], 7) > 0)
 						{
-							if (Random(1,4) <= 2)
-							{
-								$api->UserTakeItem($_GET['user'],$enweps[$weptouse]['ammo'],1);
-							}
+						    if (Random(1,100) > (getUserSkill($_GET['user'], 7) * getSkillBonus(7)))
+						        $api->UserTakeItem($_GET['user'],$r1['ammo'],1);
 						}
+						else
+						    $api->UserTakeItem($_GET['user'],$r1['ammo'],1);
 					}
 				}
             }
@@ -846,8 +841,8 @@ function attacking()
                             $q3 = $db->query("/*qc=on*/SELECT `armor` FROM `items` WHERE `itmid` = {$ir['equip_armor']} LIMIT 1");
                             //If user has valid armor equipped.
                             if ($db->num_rows($q3) > 0) {
-                                $specialnumb2=((getSkillLevel($ir['userid'],6)*7.5)/100);
-                                $dam -= $db->fetch_single($q3)-($db->fetch_single($q3)*$specialnumb2);
+                                //Thickened Skin Skill
+                                $dam -= $db->fetch_single($q3) - ($db->fetch_single($q3) * ((getUserSkill($userid, 6) * getSkillBonus(6)) / 100));
                             }
                             $db->free_result($q3);
                         }
@@ -890,8 +885,8 @@ function attacking()
 							if ($enweps[$weptouse]['ammo'] > 0)
 							{
 								//True Shot skill
-								$theirbowdamage=((getSkillLevel($_GET['user'],4)*5)/100);
-								$dam=$dam+($dam*$theirbowdamage);
+								if (getUserSkill($userid, 4) > 0)
+								    $dam = $dam + ($dam * (getUserSkill($_GET['user'], 4) * getSkillBonus(4)) / 100);
 							}
 						}
                     } //Opponent misses their hit.
@@ -1376,11 +1371,12 @@ function xp()
         } else {
             //XP gained is Opponent's Level x Opponent's Level x Opponent's Level.
             $qe = ($r['level'] * $r['level'] * $r['level']);
-            //Seasoned Warrior Skill
-			$specialnumber=((getSkillLevel($userid,5)*5)/100);
             //Add 10% bonus if Exp. token is equipped
 			if (hasPendantEquipped($userid,93))
 			{
+			    //Seasoned Warrior Skill
+			    if (getUserSkill($userid, 5) > 0)
+			        $specialnumber = (getUserSkill($userid, 5) * getSkillBonus(5)) / 100;
 				$qe=$qe+($qe*0.1);
 				$qe=$qe+($qe*$specialnumber);
 			}
@@ -1581,7 +1577,7 @@ function mug()
 			attacklog($userid,$_GET['ID'],'mugged');
 			$minimum=round($r['primary_currency']*0.02);
 			$maximum=round($r['primary_currency']*0.2);
-			$specialnumber=((getSkillLevel($userid,14)*5)/100);
+			$specialnumber = ((getUserSkill($userid, 13) * getSkillBonus(13)) / 100);
             $stole = Random($minimum,$maximum);
 			$stole = $stole+($stole*$specialnumber);
             $hosptime = Random(20, 40) + floor($ir['level'] / 6);
@@ -1755,7 +1751,7 @@ function home_invasion()
             attacklog($userid,$_GET['ID'],'mugged');
             $minimum=round($userVault*0.02);
             $maximum=round($userVault*0.2);
-            $specialnumber=((getSkillLevel($userid,14)*5)/100);
+            $specialnumber = ((getUserSkill($userid, 13) * getSkillBonus(13)) / 100);
             $stole = Random($minimum,$maximum);
             $stole = $stole+($stole*$specialnumber);
             $hosptime = Random(40, 95) + floor($ir['level'] / 6);

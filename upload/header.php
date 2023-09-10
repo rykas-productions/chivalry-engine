@@ -435,12 +435,10 @@ class headers
 				{
 					$minimumluck=1;
 					//Lucky Day
-					$specialnumber=((getSkillLevel($userid,26)*1)/100);
-					$minimumluck=$minimumluck+$specialnumber;
+					if (getUserSkill($userid, 24) > 0)
+					    $minimumluck += getUserSkill($userid, 24) * getSkillBonus(24);
 					while ($thisrng == 0)
-					{
-						$thisrng=Random($minimumluck,7);
-					}
+					    $thisrng=Random($minimumluck,7+$minimumluck);
 					$_SESSION['lucked_out']=time()+300;
 					//alert('info','Lucked Out!',"While walking around the kingdom, your luck has changed by {$thisrng}%.",false);
 					toast("Lucky Day!","While walking around {$set['WebsiteName']}, your luck has increased by {$thisrng}%.");

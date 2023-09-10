@@ -1001,7 +1001,6 @@ function backupDatabase()
 	global $_CONFIG;
 	$filename='cid_backup-'.date('y-m-d').'-'.date('H-i-s').'.sql';
 	exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/mysql/".$filename,$output);
-	exec("mysqldump {$_CONFIG['database']} --password={$_CONFIG['password']} --user={$_CONFIG['username']} --single-transaction >/var/www/chivalryisdeadgame.com/html/cache/latest.sql",$output);
 }
 
 /**

@@ -32,13 +32,6 @@ if (empty($_GET['item'])) {
             die($h->endpage());
 		}
         consumeItem($userid, $r['itmid']);
-        if (getSkillLevel($userid,28) != 0)
-        {
-            if (Random(1,20) == 1)
-            {
-                $api->UserInfoSet($userid, 'energy', Random(1,5), true);
-            }
-        }
         alert('success', "Success!", "You have successfully used your {$r['itmname']}!", true, "itemuse.php?item={$_GET['item']}", "Use Another");
       $api->SystemLogsAdd($userid, 'itemuse', "Used {$r['itmname']}.");
     }

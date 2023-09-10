@@ -55,30 +55,33 @@ if (isUserDungeon($userid))
     alert('danger',"Uh Oh!","You cannot use the Asset Investment market if you're in the dungeon.",true,'dungeon.php');
     die($h->endpage());
 }
-echo "<h3>Asset Investing</h3><hr />
-    <div class='row'>
-        <div class='col-12 col-sm-6 col-md'>
-            <a href='#' data-toggle='modal' data-target='#investment_info' class='btn btn-info btn-block'>Info</a>
-            <br />
+echo "<div class='row'><div class='col-auto'>
+    <div class='card'>
+        <div class='card-header'>
+            Asset Investment
         </div>
-        <div class='col-12 col-sm-6 col-md'>
-            <a href='investmarket.php' class='btn btn-primary btn-block'>Home</a>
-            <br />
+        <div class='card-body'>
+            <div class='row'>
+                <div class='col-auto'>
+                    <a href='investmarket.php' class='btn btn-primary btn-block'>Home</a>
+                </div>
+                <div class='col-auto'>
+                    <a href='?action=portfolio' class='btn btn-success btn-block'>Portfolio</a>
+                </div>
+                <div class='col-auto'>
+                    <a href='#' data-toggle='modal' data-target='#investment_info' class='btn btn-info btn-block'>Information</a>
+                </div>";
+                if ($ir['user_level'] == 'Admin')
+                {
+                    echo "<div class='col-auto'>
+                        <a href='?action=staffadd' class='btn btn-danger btn-block'>Add Stock</a>
+                    </div>";
+                }
+                echo"
+            </div>
         </div>
-        <div class='col-12 col-sm col-md'>
-            <a href='?action=portfolio' class='btn btn-success btn-block'>Portfolio</a>
-            <br />
-        </div>";
-        if ($ir['user_level'] == 'Admin')
-        {
-            echo "<div class='col-12 col-sm-6 col-md'>
-            <a href='?action=staffadd' class='btn btn-danger btn-block'>Add Stock</a>
-            <br />
-            </div>";
-        }
-        echo"
     </div>
-    <hr />";
+</div></div>";
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -156,13 +159,13 @@ function home()
             </div>
             <div class='col-12 col-lg-6'>
                 <div class='row'>
-                    <div class='col-12 col-sm-4 col-lg'>
+                    <div class='col-auto'>
                         <a href='?action=buy&id={$r['am_id']}' class='btn btn-success btn-block'>Buy</a><br />
                     </div>
-                    <div class='col-12 col-sm-4 col-lg'>
+                    <div class='col-auto'>
                         <a href='?action=sell&id={$r['am_id']}' class='btn btn-danger btn-block'>Sell</a><br />
                     </div>
-                    <div class='col-12 col-sm-4 col-lg'>
+                    <div class='col-auto'>
                         <a href='?action=history&id={$r['am_id']}' class='btn btn-info btn-block'>History</a><br />
                     </div>
                 </div>
@@ -456,14 +459,14 @@ function history()
         <?php
         echo "
         <div class='row'>
-            <div class='col-12 col-xxl-6'>
+            <div class='col-auto col-sm-6 col-md-4 col-lg-5'>
                 <div class='card'>
                     <div class='card-header'>
                         {$r['am_name']} Info
                     </div>
                     <div class='card-body'>
                         <div class='row'>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto col-lg-6 col-xxl-auto''>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Total Shares</b></small>
@@ -473,7 +476,7 @@ function history()
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto col-lg-6 col-xxl-auto'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Risk Level</b></small>
@@ -483,33 +486,33 @@ function history()
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Avg Cost</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . shortNumberParse($avgShrCost) . " Copper
+                                        " . shortNumberParse($avgShrCost) . " Copper Coins
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Current Value</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . shortNumberParse($r['am_cost']) . " Copper
+                                        " . shortNumberParse($r['am_cost']) . " Copper Coins
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl-4 col-xxxl'>
+                            <div class='col-auto'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Total Value</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . shortNumberParse($totalShareCost) . " Copper
+                                        " . shortNumberParse($totalShareCost) . " Copper Coins
                                     </div>
                                 </div>
                             </div>
@@ -518,14 +521,14 @@ function history()
                 </div>
                 <br />
             </div>
-            <div class='col-12 col-xxl-6'>
+            <div class='col-auto col-sm-6 col-md-4'>
                 <div class='card'>
                     <div class='card-header'>
                         Your Info
                     </div>
                     <div class='card-body'>
                         <div class='row'>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl'>
+                            <div class='col-auto'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Assets Owned</b></small>
@@ -535,23 +538,23 @@ function history()
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl'>
+                            <div class='col-auto'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Avg Cost</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        " . shortNumberParse($avgCost) . " Copper
+                                        " . shortNumberParse($avgCost) . " Copper Coins
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-4 col-xl-4 col-xxl'>
+                            <div class='col-auto'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Total Value</b></small>
                                     </div>
                                     <div class='col-12 {$valueClass}'>
-                                        " . shortNumberParse($currentValue) . " Copper
+                                        " . shortNumberParse($currentValue) . " Copper Coins
                                     </div>
                                 </div>
                             </div>
@@ -560,17 +563,14 @@ function history()
                 </div>
                 <br />
             </div>
-            <div class='col-12'>
+            <div class='col-auto col-lg-3'>
                 <div class='card'>
-                    <div class='card-header'>
-                        Actions
-                    </div>
                     <div class='card-body'>
                         <div class='row'>
-                            <div class='col-12 col-sm-6'>
-                                <a href='?action=buy&id={$r['am_id']}' class='btn btn-success btn-block'>Buy</a><br />
+                            <div class='col-auto col-md-12'>
+                                <a href='?action=buy&id={$r['am_id']}' class='btn btn-success btn-block'>Buy</a>
                             </div>
-                            <div class='col-12 col-sm-6'>
+                            <div class='col-auto col-md-12'>
                                 <a href='?action=sell&id={$r['am_id']}' class='btn btn-danger btn-block'>Sell</a>
                             </div>
                         </div>
@@ -745,7 +745,7 @@ function portfolio()
                     </div>
                     <div class='card-body'>
                         <div class='row'>
-                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto col-sm-6 col-xl'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Total Shares</b></small>
@@ -755,7 +755,7 @@ function portfolio()
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto col-sm-6 col-xl'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Total Invested</b></small>
@@ -765,7 +765,7 @@ function portfolio()
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto col-sm-6 col-xl'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Portfolio Value</b></small>
@@ -775,7 +775,7 @@ function portfolio()
                                     </div>
                                 </div>
                             </div>
-                            <div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl'>
+                            <div class='col-auto col-sm-6 col-xl'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>Lifetime Profit</b></small>
@@ -809,7 +809,7 @@ function portfolio()
                                     $avgCost = round($totalCost / $sharesTotal);
                                 echo "
                                 <div class='row'>
-                                <div class='col-12 col-sm-8 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-auto col-md-4 col-xxl'>
                                     <div class='row'>
                                         <div class='col-12'>
                                             <small><b>Asset Name</b></small>
@@ -819,17 +819,17 @@ function portfolio()
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-auto col-md-2 col-xl'>
                                     <div class='row'>
                                         <div class='col-12'>
                                             <small><b>Assets Owned</b></small>
                                         </div>
                                         <div class='col-12'>
-                                            " . number_format($sharesTotal) . "
+                                            " . shortNumberParse($sharesTotal) . "
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-auto col-md-3 col-xl'>
                                     <div class='row'>
                                         <div class='col-12'>
                                             <small><b>Avg Cost</b></small>
@@ -839,7 +839,7 @@ function portfolio()
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-auto col-md-3 col-xl'>
                                     <div class='row'>
                                         <div class='col-12'>
                                             <small><b>Invested</b></small>
@@ -849,7 +849,7 @@ function portfolio()
                                         </div>
                                     </div>
                                 </div>
-                                <div class='col-12 col-sm-4 col-xl-4 col-xxl-3 col-xxxl'>
+                                <div class='col-auto col-md-3 col-xl'>
                                     <div class='row'>
                                         <div class='col-12'>
                                             <small><b>Current Value</b></small>

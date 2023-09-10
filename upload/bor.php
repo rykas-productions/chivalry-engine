@@ -60,7 +60,7 @@ if ($chance <= 33)
 elseif (($chance > 35) && ($chance <= 40))
 {
     $cash=Random(5,20)*$multipler;
-	$specialnumber=((getSkillLevel($userid,11)*5)/100);
+    $specialnumber=((getUserSkill($userid, 10) * getSkillBonus(10))/100);
 	$cash=round($cash+($cash*$specialnumber));
 	$cash=round($cash+($cash*levelMultiplier($ir['level'], $ir['reset'])));
     echo "You quickly open this Box of Random and pull out {$cash} Chivalry Tokens. Neat!";

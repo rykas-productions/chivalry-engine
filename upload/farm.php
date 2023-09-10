@@ -23,9 +23,9 @@ $farmconfig['wellnessPerTend']	=	Random(3,9);
 $farmconfig['wellnessPerHarv']	=	Random(15,30);
 $farmconfig['wellnessPerPlant']	=	Random(7,14);
 
-if (getSkillLevel($userid, 33) > 0)
+if (getUserSkill($userid, 29) > 0)
 {
-	$specialnumber=((getSkillLevel($userid,33)*25)/100);
+	$specialnumber=((getUserSkill($userid, 29) * getSkillBonus(29)) / 100);
     $farmconfig['wellnessPerTend']=$farmconfig['wellnessPerTend']-($farmconfig['wellnessPerTend']*$specialnumber);
 	$farmconfig['wellnessPerHarv']=$farmconfig['wellnessPerHarv']-($farmconfig['wellnessPerHarv']*$specialnumber);
 	$farmconfig['wellnessPerPlant']=$farmconfig['wellnessPerPlant']-($farmconfig['wellnessPerPlant']*$specialnumber);
@@ -295,8 +295,8 @@ function plantland()
 		}
 		if (($r['farm_wellness']-$farmconfig['wellnessPerPlant']) <= 0)
 			$farmconfig['wellnessPerPlant']=$r['farm_wellness'];
-		if (getSkillLevel($userid, 36) > 0)
-			$sr['seed_time']=$sr['seed_time']/2;
+		if (getUserSkill($userid, 30) > 0)
+			$sr['seed_time'] /= 2;
 		$stagetime=time()+$sr['seed_time'];
 		
 		$db->query("UPDATE `farm_data` SET `farm_seed` = {$_POST['seed']}, `farm_time` = {$stagetime}, `farm_stage` = 1, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerPlant']} WHERE `farm_id` = {$_GET['id']}");
@@ -683,8 +683,8 @@ function tend()
 	}
 	if (isset($_POST['water']))
 	{
-		if (getSkillLevel($userid, 36) > 0)
-			$sr['seed_time']=$sr['seed_time']/2;
+	    if (getUserSkill($userid, 30) > 0)
+	        $sr['seed_time'] /= 2;
 		if ($sr['seed_wellness_plant'] > $r['farm_wellness'])
 		{
 		    alert('danger', "Uh Oh!", "Improve the plot's wellness to {$sr['seed_wellness_plant']}% before you attempt to tend this plot.", false);
