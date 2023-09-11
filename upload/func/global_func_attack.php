@@ -14,7 +14,7 @@ function calcWeaponEffectiveness($weapID, $attacker)
     $r = $db->fetch_row($q1);
     //Sharper Blade Skill
     if (getUserSkill($attacker, 9) > 0)
-        $r['weapon'] += ($r['weapon'] * ((getUserSkill($userid, 8) * getSkillBonus(8))/100));
+        $r['weapon'] += ($r['weapon'] * ((getUserSkill($attacker, 8) * getSkillBonus(8))/100));
     if ($weapID == 235)
         $r['weapon'] = ($r['weapon'] * 0.25) * $api->UserInfoGet($attacker, "level");
     return $r['weapon'];

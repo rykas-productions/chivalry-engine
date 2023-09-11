@@ -258,7 +258,7 @@ function put_dungeon($user, $time, $reason)
     //Since we're dealing with minutes, lets multiply $time by 60.
     $TimeMath = ($time * 60)+Random(-59,59);
     //Time Reduction Skill
-    $TimeMath = $TimeMath - ($TimeMath * (getUserSkillLevel($user, 20) * getSkillBonus(20)) / 100);
+    $TimeMath = $TimeMath - ($TimeMath * (getUserSkill($user, 20) * getSkillBonus(20)) / 100);
     //If $user is not in the dungeon already, lets set their exit time to $CurrentTime + $TimeMath
     if ($Dungeon <= $CurrentTime) {
         $db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime},
@@ -1388,7 +1388,11 @@ function removeOldEffects()
 function calculateUserMaxBet($userid)
 {
     global $db;
-    $r = $db->fetch_row($db->query("SELECT `level` FROM `users` WHERE `userid` = {$userid}"));
+    $r = $db->fetch_row($db->query("SELECT `u`.`level`, `us`.`reset`
+                                    FROM `users` `u`
+                                    LEFT JOIN `user_settings` AS `us`
+                                    ON `us`.`userid` = `u`.`userid`
+                                    WHERE `u`.`userid` = {$userid}"));
     $gamblingManBuff = ((getUserSkill($userid, 27) * getSkillBonus(27)) / 100);
     $maxbet = 0;
     $maxbet += $r['level'] * 500;   //base
