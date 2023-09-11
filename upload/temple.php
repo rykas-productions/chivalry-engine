@@ -97,28 +97,28 @@ function home()
                 <div class='row'>
                     <div class='col-12'>
                         <div class='row'>
-                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=energy' class='btn btn-primary btn-block'>Refill Energy - " . number_format($set['energy_refill_cost']) . " Tokens</a><br />
                             </div>
-                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=brave' class='btn btn-primary btn-block'>Refill 5% Bravery - " . number_format($set['brave_refill_cost']) . " Tokens</a><br />
                             </div>
-                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=will' class='btn btn-primary btn-block'>Refill 5% Will - " . number_format($set['will_refill_cost']) . " Tokens</a><br />
                             </div>
-                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=willall' class='btn btn-primary btn-block'>Refill 100% Will - " . number_format($set['will_refill_cost']*20) . " Tokens</a><br />
                             </div>
-                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=iq' class='btn btn-primary btn-block'>Buy IQ - " . round($set['iq_per_sec'], 2) . " IQ/Token</a><br />
                             </div>
-                            <div class='col-12 col-md-6 col-xxl-4 col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=protection' class='btn btn-primary btn-block'>Buy Protection - 5 Tokens/Min</a><br />
                             </div>
-                            <div class='col-12 col-sm-6 col-xxl col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=coppertotoken' class='btn btn-success btn-block'>Buy Tokens</a><br />
                             </div>
-                            <div class='col-12 col-sm-6 col-xxl col-xxxl-3'>
+                            <div class='col-auto'>
                                 <a href='?action=tokentocopper' class='btn btn-danger btn-block'>Sell Tokens</a><br />
                             </div>
                         </div>

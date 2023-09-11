@@ -70,7 +70,7 @@ while ($r = $db->fetch_row($q))
 				            {$displaypic}
                         </div>
                         <div class='col-12 col-md-auto col-lg-12 col-xl'>
-				            <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				            <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> " . parseUserID($r['userid']) . "
                         </div>
                     </div>
                 </div>

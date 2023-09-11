@@ -11,7 +11,7 @@ $q2=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'training' AND 
 $q3=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'mining' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT {$vipLogCount}");
 echo "
 <div class='row'>
-	<div class='col-lg text-left'>
+	<div class='col-auto'>
 		<div class='card'>
 			<div class='card-header'>
 				<h5>Last {$vipLogCount} attack results.</h5>
@@ -23,7 +23,7 @@ echo "
 				<div class='row'>
 					<div class='col'>
 						{$r['log_text']}
-						<p class='text-muted'>" . DateTime_Parse($r['log_time']) . "</p>
+						<p class='text-muted'><small>" . DateTime_Parse($r['log_time']) . "</small></p>
 					</div>
 				</div>";
 		}
@@ -31,7 +31,7 @@ echo "
 		</div>
 		</div>
 	</div>
-	<div class='col-lg text-left'>
+	<div class='col-auto'>
 		<div class='card'>
 			<div class='card-header'>
 				<h5>Last {$vipLogCount} mining attempts.</h5>
@@ -42,7 +42,7 @@ echo "
 				<div class='row'>
 					<div class='col'>
 						{$r['log_text']}
-						<p class='text-muted'>" . DateTime_Parse($r['log_time']) . "</p>
+						<p class='text-muted'><small>" . DateTime_Parse($r['log_time']) . "</small></p>
 					</div>
 				</div>";
 		}
@@ -50,7 +50,7 @@ echo "
 		</div>
 		</div>
 	</div>
-	<div class='col-lg text-left'>
+	<div class='col-auto'>
 		<div class='card'>
 			<div class='card-header'>
 				<h5>Last {$vipLogCount} training results.</h5>
@@ -61,22 +61,19 @@ echo "
 				<div class='row'>
 					<div class='col'>
 						{$r['log_text']}
-						<p class='text-muted'>" . DateTime_Parse($r['log_time']) . "</p>
+						<p class='text-muted'><small>" . DateTime_Parse($r['log_time']) . "</small></p>
 					</div>
 				</div>";
 		}
 		echo "
 		</div>
 		</div>
-	</div>
-</div>
-<br />";
+	</div>";
 $q=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'xp_gain' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT {$vipLogCount}");
 $q2=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'bank' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT {$vipLogCount}");
 //$q3=$db->query("/*qc=on*/SELECT * FROM `logs` WHERE `log_type` = 'mining' AND `log_user` = {$userid} ORDER BY `log_id` DESC LIMIT {$vipLogCount}");
 echo "
-<div class='row'>
-	<div class='col-lg-4 text-left'>
+	<div class='col-auto'>
 		<div class='card'>
 			<div class='card-header'>
 				<h5>
@@ -90,7 +87,7 @@ echo "
 						<div class='row'>
 							<div class='col'>
 								{$r['log_text']}
-								<p class='text-muted'>" . DateTime_Parse($r['log_time']) . "</p>
+								<p class='text-muted'><small>" . DateTime_Parse($r['log_time']) . "</small></p>
 							</div>
 						</div>";
 				}
@@ -98,7 +95,7 @@ echo "
 			</div>
 		</div>
 	</div>
-	<div class='col-lg-4 text-left'>
+	<div class='col-auto'>
 		<div class='card'>
 			<div class='card-header'>
 				<h5>
@@ -112,7 +109,7 @@ echo "
 						<div class='row'>
 							<div class='col'>
 								{$r['log_text']}
-								<p class='text-muted'>" . DateTime_Parse($r['log_time']) . "</p>
+								<p class='text-muted'><small>" . DateTime_Parse($r['log_time']) . "</small></p>
 							</div>
 						</div>";
 				}

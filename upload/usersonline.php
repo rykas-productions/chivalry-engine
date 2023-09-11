@@ -13,35 +13,35 @@ require('globals.php');
 //Different options for different time periods. The GET is in minutes.
 echo "<h3><i class='fas fa-toggle-on'></i> Users Online</h3><hr />
 <div class='row'>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+	<div class='col-auto'>
 		<a href='?act=5' class='btn btn-primary btn-block'>5 minutes</a>
         <br />
 	</div>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+	<div class='col-auto'>
 		<a href='?act=15' class='btn btn-primary btn-block'>15 minutes</a>
         <br />
 	</div>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+	<div class='col-auto'>
 		<a href='?act=60' class='btn btn-primary btn-block'>1 hour</a>
         <br />
 	</div>
-    <div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+    <div class='col-auto'>
 		<a href='?act=360' class='btn btn-primary btn-block'>6 hours</a>
         <br />
 	</div>
-    <div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+    <div class='col-auto'>
 		<a href='?act=720' class='btn btn-primary btn-block'>12 hours</a>
         <br />
 	</div>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+	<div class='col-auto'>
 		<a href='?act=1440' class='btn btn-primary btn-block'>24 hours</a>
         <br />
 	</div>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+	<div class='col-auto'>
 		<a href='?act=10080' class='btn btn-primary btn-block'>1 Week</a>
         <br />
 	</div>
-	<div class='col-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl'>
+	<div class='col-auto'>
 		<a href='?act=43200' class='btn btn-primary btn-block'>1 Month</a>
         <br />
 	</div>
@@ -78,7 +78,7 @@ while ($r = $db->fetch_row($q))
 				            {$displaypic}
                         </div>
                         <div class='col-12 col-md-auto col-lg-12 col-xl'>
-				            <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]
+				            <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> " . parseUserID($r['userid']) . "
                         </div>
                     </div>
                 </div>

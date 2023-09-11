@@ -35,10 +35,10 @@ else {
         //Player has the Copper Coins required to buy an account.
         if ($ir['primary_currency'] >= $bank_cost) {
 
-            alert('success', "Success!", "You have successfully bought a bank account for " . number_format($bank_cost) . " Copper Coins!", true, 'bank.php');
+            alert('success', "Success!", "You have successfully bought a bank account for " . shortNumberParse($bank_cost) . " Copper Coins!", true, 'bank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bank", 0);
-			$api->SystemLogsAdd($userid, 'bank', "[City Bank] Purchased account for " . number_format($bank_cost) . " Copper Coins.");
+            $api->SystemLogsAdd($userid, 'bank', "[City Bank] Purchased account for " . shortNumberParse($bank_cost) . " Copper Coins.");
 			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
 			item_add($userid,157,1);
         } //Player is too poor to afford account.
@@ -47,7 +47,7 @@ else {
                 " . number_format($bank_cost) . " Copper Coins.", true, 'bank.php');
         }
     } else {
-        echo "Do you wish to buy a bank account? It'll cost you " . number_format($bank_cost) . " Copper Coins.<br />
+        echo "Do you wish to buy a bank account? It'll cost you " . shortNumberParse($bank_cost) . " Copper Coins.<br />
             <a href='?buy'>Yes, please!</a>";
     }
 }
@@ -56,14 +56,18 @@ function index()
     global $ir, $bank_maxfee, $bank_feepercent, $db, $userid;
     $interest = 5;
     $cutoff = 72;
+    if (getUserSkill($userid, 31) > 0)
+        $maxInterest = returnMaxInterest($userid) * (getUserSkill($userid, 31) + 1);
+    else
+        returnMaxInterest($userid);
     if ($ir['vip_days'] == 0)
     {
         $interest=2;
         $cutoff = 24;
     }
-    echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['bank']) . "</span> in your City Bank account.</b><br />
+    echo "<b>You currently have <span id='bankacc2'>" . shortNumberParse($ir['bank']) . "</span> in your City Bank account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
-				your balance is over " . number_format(returnMaxInterest($userid)) . " Copper Coins. You must be active within the past {$cutoff} hours for this to 
+				your balance is over " . shortNumberParse($maxInterest) . " Copper Coins. You must be active within the past {$cutoff} hours for this to 
 				effect you.
 				<div id='banksuccess'></div>
 				<div class='row'>

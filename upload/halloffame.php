@@ -80,49 +80,49 @@ else {
                     LIMIT {$hofCount}");
 }
 echo "<div class='row'>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=level' class='btn btn-primary btn-block'>Level</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+    <div class='col-auto'>
         <a href='?stat=primary_currency' class='btn btn-primary btn-block'>Copper Coins</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+    <div class='col-auto'>
         <a href='?stat=secondary_currency' class='btn btn-primary btn-block'>Chivalry Tokens</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+    <div class='col-auto'>
         <a href='?stat=mining_level' class='btn btn-primary btn-block'>Mining Level</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=busts' class='btn btn-primary btn-block'>Busts</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=kills' class='btn btn-primary btn-block'>Kills</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=deaths' class='btn btn-primary btn-block'>Deaths</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+    <div class='col-auto'>
         <a href='?stat=farm_level' class='btn btn-primary btn-block'>Farm Level</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=strength' class='btn btn-primary btn-block'>Strength</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=agility' class='btn btn-primary btn-block'>Agility</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=guard' class='btn btn-primary btn-block'>Guard</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=labor' class='btn btn-primary btn-block'>Labor</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2 col-xxxl-1'>
+    <div class='col-auto'>
         <a href='?stat=iq' class='btn btn-primary btn-block'>IQ</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+    <div class='col-auto'>
         <a href='?stat=total' class='btn btn-primary btn-block'>Total Stats</a><br />
     </div>
-    <div class='col-12 col-sm-6 col-md-4 col-xl-3 col-xxl-2'>
+    <div class='col-auto'>
         <a href='?stat=profit' class='btn btn-primary btn-block'>Asset Profit</a><br />
     </div>
 </div>";
@@ -153,7 +153,7 @@ if ($_GET['stat'] != 'crypto')
                             <small><b>Player</b></small>
                         </div>
                         <div class='col-12'>
-                            <a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> [{$r['userid']}]
+                            <a href='profile.php?user={$r['userid']}'>" . parseUsername($r['userid']) . "</a> " . parseUserID($r['userid']) . "
                         </div>
                     </div>
                 </div>";
