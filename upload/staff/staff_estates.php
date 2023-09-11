@@ -24,6 +24,9 @@ switch ($_GET['action']) {
     case "delestate":
         delestate();
         break;
+    case "giftestate":
+        giftestate();
+        break;
     default:
         alert('danger', "Uh Oh!", "Please select a valid action to perform.", true, 'index.php');
         die($h->endpage());
@@ -332,4 +335,100 @@ function editestate()
     }
 }
 
+function giftestate()
+{
+    global $db, $api, $h, $userid;
+    if (isset($_POST['user']))
+    {
+        $postUser = (isset($_POST['user']) && is_numeric($_POST['user'])) ? abs(intval($_POST['user'])) : 0;
+        $postEstate = (isset($_POST['estate']) && is_numeric($_POST['estate'])) ? abs(intval($_POST['estate'])) : 0;
+        if (!isset($_POST['verf']) || !verify_csrf_code('staff_gift_estate', stripslashes($_POST['verf']))) 
+        {
+            alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
+            die($h->endpage());
+        }
+        if (empty($postEstate))
+        {
+            alert('danger', "Uh Oh!", "Please input a valid estate to gift.");
+            die($h->endpage());
+        }
+        elseif (empty($postUser))
+        {
+            alert('danger', "Uh Oh!", "Please input a valid user to gift the estate to.");
+            die($h->endpage());
+        }
+        $q = $db->query("SELECT `house_name` FROM `estates` WHERE `house_id` = {$postEstate}");
+        if ($db->num_rows($q) == 0)
+        {
+            alert('danger', "Uh Oh!", "You are trying to gift a non-existent estate.");
+            die($h->endpage());
+        }
+        $houseName = $db->fetch_single($q);
+        $db->free_result($q);
+        $q = $db->query("SELECT `username` FROM `users` WHERE `userid` = {$postUser}");
+        if ($db->num_rows($q) == 0)
+        {
+            alert('danger', "Uh Oh!", "You are trying to gift an estate to a non-existent user.");
+            die($h->endpage());
+        }
+        buyEstate($postUser, $postEstate);
+        alert('success',"Success!","You have successfully gifted {$db->fetch_single($q)} the {$houseName} estate.",true,'index.php');
+        $api->SystemLogsAdd($userid, "staff", "Gifted {$db->fetch_single($q)} the {$houseName} estate.");
+        $db->free_result($q);
+    }
+    else
+    {
+        $csrf = request_csrf_html('staff_gift_estate');
+        $getUser = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs(intval($_GET['user'])) : $userid;
+        echo "<div class='card'>
+                <div class='card-header'>
+                    Gift Estate
+                </div>
+                <div class='card-body'>
+                    <form method='post'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    Gift a player an estate using this form. This does not cost the player anything when you use this form.
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Estate</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . estate_dropdown('estate', 2) . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Player</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . user_dropdown('user', $getUser) . "
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Link</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='submit' value='Gift Estate' class='btn btn-success btn-block'>
+                                </div>
+                            </div>
+                        </div>
+                        {$csrf}
+                        </form>
+                    </div>
+                </div>
+        </div>";
+    }
+}
 $h->endpage();
