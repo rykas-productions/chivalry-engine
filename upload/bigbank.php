@@ -59,19 +59,19 @@ else {
         //Player has the Copper Coins required to buy an account.
         if ($ir['primary_currency'] >= $bank_cost) {
 
-            alert('success', "Success!", "You have successfully bought a federal bank account for " . number_format($bank_cost) . " Copper Coins!", true, 'bigbank.php');
+            alert('success', "Success!", "You have successfully bought a federal bank account for " . shortNumberParse($bank_cost) . " Copper Coins!", true, 'bigbank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "bigbank", 0);
 			item_add($userid,155,1);
 			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
-			$api->SystemLogsAdd($userid, 'bank', "[Federal Bank] Purchased account for " . number_format($bank_cost) . " Copper Coins.");
+			$api->SystemLogsAdd($userid, 'bank', "[Federal] Purchased account for " . shortNumberParse($bank_cost) . " Copper Coins.");
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough Copper Coins to buy a federal bank account. You need at least
-                " . number_format($bank_cost) . " Copper Coins.", true, 'bigbank.php');
+                " . shortNumberParse($bank_cost) . " Copper Coins.", true, 'bigbank.php');
         }
     } else {
-        echo "Do you wish to buy a Federal Bank Account? It'll cost you " . number_format($bank_cost) . " Copper Coins.<br />
+        echo "Do you wish to buy a Federal Bank Account? It'll cost you " . shortNumberParse($bank_cost) . " Copper Coins.<br />
             <a href='?buy'>Yes, please!</a>";
     }
 }
@@ -85,16 +85,16 @@ function index()
         $interest=2;
         $cutoff = 24;
     }
-    echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['bigbank']) . "</span> Copper Coins in your Federal Bank Account.</b><br />
+    echo "<b>You currently have <span id='bankacc2'>" . shortNumberParse($ir['bigbank']) . "</span> Copper Coins in your Federal Bank Account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
-				your balance is over " . number_format(returnMaxInterest($userid)* 10) . " Copper Coins. You must be active within the past {$cutoff} hours for this to 
+				your balance is over " . shortNumberParse(returnMaxInterest($userid)* 10) . " Copper Coins. You must be active within the past {$cutoff} hours for this to 
 				effect you.<br />
 				<div id='banksuccess'></div>
 				<div class='row'>
 					<div class='col-lg'>
 						<div class='card'>
 							<div class='card-header'>
-								Deposit (<span id='wallet'>" . number_format($ir['primary_currency']) . " Copper Coins</span>)
+								Deposit (<span id='wallet'>" . shortNumberParse($ir['primary_currency']) . " Copper Coins</span>)
 							</div>
 							<div class='card-body'>
 								<form method='post' id='fedBankDeposit' name='fedBankDeposit'>
@@ -107,7 +107,7 @@ function index()
 											<input type='submit' value='Deposit' class='btn btn-primary btn-block' id='fedDeposit'>
 										</div>
     									<div class='col-12'>
-    										<small><br />{$bank_feepercent}% fee, max " . number_format($bank_maxfee) . " Copper Coins</small>
+    										<small><br />{$bank_feepercent}% fee, max " . shortNumberParse($bank_maxfee) . " Copper Coins</small>
 									    </div>
                                     </div>
 								</form>
@@ -118,7 +118,7 @@ function index()
 					<div class='col-lg'>
 						<div class='card'>
 							<div class='card-header'>
-								Withdraw (<span id='bankacc'>" . number_format($ir['bigbank']) . " Copper Coins</span>)
+								Withdraw (<span id='bankacc'>" . shortNumberParse($ir['bigbank']) . " Copper Coins</span>)
 							</div>
 							<div class='card-body'>
 								<form method='post' id='fedBankWithdraw' name='fedBankWithdraw'>

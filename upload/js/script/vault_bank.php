@@ -38,9 +38,9 @@ if (isset($_POST['deposit']))
 		$api->UserTakeCurrency($userid, 'primary', $deposit);
         $api->UserInfoSetStatic($userid, "vaultbank", $ir['vaultbank']);
 		//Log bank transaction.
-        $api->SystemLogsAdd($userid, 'bank', "[Vault Bank] Deposited " . number_format($deposit) . " Copper Coins.");
-		alert('success', "", "You hand over " . number_format($deposit) . " Copper Coins to be deposited. After the fee of " . number_format($fee) . " Copper Coins is taken, 
-		" . number_format($gain) . " Copper Coins is added to your bank account. You now have " . number_format($ir['vaultbank']) . " Copper Coins in your Vault Bank Account.", false);
+        $api->SystemLogsAdd($userid, 'bank', "[Vault] Deposited " . shortNumberParse($deposit) . " Copper Coins.");
+        alert('success', "", "You hand over " . shortNumberParse($deposit) . " Copper Coins to be deposited. After the fee of " . shortNumberParse($fee) . " Copper Coins is taken, 
+		" . shortNumberParse($gain) . " Copper Coins is added to your bank account. You now have " . shortNumberParse($ir['vaultbank']) . " Copper Coins in your Vault Bank Account.", false);
 		$dojs=true;
 	}
 }
@@ -58,9 +58,9 @@ elseif (isset($_POST['withdraw']))
 		$ir['primary_currency'] += $withdraw;
 		$api->UserGiveCurrency($userid, 'primary', $withdraw);
         $api->UserInfoSetStatic($userid, "vaultbank", $ir['vaultbank']);
-		$api->SystemLogsAdd($userid, 'bank', "[Vault Bank] Withdrew " . number_format($withdraw) . " Copper Coins.");
-		alert('success', "", "You have successfully withdrew " . number_format($withdraw) . " Copper Coins from your
-		    account. You have now have " . number_format($ir['vaultbank']) . " Copper Coins left in your Vault Bank Account.", false);
+        $api->SystemLogsAdd($userid, 'bank', "[Vault] Withdrew " . shortNumberParse($withdraw) . " Copper Coins.");
+        alert('success', "", "You have successfully withdrew " . shortNumberParse($withdraw) . " Copper Coins from your
+		    account. You have now have " . shortNumberParse($ir['vaultbank']) . " Copper Coins left in your Vault Bank Account.", false);
 		$dojs=true;
 	}
 }
@@ -68,12 +68,12 @@ if (isset($dojs))
 {
 	?>
 	<script>
-		document.getElementById('wallet').innerHTML = <?php echo "'" . number_format($ir['primary_currency']) . " Copper Coins'" ?>;
-		document.getElementById('bankacc').innerHTML = <?php echo "'" . number_format($ir['vaultbank']) . " Copper Coins'" ?>;
-		document.getElementById('bankacc2').innerHTML = <?php echo "'" . number_format($ir['vaultbank']) . "'" ?>;
+		document.getElementById('wallet').innerHTML = <?php echo "'" . shortNumberParse($ir['primary_currency']) . " Copper Coins'" ?>;
+		document.getElementById('bankacc').innerHTML = <?php echo "'" . shortNumberParse($ir['vaultbank']) . " Copper Coins'" ?>;
+		document.getElementById('bankacc2').innerHTML = <?php echo "'" . shortNumberParse($ir['vaultbank']) . "'" ?>;
 		document.getElementById("form_bank_acc").value = <?php echo "'{$ir['vaultbank']}'" ?>;
 		document.getElementById("form_bank_wallet").value = <?php echo "'{$ir['primary_currency']}'" ?>;
-		document.getElementById('ui_copper').innerHTML = <?php echo "'" . number_format($ir['primary_currency']) . "'" ?>;
+		document.getElementById('ui_copper').innerHTML = <?php echo "'" . shortNumberParse($ir['primary_currency']) . "'" ?>;
 	</script>
 	<?php
 }

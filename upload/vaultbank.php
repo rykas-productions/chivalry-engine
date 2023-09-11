@@ -65,19 +65,19 @@ else {
         //Player has the Copper Coins required to buy an account.
         if ($ir['primary_currency'] >= $bank_cost) {
 
-            alert('success', "Success!", "You have successfully bought a vault bank account for " . number_format($bank_cost) . " Copper Coins!", true, 'vaultbank.php');
+            alert('success', "Success!", "You have successfully bought a vault bank account for " . shortNumberParse($bank_cost) . " Copper Coins!", true, 'vaultbank.php');
             $api->UserTakeCurrency($userid, 'primary', $bank_cost);
             $api->UserInfoSet($userid, "vaultbank", 0);
 			item_add($userid,182,1);
 			addToEconomyLog('Bank Fees', 'copper', ($bank_cost)*-1);
-			$api->SystemLogsAdd($userid, 'bank', "[Vault Bank] Purchased account for " . number_format($bank_cost) . " Copper Coins.");
+			$api->SystemLogsAdd($userid, 'bank', "[Vault] Purchased account for " . shortNumberParse($bank_cost) . " Copper Coins.");
         } //Player is too poor to afford account.
         else {
             alert('danger', "Uh oh!", "You do not have enough Copper Coins to buy a vault bank account. You need at least
-                " . number_format($bank_cost) . " Copper Coins.", true, 'vaultbank.php');
+                " . shortNumberParse($bank_cost) . " Copper Coins.", true, 'vaultbank.php');
         }
     } else {
-        echo "Do you wish to buy a Vault Bank Account? It'll cost you " . number_format($bank_cost) . " Copper Coins.<br />
+        echo "Do you wish to buy a Vault Bank Account? It'll cost you " . shortNumberParse($bank_cost) . " Copper Coins.<br />
             <a href='?buy'>Yes, please!</a>";
     }
 }
@@ -91,16 +91,16 @@ function index()
         $interest=2;
         $cutoff = 24;
     }
-    echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['vaultbank']) . "</span> Copper Coins in your Vault Bank Account.</b><br />
+    echo "<b>You currently have <span id='bankacc2'>" . shortNumberParse($ir['vaultbank']) . "</span> Copper Coins in your Vault Bank Account.</b><br />
 				At the end of each and everyday, your balance will increase by {$interest}%. You will not gain interest if 
-				your balance is over " . number_format(returnMaxInterest($userid) * 50) . " Copper Coins. You must be active within the past {$cutoff} hours for this to 
+				your balance is over " . shortNumberParse(returnMaxInterest($userid) * 50) . " Copper Coins. You must be active within the past {$cutoff} hours for this to 
 				effect you.<br />
 				<div id='banksuccess'></div>
 				<div class='row'>
 					<div class='col-lg'>
 						<div class='card'>
 							<div class='card-header'>
-								Deposit (<span id='wallet'>" . number_format($ir['primary_currency']) . " Copper Coins</span>)
+								Deposit (<span id='wallet'>" . shortNumberParse($ir['primary_currency']) . " Copper Coins</span>)
 							</div>
 							<div class='card-body'>
 								<form method='post' id='vaultBankDeposit' name='vaultBankDeposit'>
@@ -112,7 +112,7 @@ function index()
 											<input type='submit' value='Deposit' class='btn btn-primary btn-block' id='vaultDeposit'>
 										</div>
 									   <div class='col-12'>
-										  <small><br />{$bank_feepercent}% fee, max " . number_format($bank_maxfee) . " Copper Coins</small>
+										  <small><br />{$bank_feepercent}% fee, max " . shortNumberParse($bank_maxfee) . " Copper Coins</small>
 									   </div>
                                     </div>
 								</form>
@@ -123,7 +123,7 @@ function index()
 					<div class='col-lg'>
 						<div class='card'>
 							<div class='card-header'>
-								Withdraw (<span id='bankacc'>" . number_format($ir['vaultbank']) . " Copper Coins</span>)
+								Withdraw (<span id='bankacc'>" . shortNumberParse($ir['vaultbank']) . " Copper Coins</span>)
 							</div>
 							<div class='card-body'>
 								<form method='post' id='vaultBankWithdraw' name='vaultBankWithdraw'>
@@ -162,11 +162,11 @@ function deposit()
         //Update user's bank and Copper Coins info.
         $api->UserTakeCurrency($userid, 'primary', $_POST['deposit']);
         $api->UserInfoSetStatic($userid, "vaultbank", $ir['vaultbank']);
-        alert('success', "Success!", "You hand over " . number_format($_POST['deposit']) . " to be deposited. After the
-		    fee (" . number_format($fee) . " Copper Coins) is taken from your deposit, " . number_format($gain) . " is added to your
-		    bank account. You now have " . number_format($ir['vaultbank']) . " in your account.", true, 'vaultbank.php');
+        alert('success', "Success!", "You hand over " . shortNumberParse($_POST['deposit']) . " to be deposited. After the
+		    fee (" . shortNumberParse($fee) . " Copper Coins) is taken from your deposit, " . shortNumberParse($gain) . " is added to your
+		    bank account. You now have " . shortNumberParse($ir['vaultbank']) . " in your account.", true, 'vaultbank.php');
         //Log bank transaction.
-        $api->SystemLogsAdd($userid, 'bank', "[Vault Bank] Deposited " . number_format($_POST['deposit']) . " Copper Coins.");
+        $api->SystemLogsAdd($userid, 'bank', "[Vault] Deposited " . shortNumberParse($_POST['deposit']) . " Copper Coins.");
     }
 }
 
@@ -183,10 +183,10 @@ function withdraw()
         //Update user's info.
         $api->UserGiveCurrency($userid, 'primary', $_POST['withdraw']);
         $api->UserInfoSetStatic($userid, "vaultbank", $ir['vaultbank']);
-        alert('success', "Success!", "You have successfully withdrew " . number_format($_POST['withdraw']) . " from your
-		    bank account. You have now have " . number_format($ir['vaultbank']) . " left in your account.", true, 'bank.php');
+        alert('success', "Success!", "You have successfully withdrew " . shortNumberParse($_POST['withdraw']) . " from your
+		    bank account. You have now have " . shortNumberParse($ir['vaultbank']) . " left in your account.", true, 'bank.php');
         //Log transaction.
-        $api->SystemLogsAdd($userid, 'bank', "[Vault Bank] Withdrew " . number_format($_POST['withdraw']) . " Copper Coins.");
+        $api->SystemLogsAdd($userid, 'bank', "[Vault] Withdrew " . shortNumberParse($_POST['withdraw']) . " Copper Coins.");
     }
 }
 $h->endpage();

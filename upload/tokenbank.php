@@ -39,13 +39,13 @@ if ($ir['tokenbank'] == -1)
     }
 	die($h->endpage());
 }
-echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['tokenbank']) . "</span> Chivalry Tokens in your Chivalry Token Bank Account.</b><br />
+echo "<b>You currently have <span id='bankacc2'>" . shortNumberParse($ir['tokenbank']) . "</span> Chivalry Tokens in your Chivalry Token Bank Account.</b><br />
 <div id='banksuccess'></div>
 <div class='row'>
 	<div class='col-lg'>
 		<div class='card'>
 			<div class='card-header'>
-				Deposit (<span id='wallet'>" . number_format($ir['secondary_currency']) . " Chivalry Tokens</span>)
+				Deposit (<span id='wallet'>" . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens</span>)
 			</div>
 			<div class='card-body'>
 				<form method='post' id='tokenBankDeposit' name='tokenBankDeposit'>
@@ -65,7 +65,7 @@ echo "<b>You currently have <span id='bankacc2'>" . number_format($ir['tokenbank
 	<div class='col-lg'>
 		<div class='card'>
 			<div class='card-header'>
-				Withdraw (<span id='bankacc'>" . number_format($ir['tokenbank']) . " Chivalry Tokens</span>)
+				Withdraw (<span id='bankacc'>" . shortNumberParse($ir['tokenbank']) . " Chivalry Tokens</span>)
 			</div>
 			<div class='card-body'>
 				<form method='post' id='tokenBankWithdraw' name='tokenBankWithdraw'>

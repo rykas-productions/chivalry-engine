@@ -30,9 +30,9 @@ if (isset($_POST['deposit']))
 		$ir['secondary_currency'] -= $deposit;
         $api->UserTakeCurrency($userid, 'secondary', $deposit);
         $api->UserInfoSetStatic($userid, "tokenbank", $ir['tokenbank']);
-		$api->SystemLogsAdd($userid, 'bank', "[Token Bank] Deposited " . number_format($deposit) . " Chivalry Tokens.");
-        alert('success', "", "You hand over " . number_format($deposit) . " Chivalry Tokens to be
-        deposited. You now have " . number_format($ir['tokenbank']) . " Chivalry Tokens in your Chivalry Token Bank Account.", false);
+        $api->SystemLogsAdd($userid, 'bank', "[Tokens] Deposited " . shortNumberParse($deposit) . " Chivalry Tokens.");
+        alert('success', "", "You hand over " . shortNumberParse($deposit) . " Chivalry Tokens to be
+        deposited. You now have " . shortNumberParse($ir['tokenbank']) . " Chivalry Tokens in your Chivalry Token Bank Account.", false);
 		$dojs=true;
 	}
 }
@@ -50,9 +50,9 @@ elseif (isset($_POST['withdraw']))
 		$ir['secondary_currency'] += $withdraw;
 		$api->UserGiveCurrency($userid, 'secondary', $withdraw);
         $api->UserInfoSetStatic($userid, "tokenbank", $ir['tokenbank']);
-		$api->SystemLogsAdd($userid, 'bank', "[Token Bank] Withdrew " . number_format($withdraw) . " Chivalry Tokens.");
-		alert('success', "", "You have successfully withdrew " . number_format($withdraw) . " Chivalry Tokens from your
-		    account. You have now have " . number_format($ir['tokenbank']) . " Chivalry Tokens remaining in your Chivalry Token Bank account..", false);
+        $api->SystemLogsAdd($userid, 'bank', "[Tokens] Withdrew " . shortNumberParse($withdraw) . " Chivalry Tokens.");
+        alert('success', "", "You have successfully withdrew " . shortNumberParse($withdraw) . " Chivalry Tokens from your
+		    account. You have now have " . shortNumberParse($ir['tokenbank']) . " Chivalry Tokens remaining in your Chivalry Token Bank account.", false);
 		$dojs=true;
 	}
 }
@@ -60,12 +60,12 @@ if (isset($dojs))
 {
 	?>
 	<script>
-		document.getElementById('wallet').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . " Chivlary Tokens'" ?>;
-		document.getElementById('bankacc').innerHTML = <?php echo "'" . number_format($ir['tokenbank']) . " Chivlary Tokens'" ?>;
-		document.getElementById('bankacc2').innerHTML = <?php echo "'" . number_format($ir['tokenbank']) . "'" ?>;
+		document.getElementById('wallet').innerHTML = <?php echo "'" . shortNumberParse($ir['secondary_currency']) . " Chivlary Tokens'" ?>;
+		document.getElementById('bankacc').innerHTML = <?php echo "'" . shortNumberParse($ir['tokenbank']) . " Chivlary Tokens'" ?>;
+		document.getElementById('bankacc2').innerHTML = <?php echo "'" . shortNumberParse($ir['tokenbank']) . "'" ?>;
 		document.getElementById("form_bank_acc").value = <?php echo "'{$ir['tokenbank']}'" ?>;
 		document.getElementById("form_bank_wallet").value = <?php echo "'{$ir['secondary_currency']}'" ?>;
-		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'" ?>;
+		document.getElementById('ui_token').innerHTML = <?php echo "'" . shortNumberParse($ir['secondary_currency']) . "'" ?>;
 	</script>
 	<?php
 }
