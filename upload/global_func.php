@@ -1081,7 +1081,10 @@ function doDailyBankInterest()
     $bankQuery=$db->query("SELECT `userid`, `bank`, `vip_days`, `laston` FROM `users` WHERE `bank` > 0 AND `laston` > '{$last72}'");
     while ($r = $db->fetch_row($bankQuery))
     {
-        $maxBank = returnMaxInterest($r['userid']);
+        if (getUserSkill($r['userid'], 31) > 0)
+            $maxBank = returnMaxInterest($r['userid']) * (getUserSkill($r['userid'], 31) + 1);
+        else
+            $maxBank = returnMaxInterest($r['userid']);
         if ($r['bank'] <= ($maxBank+1))
         {
             $cutoff = $last72;
