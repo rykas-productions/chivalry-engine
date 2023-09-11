@@ -59,7 +59,7 @@ function index()
     if (getUserSkill($userid, 31) > 0)
         $maxInterest = returnMaxInterest($userid) * (getUserSkill($userid, 31) + 1);
     else
-        returnMaxInterest($userid);
+        $maxInterest = returnMaxInterest($userid);
     if ($ir['vip_days'] == 0)
     {
         $interest=2;
