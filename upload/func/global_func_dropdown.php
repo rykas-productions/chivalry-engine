@@ -538,7 +538,7 @@ function estate_dropdown($ddname = "estate", $selected = -1)
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
         $db->query(
-            "/*qc=on*/SELECT `house_id`, `house_name`, `house_will`
+            "/*qc=on*/SELECT `house_id`, `house_name`, `house_will`, `house_level`
     				 FROM `estates`
     				 ORDER BY `house_will` ASC");
     if ($selected == -1) {
@@ -552,7 +552,7 @@ function estate_dropdown($ddname = "estate", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['house_name']}</option>";
+        $ret .= ">{$r['house_name']} (Level: " . number_format($r['house_level']) . "; Will: " . number_format($r['house_will']) . ")</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -573,7 +573,7 @@ function estate2_dropdown($ddname = "house", $selected = -1)
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
         $db->query(
-            "/*qc=on*/SELECT `house_will`, `house_name`
+            "/*qc=on*/SELECT `house_will`, `house_name`, `house_level`
     				 FROM `estates`
     				 ORDER BY `house_will` ASC");
     if ($selected == -1) {
@@ -587,7 +587,7 @@ function estate2_dropdown($ddname = "house", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['house_name']} (Will: {$r['house_will']})</option>";
+        $ret .= ">{$r['house_name']} (Level: " . number_format($r['house_level']) . "; Will: " . number_format($r['house_will']) . ")</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -607,7 +607,7 @@ function crime_dropdown($ddname = "crime", $selected = -1)
     $ret = "<select name='$ddname' class='form-control' type='dropdown'>";
     $q =
         $db->query(
-            "/*qc=on*/SELECT `crimeID`, `crimeNAME`
+            "/*qc=on*/SELECT `crimeID`, `crimeNAME`, `crimeBRAVE`
     				 FROM `crimes`
     				 ORDER BY `crimeNAME` ASC");
     if ($selected == -1) {
@@ -621,7 +621,7 @@ function crime_dropdown($ddname = "crime", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['crimeNAME']}</option>";
+        $ret .= ">{$r['crimeNAME']} (Brave: " . number_format($r['crimeBRAVE']) . "</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -688,7 +688,7 @@ function forum_dropdown($ddname = "forum", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['ff_name']} [{$r['ff_id']}]</option>";
+        $ret .= ">{$r['ff_name']} [ID: {$r['ff_id']}]</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -722,7 +722,7 @@ function smelt_dropdown($ddname = 'smelt', $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['smelt_qty_output']} x {$itemname}</option>";
+        $ret .= ">" . number_format($r['smelt_qty_output']) . " x {$itemname}</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
@@ -758,7 +758,7 @@ function inventory_dropdown($ddname = "item", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['itmname']} (You Have " . number_format($r['inv_qty']) . ")</option>";
+        $ret .= ">{$r['itmname']} (Have " . number_format($r['inv_qty']) . ")</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
