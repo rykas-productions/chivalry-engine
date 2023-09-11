@@ -139,9 +139,9 @@ function home()
 	{
 		$mines['mine_iq'] -= calcMineIQ($userid, $mines['mine_id']);
 		
-		$mininglevel = ($MUS['mining_level'] >= $mines['mine_level']) ? "<span class='text-success'>Level: {$mines['mine_level']}</span>" : "<span class='text-danger'>Level: {$mines['mine_level']}</span>";
-		$iq = ($ir['iq'] >= $mines['mine_iq']) ? "<span class='text-success'>IQ: " . number_format($mines['mine_iq']) . "</span>" : "<span class='text-danger'>IQ: " . number_format($mines['mine_iq']) . "</span>";
-		$pickaxe = ($api->UserHasItem($ir['userid'],$mines['mine_pickaxe'],1)) ? "<span class='text-success'>Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>" : "<span class='text-danger'>Pickaxe: " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>";
+		$mininglevel = ($MUS['mining_level'] >= $mines['mine_level']) ? "<span class='text-success'><b>Level:</b> " . shortNumberParse($mines['mine_level']) . "</span>" : "<span class='text-danger'><b>Level:</b> " . shortNumberParse($mines['mine_level']) . "</span>";
+		$iq = ($ir['iq'] >= $mines['mine_iq']) ? "<span class='text-success'><b>IQ:</b> " . shortNumberParse($mines['mine_iq']) . "</span>" : "<span class='text-danger'><b>IQ:</b> " . shortNumberParse($mines['mine_iq']) . "</span>";
+		$pickaxe = ($api->UserHasItem($ir['userid'],$mines['mine_pickaxe'],1)) ? "<span class='text-success'><b>Pickaxe:</b> " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>" : "<span class='text-danger'><b>Pickaxe:</b> " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>";
 		$town = ($ir['location'] == $mines['mine_location']) ? "<span class='text-success'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>" : "<span class='text-danger'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>";
 		
 		echo "<div class='row'>
