@@ -48,18 +48,20 @@ function home()
         $r['skDesc'] = str_ireplace(array("{BONUS}","{CLASS_STAT_WEAK}","{CLASS_STAT}"), array(shortNumberParse($r['skMultiplier']), $weakStat, $statClass), $r['skDesc']);
         if (!isset($skillBtn))
             $skillBtn = "";
+            if ($currentSkillLevel == 0)
+                $skillBtn = "<a href='?action=buyskill&id={$r['skID']}' class='btn btn-success btn-block'>Unlock Skill</a>";
             if (($currentSkillLevel > 0) && ($currentSkillLevel < $r['skMaxBuy']))
                 $skillBtn = "<a href='?action=buyskill&id={$r['skID']}' class='btn btn-primary btn-block'>Upgrade Skill</a>";
-                elseif ($r['skRequired'] > 0)
-                {
-                    if (getUserSkill($userid, $r['skRequired']) == 0)
-                        $skillBtn = "<a href='#' class='btn btn-danger btn-block disabled'>Missing skill</a>";
-                }
-                elseif ($currentSkillLevel == 0)
-                $skillBtn = "<a href='?action=buyskill&id={$r['skID']}' class='btn btn-success btn-block'>Unlock Skill</a>";
-                elseif ($currentSkillLevel == $r['skMaxBuy'])
+            if ($currentSkillLevel == $r['skMaxBuy'])
                 $skillBtn = "<a href='#' class='btn btn-danger btn-block disabled'>Maxed Skill</a>";
-                echo "  <div class='row'>
+            if ($r['skRequired'] > 0)
+            {
+                if (getUserSkill($userid, $r['skRequired']) == 0)
+                    $skillBtn = "<a href='#' class='btn btn-danger btn-block disabled'>Missing skill</a>";
+            }
+            $classHasSkill = (getUserSkill($userid, $r['skRequired']) > 0) ? "text-success" : "text-danger" ;
+            $classHasPoints = ($ir['skill_points'] > $r['skCost']) ? "text-success" : "text-danger" ;
+            echo "  <div class='row'>
                             <div class='col-auto col-md-4 col-lg-3 col-xl-2'>
                                 <div class='row'>
                                     <div class='col-12'>
@@ -80,12 +82,12 @@ function home()
                                     </div>";
             				            if ($r['skRequired'] > 0)
             				            {
-            				                echo"<div class='col-auto text-danger'>
+            				                echo"<div class='col-auto {$classHasSkill}'>
                     				            <b>Skill Required:</b> " . getSkillName($r['skRequired']) . "
                                             </div>";
             				            }
             				            echo"
-                                    <div class='col-auto'>
+                                    <div class='col-auto {$classHasPoints}'>
                                         Cost: " . shortNumberParse($r['skCost']) . " Skill Points
                                     </div>
                                 </div>
