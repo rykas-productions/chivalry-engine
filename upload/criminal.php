@@ -103,7 +103,13 @@ function home()
                                     </div>
                                     <div class='col-12'>
                                         " . scaledColorProgressBar($v['sucrate'], 0, 100, true) . "
-                                    </div>
+                                    </div>";
+                                    if ($api->UserMemberLevelGet($userid, "Admin"))
+                                    {
+                                        echo"<div class='col-12'>
+                                        {$v['crimePERCFORM']}
+                                    </div>";
+                                    } echo"
                                 </div>
                             </div>
                             <div class='col-auto col-sm-6 col-md-4 col-xl-3 col-xxl-auto'>
