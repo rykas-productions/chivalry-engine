@@ -21,31 +21,31 @@ if ($db->num_rows($q2) != 0) {
 }
 echo "
 <div class='row'>
-    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+    <div class='col-auto'>
         <a href='inbox.php' class='updateHoverBtn btn btn-primary btn-block'><i class='fas fa-fw fa-inbox'></i> Inbox</a>
         <br />
     </div>
-    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+    <div class='col-auto'>
         <a href='inbox.php?action=outbox' class='updateHoverBtn btn btn-warning btn-block'><i class='fas fa-fw fa-envelope'></i> Outbox</a>
         <br />
     </div>
-    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+    <div class='col-auto'>
         <a href='inbox.php?action=compose' class='updateHoverBtn btn btn-success btn-block'><i class='fas fa-fw fa-file'></i> Compose</a>
         <br />
     </div>
-    <div class='col-6 col-sm-4 col-md-3 col-xxl'>
+    <div class='col-auto'>
         <a href='blocklist.php' class='updateHoverBtn btn btn-secondary btn-block'><i class='fas fa-fw fa-ban'></i> Blocklist</a>
         <br />
     </div>
-    <div class='col-6 col-sm-4 col-xxl'>
+    <div class='col-auto'>
         <a href='inbox.php?action=delall' class='updateHoverBtn btn btn-danger btn-block'><i class='fas fa-fw fa-trash-alt'></i> Delete All</a>
         <br />
     </div>
-    <div class='col-6 col-sm-4 col-xxl'>
+    <div class='col-auto'>
         <a href='inbox.php?action=archive' class='updateHoverBtn btn btn-dark btn-block'><i class='fas fa-fw fa-save'></i> Archive</a>
         <br />
     </div>
-    <div class='col-12 col-md-4 col-xxl'>
+    <div class='col-auto'>
         <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
         <br />
     </div>
