@@ -1376,9 +1376,8 @@ function xp()
 			{
 			    //Seasoned Warrior Skill
 			    if (getUserSkill($userid, 5) > 0)
-			        $specialnumber = (getUserSkill($userid, 5) * getSkillBonus(5)) / 100;
-				$qe=$qe+($qe*0.1);
-				$qe=$qe+($qe*$specialnumber);
+			        $qe += ($qe * (getUserSkill($userid, 5) * getSkillBonus(5)) / 100);
+				$qe += ($qe*0.1);
 			}
             //Make the XP gained a little random...
             $expgain = Random($qe / 2, $qe);
