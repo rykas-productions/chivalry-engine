@@ -278,31 +278,31 @@ if ($_GET['user'] == 21)
 }
 echo "<h3>{$user_name}'s Profile</h3>
 <div class='row'>
-	<div class='col-lg-6 col-xl-7'>
+	<div class='col-auto col-lg-6 col-xxxl-4'>
 		<div class='card {$cardColor}'>
 			<div class='card-header text-left'>
 				User info
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-12 col-xl-6'>
+					<div class='col-12 col-lg-6'>
 						{$displaypic}
 					</div>
-					<div class='col-lg'>
+					<div class='col-auto col-lg'>
 						<div class='row'>
-							<div class='col-6 col-xl-12'>
+							<div class='col-auto col-md col-xxl-12'>
 								<h6>Level</h6>
-								<h2>" . number_format($r['level']) . "</h2>
+								<h2>" . shortNumberParse($r['level']) . "</h2>
 							</div>
-							<div class='col-6 col-xl-12'>
+							<div class='col-auto col-md col-xxl-12'>
 								<h6>Class</h6>
 								<h2>{$r['class']}</h2>
 							</div>
-							<div class='col-6 col-xl-12'>
+							<div class='col-auto col-md col-xxl-12'>
 								<h6>Mastery Rank</h6>
 								<h2>" . formatMasteryRank($r['reset']) . "</h2>
 							</div>
-							<div class='col-6 col-xl-12'>
+							<div class='col-auto col-md col-xxl-12'>
 								<h6>Age</h6>
 								<h2>{$r['daysold']}</h2>
 							</div>
@@ -311,52 +311,58 @@ echo "<h3>{$user_name}'s Profile</h3>
 				</div>
 			</div>
 		</div>
-        <br />
 	</div>
-	<div class='col-lg-6 col-xl-5'>
+	<div class='col-12 col-md-6 col-xxxl-4'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Actions
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-sm'>
+					<div class='col-12'>
 						<div id='profileTxt' class='text-left'>What would you like to do?</div><br />
 						<div class='row'>
-							<div class='col-6 col-sm-4'>
-								<a href='attack.php?user={$r['userid']}' onmouseover='profileButtonAttack(\"{$r['username']}\", {$attbutton})' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/attack-btn.svg", 1.75) . "</a><br />
-							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
+								<a href='attack.php?user={$r['userid']}' onmouseover='profileButtonAttack(\"{$r['username']}\", {$attbutton})' class='btn btn-danger btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/attack-btn.svg", 1.75) . "</a><br />
+							</div>";
+						      if (date('n') == 10)
+						      {
+    						       echo"<div class='col-auto'>
+    								<a href='23halloween.php?action=tnt&user={$r['userid']}' onmouseover='profileButtonHalloweenVisit(\"{$r['username']}\")' class='btn btn-warning btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/halloween-btn.svg", 1.75) . "</a><br />
+    							</div>";   
+						      }
+						    echo"
+							<div class='col-auto'>
 								<a href='sendcash.php?user={$r['userid']}' onmouseover='profileButtonCash(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/send-cash-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='inbox.php?action=compose&user={$r['userid']}' onmouseover='profileButtonMail(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/inbox-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='hirespy.php?user={$r['userid']}' onmouseover='profileButtonSpy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/spy-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='bounty.php?action=addbounty&user={$r['userid']}' onmouseover='profileButtonBounty(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("explore/bounty_hunter.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='theft.php?user={$r['userid']}' onmouseover='profileButtonTheft(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/rob-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='poke.php?user={$r['userid']}' onmouseover='profileButtonPoke(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/poke-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='friends.php?action=add&ID={$r['userid']}' onmouseover='profileButtonFriend(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/friend-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='enemy.php?action=add&user={$r['userid']}' onmouseover='profileButtonEnemy(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/enemy-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='contacts.php?action=add&user={$r['userid']}' onmouseover='profileButtonContact(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/contact-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='blocklist.php?action=add&user={$r['userid']}' onmouseover='profileButtonBlock(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/block-btn.svg", 1.75) . "</a><br />
 							</div>
-							<div class='col-6 col-sm-4'>
+							<div class='col-auto'>
 								<a href='playerreport.php?userid={$r['userid']}' onmouseover='profileButtonReport(\"{$r['username']}\")' class='btn btn-primary btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/report-btn.svg", 1.75) . "</a><br />
 							</div>
 						</div>
@@ -365,10 +371,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 			</div>
 		</div>
     </div>
-</div>
-<br />
-<div class='row'>
-	<div class='col-lg-12'>
+	<div class='col-12 col-md-6 col-xl-5 col-xxl-6 col-xxxl-4'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Status info
@@ -377,10 +380,10 @@ echo "<h3>{$user_name}'s Profile</h3>
 				<div class='row'>
 					<div class='col-sm'>
 						<div class='row text-left'>
-							<div class='col-2'>
+							<div class='col-auto'>
 							<i class='game-icon game-icon-{$statusIcon} {$statusColor}' style='font-size:2rem;'></i>
 							</div>
-							<div class='col text-left'>
+							<div class='col-auto'>
 								<p class='{$statusColor}'>{$statusTitle}<br />
 								<i>{$statusDetail}</i></p>
 							</div>
@@ -390,10 +393,7 @@ echo "<h3>{$user_name}'s Profile</h3>
 			</div>
 		</div>
 	</div>
-</div>
-<br />
-<div class='row'>
-	<div class='col-lg-12'>
+	<div class='col-12 col-xl-7 col-xxl-6'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Social info
@@ -413,40 +413,37 @@ echo "<h3>{$user_name}'s Profile</h3>
 			</div>
 		</div>
 	</div>
-</div>
-<br />
-<div class='row'>
-	<div class='col-lg-7'>
+	<div class='col-12 col-md-6'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Basic info
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col'>
+					<div class='col-auto'>
 						{$activityBadge}
 					</div>
-					<div class='col'>
+					<div class='col-auto'>
                         {$genderBadge}
 					</div>";
 					if ($r['vip_days'] > 0)
 					{
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
 							" . createDangerBadge("VIP Days: " . shortNumberParse($r['vip_days'])) . "
 						</div>";
 					}
 					if ($api->UserMemberLevelGet($r['userid'], "forum moderator"))
 					{
 					    echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createBadge($r['user_level']) . "
 						</div>";
 					}
 					if ($married != "N/A")
 					{
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createPrimaryBadge("Married to {$event['username']} [{$event['userid']}]") . "
 						</div>";
 					}
@@ -455,21 +452,21 @@ echo "<h3>{$user_name}'s Profile</h3>
 						$jobTitle = $db->fetch_single($db->query("SELECT `jNAME` from `jobs` WHERE `jRANK` = {$r['job']}"));
 						$jobRank = $db->fetch_single($db->query("SELECT `jrRANK` from `job_ranks` WHERE `jrID` = {$r['jobrank']}"));
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createSecondaryBadge(htmlentities("{$jobRank} at {$jobTitle}", ENT_QUOTES)) . "
 						</div>";
 					}
 					if (isUserDungeon($r['userid']))
 					{
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createDangerBadge(htmlentities("Dungeon for " . TimeUntil_Parse($r['dungeon_out']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
 					if (isUserInfirmary($r['userid']))
 					{
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createDangerBadge(htmlentities("Infirmary for " . TimeUntil_Parse($r['infirmary_out']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
@@ -489,189 +486,212 @@ echo "<h3>{$user_name}'s Profile</h3>
 						else
 							$guildRank = "Guild Member";
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createInfoBadge(htmlentities("{$guildRank} of {$gR['guild_name']}", ENT_QUOTES)) . "
 						</div>";
 					}
 					if ($r['fedjail'])
 					{
 						echo "
-						<div class='col'>
-							<i class='game-icon game-icon-closed-doors text-muted enchanted_glow' data-toggle='tooltip' data-placement='top' title='" . htmlentities("Federal Dungeon: {$r['fed_reason']} for " . TimeUntil_Parse($r['fed_out']) . ".", ENT_QUOTES) . "' style='font-size: 1.75rem;'></i>
-						</div>";
+						<div class='col-auto'>
+						    " . createDangerBadge(htmlentities("Fed Dungeon: {$r['fed_reason']} for " . TimeUntil_Parse($r['fed_out']) . ".", ENT_QUOTES)) . "
+                        </div>";
 					}
 					if ($r['mbTIME'])
 					{
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createDangerBadge(htmlentities("Mail Banned: {$r['mbREASON']} for " . TimeUntil_Parse($r['mbTIME']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
 					if ($r['fb_time'])
 					{
 						echo "
-						<div class='col'>
+						<div class='col-auto'>
                             " . createDangerBadge(htmlentities("Forum Banned: {$r['fb_reason']} for " . TimeUntil_Parse($r['fb_time']) . ".", ENT_QUOTES)) . "
 						</div>";
 					}
+					$guildName = ($r['guild'] == 0) ? "N/A" : "<a href='guilds.php?action=view&id={$r['guild']}'>{$gR['guild_name']}</a>";
+					$ringDisp = (isset($ring)) ? " ({$ring})" : "";
+					$marriageDisp = ($married == "N/A") ? "Single" : "Married to {$married}{$ringDisp}";
 					echo"
 				</div>
 				<hr />
                     <div class='row'>
-                    <div class='col-12 col-sm-6 col-xxxl-3'>
-                        <div class='row'>
-                            <small>Name</small>
+                        <div class='col-auto col-sm-6 col-md-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Name</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    " . parseUsername($r['userid']) . " " . parseUserID($r['userid']) . "
+                                </div>
+                            </div>
                         </div>
+                    <div class='col-auto col-sm-6 col-md-auto'>
                         <div class='row'>
-                            " . parseUsername($r['userid']) . " [{$r['userid']}]
+                            <div class='col-12'>
+                                <small><b>Guild</b></small>
+                            </div>
+                            <div class='col-12'>
+                                {$guildName}
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Guild</small>
-                        </div>
-                        <div class='row'>";
-					       if ($r['guild'] == 0)
-					           echo "N/A";
-					       else
-					           echo "<a href='guilds.php?action=view&id={$r['guild']}'>{$gR['guild_name']}</a>";
-					        echo"
+                            <div class='col-12'>
+                                <small><b>Health</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($r['hp']) . " / " . shortNumberParse($r['maxhp']) . "
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-2'>
+                    <div class='col-auto col-sm-6 col-md-auto'>
                         <div class='row'>
-                            <small>Health</small>
-                        </div>
-                        <div class='row'>
-                            " . shortNumberParse($r['hp']) . " / " . shortNumberParse($r['maxhp']) . "
+                            <div class='col-12'>
+                                <small><b>Residence</b></small>
+                            </div>
+                            <div class='col-12'>
+                                {$r['house_name']}
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-6 col-xxxl-4'>
+                    <div class='col-auto col-sm-6 col-md-auto'>
                         <div class='row'>
-                            <small>Property</small>
-                        </div>
-                        <div class='row'>
-                           {$r['house_name']}
+                            <div class='col-12'>
+                                <small><b>Marital Status</b></small>
+                            </div>
+                            <div class='col-12'>
+                                {$marriageDisp}
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-3'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Marital Status</small>
-                        </div>
-                        <div class='row'>";
-                           if ($married == "N/A")
-                               echo "Single";
-                           else
-                               echo "Married to {$married}";
-                                   if (isset($ring))
-                                       echo " ({$ring})";
-                                   echo"
-                        </div>
-                    </div>
-                    <div class='col-12 col-sm-6 col-xl-3 col-xxl-2 col-xxxl-2'>
-                        <div class='row'>
-                            <small>Achievements</small>
-                        </div>
-                        <div class='row'>";
+                            <div class='col-12'>
+                                <small><b>Achievements</b></small>
+                            </div>
+                            <div class='col-12'>";
                                    echo shortNumberParse($db->fetch_single($db->query("SELECT COUNT(`achievement`) FROM `achievements_done` WHERE `userid` = {$r['userid']}")));
                         echo"</div>
-                    </div>
-                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
-                        <div class='row'>
-                            <small>Friends</small>
-                        </div>
-                        <div class='row'>
-                           " . shortNumberParse($friend) . "
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Enemies</small>
-                        </div>
-                        <div class='row'>
-                           " . shortNumberParse($enemy) . "
-                        </div>
-                    </div>
-                    <div class='col-12 col-sm-6 col-xl-3 col-xxxl-2'>
-                        <div class='row'>
-                            <small>Referrals</small>
-                        </div>
-                        <div class='row'>
-                           " . shortNumberParse($ref) . "
+                            <div class='col-12'>
+                                <small><b>Friends</b></small>
+                            </div>
+                            <div class='col-12'>
+                            " . shortNumberParse($friend) . "
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-6 col-xxl-3'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Last Action</small>
-                        </div>
-                        <div class='row'>
-                           {$ula}
+                            <div class='col-12'>
+                                <small><b>Enemies</b></small>
+                            </div>
+                            <div class='col-12'>
+                            " . shortNumberParse($enemy) . "
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl-6 col-xxl-3'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Last Login</small>
+                            <div class='col-12'>
+                                <small><b>Referrals</b></small>
+                            </div>
+                            <div class='col-12'>
+                            " . shortNumberParse($ref) . "
+                            </div>
                         </div>
+                    </div>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                           {$ull}
+                            <div class='col-12'>
+                                <small><b>Last Action</b></small>
+                            </div>
+                            <div class='col-12'>
+                            {$ula}
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Last Login</b></small>
+                            </div>
+                            <div class='col-12'>
+                            {$ull}
+                            </div>
                         </div>
                     </div>
                 </div>
 			</div>
         </div>
-        <br />
 	</div>
-	<div class='col-lg-5'>
+	<div class='col-12 col-md-6'>
 		<div class='card'>
 			<div class='card-header text-left'>
 				Personal info
 			</div>
 			<div class='card-body'>
-				<div class='row text-left'>
-                    <div class='col-12 col-sm-6 col-xl'>
+                <div class='row'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Copper Coins</small>
-                        </div>
-                        <div class='row'>
-                            " . shortNumberParse($r['primary_currency']) . "
-                        </div>
-                    </div>
-                    <div class='col-12 col-sm-6 col-xl'>
-                        <div class='row'>
-                            <small>Chivalry Tokens</small>
-                        </div>
-                        <div class='row'>
-                            " . shortNumberParse($r['secondary_currency']) . "
+                            <div class='col-12'>
+                                <small><b>Copper Coins</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($r['primary_currency']) . "
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12 col-sm-6 col-xl'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Location</small>
-                        </div>
-                        <div class='row'>
-                            <a href='travel.php?to={$r['location']}' data-toggle='tooltip' data-placement='bottom' title='Minimum Level: {$r['town_min_level']}'>{$r['town_name']}</a>
-                        </div>
-                    </div>
-                    <div class='col-12 col-sm-6 col-xl'>
-                        <div class='row'>
-                            <small>Country</small>
-                        </div>
-                        <div class='row'>
-                            " . ucfirst($fg['country']) . "
+                            <div class='col-12'>
+                                <small><b>Chivalry Tokens</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($r['secondary_currency']) . "
+                            </div>
                         </div>
                     </div>
-                    <div class='col-12'>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
                         <div class='row'>
-                            <small>Playing From</small>
-                        </div>
-                        <div class='row'>
-                            {$r['browser']} on {$r['os']}
+                            <div class='col-12'>
+                                <small><b>Town</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <a href='travel.php?to={$r['location']}' data-toggle='tooltip' data-placement='bottom' title='Minimum Level: {$r['town_min_level']}'>{$r['town_name']}</a>
+                            </div>
                         </div>
                     </div>
-				</div>
+                    <div class='col-auto col-sm-6 col-xxl-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Origin Country</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . ucfirst($fg['country']) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-auto col-sm-6 col-md-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Device</b></small>
+                            </div>
+                            <div class='col-12'>
+                                {$r['browser']}/{$r['os']}
+                            </div>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
-        	<br />
       </div>
         <div class='col-12'>
 		<div class='card'>

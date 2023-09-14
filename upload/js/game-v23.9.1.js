@@ -387,6 +387,11 @@ function profileButtonBlock(user)
 {
 	document.getElementById("profileTxt").innerHTML = "Block contact with " + user + ".";
 }
+function profileButtonHalloweenVisit(user)
+{
+	document.getElementById("profileTxt").innerHTML = "TRICK OR TREAT, " + user + "!!";
+}
+
 //For the recaptcha system
 function enableRecaptchaBtn()
 {

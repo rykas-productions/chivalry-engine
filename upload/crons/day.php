@@ -74,4 +74,9 @@ $month = date('n');
 $day = date('j');
 $year = date('Y');
 
+if (($month == 10) && ($day == 1))
+{
+    $api->GameAddAnnouncement("Hey folks! To kickstart the Halloween season, you may now visit a player's profile and Trick or Treat using the now-available link under the action section. You may trick or treat on a player once an hour. Doing so will grant you random candies that may be helpful on your journey. Stay tuned for more Halloween tricks as we get closer to the holiday!");
+}
+
 ?>
