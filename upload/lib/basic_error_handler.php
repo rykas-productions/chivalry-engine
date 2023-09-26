@@ -25,13 +25,13 @@ function error_critical($human_error, $debug_error, $action, $context = array())
             . '<br /><br /></pre>';
         // Only uncomment the below if you know what you're doing,
         // for debug purposes.
-        /*
+        
 		if (is_array($context) && count($context) > 0)
         {
             echo '<strong>Context at error time:</strong> ' . '<br /><br />'
                     . nl2br(print_r($context, true));
         }
-		*/
+		
     } else {
         echo 'A critical error has occurred, and this page cannot be displayed. '
             . 'Try again later. If this error persists, please alert an admin as soon as possible!';
@@ -89,13 +89,13 @@ function error_php($errno, $errstr, $errfile = '', $errline = 0, $errcontext = a
                 . $errfile . ':' . $errline . '<br /><br />';
             // Only uncomment the below if you know what you're doing,
             // for debug purposes.
-            /*
+            
 			if (is_array($errcontext) && count($errcontext) > 0)
             {
 				echo '<strong>Context at error time:</strong> '
 				. '<br /><br />' . nl2br(print_r($errcontext, true));
 			}
-			*/
+			
             echo "</pre>";
         }
     }
