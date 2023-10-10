@@ -14,18 +14,22 @@ if ($ir['rewarded'] == 0)
         $daysLoggedMulti = 1 + ($ir['dayslogged'] * 0.1);
     $daysLoggedMulti = clamp($daysLoggedMulti, 1, 31);
     $rng=Random(1,5);
-    $tokenreward=(1500*$rng)+((1500*$rng)*levelMultiplier($ir['level']));
+    $tokenreward=(1500*$rng)+((1500*$rng)*levelMultiplier($ir['level'], $ir['reset']));
     $tokenreward = $tokenreward * $daysLoggedMulti;
     $medReward=Random(5 * $daysLoggedMulti, 15 * $daysLoggedMulti);
     $scrollreward=Random(10 * $daysLoggedMulti,20 * $daysLoggedMulti);
     $luck=Random(10,35);
     $reward=Random(1,100);
-    $copper=1000000+(1000000*levelMultiplier($ir['level']));
+    $copper=1000000+(1000000*levelMultiplier($ir['level'], $ir['reset']));
     $copper = $copper  * $daysLoggedMulti;
     $bor=Random(500* $daysLoggedMulti,1025 * $daysLoggedMulti);
     $guardTime=Random(15,40);
     $autoHex=Random(50,105);
-    $rrBet=Random(50000 * $daysLoggedMulti,1250000 * $daysLoggedMulti);
+    
+    $rrmin = 100000 * levelMultiplier($ir['level'], $ir['reset']);
+    $rrmax = 3000000 * levelMultiplier($ir['level'], $ir['reset']);
+    $rrBet=Random($rrmin * $daysLoggedMulti,$rrmax * $daysLoggedMulti);
+    
     $skill = round(1  * $daysLoggedMulti);
     //Give skill point.
     if ($reward == 99 || $reward == 100)
@@ -191,18 +195,7 @@ if ($ir['rewarded'] == 0)
                 $api->UserGiveCurrency($userid,'secondary',750);
                 addToEconomyLog('Daily Reward', 'token', 750);
     }
-    
-    //3-9-2023 outage reward
-    $outageAward = getCurrentUserPref('3-9-23outageAward', false);
-    if (!$outageAward)
-    {
-        $api->UserGiveItem($userid,287,2);
-        $api->UserGiveItem($userid,286,2);
-        $api->UserGiveItem($userid,285,2);
-        
-        $api->GameAddNotification($userid,"For the long outage on March 9th, we're giving players 2 x Potion of Youthful Tolerance, Everlasting Speed and Permanent Strength (each!) Thank you for your patience and for playing CID!");
-        setCurrentUserPref('3-9-23outageAward', true);
-    }
+
     $month = date('n');
     $day = date('j');
     $year = date('Y');
