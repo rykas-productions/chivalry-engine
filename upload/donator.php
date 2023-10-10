@@ -92,7 +92,7 @@ if (isset($_GET['user']))
 					=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
 						"VIP Days*" , "premium_currency" => "Mutton");
 				$statformatted = $stats["{$einfo['stat']}"];
-				$itemInfo .= "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted} ";
+				$itemInfo .= "{$einfo['dir']}" . shortNumberParse($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted} ";
 			} //If item has no effects, lets list the description instead.
 			else 
 			{
