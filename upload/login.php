@@ -39,7 +39,7 @@ echo "
                     <input type='submit' class='btn btn-primary btn-block' value='Sign In'><br />
                     New here? <a href='register.php'>Sign up</a> for an account!
                 </form>";
-				loginbutton("rectangle");
+				//loginbutton("rectangle");
             echo "</div>
         </div>
         <br />
@@ -75,14 +75,14 @@ echo "
                 while ($pdata = $db->fetch_row($RankPlayerQuery)) {
                     $Rank = $Rank + 1;
                     echo "<div class='row'>
-                        <div class='col col-md-2'>
+                        <div class='col-auto'>
                             {$Rank}
                         </div>
                         <div class='col'>
-                            " . parseUsername($pdata['userid']) . " [{$pdata['userid']}]
+                            " . parseUsername($pdata['userid']) . " " . parseUserID($pdata['userid']) . "
                         </div>
-                        <div class='col col-4'>
-                            Level " . number_format($pdata['level']) . "
+                        <div class='col'>
+                            Level " . shortNumberParse($pdata['level']) . "
                         </div>
                     </div>";
                 }
@@ -111,10 +111,12 @@ echo "
                 No Installation Required!
             </div>
             <div class='card-body'>
-                " . number_format($playersonline) . " Players Online Today<br />
-                " . number_format($totalplayers) . " Total Players<br />
-                " . number_format($signups) . " New Players Today<br />
-				Most Users Online: " . number_format($set['mostUsersOn']) . " Users<br />" . DateTime_Parse($set['mostUsersOnTime']) . "
+                <div class='row'>
+                    <div class='col-auto'>" . shortNumberParse($playersonline) . " Players Online Today</div>
+                <div class='col-auto'>" . shortNumberParse($totalplayers) . " Total Players</div>
+                <div class='col-auto'>" . shortNumberParse($signups) . " New Players Today</div>
+				<div class='col-auto'>Most Users Online: " . shortNumberParse($set['mostUsersOn']) . " Users on " . DateTime_Parse($set['mostUsersOnTime']) . "</div>
+                </div>
             </div>
         </div>
         <br />
@@ -125,27 +127,34 @@ echo "
                 Latest Announcement
             </div>
             <div class='card-body'>
-                " . $parser->getAsHtml() . "<br />
-				<small>" . DateTime_Parse($ANN['ann_time']) . "</small>
+                <div class='row'>
+                    <div class='col-12'>" . $parser->getAsHtml() . "</div>
+				    <div class='col-12'><small>" . DateTime_Parse($ANN['ann_time']) . "</small></div>
+                </div>
             </div>
         </div>
         <br />
     </div>";
     $displaypic = "<img src='" . parseDisplayPic($set['random_player_showcase']) . "' class='img-thumbnail' height='75'>";
 echo"
-    <div class='col-md-6 col-lg-7 col-xl-4 col-xxl-3'>
+    <div class='col-md-6 col-lg-5 col-xl-4 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
                 Player of the Week
             </div>
             <div class='card-body'>
                 <div class='row'>
-                    <div class='col-12 col-sm-3'>
+                    <div class='col-12 col-sm col-md-5'>
                         {$displaypic}
                     </div>
-                    <div class='col-12 col-sm'>
-                        {$api->SystemUserIDtoName($set['random_player_showcase'])} [{$set['random_player_showcase']}]
-                        Level: {$api->UserInfoGet($set['random_player_showcase'], "level")}
+                    <div class='col-12 col-sm-12 col-md'>
+                        <div class='row'>
+                            <div class='col-auto'>
+                                " . parseUsername($set['random_player_showcase']) . " " . parseUserID($set['random_player_showcase']) . "
+                            </div>
+                            <div class='col-auto'>
+                                Level: " . shortNumberParse($api->UserInfoGet($set['random_player_showcase'], "level")) . "
+                            </div>
                     </div>
                 </div>
             </div>
