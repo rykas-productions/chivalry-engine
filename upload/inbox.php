@@ -42,10 +42,6 @@ echo "
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=archive' class='updateHoverBtn btn btn-dark btn-block'><i class='fas fa-fw fa-save'></i> Archive</a>
-        <br />
-    </div>
-    <div class='col-auto'>
         <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
         <br />
     </div>
@@ -93,14 +89,14 @@ function home()
 	if ($ir['mail'] == 0)
 	{
 		$MailQuery = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' ORDER BY `mail_time` desc LIMIT {$viewCount}");
-		$info="Showing your {$viewCount} latest messages.";
+		$info="Showing you your " . shortNumberParse($viewCount) . " latest messages.";
 	}
 	else
 	{
 		$MailQuery = $db->query("/*qc=on*/SELECT * FROM `mail` WHERE `mail_to` = '{$userid}' AND `mail_status` = 'Unread' ORDER BY `mail_time` desc");
-		$info="Showing your unread messages.";
+		$info="Showing you your unread messages.";
 	}
-	echo "<b>{$info}</b>";
+	alert('info',"",$info,false);
     while ($r = $db->fetch_row($MailQuery)) {
         //Bind their picture to a variable... if they have one.
         //Bind if the message has been previously read or not.
@@ -119,25 +115,25 @@ function home()
 		echo "<div class='card'>
 			<div class='card-header bg-transparent'>
 				<div class='row'>
-					<div class='col-md-2 col-sm-4 col-6'>
-						<a href='profile.php?user={$r['mail_from']}' class='updateHoverBtn'>{$un1['username']}</a> [{$r['mail_from']}]
+					<div class='col col-xl'>
+						<a href='profile.php?user={$r['mail_from']}' class='updateHoverBtn'>{$un1['username']} " . parseUserID($r['mail_from']) . "</a>
 					</div>
-					<div class='col-md-3 text-muted hidden-sm-down'>
+					<div class='col-12 col-md-auto col-xl text-muted hidden-sm-down'>
 						" . DateTime_Parse($r['mail_time']) . "
 					</div>
-					<div class='col-6 col-sm-4'>
+					<div class='col'>
 						<i><a href='?action=read&msg={$r['mail_id']}' class='updateHoverBtn'>{$sub}</a></i>
 					</div>
-					<div class='col-md-3 col-sm-4 col-6 hidden-xs-down'>
+					<div class='col-auto col-xl'>
 						<div class='row'>
-							<div class='col'>
+							<div class='col hidden-sm-down'>
 								<a class='btn btn-primary btn-sm updateHoverBtn' href='?action=read&msg={$r['mail_id']}'><i class='far fa-envelope-open'></i></a>
 							</div>
 							<div class='col'>
-								<a class='btn btn-primary btn-sm updateHoverBtn' href='playerreport.php?userid={$r['mail_from']}'><i class='fas fa-flag'></i></a>
+								<a class='btn btn-warning btn-sm updateHoverBtn' href='playerreport.php?userid={$r['mail_from']}'><i class='fas fa-flag'></i></a>
 							</div>
 							<div class='col'>
-								<a class='btn btn-primary btn-sm updateHoverBtn' href='?action=delete&msg={$r['mail_id']}'><i class='fas fa-trash-alt'></i></a>
+								<a class='btn btn-danger btn-sm updateHoverBtn' href='?action=delete&msg={$r['mail_id']}'><i class='fas fa-trash-alt'></i></a>
 							</div>
 						</div>
 					</div>
@@ -185,64 +181,87 @@ function read()
 	$pic = "<img src='" . parseDisplayPic($msg['mail_from']) . "' height='75' alt='{$un1['username']}&#39;s Display picture.' title='{$un1['username']}&#39;s Display picture'>";
 	echo "
 	<div class='card'>
-		<div class='card-header bg-transparent'>
+        <div class='card-header'>
+            Subject: {$msg['mail_subject']} (" . DateTime_Parse($msg['mail_time']) . ")
+        </div>
+		<div class='card-body'>
 			<div class='row'>
-				<div class='col-md-1 col-4'>
-					{$pic}
+				<div class='col-12 col-lg-auto'>
+                    <div class='row'>
+                        <div class='col col-lg-12'>
+					       {$pic}
+                        </div>
+                        <div class='col col-lg-12'>
+                            <a href='profile.php?user={$msg['mail_from']}' class='updateHoverBtn'>{$un1['usernames']}</a> " . parseUserID($msg['mail_from']) . "
+                        </div>
+                    </div>
 				</div>
-				<div class='col-md-3 col-8'>
-					<a href='profile.php?user={$msg['mail_from']}' class='updateHoverBtn'>{$un1['usernames']}</a> [{$msg['mail_from']}]<br />
-					" . DateTime_Parse($msg['mail_time']) . "
+				<div class='col-12 col-lg'>
+                    <div class='row'>
+                        <div class='col-12'>
+					       <small><b>Message</b></small>
+                        </div>
+                        <div class='col-12'>
+					       {$currentmsg}
+                        </div>
+                    </div>
 				</div>
-				<div class='col-md-8'>
-					<hr class='hidden-md-up'>
-					<b>Subject: {$msg['mail_subject']}</b><br />
-					{$currentmsg}
-				</div>
-			</div>";
+			</div>
+        </div>
+    </div><br />";
 			if (permission('CanReplyMail', $userid)) 
 			{
 				echo"
 				<form method='post' action='?action=send'>
-				<hr />
-				<div class='row'>
-					<div class='col-md-2 col-sm-3 col-6'>
-						<b>Recipient</b>
-					</div>
-					<div class='col-md-10 col-sm-9'>
-						<input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$un1['username']}'>
-					</div>
-				</div>
-				<br />
-				<div class='row'>
-					<div class='col-md-2 col-sm-3 col-6'>
-						<b>Subject</b>
-					</div>
-					<div class='col-md-10 col-sm-9'>
-						<input type='text' class='form-control' maxlength='50' name='subject' value='{$msg['mail_subject']}'>
-					</div>
-				</div>
-				<br />
-				<div class='row'>
-					<div class='col-md-2 col-sm-3 col-6'>
-						<b>Response</b>
-					</div>
-					<div class='col-md-10 col-sm-9'>
-						<textarea class='form-control' required='1' maxlength='65655' name='msg'></textarea>
-					</div>
-				</div>
-				<br />
-				<div class='row'>
-					<div class='col'>
-						<button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Reply to {$un1['username']}</button>
-					</div>
-				</div>
+                <div class='card'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-md'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Recipient</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='text' class='form-control' readonly='1' name='sendto' required='1' value='{$un1['username']}'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Subject</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='text' class='form-control' maxlength='50' name='subject' value='{$msg['mail_subject']}'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Response</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <textarea class='form-control' required='1' maxlength='65655' name='msg'></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Action</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Reply to {$un1['username']}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 				<input type='hidden' name='verf' value='{$code}' />
 				</form>";
 			}
-			echo"
-		</div>
-	</div>";
 }
 
 function send()
@@ -415,50 +434,60 @@ function compose()
     if (permission('CanReplyMail', $userid)) {
         //Request CSRF Code and display the message composer form.
         $code = request_csrf_code('inbox_send');
-		echo "
-		<form method='post' action='?action=send'>
-		<div class='card'>
-			<div class='card-header bg-transparent'>
-				<div class='row'>
-					<div class='col-md-2 col-sm-3 col-6'>
-						<b>Recipient</b>
-					</div>
-					<div class='col-md-10 col-sm-9'>
-						<input type='text' class='form-control' value='{$username}' name='sendto' required='1'>
-					</div>
-				</div>
-				<br />
-				<div class='row'>
-					<div class='col-md-2 col-sm-3 col-6'>
-						<b>Subject</b>
-					</div>
-					<div class='col-md-10 col-sm-9'>
-						<input type='text' class='form-control' maxlength='50' name='subject'>
-					</div>
-				</div>
-				<br />
-				<div class='row'>
-					<div class='col-md-2 col-sm-3 col-6'>
-						<b>Message</b>
-					</div>
-					<div class='col-md-10 col-sm-9'>
-						<textarea class='form-control' rows='5' required='1' maxlength='65655' name='msg'></textarea>
-					</div>
-				</div>
-				<br />
-				<div class='row'>
-					<div class='col'>
-						<input type='submit' class='btn btn-primary btn-block'  value='Send Message'>
-					</div>
-				</div>
-			</div>
-		</div>
-		<input type='hidden' name='verf' value='{$code}' />
-		</form>";
+        echo"
+				<form method='post' action='?action=send'>
+                <div class='card'>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-md'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Recipient</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='text' class='form-control' name='sendto' required='1'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Subject</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='text' class='form-control' maxlength='50' name='subject'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Response</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <textarea class='form-control' required='1' maxlength='65655' name='msg'></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Action</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Send Message</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<input type='hidden' name='verf' value='{$code}' />
+				</form>";
     }
 }
 
-function archive()
+/*function archive()
 {
 	echo "
 	We at Chivalry is Dead delete read messages when they're 30 days old. Here, you may save your messages for whatever reason. We don't care why.
@@ -476,7 +505,7 @@ function archive()
 			</form>
 		</div>
 	</div>";
-}
+}*/
 
 function delete()
 {

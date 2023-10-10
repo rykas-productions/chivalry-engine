@@ -30,10 +30,6 @@ echo "
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=archive' class='updateHoverBtn btn btn-dark btn-block'><i class='fas fa-fw fa-save'></i> Archive</a>
-        <br />
-    </div>
-    <div class='col-auto'>
         <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
         <br />
     </div>
