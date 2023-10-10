@@ -112,7 +112,10 @@ function calculateSellPrice($estate_id)
 	$r=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$estate_id}"));
 	$r2=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$r['estate']}"));
 	//start at 85% value due to depreciation
-	$multi = 0.85;
+	if (isHoliday())
+	    $multi = 1;
+	else
+	   $multi = 0.85;
 	if ($r['gardenUpgrade'] > 0)
 	    $multi = ($multi) + ($r['gardenUpgrade'] * 0.075);
     if ($r['vaultUpgrade'] > 0)

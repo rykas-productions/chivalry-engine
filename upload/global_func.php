@@ -1374,3 +1374,23 @@ function logMarketAvg($qty, $cost)
     $time = time();
     $db->query("INSERT INTO `token_market_avg` (`token_sold`, `token_total`, `token_time`) VALUES ('{$qty}', '{$cost}', '{$time}')");
 }
+
+function isHoliday()
+{
+    $month = date('n');
+    $day = date('j');
+    $year = date('Y');
+    
+    if ($month == 10 && $day == 31)
+        return true;
+    elseif ($month == 12 && $day == 25)
+        return true;
+    elseif ($month == 1 && $day == 1)
+        return true;
+    elseif ($month == 2 && $day == 14)
+        return true;
+    elseif ($month == 7 && $day == 4)
+        return true;
+    else
+        return false;
+}

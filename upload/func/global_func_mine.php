@@ -61,12 +61,10 @@ function getMineRolls($userid, $mineIQ)
 function calculateMinePowerCost($userid)
 {
     $multiplier = 1.0;
-    $month = date('n');
-    $day = date('j');
-    //halloween
-    if ($month == 10)
-        if (($day >= 24) && ($day <= 31))
-            $multiplier -= 0.5;
+    if (isHoliday())
+        $multiplier /= 0.5;
+    if (reachedMonthlyDonationGoal())
+        $multiplier /= 0.5;
     $miningLevel = getUserMiningLevel($userid);
     if ($miningLevel < 10)
         $CostForPower=10;
@@ -137,12 +135,10 @@ function randMineDropCalc($userid, $mineID, $dropID)
 {
     global $db;
     $itemMultipler = 1.0;
-    $month = date('n');
-    $day = date('j');
-    //halloween
-    if ($month == 10)
-        if (($day >= 24) && ($day <= 31))
-            $itemMultipler += 0.15;
+    if (isHoliday())
+        $itemMultipler+=1.1;
+    if (reachedMonthlyDonationGoal())
+        $itemMultipler+=1.25;
     if ($dropID < 4)
     {
         if (hasNecklaceEquipped($userid, 332))
@@ -164,12 +160,10 @@ function randMineDropCalc($userid, $mineID, $dropID)
 function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
 {
     $xpMultiplier = 1.0;
-    $month = date('n');
-    $day = date('j');
-    //halloween
-    if ($month == 10)
-        if (($day >= 24) && ($day <= 31))
-            $xpMultiplier += 1.05;
+    if (isHoliday())
+        $xpMultiplier+=1.1;
+    if (reachedMonthlyDonationGoal())
+        $xpMultiplier+=1.25;
     $gainedXP = 0;
     if ($dropID == 1)
         $baseXP = 0.35;
@@ -194,8 +188,7 @@ function calcMineIQ($userid, $mineID)
     global $db;
     $specialnumber = ((getUserSkill($userid, 14) * getSkillBonus(14)) / 100);
     $mineIQ = $db->fetch_single($db->query("SELECT `mine_iq` FROM `mining_data` WHERE `mine_id` = {$mineID}"));
-    $mineIQ -= $mineIQ;
-    return $mineIQ;
+    return $mineIQ - ($mineIQ * $specialnumber);
 }
 
 function mining_levelup()

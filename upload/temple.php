@@ -26,8 +26,6 @@ if (Random(1,100) == 6)
     alert('danger',"Uh Oh!","While walking up to the Temple of Fortune, you trip up the stairs and fall all the way down. You need to go to the infirmary.",true,'infirmary.php');
     die($h->endpage());
 }
-$month = date('n');
-$day = date('j');
 
 //Deep Reading Skill
 $extraiq=(getUserSkill($userid, 11) * getSkillBonus(11)) / 100;
@@ -43,6 +41,15 @@ if ($gameBuyPrice > $set['token_maximum'])
     $gameBuyPrice = $set['token_maximum'];
 if ($gameSellPrice < $set['token_minimum'])
     $gameSellPrice = $set['token_minimum'];
+
+//Holiday costs...
+if (isHoliday())
+{
+    $set['energy_refill_cost'] /= 2;
+    $set['brave_refill_cost'] /= 2;
+    $set['will_refill_cost'] /= 2;
+    $set['iq_per_sec'] *= 2;
+}
 
 echo "<h3><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</h3><hr />";
 //Set the GET to nothing if not set.
