@@ -1567,3 +1567,41 @@ function userCalculateNetworth($userid)
     }
     return $worth;
 }
+
+function changeUserStats($userid, $stat, $change)
+{
+    global $db, $ir;
+    $db->query("UPDATE `userstats` SET `{$stat}` = `{$stat}` + ({$change}) WHERE `userid` = {$userid}");
+    if (($userid == $ir['userid']) && (isset($ir)))
+        $ir[$stat] = $ir[$stat] + ($change);
+}
+
+function changeUserStrength($userid, $change)
+{
+    changeUserStats($userid, 'strength', $change);
+}
+
+function changeUserAgility($userid, $change)
+{
+    changeUserStats($userid, 'agility', $change);
+}
+
+function changeUserLabor($userid, $change)
+{
+    changeUserStats($userid, 'labor', $change);
+}
+
+function changeUserGuard($userid, $change)
+{
+    changeUserStats($userid, 'guard', $change);
+}
+
+function changeUserIQ($userid, $change)
+{
+    changeUserStats($userid, 'iq', $change);
+}
+
+function changeUserLuck($userid, $change)
+{
+    changeUserStats($userid, 'luck', $change);
+}

@@ -249,7 +249,9 @@ function mine()
                 $energyCost = $energyCost - (returnEffectMultiplier($userid, constant("holiday_mining_energy")) * 0.2);
 			$MSI['mine_power_use'] = $MSI['mine_power_use'] * $energyCost;
 			if (reachedMonthlyDonationGoal())
-			    $MSI['mine_power_use'] = round($MSI['mine_power_use'] / 2);
+			    $MSI['mine_power_use'] /= 2;
+			if (isHoliday())
+			    $MSI['mine_power_use'] /= 2;
 			$nextspot=$spot+1;
 			$nextmineslevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$nextspot}"));
 			/*if ($MSI['mine_level'] >= $nextmineslevel)
@@ -258,6 +260,7 @@ function mine()
 				die($h->endpage());
 			}*/
 			$MSI['mine_iq'] = calcMineIQ($userid, $spot);
+			$laborCost = round($MSI['mine_iq'] * 0.06);
             if ($MUS['mining_level'] < $MSI['mine_level']) 
             {
                 alert('danger', "Uh Oh!", "You are too low level to mine here. You need mining level {$MSI['mine_level']} to mine here.", true, 'mine.php');
@@ -270,9 +273,14 @@ function mine()
             } 
             elseif ($ir['iq'] < $MSI['mine_iq']) 
             {
-                alert('danger', "Uh Oh!", "Your IQ is too low to mine here. You need " . number_format($MSI['mine_iq']) . " IQ.", true, 'mine.php');
+                alert('danger', "Uh Oh!", "Your IQ is too low to mine here. You need " . shortNumberParse($MSI['mine_iq']) . " IQ.", true, 'mine.php');
                 die($h->endpage());
-            } 
+            }
+            elseif ($ir['labor'] < $laborCost)
+            {
+                alert('danger', "Uh Oh!", "Your labor is too low to mine here. You need " . shortNumberParse($MSI['mine_iq']) . " IQ.", true, 'mine.php');
+                die($h->endpage());
+            }
             elseif ($MUS['miningpower'] < $MSI['mine_power_use']) 
             {
                 alert('danger', "Uh Oh!", "You do not have enough mining power to mine here. You need {$MSI['mine_power_use']}.", true, 'mine.php');
@@ -363,6 +371,7 @@ function mine()
             echo "
 			<img src='https://res.cloudinary.com/dydidizue/image/upload/v1522516963/2-cave.jpg' class='img-thumbnail img-responsive'>";
             $db->query("UPDATE `mining` SET `miningpower`=`miningpower`-'{$MSI['mine_power_use']}' WHERE `userid` = {$userid}");
+            changeUserLabor($userid, -1 * $laborCost);
         }
     }
 }

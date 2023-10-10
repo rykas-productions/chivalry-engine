@@ -11,6 +11,7 @@ if ($api->UserStatus($userid, 'dungeon')) {
     alert('danger', "Locked Up!", "You cannot go begging if you're in the dungeon.");
     die($h->endpage());
 }
+$laborCost = 25 * levelMultiplier($ir['level'], $ir['reset']);
 if (!isset($_GET['action'])) 
 {
     $_GET['action'] = '';
@@ -26,23 +27,29 @@ switch ($_GET['action'])
 }
 function home()
 {
-	global $h, $ir;
+    global $h, $ir, $laborCost;
 	echo "Take to the streets to beg for currency. You may receive things, you may not. 
 	Your attempts to beg increase 25 per hour, capped at 100 at any one time.<br />
-	<b>You can currently beg {$ir['searchtown']} times.</b><br />
+	<b>You can currently beg {$ir['searchtown']} times.</b> It costs " . shortNumberParse($laborCost) . " Labor each beg attempt.<br />
 	<a href='?action=beg' class='btn btn-primary'>Start Begging</a>";
 	$h->endpage();
 }
 
 function dobum()
 {
-	global $ir, $userid, $api, $h, $db;
+    global $ir, $userid, $api, $h, $db, $laborCost;
 	if ($ir['searchtown'] == 0)
 	{
 		alert('danger',"Uh Oh!","You cannot bum anymore this hour. Come back in an hour.",true,'explore.php');
 		die($h->endpage());
 	}
+	if ($ir['labor'] < $laborCost)
+	{
+	    alert('danger',"Uh Oh!","You need at least " . shortNumberParse($laborCost) . " Labor to beg at this time. You only have " . shortNumberParse($ir['labor']) . " Labor.",true,'explore.php');
+	    die($h->endpage());
+	}
 	$db->query("UPDATE `user_settings` SET `searchtown` = `searchtown` - 1 WHERE `userid` = {$userid}");
+	changeUserLabor($userid, $laborCost * -1);
 	$ir['searchtown']--;
 	$rand=Random(1,20);
 	if ($rand <= 5)
