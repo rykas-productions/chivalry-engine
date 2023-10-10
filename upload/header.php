@@ -308,7 +308,7 @@ class headers
 	{
 		echo "<b><span class='text-info'>You have Will Overcharge active for the next " . TimeUntil_Parse($ir['will_overcharge']) . ".</span></b><br />";
 	}
-    if (getCurrentUserPref('tutorialToggle', 'true') == 'true')
+	if (getCurrentUserPref('tutorialToggle', 'true') == 'true')
     {
         $page = $db->escape(strip_tags(stripslashes(basename($_SERVER['PHP_SELF']))));
         $tq=$db->query("/*qc=on*/SELECT * FROM `tutorial` WHERE `page` = '{$page}'");
@@ -715,10 +715,10 @@ class headers
 	{
 		global $db;
 		$time = time();
-		$paperads = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`news_id`) FROM `newspaper_ads` WHERE `news_end` > {$time}"));
+		$paperads = $db->fetch_single($db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` DESC"));
 		if ($paperads == 0)
 		{
-			$news="Welcome to Chivalry is Dead. <b>//</b> You may post an ad by clicking <a href='newspaper.php?action=buyad'>here</a>.";
+			$news="Welcome to Chivalry is Dead. <b>//</b> You may purchase an ad by clicking <a href='newspaper.php?action=buyad'>here</a>.";
 		}
 		else
 		{
@@ -727,10 +727,10 @@ class headers
 			while ($par=$db->fetch_row($npq))
 				{
 				    $par['news_text'] = str_replace("<br />", " ", $par['news_text']);
-					$phrase = " " . parseUsername($par['news_owner']) . " [{$par['news_owner']}]: {$par['news_text']} <b>//</b>";
+					$phrase = " " . parseUsername($par['news_owner']) . " " . parseUserID($par['news_owner']) . " {$par['news_text']} <b>//</b>";
 					$news.="{$phrase}";
 				}
-			$news.="<b>//END</b>";
+			$news.=" You may purchase an ad by clicking <a href='newspaper.php?action=buyad'>here</a>. <b>//END</b>";
 		}
 		echo "
 		<div class='marquee'>
