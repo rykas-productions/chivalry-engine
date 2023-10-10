@@ -13,14 +13,14 @@ echo "<div class='card'>
         <div class='card-header'>
             {$set['WebsiteName']} Game Rules
         </div>
-        <div class='card-body'>";
+        <div class='card-body'><div class='row'>";
 $q = $db->query("/*qc=on*/SELECT * FROM `gamerules` ORDER BY `rule_id` ASC");
 $rulenumber = 1;
 //List game rules.
 while ($r = $db->fetch_row($q))
 {
-    echo "  <div class='row'>
-    <div class='col-12'>
+    echo "  
+    <div class='col-12 col-lg-6 col-xl-4 col-xxl-3'>
         <div class='row'>
             <div class='col-12'>
                 <small><b>Rule #{$rulenumber}</b></small>
@@ -31,8 +31,8 @@ while ($r = $db->fetch_row($q))
         </div>
         <br />
     </div>
-</div>";
+";
                 $rulenumber = $rulenumber + 1;
 }
-echo "</div></div>";
+echo "</div></div></div>";
 $h->endpage();
