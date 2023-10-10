@@ -1,12 +1,3 @@
-<script>
-    function total_cost() {
-        var day = parseInt((document.getElementById("days").value) * 2000);
-        var init = parseInt((document.getElementById("init").value));
-        var charlength = parseInt((document.getElementById("chars").value.length) * 7);
-        var totalcost = day + init + charlength;
-        var output = document.getElementById("output").value = totalcost;
-    }
-</script>
 <?php
 /*
 	File:		newspaper.php
@@ -19,6 +10,25 @@
 $disablespeed=1;
 require("globals.php");
 require('lib/bbcode_engine.php');
+$baseCharCost = 7;
+$baseDayCost = 2000;
+$baseInitCost = 25000;
+
+$adjustedCharCost = $baseCharCost * levelMultiplier($ir['level'], $ir['reset']);
+$adjustedDayCost = $baseDayCost * levelMultiplier($ir['level'], $ir['reset']);
+$adjustedInitCost = $baseInitCost * levelMultiplier($ir['level'], $ir['reset']);
+
+?>
+<script>
+    function total_cost() {
+        var day = parseInt((document.getElementById("days").value) * <?php echo $adjustedDayCost; ?>);
+        var init = parseInt((document.getElementById("init").value));
+        var charlength = parseInt((document.getElementById("chars").value.length) * <?php echo $adjustedCharCost; ?>);
+        var totalcost = day + init + charlength;
+        var output = document.getElementById("output").value = totalcost;
+    }
+</script>
+<?php
 $CurrentTime = time();
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -42,48 +52,76 @@ switch ($_GET['action']) {
 }
 function news_home()
 {
-    global $db, $h, $CurrentTime, $parser, $userid;
-    $AdsQuery = $db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` ASC");
+    global $db, $h, $CurrentTime, $parser, $userid, $adjustedCharCost, $adjustedDayCost, $adjustedInitCost, $set;
+    $AdsQuery = $db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$CurrentTime} ORDER BY `news_cost` DESC");
     if ($db->num_rows($AdsQuery) == 0) {
         alert("danger", "Uh Oh!", "There aren't any newspaper ads at this time. Maybe you should <a href='?action=buyad'>list</a> one?", false);
         die($h->endpage());
     }
     echo "<h3>The Newspaper</h3>
-	<small>List an ad <a href='?action=buyad'>here</a>. Listings begin at 25,000 Copper Coins!<hr />";
-    echo "
-		<table class='table table-bordered'>
-			<thead>
-				<tr>
-					<th width='33%'>
-						Ad Info
-					</th>
-					<th>
-						Ad Content
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-	";
-    while ($Ads = $db->fetch_row($AdsQuery)) {
+	<small>List an ad <a href='?action=buyad'>here</a>. Listings begin at " . shortNumberParse($adjustedInitCost) . " Copper Coins!</small><hr />";
+    echo "  <div class='card'>
+                <div class='card-header'>
+                    {$set['WebsiteName']} Newspaper
+                </div>
+                <div class='card-body'>";
+    while ($Ads = $db->fetch_row($AdsQuery)) 
+    {
         $parser->parse($Ads['news_text']);
         $UserName = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$Ads['news_owner']}"));
-        echo "	<tr>
-					<td>
-						Posted By <a href='profile.php?user={$Ads['news_owner']}'>" . parseUsername($Ads['news_owner']) . "</a> [{$Ads['news_owner']}]<br />
-						<small>Posted At: " . DateTime_Parse($Ads['news_start']) . "<br />
-						Ad Ends: " . date('F j, Y g:i:s a', $Ads['news_end']) . "</small>
-					</td>
-					<td>
-						{$parser->getAsHtml()}
-					</td>
-				</tr>";
+        echo "  <div class='row'>
+                    <div class='col-12 col-sm col-xl col-xxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Listing Info</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        Owner: <a href='profile.php?user={$Ads['news_owner']}'>" . parseUsername($Ads['news_owner']) . "</a> " . parseUserID($Ads['news_owner']) . "
+                                    </div>
+                                    <div class='col-12'>
+                                        <small>Cost: " . shortNumberParse($Ads['news_cost']) . " Copper Coins</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm col-xl col-xxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Listing Time</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        Starts " . DateTime_Parse($Ads['news_start']) . "
+                                    </div>
+                                    <div class='col-12'>
+                                        Ends: " . TimeUntil_Parse($Ads['news_end']) . "
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                    <div class='col-12 col-xl'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Listing Content</b></small>
+                            </div>
+                            <div class='col-12'>
+                                {$parser->getAsHtml()}
+                            </div>
+                        </div>
+                    </div>
+                </div>";
     }
-    echo "</tbody></table>";
+    echo "</div>";
 }
 
 function news_buy()
 {
-    global $db, $api, $h, $userid, $CurrentTime;
+    global $db, $api, $h, $userid, $CurrentTime, $ir, $adjustedCharCost, $adjustedDayCost, $adjustedInitCost;
     if (isset($_POST['init_cost'])) {
         //Make sure POST is safe to work with
         $ad = $db->escape(nl2br(htmlentities(stripslashes($_POST['ad_text']), ENT_QUOTES, 'ISO-8859-1')));
@@ -100,9 +138,13 @@ function news_buy()
             alert('danger', "Uh Oh!", "You need to fill out the form completely before submitting.");
             die($h->endpage());
         }
-        //Add up the costs
-        $charcost = ((strlen($ad)) * 7);
-        $daycost = $days * 2000;
+        if ($initcost < $adjustedInitCost)
+        {
+            alert('danger', "Uh Oh!", "You must spend at least " . shortNumberParse($adjustedInitCost) . " Copper Coins on a newspaper ad listing.");
+            die($h->endpage());
+        }
+        $charcost = ((strlen($ad)) * $adjustedCharCost);
+        $daycost = $days * $adjustedDayCost;
         $totalcost = $daycost + $charcost + $initcost;
         //End Time
         $endtime=time()+(86400*$days);
@@ -110,7 +152,7 @@ function news_buy()
 
         //Make sure user has the cash to buy this ad.
         if (!$api->UserHasCurrency($userid, 'primary', $totalcost)) {
-            alert('danger', "Uh Oh!", "You do not have enough Copper Coins to place this ad. You need " . number_format($totalcost) . " Copper Coins.");
+            alert('danger', "Uh Oh!", "You do not have enough Copper Coins to place this ad. You need " . shortNumberParse($totalcost) . " Copper Coins.");
             die($h->endpage());
         }
 		if ($days > 7)
@@ -119,7 +161,7 @@ function news_buy()
             die($h->endpage());
 		}
         $api->UserTakeCurrency($userid,'primary',$totalcost);
-        alert('success',"Success!","You have successfully purchased a newspaper ad.",true,'newspaper.php');
+        alert('success',"Success!","You have successfully purchased a newspaper ad for " . shortNumberParse($totalcost) ." Copper Coins.",true,'newspaper.php');
         $db->query("INSERT INTO `newspaper_ads`
                     (`news_cost`, `news_start`, `news_end`, `news_owner`, `news_text`)
                     VALUES
@@ -140,13 +182,13 @@ function news_buy()
                         <small>A higher number will rank you higher on the ad list.</small>
                     </td>
                     <td>
-                        <input type='number' value='25000' min='25000' name='init_cost' required='1' id='init' onkeyup='total_cost();' class='form-control'>
+                        <input type='number' value='{$adjustedInitCost}' min='{$adjustedInitCost}' name='init_cost' required='1' id='init' onkeyup='total_cost();' class='form-control'>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         Ad Runtime<br />
-                        <small>Each day will add 2,000 Copper Coins to your cost.</small>
+                        <small>Each day will add " . shortNumberParse($adjustedDayCost) . " Copper Coins to your cost.</small>
                     </td>
                     <td>
                         <input type='number' value='1' min='1' max='7' name='ad_length' id='days' onkeyup='total_cost();' required='1' class='form-control'>
@@ -155,7 +197,7 @@ function news_buy()
                 <tr>
                     <td>
                         Ad Text<br />
-                        <small>Each character is worth 7 Copper Coins.</small>
+                        <small>Each character is worth " . shortNumberParse($adjustedCharCost) . " Copper Coins.</small>
                     </td>
                     <td>
                         <textarea class='form-control' name='ad_text' id='chars' onkeyup='total_cost();' required='1'></textarea>
