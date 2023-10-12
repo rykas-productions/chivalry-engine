@@ -1605,3 +1605,12 @@ function changeUserLuck($userid, $change)
 {
     changeUserStats($userid, 'luck', $change);
 }
+
+function cidDebugAccess()
+{
+    global $ir;
+    if (($ir['user_level'] == 'Admin') || ($ir['user_level'] == 'Web Developer'))
+        return true;
+    else
+        return false;
+}

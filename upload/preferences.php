@@ -883,14 +883,18 @@ function userdropdown()
     }
     else
     {
+        $disabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_settings` WHERE `dropdown` = 0")) : "";
+        $enabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_settings` WHERE `dropdown` = 1")) : "";
         echo "You can choose your user input method of choice here. Dropdown is default.<br />
         <form method='post'>
             <input type='hidden' value='list' name='do'>
             <input type='submit' class='btn btn-primary' value='Dropdown'>
+            {$disabled}
         </form>
 		<form method='post'>
             <input type='hidden' value='input' name='do'>
             <input type='submit' class='btn btn-primary' value='User ID Input'>
+            {$enabled}
         </form>";
     }
 }
@@ -915,15 +919,19 @@ function forumalert()
     }
     else
     {
+        $disabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_settings` WHERE `forum_alert` = 0")) : "";
+        $enabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_settings` WHERE `forum_alert` = 1")) : "";
         echo "You can choose to receive notifications if players respond to your forum threads. You will not get notifications 
 		if you respond to your own threads. By default, this is off. You <i>must</i> opt-in to receive notifications.<br />
         <form method='post'>
             <input type='hidden' value='disable' name='do'>
             <input type='submit' class='btn btn-primary' value='Disable Notifications'>
+            {$disabled}
         </form>
 		<form method='post'>
             <input type='hidden' value='enable' name='do'>
             <input type='submit' class='btn btn-primary' value='Enable Notifications'>
+            {$enabled}
         </form>";
     }
 }
@@ -942,7 +950,6 @@ function assetalert()
         }
         else
         {
-            $db->query("UPDATE `user_settings` SET `forum_alert` = 1 WHERE `userid` = {$userid}");
             setCurrentUserPref('assetAlerts', 'true');
             alert('success',"Success!","You have successfully enabled asset market notifications.",true,'preferences.php');
             $api->SystemLogsAdd($userid, 'preferences', "Enabled asset notifications.");
@@ -950,6 +957,9 @@ function assetalert()
     }
     else
     {
+        $prefname = 'assetAlerts';
+        $disabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_pref` WHERE `preference` = '{$prefname}' AND `value` = 'false'")) : "";
+        $enabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_pref` WHERE `preference` = '{$prefname}' AND `value` = 'true'")) : "";
         $opt = ($assetPref == 'true') ? "in" : "out";
         echo "
         <div class='row'>
@@ -967,12 +977,14 @@ function assetalert()
                                 <form method='post'>
                                     <input type='hidden' value='disable' name='do'>
                                     <input type='submit' class='btn btn-danger btn-block' value='Disable Notifications'>
+                                    {$disabled}
                                 </form>
                             </div>
                             <div class='col-12 col-sm-6'>
                                 <form method='post'>
                                     <input type='hidden' value='enable' name='do'>
                                     <input type='submit' class='btn btn-success btn-block' value='Enable Notifications'>
+                                    {$enabled}
                                 </form>
                             </div>
                         </div>
@@ -1268,18 +1280,23 @@ function tuttoggle()
             $api->SystemLogsAdd($userid, 'preferences', "Changed tutorial toggle to {$_POST['topics']}.");
             die($h->endpage());
     } else {
+        //SELECT `value` FROM `user_pref` WHERE `preference` = '{$prefName}'
+        $disabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_pref` WHERE `preference` = 'tutorialToggle' AND `value` = 'false'")) : "";
+        $enabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `user_pref` WHERE `preference` = 'tutorialToggle' AND `value` = 'true'")) : "";
 		echo "Here you may toggle the tutorial. By default, its enabled. You have set your tutorial toggle to {$userCount}.
 		<div class='row'>
 			<div class='col-md'>
 				<form method='post'>
 					<input type='hidden' name='topics' value='true' class='form-control'>
 					<input type='submit' class='btn btn-danger' value='Enable Tutorial'>
+                    {$enabled}
 				</form>
 			</div>
 			<div class='col-md'>
 				<form method='post'>
 					<input type='hidden' name='topics' value='false' class='form-control'>
 					<input type='submit' class='btn btn-success' value='Disable Tutorial'>
+                    {$disabled}
 				</form>
 			</div>
 		</div>";
@@ -1306,14 +1323,18 @@ function icontoggle()
     }
     else
     {
+        $disabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`icons`) FROM `user_settings` WHERE `icons` = 0")) : "";
+        $enabled = (cidDebugAccess()) ? "<br />" . $db->fetch_single($db->query("SELECT COUNT(`icons`) FROM `user_settings` WHERE `icons` = 1")) : "";
         echo "Here you may disable in-game item icons. Doing so may allow the game to load quicker on lower-end machines.<br />
         <form method='post'>
             <input type='hidden' value='disable' name='do'>
             <input type='submit' class='btn btn-primary' value='Disable Icons'>
+            {$disabled}
         </form>
 		<form method='post'>
             <input type='hidden' value='enable' name='do'>
             <input type='submit' class='btn btn-primary' value='Enable Icons'>
+            {$enabled}
         </form>";
     }
 }
