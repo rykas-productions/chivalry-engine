@@ -286,15 +286,7 @@ while ($i = $db->fetch_row($inv))
 	$i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
 	$icon = ($ir['icons'] == 1) ? returnIcon($i['itmid'],2) : "";
 	$i['inv_qty_value']=$i['inv_qty']*$i['itmsellprice'];
-	$armory=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`gaQTY`) FROM `guild_armory` WHERE `gaITEM` = {$i['itmid']} AND `gaGUILD` != 1"));
-	$invent=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`inv_qty`) FROM `inventory` WHERE `inv_itemid` = {$i['itmid']} AND `inv_userid` != 1"));
-	$market=$db->fetch_single($db->query("/*qc=on*/SELECT SUM(`imQTY`) FROM `itemmarket` WHERE `imITEM` = {$i['itmid']}"));
-	$primary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_primary`) FROM `users` WHERE `equip_primary` = {$i['itmid']} AND `userid` != 1"));
-	$secondary=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_secondary`) FROM `users` WHERE `equip_secondary` = {$i['itmid']} AND `userid` != 1"));
-	$armor=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_armor`) FROM `users` WHERE `equip_armor` = {$i['itmid']} AND `userid` != 1"));
-	$badge=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_badge`) FROM `users` WHERE `equip_badge` = {$i['itmid']} AND `userid` != 1"));
-	$trink=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_slot`) FROM `user_equips` WHERE `itemid` = {$i['itmid']}"));
-	$total=$invent+$armory+$market+$primary+$secondary+$armor+$badge+$trink;
+	$total=returnTotalItemCount($i['itmid']);
 	$itemUse = array();
 	echo "
 	<div class='card'>
