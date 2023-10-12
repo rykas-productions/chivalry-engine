@@ -11,7 +11,8 @@ $hofCount=getCurrentUserPref('hofView',20);
 echo "<h3><i class='game-icon game-icon-crown'></i> Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
-    'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 'deaths', 'richest', 'farm_level', 'profit');
+    'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 
+    'deaths', 'richest', 'farm_level', 'profit', date('Y') . 'halloweenCandies');
 //Stat is not chosen, set to level.
 if (!isset($_GET['stat'])) {
     $_GET['stat'] = 'level';
@@ -23,7 +24,8 @@ if (!in_array($_GET['stat'], $StatArray)) {
 //Sanitize and escape the GET.
 $_GET['stat'] = $db->escape(strip_tags(stripslashes($_GET['stat'])));
 //The GET wants user's total stats ranked.
-if ($_GET['stat'] == 'total') {
+if ($_GET['stat'] == 'total') 
+{
     $q = $db->query("/*qc=on*/SELECT `u`.*, `us`.*
                     FROM `users` `u` 
                     INNER JOIN `userstats` AS `us`
@@ -32,7 +34,8 @@ if ($_GET['stat'] == 'total') {
                     ORDER BY (`strength` + `agility` + `guard` + `labor` + `iq`) DESC
                     LIMIT {$hofCount}");
 } //The GET wants mining levels ranked.
-elseif ($_GET['stat'] == 'mining_level') {
+elseif ($_GET['stat'] == 'mining_level') 
+{
     $q = $db->query("/*qc=on*/SELECT `u`.*, `m`.*
                     FROM `users` `u` 
                     INNER JOIN `mining` AS `m`
@@ -69,8 +72,20 @@ elseif ($_GET['stat'] == 'profit')
                     ORDER BY `profit` DESC
                     LIMIT {$hofCount}");
 }
+elseif ($_GET['stat'] == date('Y') . 'halloweenCandies')
+{
+    $q = $db->query("/*qc=on*/SELECT `u`.*, `us`.*
+                    FROM `users` `u`
+                    INNER JOIN `user_pref` AS `us`
+                    ON `u`.`userid` = `us`.`userid`
+                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
+                    AND `preference` = '" . date('Y') . "halloweenCandies'
+                    ORDER BY `value` DESC
+                    LIMIT {$hofCount}");
+}
  //GET wants anything else ranked.
-else {
+else 
+{
     $q = $db->query("/*qc=on*/SELECT `u`.*, `us`.*
                     FROM `users` `u` 
                     INNER JOIN `userstats` AS `us`
@@ -124,11 +139,18 @@ echo "<div class='row'>
     </div>
     <div class='col-auto'>
         <a href='?stat=profit' class='btn btn-primary btn-block'>Asset Profit</a><br />
-    </div>
+    </div>";
+    if (date('n') >= 10)
+    {
+        echo " <div class='col-auto'>
+        <a href='?stat=" . date('Y') . "halloweenCandies' class='btn btn-primary btn-block'>" . date('Y') . " Halloween</a><br />
+        </div>";
+    }
+    echo"
 </div>";
 echo "<div class='card'>
         <div class='card-header'>
-            Listing the {$hofCount} players with the highest {$_GET['stat']}
+            Listing the {$hofCount} players with the highest " . parseHOFname($_GET['stat']) . "
         </div>
         <div class='card-body'>";
 $rank = 1;
@@ -157,27 +179,45 @@ if ($_GET['stat'] != 'crypto')
                         </div>
                     </div>
                 </div>";
-            if ($_GET['stat'] == 'level' || $_GET['stat'] == 'primary_currency' || $_GET['stat'] == 'secondary_currency'
-                || $_GET['stat'] == 'mining_level' || $_GET['stat'] == 'busts' || $_GET['stat'] == 'kills'
-                || $_GET['stat'] == 'deaths' || $_GET['stat'] == 'richest' || $_GET['stat'] == 'farm_level'
-                || $_GET['stat'] == 'profit') 
+            $showArray = array('level', 'primary_currency', 'secondary_currency', 
+                            'mining_level', 'busts', 'kills', 'deaths', 'richest', 
+                            'farm_level', 'profit', date('Y') . 'halloweenCandies'
+            );
+            if (in_array($_GET['stat'], $showArray)) 
                 {
+                    if ($_GET['stat'] == date('Y') . "halloweenCandies")
+                        $parsed = getUserPref($r['userid'], date('Y') . "halloweenCandies", 0);
+                    else
+                        $parsed = $r[$_GET['stat']];
                     echo"
                     <div class='col'>
-                    <div class='row'>
-                        <div class='col-12'>
-                            <small><b>{$_GET['stat']}</b></small>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>" . parseHOFname($_GET['stat']) . "</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($parsed) . "
+                            </div>
                         </div>
-                        <div class='col-12'>
-                            " . shortNumberParse($r[$_GET['stat']]) . "
-                        </div>
-                    </div>
-                </div>";
+                    </div>";
                 }
                 echo "</div>";
         $rank++;
     }
     echo "</div>
             </div>";
+}
+
+function parseHOFname($stat)
+{
+    $array = array("level" => "Level", "primary_currency" => "Copper Coins",
+        "secondary_currency" => "Chivlary Tokens", "mining_level" => "Mining Level",
+        "busts" => "Dungeon Busts", "kills" => "Kills", "deaths" => "Deaths", 
+        "richest" => "Networth", "farm_level" => "Farming Level", "profit" => "Market ROI",
+        date('Y') . "halloweenCandies" => "Halloween Candies Collected", "strength" => "Strength",
+        "guard" => "Guard", "agility" => "Agility", "labor" => "Labor", "iq" => "IQ",
+        "total" => "Total Stats"
+    );
+    return $array[$stat];
 }
 $h->endpage();
