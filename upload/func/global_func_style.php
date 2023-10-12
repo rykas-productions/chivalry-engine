@@ -83,7 +83,7 @@ function createDangerBadge($text)
 
 function createPrimaryBadge($text)
 {
-    return createBadge($text, 'primary');
+    return createBadge($text);
 }
 
 function createSecondaryBadge($text)
@@ -104,6 +104,23 @@ function createSuccessBadge($text)
 function createInfoBadge($text)
 {
     return createBadge($text, 'info');
+}
+
+function createRandomBadge($text)
+{
+    $rand = Random(1,6);
+    if ($rand == 1)
+        return createDangerBadge($text);
+    elseif ($rand == 2)
+        return createPrimaryBadge($text);
+    elseif ($rand == 3)
+        return createSecondaryBadge($text);
+    elseif ($rand == 4)
+        return createWarningBadge($text);
+    elseif ($rand == 5)
+        return createSuccessBadge($text);
+    elseif ($rand == 6)
+        return createInfoBadge($text);
 }
 
 function parseUserID($userid)
