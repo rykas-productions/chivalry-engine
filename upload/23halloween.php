@@ -67,7 +67,7 @@ function trick_or_treat()
     $api->UserGiveItem($userid, $candy, 1);
     $api->SystemLogsAdd($userid, date('Y') . "halloween", "Given {$api->SystemItemIDtoName($candy)} from {$api->SystemUserIDtoName($_GET['user'])} " . parseUserID($_GET['user']));
     setCurrentUserPref(date('Y') . "halloweenCandies", $newValue);
-    $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . " " . parseUserID($userid) . "</a> has visitied you for Halloween!!");
+    $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . " " . parseUserID($userid) . "</a> has visited you for Halloween!!");
     doHalloweenVisit($userid, $_GET['user']);
     $h->endpage();
 }
