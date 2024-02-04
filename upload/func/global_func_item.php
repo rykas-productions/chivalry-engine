@@ -362,3 +362,33 @@ function returnTotalItemCount($itemID)
     $trink = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`equip_slot`) FROM `user_equips` WHERE `itemid` = {$itemID}"));
     return $invent + $armory + $market + $primary + $secondary + $armor + $badge + $trink;
 }
+
+function getRandomItem()
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT `itmid` FROM `items` ORDER BY RAND() LIMIT 1"));
+}
+
+function getRandomWeapon()
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT `itmid` FROM `items` WHERE `weapon` > 0 ORDER BY RAND() LIMIT 1"));
+}
+
+function getRandomArmor()
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT `itmid` FROM `items` WHERE `armor` > 0 ORDER BY RAND() LIMIT 1"));
+}
+
+function getRandomPotion()
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT `itmid` FROM `items` WHERE `itmtype` = 8 ORDER BY RAND() LIMIT 1"));
+}
+
+function getRandomOtherEquipment()
+{
+    global $db;
+    return $db->fetch_single($db->query("SELECT `itmid` FROM `items` WHERE (`itmtype` >= 15 AND `itmtype` <= 18) ORDER BY RAND() LIMIT 1"));
+}

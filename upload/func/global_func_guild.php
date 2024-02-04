@@ -237,7 +237,13 @@ function checkGuildCrimes()
         $suc = Random(0, 1);
         if ($suc <= 3) {
             $log = $r2['gcSTART'] . $r2['gcSUCC'];
-            $winnings = Random($r2['gcMINCASH'], $r2['gcMAXCASH']);
+            $winnerCount=0;
+            $winnings=0;
+            while ($winnerCount != $r2['gcUSERS'])
+            {
+                $winnings+=Random($r2['gcMINCASH'], $r2['gcMAXCASH']);
+                $winnerCount++;
+            }
             $result = 'success';
         } else {
             $log = $r2['gcSTART'] . $r2['gcFAIL'];
