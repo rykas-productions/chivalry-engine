@@ -33,20 +33,12 @@ function friends_list()
 	$ir['friend_count']=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`friend_id`) FROM `friends` WHERE `friended` = {$userid}"));
     echo "
 [<a href='?action=add'>Add an friend</a>] || [<a href='?action=spy'>Hire Spy</a>]<br />
-These are the people on your friends list. " . number_format($ir['friend_count']) . " player(s) have added you to their friends list.
 <br />
-<table class='table table-bordered table-striped'>
-		<thead>
-		<tr>
-			<th>Name</th>
-			<th>Mail</th>
-			<th>Attack</th>
-			<th>Remove</th>
-			<th>Comment</th>
-			<th>Status</th>
-		</tr>
-		</thead>
-		<tbody>
+<div class='card'>
+        <div class='card-header'>
+            These are the people on your friend list. " . shortNumberParse($ir['friend_count']) . " player(s) have added you to their friend list.
+        </div>
+        <div class='card-body'>
    ";
     $q =
             $db->query(
@@ -81,18 +73,64 @@ These are the people on your friends list. " . number_format($ir['friend_count']
             $r['comment'] = 'N/A';
         }
         echo "
-		<tr>
-			<td><a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}]</td>
-			<td><a href='inbox.php?action=compose&user={$r['userid']}'>Mail</a></td>
-			<td>{$attacklink}</td>
-			<td><a href='?action=remove&f={$r['friend_id']}'>Remove</a></td>
-			<td>" . strip_tags(html_entity_decode($r['comment'])) . "<br />[<a href='?action=ccomment&f={$r['friend_id']}'>Change</a>]</td>
-			<td>$on</td>
-		</tr>
-   ";
+        <div class='row'>
+            <div class='col-xl col-auto'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small><b>Name</b></small>
+                    </div>
+                    <div class='col-12'>
+                        <a href='profile.php?user={$r['userid']}'>{$r['username']}</a> " . parseUserID($r['userid']) . "
+                    </div>
+                </div>
+            </div>
+            <div class='col-xl col-auto'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small><b>Actions</b></small>
+                    </div>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col-auto'>
+                                " . createPrimaryBadge("<a href='inbox.php?action=compose&user={$r['userid']}'>Mail</a>") . "
+                            </div>
+                            <div class='col-auto'>
+                                " . createDangerBadge($attacklink) . "
+                            </div>
+                            <div class='col-auto'>
+                                " . createSuccessBadge("<a href='?action=remove&f={$r['friend_id']}'>Remove</a>") . "
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='col-xl col-auto'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small><b>Comment</b></small>
+                    </div>
+                    <div class='col-12'>
+                        " . strip_tags($r['comment']) . "
+                    </div>
+                    <div class='col-12'>
+                        <small><a href='?action=ccomment&f={$r['friend_id']}'>Change</a></small>
+                    </div>
+                </div>
+            </div>
+            <div class='col-xl col-auto'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small><b>Activity</b></small>
+                    </div>
+                    <div class='col-12'>
+                        $on
+                    </div>
+                </div>
+            </div>
+        </div>";
     }
     $db->free_result($q);
-    echo "</tbody></table>";
+    echo "</div></div>";
 	$h->endpage();
 }
 function add_friend()
