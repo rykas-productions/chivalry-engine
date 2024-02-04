@@ -70,9 +70,9 @@ runMarketTick(2);   //low risk market
 purgeOldLogs();
 addAutoBountyListing();
 
-$month = date('n');
-$day = date('j');
-$year = date('Y');
+$month = currentMonth();
+$day = currentDay();
+$year = currentYear();
 
 if (($month == 10) && ($day == 1))
 {
