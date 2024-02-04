@@ -3,6 +3,17 @@ require('globals.php');
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
+$rssPrice = 1;
+if (isHoliday())
+{
+    $rssPrice*=0.75;
+    alert('info',"","Since its a holiday in the kingdom of Chivalry is Dead, resource costs for estates have been reduced by 25%!",false);
+}
+if (currentYear() == 2024 && currentMonth() == 2)
+{
+    alert('info',"","Through the month of Feburary, resource costs for estate upgrades have been reduced by 40%!",false);
+    $rssPrice *= 0.60;
+}
 $estate=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$ir['estate']}"));
 $edb=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$estate['estate']}"));
 $edb['upgradeLevel'] = round($edb['upgradeLevel'] + ($edb['upgradeLevel'] * levelMultiplier($ir['level'])));
@@ -510,11 +521,11 @@ function property_list()
 
 function construct_garden()
 {
-	global $db, $ir, $userid, $estate, $edb, $h, $api;
+	global $db, $ir, $userid, $estate, $edb, $h, $api, $rssPrice;
 	$gardenLevel = $estate['gardenUpgrade'];
-	$waterCost = calcWaterCosts($gardenLevel, $edb['house_will']);
-	$stoneCost = calcStoneCosts($gardenLevel, $edb['house_will']);
-	$stickCost = calcStickCosts($gardenLevel, $edb['house_will']);
+	$waterCost = calcWaterCosts($gardenLevel, $edb['house_will']) * $rssPrice;
+	$stoneCost = calcStoneCosts($gardenLevel, $edb['house_will']) * $rssPrice;
+	$stickCost = calcStickCosts($gardenLevel, $edb['house_will']) * $rssPrice;
 	if ($gardenLevel >= $edb['upgradeLevel'])
 	{
 		alert('danger',"Uh Oh!","You cannot construct a garden here.", true, 'estate_management.php');
@@ -583,11 +594,11 @@ function construct_garden()
 
 function upgrade_garden()
 {
-	global $db, $ir, $userid, $estate, $edb, $h, $api;
+	global $db, $ir, $userid, $estate, $edb, $h, $api, $rssPrice;
 	$gardenLevel = $estate['gardenUpgrade'];
-	$waterCost = calcWaterCosts($gardenLevel, $edb['house_will']);
-	$stoneCost = calcStoneCosts($gardenLevel, $edb['house_will']);
-	$stickCost = calcStickCosts($gardenLevel, $edb['house_will']);
+	$waterCost = calcWaterCosts($gardenLevel, $edb['house_will']) * $rssPrice;
+	$stoneCost = calcStoneCosts($gardenLevel, $edb['house_will']) * $rssPrice;
+	$stickCost = calcStickCosts($gardenLevel, $edb['house_will']) * $rssPrice;
 	
 	$newWill = calcExtraWill($gardenLevel+1, $edb['house_will']);
 	if ($gardenLevel >= $edb['upgradeLevel'])
@@ -663,9 +674,9 @@ function upgrade_garden()
 
 function construct_vault()
 {
-	global $db, $ir, $userid, $estate, $edb, $h, $api;
+	global $db, $ir, $userid, $estate, $edb, $h, $api, $rssPrice;
 	$gardenLevel = $estate['vaultUpgrade'];
-	$ironCost = calcIronCosts($gardenLevel, $edb['house_price']);
+	$ironCost = calcIronCosts($gardenLevel, $edb['house_price']) * $rssPrice;
 	if ($gardenLevel >= $edb['upgradeLevel'])
 	{
 		alert('danger',"Uh Oh!","You cannot construct a vault here.", true, 'estate_management.php');
@@ -720,9 +731,9 @@ function construct_vault()
 
 function upgrade_vault()
 {
-	global $db, $ir, $userid, $estate, $edb, $h, $api;
+	global $db, $ir, $userid, $estate, $edb, $h, $api, $rssPrice;
 	$gardenLevel = $estate['vaultUpgrade'];
-	$ironCost = calcIronCosts($gardenLevel, $edb['house_price']);
+	$ironCost = calcIronCosts($gardenLevel, $edb['house_price']) * $rssPrice;
 	if ($gardenLevel >= $edb['upgradeLevel'])
 	{
 		alert('danger',"Uh Oh!","You cannot upgrade your vault anymore at this estate.", true, 'estate_management.php');
@@ -784,10 +795,10 @@ function upgrade_vault()
 
 function construct_sleep()
 {
-    global $db, $ir, $userid, $estate, $edb, $h, $api;
+    global $db, $ir, $userid, $estate, $edb, $h, $api, $rssPrice;
     $gardenLevel = $estate['sleepUpgrade'];
-    $waterCost = calcStickCosts($gardenLevel, $edb['house_will'])*0.5;
-    $stoneCost = calcIronCosts($gardenLevel, $edb['house_will'])*0.1;
+    $waterCost = calcStickCosts($gardenLevel, (($edb['house_will'])*0.5) * $rssPrice);
+    $stoneCost = calcIronCosts($gardenLevel, (($edb['house_will'])*0.1) * $rssPrice);
     if ($gardenLevel >= $edb['upgradeLevel'])
     {
         alert('danger',"Uh Oh!","You cannot construct your sleeping quarters here.", true, 'estate_management.php');
@@ -850,10 +861,10 @@ function construct_sleep()
 
 function upgrade_sleep()
 {
-    global $db, $ir, $userid, $estate, $edb, $h, $api;
+    global $db, $ir, $userid, $estate, $edb, $h, $api, $rssPrice;
     $gardenLevel = $estate['sleepUpgrade'];
-    $waterCost = calcStickCosts($gardenLevel, $edb['house_will'])*0.5;
-    $stoneCost = calcIronCosts($gardenLevel, $edb['house_will'])*0.1;
+    $waterCost = calcStickCosts($gardenLevel, (($edb['house_will'])*0.5) * $rssPrice);
+    $stoneCost = calcIronCosts($gardenLevel, (($edb['house_will'])*0.1) * $rssPrice);
     if ($gardenLevel >= $edb['upgradeLevel'])
     {
         alert('danger',"Uh Oh!","You cannot upgrade your sleeping quarters anymore at this estate.", true, 'estate_management.php');
@@ -1184,6 +1195,7 @@ function estate_market()
                      ON `em`.`em_estate_id` = `ue`.`ue_id`
                      INNER JOIN `estates` AS `e`
                      ON `e`.`house_id` = `ue`.`estate`
+                     WHERE `e`.`house_hidden` = 0
                      ORDER BY `e`.`house_will`, `em`.`em_cost` ASC");
         echo "<div class='card'>
             <div class='card-body'><div class='row'>
