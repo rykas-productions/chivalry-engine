@@ -61,11 +61,12 @@ function home()
                 $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
                 if (isset($ir['voted'][$r['id']])) {
                      echo "<div class='card'>
-                            <div class='card-body'><div class='row'>
-								<div class='col-3'>
+                            <div class='card-body'>
+                            <div class='row'>
+								<div class='col-12'>
 									<h3>Poll Question</h3>
 								</div>
-								<div class='col'>
+								<div class='col-12'>
 									<h6>{$r['question']}</h6>
 								</div>
 							</div>
@@ -81,16 +82,11 @@ function home()
                                     $perc = 0;
                                 }
                                 echo "<div class='row'>
-										<div class='col-3'>
+										<div class='col-12 col-xl-4'>
 											{$r[$k]}
 										</div>
-										<div class='col-1'>
-											" . shortNumberParse($r[$ke]) . "
-										</div>
-										<div class='col'>
-											<div class='progress' style='height: 1rem;'>
-												<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
-											</div>
+										<div class='col-12 col-xl'>
+											" . scaledColorProgressBar($r[$ke], 0, $r['votes']) . "
 										</div>
 									</div>
 									<hr />";
@@ -98,60 +94,67 @@ function home()
                         }
                     } else {
                         echo "<div class='row'>
-							<div class='col-3'>
-								<h5>Results hidden.</h5>
+							<div class='col'>
+								<h5>Results hidden until the poll closes.</h5>
 							</div>
 						</div>";
                     }
                     $myvote = $r['choice' . $ir['voted'][$r['id']]];
 				echo "<div class='row'>
-							<div class='col-3'>
-								<h5>Total Votes</h5>
+							<div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+								        <h5>Total Votes</h5>
+                                    </div>
+                                    <div class='col'>
+                                        <h6>" . shortNumberParse($r['votes']) . "</h6>
+                                    </div>
+                                </div>
 							</div>
-							<div class='col-1'>
-								<h6>" . shortNumberParse($r['votes']) . "</h6>
-							</div>
-							<div class='col-3'>
-								<h5>Your Vote</h5>
-							</div>
-							<div class='col-3'>
-								<i>{$myvote}</i>
+                            <div class='col'>
+                                <div class='row'>
+                                    <div class='col-12'>
+								        <h5>Your Vote</h5>
+                                    </div>
+                                    <div class='col'>
+                                        <i>{$myvote}</i>
+                                    </div>
+                                </div>
 							</div>
 						</div></div></div><br />";
                 } else {
-                    echo "<div class='card'><div class='card-body'>
+                    echo "
 				<form method='post'>
-					<input type='hidden' name='poll' value='{$r['id']}' />
-					<div class='row'>
-						<div class='col-3'>
-							<h3>Poll Question</h3>
-						</div>
-						<div class='col'>
-							<h6>{$r['question']}</h6>
-						</div>
-					</div>
-					<hr />";
-                    for ($i = 1; $i <= 10; $i++) {
-                        if ($r['choice' . $i]) {
-                            $k = 'choice' . $i;
-                            if ($i == 1) {
-                                $c = "checked='checked'";
-                            } else {
-                                $c = "";
-                            }
-							echo "<div class='row'>
-								<div class='col-3'>
-									{$r[$k]}
+                    <input type='hidden' name='poll' value='{$r['id']}' />
+					<div class='card'>
+                            <div class='card-body'>
+                            <div class='row'>
+								<div class='col-12 col-xl'>
+									<h3>Poll Question</h3>
 								</div>
-								<div class='col'>
-										<input type='radio' class='form-control' name='choice' value='{$i}' {$c} />
-									</div>
+								<div class='col-12 col-xl'>
+									<h6>{$r['question']}</h6>
+								</div>
 							</div>
 							<hr />";
+                    $pollOptions = "";
+                    for ($i = 1; $i <= 10; $i++) 
+                    {
+                        $k = 'choice' . $i;
+                        if ($r['choice' . $i]) 
+                        {
+							$pollOptions.="<option value='{$i}'>{$r[$k]}</option>";
                         }
                     }
+                    if (empty($pollOptions))
+                        $pollOptions.="<option>No options available</option>";
                     echo "<div class='row'>
-							<div class='col'>
+                            <div class='col-12 col-xl'>
+                                <select name='choice' id='class' class='form-control' type='dropdown'>
+                                    {$pollOptions}
+        				        </select>
+                            </div>
+							<div class='col-12 col-xl'>
 								<input type='submit' class='btn btn-primary' value='Cast Vote' />
 							</div>
 							</div>
@@ -175,17 +178,19 @@ function viewpolls()
     } else {
         while ($r = $db->fetch_row($q)) {
             $r['votes'] = $r['voted1'] + $r['voted2'] + $r['voted3'] + $r['voted4'] + $r['voted5'] + $r['voted6'] + $r['voted7'] + $r['voted8'] + $r['voted9'] + $r['voted10'];
-            echo "
-			<div class='card'>
-                <div class='card-body'><div class='row'>
-				<div class='col-3'>
-					<h3>Poll Question</h3>
-				</div>
-				<div class='col'>
-					<h6>{$r['question']}</h6>
-				</div>
-			</div>
-			<hr />";
+            if ($r['votes'] == 0)
+                $r['votes'] = 1;
+            echo "<div class='card'>
+                    <div class='card-body'>
+                    <div class='row'>
+						<div class='col-12'>
+							<h3>Poll Question</h3>
+						</div>
+						<div class='col-12'>
+							<h6>{$r['question']}</h6>
+						</div>
+					</div>
+				<hr />";
             for ($i = 1; $i <= 10; $i++) {
                 if ($r['choice' . $i]) {
                     $k = 'choice' . $i;
@@ -195,27 +200,22 @@ function viewpolls()
                     } else {
                         $perc = 0;
                     }
-					echo "<div class='row'>
-							<div class='col-3'>
-								{$r[$k]}
-							</div>
-							<div class='col-1'>
-								" . shortNumberParse($r[$ke]) . "
-							</div>
-							<div class='col'>
-								<div class='progress' style='height: 1rem;'>
-									<div class='progress-bar' role='progressbar' aria-valuenow='{$perc}' style='width:{$perc}%' aria-valuemin='0' aria-valuemax='100'><span>{$perc}%</span></div>
-								</div>
-							</div>
-						</div>
-						<hr />";
+                    echo "<div class='row'>
+										<div class='col-12 col-xl-4'>
+											{$r[$k]}
+										</div>
+										<div class='col-12 col-xl'>
+											" . scaledColorProgressBar($r[$ke], 0, $r['votes']) . "
+										</div>
+									</div>
+									<hr />";
                 }
             }
 			echo "<div class='row'>
-							<div class='col-3'>
+							<div class='col'>
 								<h5>Total Votes</h5>
 							</div>
-							<div class='col-1'>
+							<div class='col'>
 								<h6>" . shortNumberParse($r['votes']) . "</h6>
 							</div>
 						</div>
