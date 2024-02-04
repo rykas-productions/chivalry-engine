@@ -42,6 +42,7 @@ function addestate()
         $will = (isset($_POST['will']) && is_numeric($_POST['will'])) ? abs(intval($_POST['will'])) : 100;
         $cost = (isset($_POST['cost']) && is_numeric($_POST['cost'])) ? abs($_POST['cost']) : 0;
 		$upgrades = (isset($_POST['upgrades']) && is_numeric($_POST['upgrades'])) ? abs($_POST['upgrades']) : 0;
+		$hidden = (isset($_POST['hidden']) && is_numeric($_POST['hidden'])) ? abs($_POST['hidden']) : 0;
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_addestate', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your previous action was blocked for your security. Please submit forms quickly after opening them.");
             die($h->endpage());
@@ -66,9 +67,12 @@ function addestate()
             alert('danger', "Uh Oh!", "You cannot have an estate with less than 100 will.");
             die($h->endpage());
         }
+        
+        if (($hidden > 1) || ($hidden < 0))
+            $hidden = 0;
         $api->SystemLogsAdd($userid, 'staff', "Created an estate named {$name}.");
         alert('success', "Success!", "You have successfully created the {$name} Estate.", true, 'index.php');
-        $db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`, `upgradeLevel`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}', '{$upgrades}')");
+        $db->query("INSERT INTO `estates` (`house_name`, `house_price`, `house_will`, `house_level`, `upgradeLevel`, `house_hidden`) VALUES ('{$name}', '{$cost}', '{$will}', '{$lvl}', '{$upgrades}', '{$hidden}')");
     } else {
         $csrf = request_csrf_html('staff_addestate');
         echo "<form action='?action=addestate' method='post'>
@@ -116,6 +120,17 @@ function addestate()
 				</th>
 				<td>
 					<input type='number' name='upgrades' min='0' max='100' required='1' class='form-control'>
+				</td>
+			</tr>
+            <tr>
+				<th>
+					Hidden?
+				</th>
+				<td>
+					<select name='hidden' class='form-control' required='1' type='dropdown'>
+						<option value='0'>Not Hidden</option>
+						<option value='1'>Hidden</option>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -374,6 +389,7 @@ function giftestate()
         buyEstate($postUser, $postEstate);
         alert('success',"Success!","You have successfully gifted {$db->fetch_single($q)} the {$houseName} estate.",true,'index.php');
         $api->SystemLogsAdd($userid, "staff", "Gifted {$db->fetch_single($q)} the {$houseName} estate.");
+        $api->GameAddNotification($postUser, "The game administration has gifted you the {$houseName} estate. You may view this in the Estate Management page.");
         $db->free_result($q);
     }
     else
