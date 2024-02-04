@@ -47,11 +47,11 @@ foreach ($staff as $r)
 						<div class='row'>
 							<div class='col'>
 								Level<br />
-								" . number_format($r['level']) . "<br />
+								" . shortNumberParse($r['level']) . "<br />
 							</div>
 							<div class='col hidden-sm-down'>
 								Copper Coins<br />
-								" . number_format($r['primary_currency']) . "
+								" . shortNumberParse($r['primary_currency']) . "
 							</div>
 							<div class='col'>
 								{$active}
@@ -81,7 +81,18 @@ foreach ($staff as $r)
         $r['username'] = parseUsername($r['userid']);
 		$un = $api->SystemUserIDtoName($r['userid']);
 		$displaypic = "<img src='" . parseDisplayPic($r['userid']) . "' height='75' alt='{$un}&#39;s Display picture.' title='{$un}&#39;s Display picture'>";
-		$active = ($r['laston'] > time() - 300) ? "<span class='text-success'>Online</span>" : "<span class='text-danger'>Offline</span>";
+		
+		$active = 0;
+		if ($r['laston'] > time() - 300)
+		    $active = 1;
+	    elseif (($r['laston'] < time() - 300) && ($r['laston'] > time() - 900))
+	       $active = 2;
+		if ($active == 1)
+		    $activityBadge = createSuccessBadge("Active now!");
+	    elseif ($active == 2)
+		    $activityBadge = createWarningBadge("Idle");
+	    else
+	        $activityBadge = createDangerBadge("Offline");
 		echo "
 		<div class='card'>
 			<div class='card-body'>
@@ -96,14 +107,14 @@ foreach ($staff as $r)
 						<div class='row'>
 							<div class='col'>
 								Level<br />
-								" . number_format($r['level']) . "<br />
+								" . shortNumberParse($r['level']) . "<br />
 							</div>
 							<div class='col hidden-sm-down'>
 								Copper Coins<br />
-								" . number_format($r['primary_currency']) . "
+								" . shortNumberParse($r['primary_currency']) . "
 							</div>
 							<div class='col'>
-								{$active}
+								{$activityBadge}
 							</div>
 							<div class='col'>
 								<a href='inbox.php?action=compose&user={$r['userid']}'>Send Message</a>
@@ -145,11 +156,11 @@ foreach ($staff as $r)
 						<div class='row'>
 							<div class='col'>
 								Level<br />
-								" . number_format($r['level']) . "<br />
+								" . shortNumberParse($r['level']) . "<br />
 							</div>
 							<div class='col hidden-sm-down'>
 								Copper Coins<br />
-								" . number_format($r['primary_currency']) . "
+								" . shortNumberParse($r['primary_currency']) . "
 							</div>
 							<div class='col'>
 								{$active}
