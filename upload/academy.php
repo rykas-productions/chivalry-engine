@@ -24,7 +24,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
     				 WHERE `ac_id` = {$ir['course']}");
     $coud = $db->fetch_row($cd);
     $db->free_result($cd);
-	$daystoseconds=$coud['ac_days']*86400;
+	$daystoseconds=getCourseTime($coud['ac_days'])*86400;
 	if (getUserSkill($userid,17) > 0)
 	{
 	    $iq=round($ir['iq']/5000);
@@ -155,7 +155,7 @@ function menu()
                                         <small><i>Graduates " . shortNumberParse($graduates) . "</i></small>
                                     </div>
                                     <div class='col-6 col-md-3 col-lg-6 col-xl-4'>
-                                        <small><i>Course Length " . shortNumberParse($academy['ac_days']) . " Days</i></small>
+                                        <small><i>Course Length " . round(getCourseTime($academy['ac_days']), 2) . " Days</i></small>
                                     </div>
                                     <div class='col col-md-4 col-lg'>
                                         <small><i {$costClass}>Cost " . shortNumberParse($academy['ac_cost']) . " Copper Coins</i></small>
@@ -218,7 +218,7 @@ function start()
         alert('danger', "Uh Oh!", "You have already graduated from this course. No need to enroll again.", true, 'academy.php');
         die($h->endpage());
     }
-	$timestamp=$course['ac_days'] * 86400;
+    $timestamp=round(getCourseTime($course['ac_days']), 2) * 86400;
 	if (getUserSkill($userid,17) > 0)
 	{
 		$iq=round($ir['iq']/5000);
@@ -240,7 +240,14 @@ function start()
     $api->UserTakeCurrency($userid, 'primary', $course['ac_cost']); //Take user's money.
 	addToEconomyLog('Academy', 'copper', ($course['ac_cost'])*-1);
     alert('success', "Success!", "You have successfully enrolled yourself in the {$course['ac_name']} course. It will
-	                            complete in " . shortNumberParse($course['ac_days']) . " days.", true, 'index.php');
+	                            complete in " . round(getCourseTime($course['ac_days']), 2) . " days.", true, 'index.php');
+}
+
+function getCourseTime($academyTime)
+{
+    global $ir;
+    $return = $academyTime / levelMultiplier(1, $ir['reset']);
+    return $return;
 }
 
 $h->endpage();
