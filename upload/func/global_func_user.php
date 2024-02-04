@@ -1402,6 +1402,11 @@ function calculateUserMaxBet($userid)
     return round($maxbet);
 }
 
+function calculateUserMaxBetReset($userid)
+{
+    return calculateUserMaxBet($userid) * 30 * 40;
+}
+
 function getUserMasteryRank($user)
 {
     return getUserResetCount($user) - 1;

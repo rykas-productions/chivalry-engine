@@ -67,9 +67,9 @@ if (isset($_POST['change']) && in_array($_POST['change'], array('higher', 'lower
             die($h->endpage());
         }
         //User has won max winnings this hour.
-        elseif ($ir['winnings_this_hour'] >= (($maxbet*15)*20))
+        elseif ($ir['winnings_this_hour'] >= calculateUserMaxBetReset($userid))
         {
-            alert('danger', "Uh Oh!", "The casino's run out of cash to give you. Come back in an hour.", true, "explore.php");
+            alert('danger', "Uh Oh!", "You've forced the casino to close with the amount you've won today. Come back in " . TimeUntil_Parse(getNextDayReset()) . ".", true, "explore.php");
             die($h->endpage());
         }
         //Bind guessed number from SESSION into a variable.

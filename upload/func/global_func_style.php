@@ -68,7 +68,7 @@ function scaledColorProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonu
 function loadGamblingAlert()
 {
     global $ir;
-    alert('info',"","You have won " . shortNumberParse($ir['winnings_this_hour']) . " / " . shortNumberParse((calculateUserMaxBet($ir['userid']) * 15) * 20) . " Copper Coins this hour.", false);
+    alert('info',"","You have won " . shortNumberParse($ir['winnings_this_hour']) . " / " . shortNumberParse(calculateUserMaxBetReset($ir['userid'])) . " Copper Coins today.", false);
 }
 
 function createBadge($text, $theme = 'primary')

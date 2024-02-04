@@ -70,6 +70,8 @@ runMarketTick(2);   //low risk market
 purgeOldLogs();
 addAutoBountyListing();
 
+$db->query("UPDATE `user_settings` SET `winnings_this_hour` = 0");
+
 $month = currentMonth();
 $day = currentDay();
 $year = currentYear();

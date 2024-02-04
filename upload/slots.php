@@ -20,9 +20,9 @@ $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
 }
-if ($ir['winnings_this_hour'] >= (($maxbet*15)*20))
+if ($ir['winnings_this_hour'] >= calculateUserMaxBetReset($userid))
 {
-	alert('danger', "Uh Oh!", "The casino's run out of cash to give you. Come back in an hour.", true, "explore.php");
+    alert('danger', "Uh Oh!", "You've forced the casino to close with the amount you've won today. Come back in " . TimeUntil_Parse(getNextDayReset()) . ".", true, "explore.php");
     die($h->endpage());
 }
 if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) {
