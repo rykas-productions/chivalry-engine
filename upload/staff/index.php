@@ -30,7 +30,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                                     <small>PHP Version</small>
                                 </div>
                                 <div class='col-12'>
-                                    " . phpversion() . "
+                                    " . phpversion_exact() . "
                                 </div>
                             </div>
                         </div>
@@ -80,7 +80,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
         </div>
-        <div class='col-auto col-xxxl-4'>
+        <div class='col-12 col-lg-6 col-xxl-5 col-xxxl-4'>
             <div class='card bg-dark mb-3'>
                 <div class='card-header'>
                     Chivalry Engine Info
@@ -182,7 +182,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
 echo "<div class='row'>";
 if ($api->UserMemberLevelGet($userid, 'admin'))
 {
-    echo "<div class='col-auto'>
+    echo "<div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xxl-auto'>
             <div class='card'>
                 <div class='card-header'>
                     Admin Options
@@ -193,7 +193,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                             <a href='staff_settings.php?action=basicset' class='btn btn-primary btn-block'>Game Settings</a><br />
                         </div>
                         <div class='col-auto'>
-                            <a href='staff_settings.php?action=announce' class='btn btn-primary btn-block'>Create Announcement</a><br />
+                            <a href='staff_settings.php?action=announce' class='btn btn-primary btn-block'>Post Announcement</a><br />
                         </div>
                         <div class='col-auto'>
                             <a href='staff_settings.php?action=diagnostics' class='btn btn-primary btn-block'>Game Diagnostics</a><br />
@@ -203,7 +203,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Game Rules
@@ -224,7 +224,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-         <div class='col-auto'>
+         <div class='col-auto col-sm-6 col-md-4 col-lg-3'>
             <div class='card'>
                 <div class='card-header'>
                     VIP Packs
@@ -245,7 +245,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3'>
             <div class='card'>
                 <div class='card-header'>
                     Promo Codes
@@ -263,7 +263,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-         <div class='col-auto'>
+         <div class='col-auto col-sm-6 col-md-8 col-lg-6 col-xl-5'>
             <div class='card'>
                 <div class='card-header'>
                     Criminal
@@ -293,7 +293,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-         <div class='col-auto'>
+         <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Item Shops
@@ -314,7 +314,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     NPCs
@@ -338,7 +338,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Towns
@@ -359,7 +359,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Academy
@@ -380,7 +380,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-8 col-lg-6'>
             <div class='card'>
                 <div class='card-header'>
                     Jobs
@@ -410,10 +410,10 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-         <div class='col-auto'>
+         <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
-                    Estates / Properties
+                    Properties
                 </div>
                 <div class='card-body'>
                     <div class='row'>
@@ -431,7 +431,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Mining
@@ -452,7 +452,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Blacksmith Smeltery
@@ -470,7 +470,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Farming
@@ -496,7 +496,26 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
 //start assistant only stuff
 if ($api->UserMemberLevelGet($userid, 'assistant'))
 {
-    echo "<div class='col-auto'>
+    echo "
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
+            <div class='card'>
+                <div class='card-header'>
+                    Game Polls
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-auto'>
+                            <a href='staff_polling.php?action=addpoll' class='btn btn-success btn-block'>Create Poll</a><br />
+                        </div>
+                        <div class='col-auto'>
+                            <a href='staff_polling.php?action=closepoll' class='btn btn-danger btn-block'>End Poll</a><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+         </div>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-6'>
             <div class='card'>
                 <div class='card-header'>
                     Items
@@ -534,25 +553,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
-            <div class='card'>
-                <div class='card-header'>
-                    Game Polls
-                </div>
-                <div class='card-body'>
-                    <div class='row'>
-                        <div class='col-auto'>
-                            <a href='staff_polling.php?action=addpoll' class='btn btn-success btn-block'>Create Poll</a><br />
-                        </div>
-                        <div class='col-auto'>
-                            <a href='staff_polling.php?action=closepoll' class='btn btn-danger btn-block'>End Poll</a><br />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br />
-         </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-12 col-md-8 col-lg-6 col-xl-5'>
             <div class='card'>
                 <div class='card-header'>
                     Users
@@ -605,7 +606,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant'))
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Permissions
@@ -626,7 +627,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant'))
             </div>
             <br />
          </div>
-         <div class='col-auto'>
+         <div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Guilds
@@ -653,7 +654,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant'))
 }
 //end assistant only functions
 //start all other staff stuff
-echo "<div class='col-auto'>
+echo "<div class='col-auto col-sm-6 col-md-4 col-lg-3 col-xl-2'>
             <div class='card'>
                 <div class='card-header'>
                     Forums
@@ -674,7 +675,7 @@ echo "<div class='col-auto'>
             </div>
             <br />
          </div>
-        <div class='col-auto'>
+        <div class='col-auto col-sm-6 col-md-12 col-xl-6'>
             <div class='card'>
                 <div class='card-header'>
                     Punishments
@@ -742,7 +743,7 @@ echo "<div class='col-auto'>
 if ($api->UserMemberLevelGet($userid, 'admin'))
 {
     echo "
-    <div class='col-auto'>
+    <div class='col-12'>
             <div class='card'>
                 <div class='card-header'>
                     Last 5 Staff Actions
