@@ -1,5 +1,6 @@
 <?php
 $expMod=1.0;
+$waterIncr = 5;
 $macropage = ('farm.php');
 require('globals.php');
 echo "<h3>" . loadImageAsset("explore/farming.svg", 1.8) . " Farming</h3><hr />";
@@ -306,6 +307,7 @@ function plantland()
 		alert('success', "Success!", "You have successfully planted a {$cropSeedName} in this plot.", false, 'farm.php');
 		
 		$api->SystemLogsAdd($userid, "farm", "Planted {$cropSeedName} in on plot # {$_GET['id']}");
+		doGetBonusWellCapacity();
 		die(home());
 	}
 	else
@@ -379,6 +381,7 @@ function waterland()
 		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 		alert('success', "Success", "You have successfully watered this farmland, increasing its wellness by {$random}%.", false);
 		$api->SystemLogsAdd($userid, "farm", "Planted plot # {$_GET['id']} (+{$random}% Wellness)");
+		doGetBonusWellCapacity();
 		die(home());
 	}
 	$h->endpage();
@@ -423,6 +426,7 @@ function fertilize()
 			$api->UserTakeItem($userid,311,1);
 			alert('success', "Success", "You have successfully fertilized this farmland, increasing its wellness by {$random}%.", false);
 			$api->SystemLogsAdd($userid, "farm", "Fertilized plot # {$_GET['id']} (+{$random}% Wellness)");
+			doGetBonusWellCapacity();
 			die(home());
 		}
 	}
@@ -544,6 +548,7 @@ function harvest()
 		$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerHarv']}, `farm_seed` = 0 WHERE `farm_id` = {$_GET['id']}");
 		alert('success', "Success!", "You have successfully harvested your {$cropSeedName} and received {$cropOutput} {$api->SystemItemIDtoName($sr['seed_output'])}s and " . number_format($xp) . " farming experience.", false);
 		$api->SystemLogsAdd($userid, "farm", "Collected seeds on plot # {$_GET['id']} (Received {$cropOutput} {$api->SystemItemIDtoName($sr['seed_output'])})");
+		doGetBonusWellCapacity();
 		die(home());
 	}
 	else
@@ -619,6 +624,7 @@ function collect()
 		$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerHarv']}, `farm_seed` = 0 WHERE `farm_id` = {$_GET['id']}");
 		alert('success', "Success!", "You have successfully harvested this plot and received {$cropOutput} {$api->SystemItemIDtoName($r['farm_seed'])}(s).", false);
 		$api->SystemLogsAdd($userid, "farm", "Collected seeds on plot # {$_GET['id']} (Received {$cropOutput} {$api->SystemItemIDtoName($r['farm_seed'])})");
+		doGetBonusWellCapacity();
 		die(home());
 	}
 	else
@@ -713,6 +719,7 @@ function tend()
 		$random=Random(2 * $r['farm_stage'], 6 * $r['farm_stage']);
 		$db->query("UPDATE `farm_users` SET `farm_xp` = `farm_xp` + {$random} WHERE `userid` = {$userid}");
 		$api->SystemLogsAdd($userid, "farm", "Tended plot # {$_GET['id']}.");
+		doGetBonusWellCapacity();
 		die(home());
 	}
 	else
@@ -1238,5 +1245,16 @@ function editseed()
     {
         alert('danger',"Uh Oh!","Invalid step specified.", true, '?action=editseed');
         die($h->endpage());
+    }
+}
+
+function doGetBonusWellCapacity()
+{
+    global $db, $ir, $userid, $FU, $waterIncr;
+    if (Random(1,300) == Random(1,300))
+    {
+        $FU['farm_water_max'] = $FU['farm_water_max'] + $waterIncr;
+        $db->query("UPDATE `farm_users` SET `farm_water_max` = `farm_water_max` + {$waterIncr} WHERE `userid` = {$userid}");
+        alert('success',"Bonus Well Capacity!","While tending your farm, you've discovered a small reservoir of water, increasing your well's capacity by {$waterIncr} units.",false);
     }
 }
