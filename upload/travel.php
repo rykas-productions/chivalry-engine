@@ -10,10 +10,10 @@
 require('globals.php');
 //Set cost to travel to a variable
 $cost_of_travel = round(15 * levelMultiplier($ir['level'], $ir['reset']));
-if ($cost_of_travel > 50)
-    $cost_of_travel=50;
+if ($cost_of_travel > 75)
+    $cost_of_travel = 75;
 if ($api->UserHasItem($userid,269))
-	$cost_of_travel = $cost_of_travel*0.5;
+	$cost_of_travel *= 0.5;
 //Block access if user is in the infirmary.
 if ($api->UserStatus($ir['userid'], 'infirmary')) {
     alert('danger', "Unconscious!", "You cannot travel while you're in the infirmary.", false);
@@ -30,7 +30,7 @@ $_GET['to'] = (isset($_GET['to']) && is_numeric($_GET['to'])) ? abs($_GET['to'])
 if (empty($_GET['to'])) {
     echo "Welcome to the horse stable. You can travel to other cities here, but at a cost. Where would you like to
 	travel today? Note that as you progress further in the game, more locations will be made available to you.
-	It will cost you " . number_format($cost_of_travel) . " Chivalry Tokens to travel today.
+	It will cost you " . shortNumberParse($cost_of_travel) . " Chivalry Tokens to travel today.
 	<div class='row'>
         <div class='col-12'>
             <div class='card'>
@@ -57,7 +57,7 @@ if (empty($_GET['to'])) {
                              <a href='?to={$r['town_id']}'>{$r['town_name']}</a>
                         </div>
                         <div class='col-12'>
-                            <small>Population " . number_format($population) . "</small>
+                            <small>Population " . shortNumberParse($population) . "</small>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@ if (empty($_GET['to'])) {
                              <small>Level Required</small>
                         </div>
                         <div class='col-12'>
-                            " . number_format($r['town_min_level']) . "
+                            " . shortNumberParse($r['town_min_level']) . "
                         </div>
                     </div>
                 </div>
@@ -112,18 +112,33 @@ if (empty($_GET['to'])) {
         alert('danger', "Uh Oh!", "You do not have enough Chivalry Tokens to travel today.", true, "travel.php");
         die($h->endpage());
     //User is trying to travel to the town they're already in.
-    } elseif ($ir['location'] == $_GET['to']) {
+    } 
+    elseif ($ir['location'] == $_GET['to']) 
+    {
         alert('danger', "Uh Oh!", "Why would you want to travel to the town you're already in.", true, "travel.php");
         die($h->endpage());
-    } else {
+    } 
+    elseif ($_GET['to'] == 27)
+    {
+        if (!isCourseComplete($userid, 29))
+        {
+            alert('danger',"Uh Oh!", "Please complete the <i>Runic Mysteries</i> academic course to learn the way to travel to the Essence Isle.", true, "travel.php");
+            die($h->endpage());
+        }
+    }
+    else 
+    {
         //Select town info.
         $q = $db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$_GET['to']} AND `town_min_level` <= {$ir['level']}");
 
         //Town does not exist or user's level is too low.
-        if (!$db->num_rows($q)) {
+        if (!$db->num_rows($q)) 
+        {
             alert('danger', "Uh Oh!", "The town you wish to travel to does not exist, or you're too low of a level to reach.", true, "travel.php");
             die($h->endpage());
-        } else {
+        }
+        else 
+        {
             //Update user!
             $api->UserTakeCurrency($userid,'secondary',$cost_of_travel);
             $db->query("UPDATE `users` SET `location` = {$_GET['to']} WHERE `userid` = {$userid}");
