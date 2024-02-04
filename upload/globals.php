@@ -215,6 +215,8 @@ if (!($db->num_rows($UIDB))) {
     VALUES ('{$userid}', '100', '100', '0', '1', '1', '0');");
 }
 include('dailyreward.php');
+require_once 'lib/DiscordMsg/Msg.php';
+require_once 'lib/DiscordMsg/DiscordMsg.php';
 check_data();
 updateMostUsersCount();
 

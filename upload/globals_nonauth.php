@@ -63,6 +63,8 @@ if (!isset($hidehdr))
 	$h = new headers;
 	$h->startheaders();
 }
+require_once 'lib/DiscordMsg/Msg.php';
+require_once 'lib/DiscordMsg/DiscordMsg.php';
 //Update data in-game externally.
 check_data();
 //Run the crons if possible.
