@@ -227,61 +227,61 @@ function day($today)
 	}
 	if ($day == 5)
 	{
-	    $copper = Random(93750000,156250000);
+	    $copper = Random(93750000,156250000) * levelMultiplier($ir['level'], $ir['reset']);;
 	    alert('success',"Success!","You open up today's calender spot and receive " . shortNumberParse($copper) . " Copper Coins.",true,'adventcalender.php');
 		$api->UserGiveCurrency($userid,'primary',$copper);
 	}
 	if ($day == 6)
 	{
-	    $tokens = Random(18750,31250);
+	    $tokens = Random(18750,31250) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive " . shortNumberParse($tokens) . " Chivalry Tokens.",true,'adventcalender.php');
 		$api->UserGiveCurrency($userid,'secondary',$tokens);
 	}
 	if ($day == 7)
 	{
-	    $will = Random(150,450);
+	    $will = Random(150,450) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive a bonus {$will} Will at your current estate.",true,'adventcalender.php');
 		increaseMaxWill($userid, $will);
 	}
 	if ($day == 8)
 	{
-	    $will = Random(375,937);
+	    $will = Random(375,937) * levelMultiplier($ir['level'], $ir['reset']);
 		alert('success',"Success!","You open up today's calender spot and receive a bonus {$will} Will at your current estate.",true,'adventcalender.php');
 		increaseMaxWill($userid, $will);
 	}
 	if ($day == 9)
 	{
-	    $scrolls = Random(12,39);
+	    $scrolls = Random(12,39) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$scrolls} CID Admin Gym Access Scroll.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,205,25);
 	}
 	if ($day == 10)
 	{
-	    $candy = Random(50,150);
+	    $candy = Random(50,150) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$candy} Candy Canes.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,201,100);
 	}
 	if ($day == 11)
 	{
-	    $gems = Random(87,263);
-		alert('success',"Success!","You open up today's calender spot and receive {$gems} Flawed Rubies.",true,'adventcalender.php');
+	    $gems = Random(87,263) * levelMultiplier($ir['level'], $ir['reset']);;
+		alert('success',"Success!","You open up today's calender spot and receive {$gems} Tiny Rubies.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,45,175);
 	}
 	if ($day == 12)
 	{
-	    $gems = Random(7,22);
+	    $gems = Random(7,22) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$gems} Small Sapphires.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,162,15);
 	}
 	if ($day == 13)
 	{
-	    $potion = Random(7,22);
+	    $potion = Random(7,22) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$potion} Mining Energy Potions.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,227,15);
 	}
 	if ($day == 14)
 	{
-	    $will = Random(750,1250);
+	    $will = Random(750,1250) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive a bonus " . shortNumberParse($will) . " Will at your current estate.",true,'adventcalender.php');
 		increaseMaxWill($userid, $will);
 	}
@@ -297,25 +297,25 @@ function day($today)
 	}
 	if ($day == 17)
 	{
-	    $count = Random(175,325);
+	    $count = Random(175,325) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$count} Acupuncture Needles.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,100,$count);
 	}
 	if ($day == 18)
 	{
-	    $count = Random(25,75);
+	    $count = Random(25,75) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$count} Medical Packages.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,216,$count);
 	}
 	if ($day == 19)
 	{
-	    $count = Random(3,10);
+	    $count = Random(3,10) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$count} Large Health Potions.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,9,$count);
 	}
 	if ($day == 20)
 	{
-	    $count = Random(13,50);
+	    $count = Random(13,50) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive {$count} Herbs of the Enlightened Miner.",true,'adventcalender.php');
 		$api->UserGiveItem($userid,177,25);
 	}
@@ -331,12 +331,13 @@ function day($today)
 	}
 	if ($day == 23)
 	{
-		alert('success',"Success!","You open up today's calender spot and receive a Baetylus.",true,'adventcalender.php');
-		$api->UserGiveItem($userid,152,1);
+	    $weapon = getRandomWeapon();
+		alert('success',"Success!","You open up today's calender spot and receive a {$api->SystemItemIDtoName($weapon)}.",true,'adventcalender.php');
+		$api->UserGiveItem($userid,$weapon,1);
 	}
 	if ($day == 24)
 	{
-	    $count = Random(731,1553);
+	    $count = Random(731,1553) * levelMultiplier($ir['level'], $ir['reset']);;
 		alert('success',"Success!","You open up today's calender spot and receive a bonus " . shortNumberParse($count) . " Will at your current estate.",true,'adventcalender.php');
 		increaseMaxWill($userid, $count);
 	}
