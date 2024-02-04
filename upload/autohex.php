@@ -60,6 +60,7 @@ if (isset($_POST['open']))
     $sticks=0;
     $rocks=0;
     $notes=0;
+    $water=0;
 	while($number < $_POST['open'])
 	{
 		$number=$number+1;
@@ -140,6 +141,8 @@ if (isset($_POST['open']))
 		}
         elseif ($chance == 94)
 			$notes++;
+		elseif ($chance == 95)
+		    $water++;
 		else
 			$nothing++;
 	}
@@ -191,6 +194,9 @@ if (isset($_POST['open']))
                     <div class='col-auto'>
                         " . shortNumberParse($notes) . " Assassination Notes
                     </div>
+                    <div class='col-auto'>
+                        " . shortNumberParse($water) . " Bucket of Water(s)
+                    </div>
                     <div class='text-danger col-auto'>
                         " . shortNumberParse($nothing) . " Empty Hexbags
                     </div>
@@ -207,6 +213,7 @@ if (isset($_POST['open']))
 	$api->UserGiveItem($userid,29,$lockpicks);
     $api->UserGiveItem($userid,2,$rocks);
     $api->UserGiveItem($userid,1,$sticks);
+    $api->UserGiveItem($userid,296,$water);
 	$db->query("UPDATE `userstats` 
 				SET `strength` = `strength` + {$strength}, 
 				`agility` = `agility` + {$agility}, 
@@ -215,8 +222,8 @@ if (isset($_POST['open']))
 	$api->UserGiveItem($userid,33,$borg);
     $api->UserGiveItem($userid,222,$notes);
 	//Logs
-	$api->SystemLogsAdd($userid,"hexbags","Received " . number_format($copper) . " Copper Coins.");
-	$api->SystemLogsAdd($userid,"hexbags","Received " . number_format($tokens) . " Chivalry Tokens.");
+	$api->SystemLogsAdd($userid,"hexbags","Received " . shortNumberParse($copper) . " Copper Coins.");
+	$api->SystemLogsAdd($userid,"hexbags","Received " . shortNumberParse($tokens) . " Chivalry Tokens.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$dungeon} dungeon minutes.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$infirmary} infirmary minutes.");
 	$api->SystemLogsAdd($userid,"hexbags","Received {$leeches} Leeches.");

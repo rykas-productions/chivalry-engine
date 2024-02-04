@@ -144,6 +144,12 @@ elseif ($chance == 94)
     $api->UserGiveItem($userid,222,1);
     $api->SystemLogsAdd($userid,"hexbags","Received Assassination Note.");
 }
+elseif ($chance == 95)
+{
+    $string = "You open this hexbag and filled bucket of water? How...? Its in your inventory.";
+    $api->UserGiveItem($userid,296,1);
+    $api->SystemLogsAdd($userid,"hexbags","Received Bucket of Water.");
+}
 else
 {
     $string = "You reach into this hexbag and feel something warm and squishy. You decide its best to keep it in there for now.";
