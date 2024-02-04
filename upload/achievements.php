@@ -267,6 +267,9 @@ switch ($_GET['action']) {
     case 'iq5':
         iq(5000000,66);
         break;
+    case 'iq6':
+        iq(25000000,110);
+        break;
 	case 'vip1':
         vip(10,67);
         break;
@@ -349,7 +352,7 @@ function home()
 	be rewarded once per achievement. Each achievement you complete will get you 1 skill point.";
 	$count=1;
 	//this # for next achievement number
-	while ($count != 110)
+	while ($count != 111)
 	{
 		$class[$count]= (userHasAchievement($count)) ? "class='text-success updateHoverBtn'" : "class='text-danger font-weight-bold updateHoverBtn'" ;
 		$count=$count+1;
@@ -807,6 +810,9 @@ function home()
                         </div>
                         <div class='col-auto'>
                             <a {$class[66]} href='?action=iq5'>5M</a>
+                        </div>
+                        <div class='col-auto'>
+                            <a {$class[110]} href='?action=iq6'>25M</a>
                         </div>
                     </div>
 				</div>
