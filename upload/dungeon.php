@@ -43,10 +43,35 @@ function home()
 	<small>There's currently " . number_format($PlayerCount) . " players in the dungeon.</small>
 	<hr />";
     $query = $db->query("/*qc=on*/SELECT * FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime} ORDER BY `dungeon_out` DESC");
+    echo "<div class='card'>
+            <div class='card-header'>
+                <div class='row'>
+                    <div class='col-auto'>
+                        <i class='game-icon game-icon-cage'></i>
+                    </div>
+                    <div class='col-auto'>
+                        There's currently " . shortNumberParse($PlayerCount) . " players in the dungeon.
+                    </div>
+                </div>
+            </div>
+            <div class='card-body'>";
 	while ($Infirmary = $db->fetch_row($query)) 
 	{
 		$displaypic = "<img src='" . parseImage(parseDisplayPic($Infirmary['dungeon_user'])) . "' height='75' alt='' title=''>";
 		echo "
+        <div class='row'>
+            <div class='col-12'>
+                <div class='row'>
+                    <div class='col-12'>
+                        <small><b>Player</b></small>
+                    </div>
+                    <div class='col-12'>
+                        <a href='profile.php?user={$Infirmary['dungeon_user']}'> " . parseUsername($Infirmary['dungeon_user']) . " </a> 
+                        " . parseUserID($Infirmary['dungeon_user']) . "
+                    </div>
+                </div>
+            </div>
+        </div>
 		<div class='card'>
 			<div class='card-body'>
 				<div class='row'>
@@ -80,6 +105,7 @@ function home()
 			</div>
 		</div>";
     }
+    echo "</div></div>";
 	if ($api->UserStatus($userid, 'dungeon'))
 	{
 		echo "<hr />
@@ -121,7 +147,7 @@ function bail()
             alert('danger', "Uh Oh!", "You are already in the dungeon, so you cannot bail others others out.", true, 'dungeon.php');
             die($h->endpage());
         }
-        $cost = 250 * $api->UserInfoGet($_GET['user'], 'level', false);
+        $cost = round(175 + (175 * levelMultiplier($api->UserInfoGet($_GET['user'], 'level', false), getUserResetCount($_GET['user']))));
         //User does not have enough Copper Coins to bail this user out.
         if ($api->UserHasCurrency($userid, 'primary', $cost) == false) {
             alert('danger', "Uh Oh!", "You do not have enough Copper Coins to bail this user out. You need
