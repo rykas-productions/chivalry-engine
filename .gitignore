@@ -32,3 +32,4 @@ upload/js/script/notif.php
 upload/lib/DiscordMsg/DiscordMsg.php
 *.prefs
 *.prefs
+upload/lib/DiscordMsg/DiscordMsg.php
