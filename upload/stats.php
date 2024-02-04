@@ -353,6 +353,78 @@ echo "<h3><i class='fas fa-chart-bar'></i> Game Statistics</h3><hr />
 		</div>
         <br />
 	</div>
+    <div class='col-12 col-lg-6 col-xxxl-3'>
+		<div class='card'>
+			<div class='card-header'>
+					Estates Owned
+			</div>
+			<div class='card-body text-left'>
+                <div class='row'>
+                    <div class='col-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Withdrawn</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalSecondaryCurrency) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Withdrawn</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($AverageSecondaryCurrencyPerPlayer) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Token Vault</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalBankToken) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Token Vault</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($AverageTokenBank) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Avg Market Price</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($avgprice) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-auto'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Total Circulating</b></small>
+                            </div>
+                            <div class='col-12'>
+                                " . shortNumberParse($TotalBankandSC) . "
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
+        <br />
+	</div>
 </div>";
 $h->endpage();
 ?>
