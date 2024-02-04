@@ -79,4 +79,15 @@ if (($month == 10) && ($day == 1))
     $api->GameAddAnnouncement("Hey folks! To kickstart the Halloween season, you may now visit a player's profile and Trick or Treat using the now-available link under the action section. You may trick or treat on a player once an hour. Doing so will grant you random candies that may be helpful on your journey. Stay tuned for more Halloween tricks as we get closer to the holiday!");
 }
 
+if (($month == 11) && ($day == 1))
+{
+    $api->GameAddAnnouncement("That concludes the Halloween Trick or Treat! I'll be making another announcement shortly after I tally up the prizes. Thank you to everyone who played.<br />Now that its November, however, we need to transition into turkey hunting season. Check out the new link on Explore to start stockpiling feathers and turkeys for the turkey hunt. Get enough feathers and you can build this year's Thanksgiving Armor!");
+}
+
+if (($month == 12) && ($day == 1))
+{
+    $db->query("TRUNCATE TABLE `advent_calender`");
+    $api->GameAddAnnouncement("Greetings folks!<br />Thank you to everyone who participated in the Turkey hunt this year. Hope everyone who wanted the armor was able to craft it. I'll probably leave that reciep available until the new year.<br />Since its December now, its the first day of our Advent Calendar. Check the page on explore each day and you can receive nice prizes every day you log in.");
+}
+
 ?>
