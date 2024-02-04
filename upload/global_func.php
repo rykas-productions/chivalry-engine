@@ -429,14 +429,19 @@ function verify_csrf_code($formid, $code, $expiry = 300)
 function encode_password($password,$lvl='Member')
 {
     global $set;
-    $pw = PASSWORD_DEFAULT;
+    $pw = PASSWORD_ARGON2ID;
     //Set the password cost via settings.
-	if ($lvl == 'Member')
-		$options = ['cost' => $set['Password_Effort'],];
-	else
-		$options = ['cost' => $set['Password_Effort']+1,];
+    if ($pw == PASSWORD_BCRYPT)
+    {
+	   if ($lvl == 'Member')
+		  $options = ['cost' => $set['Password_Effort'],];
+	   else
+		  $options = ['cost' => $set['Password_Effort']+1,];
+	   return password_hash(base64_encode(hash('sha256', $password, true)), $pw, $options);
+    }
+    else
+        return password_hash(base64_encode(hash('sha256', $password, true)), $pw);
     //Return the generated password.
-		return password_hash(base64_encode(hash('sha256', $password, true)), $pw, $options);
 }
 
 /**
@@ -1385,12 +1390,27 @@ function isHoliday()
         return true;
     elseif ($month == 12 && $day == 25)
         return true;
+    elseif ($month == 11 && $day == 23 && $year == 2023)
+        return true;
     elseif ($month == 1 && $day == 1)
         return true;
     elseif ($month == 2 && $day == 14)
         return true;
     elseif ($month == 7 && $day == 4)
         return true;
+    elseif ($month == 4 && $day == 20)
+        return true;
     else
         return false;
+}
+
+function phpversion_exact()
+{
+    if (preg_match('/(\d+\.\d+\.\d+)/', phpversion(), $matches)) 
+    {
+        $phpVersion = $matches[1];
+        return $phpVersion;
+    } else {
+        return "N/A";
+    }
 }
