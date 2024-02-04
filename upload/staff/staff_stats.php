@@ -31,6 +31,9 @@ switch ($_GET['action'])
     case "armor":
         listarmor();
         break;
+    case "items":
+        listall();
+        break;
     case "armorcost":
         listarmorbycost();
         break;
@@ -43,6 +46,53 @@ switch ($_GET['action'])
 function theme()
 {
     global $db;
+}
+
+function listall()
+{
+    global $db, $api;
+    $q = $db->query("SELECT * FROM `items` ORDER BY `itmid` ASC");
+    echo "<div class='card'>
+            <div class='card-header'>
+                Listing all in-game items
+            </div>
+            <div class='card-body'>";
+    while ($r = $db->fetch_row($q))
+    {
+        echo "<div class='row'>
+                <div class='col-auto col-md-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Item Name</b></small>
+                        </div>
+                        <div class='col-12'>
+                            <a href='../iteminfo.php?ID={$r['itmid']}'>{$r['itmname']}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-auto col-md-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Buy (Sell)</b></small>
+                        </div>
+                        <div class='col-12'>
+                            " . shortNumberParse($r['itmbuyprice']) . " (" . shortNumberParse($r['itmsellprice']) . ")
+                        </div>
+                    </div>
+                </div>
+                <div class='col-auto col-md-3'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Armor Rating</b></small>
+                        </div>
+                        <div class='col-12'>
+                            " . shortNumberParse($r['armor']) . "
+                        </div>
+                    </div>
+                </div>
+            </div>";
+    }
+    echo "</div></div>";
 }
 
 function listarmor()
