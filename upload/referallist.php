@@ -10,45 +10,59 @@ if ($db->num_rows($q) == 0)
 	alert('danger',"Uh Oh!","You have not referred anyone to the game yet.",true,'explore.php');
 	die($h->endpage());
 }
-echo"
-<table class='table table-bordered table-striped'>
-	<thead>
-		<tr>
-			<th>
-				User
-			</th>
-			<th>
-				Level
-			</th>
-			<th>
-				Last Active
-			</th>
-			<th>
-				Referral Time
-			</th>
-		</tr>
-	</thead>
-	<tbody>";
+echo "<div class='card'>
+        <div class='card-header'>
+            Your Referrals " . createPrimaryBadge($db->num_rows($q)) . "
+        </div>
+        <div class='card-body'>";
 while ($r=$db->fetch_row($q))
 {
-	$lvl=$api->UserInfoGet($r['refered_id'],'level');
+	$lvl=shortNumberParse($api->UserInfoGet($r['refered_id'],'level'));
 	$lastactive=$api->UserInfoGet($r['refered_id'],'laston');
 	echo "
-	<tr>
-		<td>
-			<a href='profile.php?user={$r['refered_id']}'>" . parseUsername($r['refered_id']) . "</a> [{$r['refered_id']}]
-		</td>
-		<td>
-			{$lvl}
-		</td>
-		<td>
-		" . DateTime_Parse($lastactive) . "
-		</td>
-		<td>
-		" . DateTime_Parse($r['time']) . "
-		</td>
-	</tr>";
+    <div class='row'>
+        <div class='col-12 col-sm-6 col-md-3'>
+            <div class='row'>
+                <div class='col-12'>
+                    <small><b>Referral</b></small>
+                </div>
+                <div class='col-12'>
+                    <a href='profile.php?user={$r['refered_id']}'>" . parseUsername($r['refered_id']) . "</a> " . parseUserID($r['refered_id']) . "
+                </div>
+            </div>
+        </div>
+        <div class='col-12 col-sm-6 col-md-2'>
+            <div class='row'>
+                <div class='col-12'>
+                    <small><b>Level</b></small>
+                </div>
+                <div class='col-12'>
+                    {$lvl}
+                </div>
+            </div>
+        </div>
+        <div class='col-12 col-sm-6 col-md'>
+            <div class='row'>
+                <div class='col-12'>
+                    <small><b>Registration Time</b></small>
+                </div>
+                <div class='col-12'>
+                    " . DateTime_Parse($r['time']) . "
+                </div>
+            </div>
+        </div>
+        <div class='col-12 col-sm-6 col-md-2'>
+            <div class='row'>
+                <div class='col-12'>
+                    <small><b>Active?</b></small>
+                </div>
+                <div class='col-12'>
+                    " . parseActivity($r['refered_id']) . "
+                </div>
+            </div>
+        </div>
+    </div>";
 }
-echo "</tbody></table>";
+echo "</div></div>";
 
 $h->endpage();
