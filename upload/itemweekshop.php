@@ -1,7 +1,7 @@
 <?php
 $macropage = ('itemweekshop.php');
 require('globals.php');
-if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
+/*if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
 {
 	alert('danger',"Uh Oh!","You cannot visit the Item of the Week Shop while in the dungeon and infirmary.",true,'explore.php');
 	die($h->endpage());
@@ -224,5 +224,5 @@ echo "	<div class='col-md'>
 				</div>
 			</div>
 		</div>";
-echo "</div>";
+echo "</div>";*/
 $h->endpage();

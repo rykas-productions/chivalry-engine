@@ -102,9 +102,6 @@ echo"
 						<a href='secmarket.php'>" . loadImageAsset("explore/token_market.svg") . " Token Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a>
 					</div>
 					<div class='col-auto'>
-						<a href='itemweekshop.php' class='{$txtClass}'>" . loadImageAsset("explore/item_of_week.svg") . " Item of the Week</a>
-					</div>
-					<div class='col-auto'>
 						<a href='votestore.php'>" . loadImageAsset("explore/vote_store.svg") . " Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a>
 					</div>
 					<div class='col-auto'>
