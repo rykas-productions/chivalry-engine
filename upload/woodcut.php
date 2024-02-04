@@ -65,7 +65,10 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid, $api, $h, $set;
-    $logs = 25 + (round($set['cutter_level'] / 10));
+    $baseNumber = 25;
+    if (isHoliday())
+        $baseNumber*=1.75;
+    $logs = $baseNumber + (round($set['cutter_level'] / 10));
     $userLogs = $api->UserCountItem($userid, 410);
     //@todo grid the butyons here.
     echo "<div class='card'>

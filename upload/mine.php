@@ -14,9 +14,8 @@ require('globals.php');
 //2021 Halloween event
 $month = date('n');
 $day = date('j');
-if ($month == 10)
-    if (($day >= 24) && ($day <= 31))
-        $energyCost -= 0.5;
+if (isHoliday())
+    $energyCost -= 0.5;
 if ((!isCourseComplete($userid, 23)) && ($userid != 1))
 {
 	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.", true, 'explore.php');
@@ -193,6 +192,8 @@ function buypower()
         $totalcost = $sets * $CostForPower;
         if (reachedMonthlyDonationGoal())
             $totalcost = round($totalcost / 2);
+        if (isHoliday())
+            $totalcost/=2;
         if ($sets > $MUS['buyable_power']) {
             alert('danger', "Uh Oh!", "You are trying to buy more sets of power than you currently have available to you.");
             die($h->endpage());
@@ -261,6 +262,8 @@ function mine()
 			}*/
 			$MSI['mine_iq'] = calcMineIQ($userid, $spot);
 			$laborCost = round($MSI['mine_iq'] * 0.06);
+			if (isHoliday())
+			    $laborCost*=0.5;
             if ($MUS['mining_level'] < $MSI['mine_level']) 
             {
                 alert('danger', "Uh Oh!", "You are too low level to mine here. You need mining level {$MSI['mine_level']} to mine here.", true, 'mine.php');
@@ -278,12 +281,12 @@ function mine()
             }
             elseif ($ir['labor'] < $laborCost)
             {
-                alert('danger', "Uh Oh!", "Your labor is too low to mine here. You need " . shortNumberParse($MSI['mine_iq']) . " IQ.", true, 'mine.php');
+                alert('danger', "Uh Oh!", "Your labor is too low to mine here. You need " . shortNumberParse($laborCost) . " Labor.", true, 'mine.php');
                 die($h->endpage());
             }
             elseif ($MUS['miningpower'] < $MSI['mine_power_use']) 
             {
-                alert('danger', "Uh Oh!", "You do not have enough mining power to mine here. You need {$MSI['mine_power_use']}.", true, 'mine.php');
+                alert('danger', "Uh Oh!", "You do not have enough mining power to mine here. You need " . shortNumberParse($MSI['mine_power_use']) . " mining power, but only have " . shortNumberParse($MUS['miningpower']) . ".", true, 'mine.php');
                 die($h->endpage());
             }
             $unequipped=0;

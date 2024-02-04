@@ -12,7 +12,8 @@ echo "<h3><i class='game-icon game-icon-crown'></i> Hall of Fame</h3><hr />";
 //Add stats to this array.
 $StatArray = array('total', 'level', 'strength', 'agility', 'guard', 'labor', 'iq',
     'primary_currency', 'mining_level', 'secondary_currency', 'busts', 'kills', 
-    'deaths', 'richest', 'farm_level', 'profit', date('Y') . 'halloweenCandies');
+    'deaths', 'richest', 'farm_level', 'profit', date('Y') . 'halloweenCandies', 
+    date('Y') . 'turkeyKills');
 //Stat is not chosen, set to level.
 if (!isset($_GET['stat'])) {
     $_GET['stat'] = 'level';
@@ -60,7 +61,8 @@ elseif ($_GET['stat'] == 'richest')
                     FROM `users` `u` 
                     INNER JOIN `userstats` AS `us`
                     ON `u`.`userid` = `us`.`userid`
-                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0");
+                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
+                    LIMIT {$hofCount}");
 }
 elseif ($_GET['stat'] == 'profit')
 {
@@ -80,9 +82,21 @@ elseif ($_GET['stat'] == date('Y') . 'halloweenCandies')
                     ON `u`.`userid` = `us`.`userid`
                     WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
                     AND `preference` = '" . date('Y') . "halloweenCandies'
-                    ORDER BY `value` DESC
+                    ORDER BY `us`.`value` DESC
                     LIMIT {$hofCount}");
 }
+elseif ($_GET['stat'] == date('Y') . 'turkeyKills')
+{
+    $q = $db->query("/*qc=on*/SELECT `u`.*, `us`.*
+                    FROM `users` `u`
+                    INNER JOIN `user_pref` AS `us`
+                    ON `u`.`userid` = `us`.`userid`
+                    WHERE `user_level` != 'Admin' AND `user_level` != 'NPC' AND `fedjail` = 0
+                    AND `preference` = '" . date('Y') . "turkeyKills'
+                    ORDER BY `us`.`value` DESC
+                    LIMIT {$hofCount}");
+}
+
  //GET wants anything else ranked.
 else 
 {
@@ -146,6 +160,12 @@ echo "<div class='row'>
         <a href='?stat=" . date('Y') . "halloweenCandies' class='btn btn-primary btn-block'>" . date('Y') . " Halloween</a><br />
         </div>";
     }
+    if (date('n') >= 11)
+    {
+        echo " <div class='col-auto'>
+        <a href='?stat=" . date('Y') . "turkeyKills' class='btn btn-primary btn-block'>" . date('Y') . " Turkey Kills</a><br />
+        </div>";
+    }
     echo"
 </div>";
 echo "<div class='card'>
@@ -181,12 +201,15 @@ if ($_GET['stat'] != 'crypto')
                 </div>";
             $showArray = array('level', 'primary_currency', 'secondary_currency', 
                             'mining_level', 'busts', 'kills', 'deaths', 'richest', 
-                            'farm_level', 'profit', date('Y') . 'halloweenCandies'
+                            'farm_level', 'profit', date('Y') . 'halloweenCandies',
+                            date('Y') . 'turkeyKills'
             );
             if (in_array($_GET['stat'], $showArray)) 
                 {
                     if ($_GET['stat'] == date('Y') . "halloweenCandies")
                         $parsed = getUserPref($r['userid'], date('Y') . "halloweenCandies", 0);
+                    elseif ($_GET['stat'] == date('Y') . "turkeyKills")
+                        $parsed = getUserPref($r['userid'], date('Y') . "turkeyKills", 0);
                     else
                         $parsed = $r[$_GET['stat']];
                     echo"
@@ -214,7 +237,8 @@ function parseHOFname($stat)
         "secondary_currency" => "Chivlary Tokens", "mining_level" => "Mining Level",
         "busts" => "Dungeon Busts", "kills" => "Kills", "deaths" => "Deaths", 
         "richest" => "Networth", "farm_level" => "Farming Level", "profit" => "Market ROI",
-        date('Y') . "halloweenCandies" => "Halloween Candies Collected", "strength" => "Strength",
+        date('Y') . "halloweenCandies" => "Collected Candies", "strength" => "Strength",
+        date('Y') . "turkeyKills" => "Turkey Kills",
         "guard" => "Guard", "agility" => "Agility", "labor" => "Labor", "iq" => "IQ",
         "total" => "Total Stats"
     );

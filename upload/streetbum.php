@@ -12,6 +12,8 @@ if ($api->UserStatus($userid, 'dungeon')) {
     die($h->endpage());
 }
 $laborCost = 25 * levelMultiplier($ir['level'], $ir['reset']);
+if (isHoliday())
+    $laborCost*=0.5;
 if (!isset($_GET['action'])) 
 {
     $_GET['action'] = '';
