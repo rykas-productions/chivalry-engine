@@ -8,7 +8,7 @@
  */
 function getSkillLevel($user, $id)
 {
-    trigger_error("Using depreciated method `getSkillLevel();`", E_USER_DEPRECATED);
+    trigger_error("Using depreciated method `getSkillLevel();` Please report this to CID Admin. This is a non-fatal error.", E_USER_DEPRECATED);
     return getUserSkill($user, $id);
 }
 
