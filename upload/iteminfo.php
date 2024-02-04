@@ -48,14 +48,14 @@ if (!$itmid) {
             <div class='col-12'>
                 <div class='card'>
                     <div class='card-header'>
-                        {$id['itmname']} [{$itmid}]
+                        {$id['itmname']} " . parseUserID($itmid) . "
                     </div>
                     <div class='card-body'>
                         <div class='row'>
-                            <div class='col-12 col-md-3 col-xl-2 col-xxl-1'>
+                            <div class='col-12 col-sm-auto col-md-3 col-xl-2 col-xxxl-1'>
                                 " . returnIcon($itmid, 6) . "
                             </div>
-                            <div class='col-12 col-md'>
+                            <div class='col-12 col-sm'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         {$id['itmdesc']}
@@ -70,144 +70,325 @@ if (!$itmid) {
                                         echo"
                                     <div class='col-12'>
                                         <i><b>{$id['itmname']} is a/an {$id['itmtypename']} item.</b></i>
-                                    </div>
-                                </div>";
-                            if (($id['itmbuyprice'] > 0) || ($id['itmsellprice'] > 0))
-                            {
-                                echo "<div class='row'>";
-                                if ($id['itmbuyprice'] > 0)
-                                {
-                                    echo "<div class='col'>
-                                        <div class='row'>
-                                            <div class='col-12'>
-                                                <small>Purchase Price</small>
-                                            </div>
-                                            <div class='col-12'>
-                                            " . shortNumberParse($id['itmbuyprice']) . " Copper Coins
-                                            </div>
-                                        </div>
                                     </div>";
-                                }
-                                if ($id['itmbuyprice'] > 0)
-                                {
-                                    echo "<div class='col'>
-                                        <div class='row'>
-                                            <div class='col-12'>
-                                                <small>Selling Price</small>
+                                    if ($id['itmbuyprice'] > 0)
+                                    {
+                                        echo "<div class='col-12 col-sm-6'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Purchase Price</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                " . shortNumberParse($id['itmbuyprice']) . " Copper Coins
+                                                </div>
                                             </div>
-                                            <div class='col-12'>
-                                            " . shortNumberParse($id['itmsellprice']) . " Copper Coins
+                                        </div>";
+                                    }
+                                    
+                                    if ($id['itmsellprice'] > 0)
+                                    {
+                                        echo "<div class='col-12 col-sm-6'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Sell Price</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                " . shortNumberParse($id['itmsellprice']) . " Copper Coins
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>";
-                                }
-                                echo "</div>";
-                            }
-                            if (($id['weapon'] > 0) || ($id['armor'] > 0) || ($id['ammo'] > 0))
-                            {
-                                echo "<div class='row'>";
-                                if ($id['weapon'] > 0)
-                                {
-                                    echo "<div class='col'>
-                                        <div class='row'>
-                                            <div class='col-12'>
-                                                <small>Weapon Rating</small>
+                                        </div>";
+                                    }
+                                    
+                                    if ($id['weapon'] > 0)
+                                    {
+                                        echo "<div class='col-12 col-sm-6'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Weapon Rating</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                " . shortNumberParse($id['weapon']) . "
+                                                </div>
                                             </div>
-                                            <div class='col-12'>
-                                            " . shortNumberParse($id['weapon']) . "
+                                        </div>";
+                                    }
+                                    
+                                    if ($id['armor'] > 0)
+                                    {
+                                        echo "<div class='col-12 col-sm-6'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Armor Rating</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                " . shortNumberParse($id['armor']) . "
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>";
-                                }
-                                if ($id['armor'] > 0)
-                                {
-                                    echo "<div class='col'>
-                                        <div class='row'>
-                                            <div class='col-12'>
-                                                <small>Armor Rating</small>
-                                            </div>
-                                            <div class='col-12'>
-                                            " . shortNumberParse($id['armor']) . "
-                                            </div>
-                                        </div>
-                                    </div>";
-                                }
-                                if ($id['ammo'] > 0)
-                                {
-                                    echo "<div class='col'>
-                                        <div class='row'>
-                                            <div class='col-12'>
-                                                <small>Required Ammo</small>
-                                            </div>
-                                            <div class='col-12'>
+                                        </div>";
+                                    }
+                                    
+                                    if ($id['ammo'] > 0)
+                                    {
+                                        echo "<div class='col-12 col-sm-6'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Projectile Fired</b></small>
+                                                </div>
+                                                <div class='col-12'>
                                                 <a href='?ID={$id['ammo']}'>{$api->SystemItemIDtoName($id['ammo'])}</a>
+                                                </div>
+                                            </div>
+                                        </div>";
+                                    }  
+                                echo "<div class='col-12 col-sm-6'>
+                                            <div class='row'>
+                                                <div class='col-12'>
+                                                    <small><b>Circulating</b></small>
+                                                </div>
+                                                <div class='col-12'>
+                                                    " . shortNumberParse($total) . "
+                                                </div>
+                                            </div>
+                                        </div>";
+                                $towns='';
+                                $sq=$db->query("/*qc=on*/SELECT `sitemSHOP` FROM `shopitems` WHERE `sitemITEMID` = {$_GET['ID']}");
+                                if ($db->num_rows($sq) > 0)
+                                {
+                                    while ($sr=$db->fetch_row($sq))
+                                    {
+                                        $shop=$db->fetch_single($db->query("/*qc=on*/SELECT `shopLOCATION` FROM `shops` WHERE `shopID` = {$sr['sitemSHOP']}"));
+                                        $towns.= createRandomBadge("<a href='travel.php?to={$shop}'>{$api->SystemTownIDtoName($shop)}</a>") . " ";
+                                    }
+                                    echo"
+                                    <div class='col-auto'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small><b>Town Shops</b></small>
+                                            </div>
+                                            <div class='col-12'>
+                                                {$towns}
                                             </div>
                                         </div>
                                     </div>";
                                 }
-                                echo "</div>";
-                            }
-                            echo "</div>
-                        </div>
-                        <div class='row'>
-                            <div class='col'>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        <small>Circulating</small>
-                                    </div>
-                                    <div class='col-12'>
-                                        " . shortNumberParse($total) . "
-                                    </div>
-                                </div>
-                            </div>";
-                            $towns='';
-                            $sq=$db->query("/*qc=on*/SELECT `sitemSHOP` FROM `shopitems` WHERE `sitemITEMID` = {$_GET['ID']}");
-                            if ($db->num_rows($sq) > 0)
-                            {
-                                while ($sr=$db->fetch_row($sq))
+                                $towns='';
+                                $sq=$db->query("/*qc=on*/SELECT `mine_location` FROM `mining_data` WHERE `mine_copper_item` = {$_GET['ID']} OR `mine_silver_item` = {$_GET['ID']} OR `mine_gold_item` = {$_GET['ID']} OR `mine_gem_item` = {$_GET['ID']}");
+                                if ($db->num_rows($sq) > 0)
                                 {
-                                    $shop=$db->fetch_single($db->query("/*qc=on*/SELECT `shopLOCATION` FROM `shops` WHERE `shopID` = {$sr['sitemSHOP']}"));
-                                    $towns.= "<a href='travel.php?to={$shop}'>{$api->SystemTownIDtoName($shop)}</a> ";
+                                    while ($sr=$db->fetch_row($sq))
+                                    {
+                                        $shop2=$sr['mine_location'];
+                                        $towns.= createRandomBadge("<a href='travel.php?to={$shop2}'>{$api->SystemTownIDtoName($shop2)}</a>") . " ";
+                                    }
+                                    echo"
+                                    <div class='col-auto'>
+                                        <div class='row'>
+                                            <div class='col-12'>
+                                                <small><b>Town Mines</b></small>
+                                            </div>
+                                            <div class='col-12'>
+                                                {$towns}
+                                            </div>
+                                        </div>
+                                    </div>";
                                 }
-                                echo"
-                                <div class='col'>
-                                    <div class='row'>
-                                        <div class='col-12'>
-                                            <small>Town Available</small>
-                                        </div>
-                                        <div class='col-12'>
-                                            {$towns}
-                                        </div>
-                                    </div>
-                                </div>";
-                            }
-                            $towns='';
-                            $sq=$db->query("/*qc=on*/SELECT `mine_location` FROM `mining_data` WHERE `mine_copper_item` = {$_GET['ID']} OR `mine_silver_item` = {$_GET['ID']} OR `mine_gold_item` = {$_GET['ID']} OR `mine_gem_item` = {$_GET['ID']}");
-                            if ($db->num_rows($sq) > 0)
-                            {
-                                while ($sr=$db->fetch_row($sq))
-                                {
-                                    $shop2=$sr['mine_location'];
-                                    $towns.= "<a href='travel.php?to={$shop2}'>{$api->SystemTownIDtoName($shop2)}</a> ";
-                                }
-                                echo"
-                                <div class='col'>
-                                    <div class='row'>
-                                        <div class='col-12'>
-                                            <small>Town Mines</small>
-                                        </div>
-                                        <div class='col-12'>
-                                            {$towns}
-                                        </div>
-                                    </div>
-                                </div>";
-                            }
+                            echo "</div>";
+                            
                             echo"
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>";
+            </div>";
+        echo "</div>";
+        $chanceDropItems = array(33);
+        if (in_array($itmid, $chanceDropItems))
+        {
+            echo "<div class='col-12'>
+                        <div class='card'>
+                            <div class='card-header'>
+                                Chance Drops
+                            </div>
+                            <div class='card-body'>
+                                <div class='row'>";
+                                if ($itmid == 33)
+                                {
+                                    echo "<div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>37.9%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Copper Coins
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>12.6%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Chivalry Tokens
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>5.74%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Infirmary Visit
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>5.74%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Bread
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>5.74%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Venison
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>5.74%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Small Health Potion
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>5.74%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Linen Wraps
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>5.74%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Dungeon Keys
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>3.44%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Small Explosive
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>2.29%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Chivalry Gym Scroll
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>2.29%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Distant Attack Scroll
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>2.29%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Mysterious Potion
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>2.29%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Acupuncture Needle
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>1.37%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Nothing
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>1.14%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Herb of Enlightened Miner
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>1.03%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Rickity Bomb
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>1.03%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        1-3 Hexbags
+                                                    </div>
+                                                </div>
+                                            </div>";
+                                }
+                                    
+                            echo "</div></div>
+                        </div>
+                    </div>";
+        }
+        echo "</div>";
         $db->free_result($q);
     }
 }
