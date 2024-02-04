@@ -33,16 +33,43 @@ if ($ir['guild'] != $r['gclGUILD']) {
     die($h->endpage());
 }
 $name=$db->fetch_single($db->query("/*qc=on*/SELECT `gcNAME` FROM `guild_crimes` WHERE `gcID` = {$r['gclCID']}"));
-echo "Here is the information on the crime.
-<br />
-<b>Crime:</b> {$name}
-<br />
-<b>Time Executed:</b> " . date('F j, Y, g:i:s a', $r['gclTIME']) . "
-<br />
-{$r['gclLOG']}
-<br />
-<br />
-<b>Result:</b> " . ucfirst($r['gclRESULT']) . "
-<br />
-<b>Copper Coins Earned:</b> " . shortNumberParse($r['gclWINNING']);
+echo "<div class='card'>
+        <div class='card-header'>
+            {$name} " . createBadge(DateTime_Parse($r['gclTIME'])) . "
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class='col-12'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Summary</b></small>
+                        </div>
+                        <div class='col-12'>
+                            {$r['gclLOG']}
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Result</b></small>
+                        </div>
+                        <div class='col-12'>
+                            " . ucfirst($r['gclRESULT']) . "
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-sm'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Copper Coins</b></small>
+                        </div>
+                        <div class='col-12'>
+                            " . shortNumberParse($r['gclWINNING']) . "
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>";
 $h->endpage();
