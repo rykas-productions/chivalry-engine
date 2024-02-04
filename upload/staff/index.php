@@ -18,7 +18,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
     echo "
     <div class='row'>
         <div class='col-12 col-lg-6 col-xxl-5 col-xxxl-4'>
-            <div class='card bg-dark mb-3'>
+            <div class='card'>
                 <div class='card-header'>
                     System Info
                 </div>
@@ -27,7 +27,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>PHP Version</small>
+                                    <small><b>PHP Version</b></small>
                                 </div>
                                 <div class='col-12'>
                                     " . phpversion_exact() . "
@@ -37,7 +37,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Database Version</small>
+                                    <small><b>Database Version</b></small>
                                 </div>
                                 <div class='col-12'>
                                     " . $MySQLIVersion . "
@@ -47,31 +47,45 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Apache Version</small>
+                                    <small><b>Apache Version</b></small>
                                 </div>
                                 <div class='col-12'>
                                     " . apache_get_version() . "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6'>
+                        <div class='col-12'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Disk Free</small>
+                                    <small><b>Disk Free</b></small>
                                 </div>
                                 <div class='col-12'>
-                                    " . numberToByteParse(disk_free_space("/")) . " / " . numberToByteParse(disk_total_space("/")) . "
-                                    " . scaledColorProgressBar(disk_free_space("/"), 0, disk_total_space("/")) . "
+                                    <div class='row'>
+                                        <div class='col-12 col-sm-6'>
+                                            " . numberToByteParse(disk_free_space("/")) . " / " . numberToByteParse(disk_total_space("/")) . "
+                                        </div>
+                                        <div class='col-12 col-sm-6'>
+                                            " . scaledColorProgressBar(disk_free_space("/"), 0, disk_total_space("/"), true) . "
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6'>
+                        <div class='col-12'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Bandwidth Transferred</small>
+                                    <small><b>Bandwidth Transferred</b></small>
                                 </div>
                                 <div class='col-12'>
-                                    " . numberToByteParse(returnVPSBandwidth()) . "
+                                    <div class='row'>
+                                        <div class='col-12 col-sm-6'>
+                                            " . numberToByteParse(returnVPSBandwidth()) . " / " . numberToByteParse(1024*1024*1024*1024*4) . "
+                                        </div>
+                                        <div class='col-12 col-sm-6'>
+                                            " . scaledColorProgressBar(returnVPSBandwidth(), 0, 1024*1024*1024*1024*4, true) . "
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -81,7 +95,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             <br />
         </div>
         <div class='col-12 col-lg-6 col-xxl-5 col-xxxl-4'>
-            <div class='card bg-dark mb-3'>
+            <div class='card'>
                 <div class='card-header'>
                     Chivalry Engine Info
                 </div>
@@ -90,7 +104,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>API Version</small>
+                                    <small><b>API Version</b></small>
                                 </div>
                                 <div class='col-12'>
                                     {$api->SystemReturnAPIVersion()}
@@ -100,7 +114,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Chivalry Engine Version</small>
+                                    <small><b>Chivalry Engine Version</b></small>
                                 </div>
                                 <div class='col-12'>
                                     {$set['Version_Number']}
@@ -110,7 +124,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Debug mode</small>
+                                    <small><b>Debug mode</b></small>
                                 </div>
                                 <div class='col-12'>
                                     {$debugMode}
@@ -120,7 +134,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Dev mode</small>
+                                    <small><b>Dev mode</b></small>
                                 </div>
                                 <div class='col-12'>
                                     {$devMode}
@@ -130,7 +144,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Engine Updates</small>
+                                    <small><b>Engine Updates</b></small>
                                 </div>
                                 <div class='col-12'>
                                     " . version_json() . "
@@ -143,7 +157,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
             <br />
         </div>
         <div class='col-12 col-lg-6 col-xxl-3 col-xxxl-4'>
-            <div class='card bg-dark mb-3'>
+            <div class='card'>
                 <div class='card-header'>
                     {$set['WebsiteName']} Details
                 </div>
@@ -152,7 +166,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Moderation Logs</small>
+                                    <small><b>Moderation Logs</b></small>
                                 </div>
                                 <div class='col-12'>
                                     <a href='staff_moderation.php?action=listall'>" . number_format($db->fetch_single($db->query("SELECT COUNT(`mod_id`) FROM `staff_moderation_board`"))) . "</a>
@@ -162,7 +176,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-12 col-sm-6'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>Monthly Income</small>
+                                    <small><b>Monthly Income</b></small>
                                 </div>
                                 <div class='col-12'>
                                     \${$set['MonthlyDonationGoal']}
@@ -764,7 +778,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-6 col-md-4'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>" . DateTime_Parse($r['log_time']) . "</small>
+                                    <small><b>" . DateTime_Parse($r['log_time']) . "</b></small>
                                 </div>
                                 <div class='col-12'>
                                     <a href='../profile.php?user={$r['log_user']}'>{$r['username']}</a> [{$r['log_user']}]
@@ -774,7 +788,7 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                         <div class='col-6 col-md-8'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small>{$r['log_ip']}</small>
+                                    <small><b>{$r['log_ip']}</b></small>
                                 </div>
                                 <div class='col-12'>
                                     {$r['log_text']}
