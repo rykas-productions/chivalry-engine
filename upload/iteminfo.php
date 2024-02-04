@@ -73,7 +73,7 @@ if (!$itmid) {
                                     </div>";
                                     if ($id['itmbuyprice'] > 0)
                                     {
-                                        echo "<div class='col-12 col-sm-6'>
+                                        echo "<div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
                                             <div class='row'>
                                                 <div class='col-12'>
                                                     <small><b>Purchase Price</b></small>
@@ -87,7 +87,7 @@ if (!$itmid) {
                                     
                                     if ($id['itmsellprice'] > 0)
                                     {
-                                        echo "<div class='col-12 col-sm-6'>
+                                        echo "<div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
                                             <div class='row'>
                                                 <div class='col-12'>
                                                     <small><b>Sell Price</b></small>
@@ -101,7 +101,7 @@ if (!$itmid) {
                                     
                                     if ($id['weapon'] > 0)
                                     {
-                                        echo "<div class='col-12 col-sm-6'>
+                                        echo "<div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
                                             <div class='row'>
                                                 <div class='col-12'>
                                                     <small><b>Weapon Rating</b></small>
@@ -115,7 +115,7 @@ if (!$itmid) {
                                     
                                     if ($id['armor'] > 0)
                                     {
-                                        echo "<div class='col-12 col-sm-6'>
+                                        echo "<div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
                                             <div class='row'>
                                                 <div class='col-12'>
                                                     <small><b>Armor Rating</b></small>
@@ -129,7 +129,7 @@ if (!$itmid) {
                                     
                                     if ($id['ammo'] > 0)
                                     {
-                                        echo "<div class='col-12 col-sm-6'>
+                                        echo "<div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
                                             <div class='row'>
                                                 <div class='col-12'>
                                                     <small><b>Projectile Fired</b></small>
@@ -140,7 +140,7 @@ if (!$itmid) {
                                             </div>
                                         </div>";
                                     }  
-                                echo "<div class='col-12 col-sm-6'>
+                                echo "<div class='col-12 col-sm-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
                                             <div class='row'>
                                                 <div class='col-12'>
                                                     <small><b>Circulating</b></small>
