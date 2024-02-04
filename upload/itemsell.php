@@ -10,7 +10,6 @@
 require('globals.php');
 $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(intval($_GET['ID'])) : '';
 $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(intval($_POST['qty'])) : '';
-echo "<h3>Item Selling</h3><hr />";
 if (permission('CanSellToGame', $userid) == true) {
     if (!empty($_POST['qty']) && !empty($_GET['ID'])) {
         $id =
@@ -40,9 +39,9 @@ if (permission('CanSellToGame', $userid) == true) {
                 $api->UserTakeItem($userid, $r['itmid'], $_POST['qty']);
                 $api->UserGiveCurrency($userid, 'primary', $price);
                 $priceh = shortNumberParse($price);
-                alert('success', "Success!", "You have successfully sold {$_POST['qty']} {$r['itmname']}(s) back to the
+                alert('success', "Success!", "You have successfully sold " . shortNumberParse($_POST['qty']) . " {$r['itmname']}(s) back to the
 				    game for {$priceh} Copper Coins.", true, 'inventory.php');
-                $is_log = $db->escape("{$ir['username']} sold {$_POST['qty']} {$r['itmname']}(s) for {$priceh}");
+                $is_log = $db->escape("{$ir['username']} sold " . shortNumberParse($_POST['qty']) . " {$r['itmname']}(s) for {$priceh} Copper Coins.");
                 $api->SystemLogsAdd($userid, 'itemsell', $is_log);
 				addToEconomyLog('Item Sell to Game', 'copper', $price);
             }
@@ -63,29 +62,41 @@ if (permission('CanSellToGame', $userid) == true) {
         } else {
             $r = $db->fetch_row($id);
             $code = request_csrf_code("sellitem_{$_GET['ID']}");
-            echo "
-			<b>You are attempting to sell your {$r['itmname']}(s) back to the game. You have
-			" . number_format($r['inv_qty']) . " to sell. How many do you wish to sell?</b>
-			<br />
-			<form action='?ID={$_GET['ID']}' method='post'>
-				<table class='table table-bordered'>
-					<tr>
-						<th>
-							Quantity
-						</th>
-						<td>
-							<input type='text' class='form-control' name='qty' value='{$r['inv_qty']}' />
-						</td>
-					</tr>
-					<tr>
-						<td colspan='2'>
-							<input type='submit' class='btn btn-primary' value='Sell' />
-						</td>
-					</tr>
-					<input type='hidden' name='verf' value='{$code}' />
-				</table>
-			</form>
-			";
+            echo "<form action='?ID={$_GET['ID']}' method='post'>
+            <div class='card'>
+                <div class='card-header'>
+                    Selling your {$r['itmname']}(s)
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            You may sell your " . shortNumberParse($r['inv_qty']) . " {$r['itmname']}(s) back to the game for their sell price.
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Quantity</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='text' class='form-control' name='qty' value='{$r['inv_qty']}' max='{$r['inv_qty']}' />
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-auto'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Confirm</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <input type='submit' class='btn btn-success btn-block' value='Sell' />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type='hidden' name='verf' value='{$code}' />
+            </form>";
         }
         $db->free_result($id);
     } else {
