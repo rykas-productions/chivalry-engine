@@ -427,8 +427,7 @@ function compose()
     //Sanitize GET
     $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
     //GET is set and greater than 0, so let's fetch the username associated that's on the GET.
-    $username = (isset($_GET['user']) && ($_GET['user'] > 0)) ?
-        $username = $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}")) :
+    $username = (isset($_GET['user']) && ($_GET['user'] > 0)) ? $db->fetch_single($db->query("/*qc=on*/SELECT `username` FROM `users` WHERE `userid` = {$_GET['user']}")) :
         '';
     //Permission check to see if player can send mail.
     if (permission('CanReplyMail', $userid)) {
@@ -445,7 +444,7 @@ function compose()
                                         <small><b>Recipient</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        <input type='text' class='form-control' name='sendto' required='1'>
+                                        <input type='text' class='form-control' value='{$username}' name='sendto' required='1'>
                                     </div>
                                 </div>
                             </div>
