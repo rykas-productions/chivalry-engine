@@ -83,7 +83,7 @@ if (isset($_POST['open']))
 			$cash=round($cash+($cash*$lvlmultiplier));
 			$copper=$copper+$cash;
 		}
-		elseif (($chance > 35) && ($chance <= 40))
+		elseif (($chance > 33) && ($chance <= 45))
 		{
 			$cash=Random(5,20)*$multipler;
 			$specialnumber=((getUserSkill($userid, 10) * getSkillBonus(10))/100);

@@ -57,7 +57,7 @@ if ($chance <= 33)
     $api->SystemLogsAdd($userid,"bor","Received {$cash} Copper Coins.");
 	addToEconomyLog('BOR', 'copper', $cash);
 }
-elseif (($chance > 35) && ($chance <= 40))
+elseif (($chance > 33) && ($chance <= 45))
 {
     $cash=Random(5,20)*$multipler;
     $specialnumber=((getUserSkill($userid, 10) * getSkillBonus(10))/100);
