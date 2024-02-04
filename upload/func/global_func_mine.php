@@ -214,3 +214,15 @@ function countUserAutoMiners($userid)
     global $db;
     return $db->fetch_single($db->query("SELECT COUNT(`userid`) FROM `mining_auto` WHERE `userid` = {$userid}"));
 }
+
+function doBonusMiningEnergyChance()
+{
+    global $db, $userid, $MU;
+    $incr = 10;
+    if (Random(1,200) == Random(1,200))
+    {
+        $MU['max_miningpower'] = $MU['max_miningpower'] + $incr;
+        $db->query("UPDATE `mining` SET `max_miningpower` = `max_miningpower` + {$incr} WHERE `userid` = {$userid}");
+        alert('info',"","You've gained a bonus {$incr} Maximum mining power!!",false);
+    }
+}

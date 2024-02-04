@@ -15,7 +15,10 @@ require('globals.php');
 $month = date('n');
 $day = date('j');
 if (isHoliday())
+{
     $energyCost -= 0.5;
+    alert('info',"","Since its a holiday in the kingdom of Chivalry is Dead, mining power requirements have been reduced by 50%!",false);
+}
 if ((!isCourseComplete($userid, 23)) && ($userid != 1))
 {
 	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.", true, 'explore.php');
@@ -303,6 +306,7 @@ function mine()
                 alert('danger', "Uh Oh!", "You do not have the required pickaxe to mine here. You need a " . $api->SystemItemIDtoName($MSI['mine_pickaxe']) . " to mine here.", true, "mine.php");
                 die($h->endpage());
             }
+            doBonusMiningEnergyChance();
             $Rolls = getMineRolls($userid, $MSI['mine_iq']);
 			$remainpower = $MUS['miningpower'] - $MSI['mine_power_use'];
 			//All the negative events are in here.
