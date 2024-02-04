@@ -249,6 +249,7 @@ function crime()
             }
 			$api->SystemLogsAdd($userid, 'xp_gain', "+" . number_format($r['crimeXP']) . "XP");
             alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, "?action=crime&c={$_GET['c']}", "Attempt Again");
+            setCurrentUserPref('lastCrimeTime', time());
             die($h->endpage());
         }
     }

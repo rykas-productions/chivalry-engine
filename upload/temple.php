@@ -173,6 +173,12 @@ function brave()
 {
     global $api, $userid, $ir, $set, $h;
     //User has enoguh Chivalry Tokens to refill their brave
+    $crimeTime=getCurrentUserPref('lastCrimeTime', 0);
+    if (time() <= $crimeTime + 2400)
+    {
+        alert('danger',"Uh Oh!","Slow down there buddy, you can't refill your bravery so recently after commiting crimes. Try again in " . TimeUntil_Parse($crimeTime + 2400) . ".",true,'temple.php');
+        die($h->endpage());
+    }
     if ($api->UserHasCurrency($userid, 'secondary', $set['brave_refill_cost'])) {
         //User's brave is already full.
         if ($api->UserInfoGet($userid, 'brave', true) == 100) {
