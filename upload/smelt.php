@@ -30,6 +30,8 @@ function home()
     global $db, $userid, $api;
     $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` ORDER BY `smelt_output` ASC");
     echo "
+    <a href='#' class='btn btn-primary' data-toggle='modal' data-target='#smithing_info'>In Progress</a>
+    <br />
     <div class='row'>
         <div class='col-12'>
             <div class='card'>
@@ -176,4 +178,5 @@ function smelt()
     }
 }
 
+include('forms/smithing_progress_popup.php');
 $h->endpage();
