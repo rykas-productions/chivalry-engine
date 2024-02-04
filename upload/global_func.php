@@ -641,8 +641,15 @@ function SystemLogsAdd($user, $logtype, $input)
  * @param int $max = Maximum number to be picked randomly. [Default = PHP_INT_MAX]
  * @return int
  */
-function Random($min = 0, $max = PHP_INT_MAX)
+function Random($min = 0, $max = PHP_INT_MAX, $isFloat = false)
 {
+    if ($max > PHP_INT_MAX)
+        $isFloat = true;
+    if ($min < PHP_INT_MIN)
+        $isFloat = true;
+    if ($isFloat)
+        return $min + mt_rand() / mt_getrandmax() * ($max - $min);
+    else 
         return random_int($min, $max);
 }
 
@@ -1382,9 +1389,9 @@ function logMarketAvg($qty, $cost)
 
 function isHoliday()
 {
-    $month = date('n');
-    $day = date('j');
-    $year = date('Y');
+    $month = currentMonth();
+    $day = currentDay();
+    $year = currentYear();
     
     if ($month == 10 && $day == 31)
         return true;
@@ -1413,4 +1420,19 @@ function phpversion_exact()
     } else {
         return "N/A";
     }
+}
+
+function currentDay()
+{
+    return date('j');
+}
+
+function currentYear()
+{
+    return date('Y');
+}
+
+function currentMonth()
+{
+    return date('n');
 }
