@@ -55,7 +55,7 @@ echo "<h3><i class='fas fa-list'></i> Item Appendix</h3><hr />This page lists al
                     " . createRandomBadge("<a href='?view=holiday'>Holiday</a>") . "
                 </div>
                 <div class='col-auto'>
-                    " . createRandomBadge("<a href='?view=holiday'>Other</a>") . "
+                    " . createRandomBadge("<a href='?view=other'>Other</a>") . "
                 </div>
             </div>
         </div>
