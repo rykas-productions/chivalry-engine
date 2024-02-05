@@ -822,7 +822,7 @@ function edititem()
                                                 <small><b>Ammo Required</b></small>
                                             </div>
                                             <div class='col-12'>
-                                                " . item_dropdown('ammo') . "
+                                                " . item_dropdown('ammo', $itemi['ammo']) . "
                                             </div>
                                         </div>
                                     </div>
