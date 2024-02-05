@@ -200,7 +200,7 @@ if (!$itmid) {
                 </div>
             </div>";
         echo "</div>";
-        $chanceDropItems = array(33);
+        $chanceDropItems = array(33,210);
         if (in_array($itmid, $chanceDropItems))
         {
             echo "<div class='col-12'>
@@ -382,6 +382,43 @@ if (!$itmid) {
                                                     </div>
                                                 </div>
                                             </div>";
+                                }
+                                if ($itmid == 210)
+                                {
+                                    echo "
+                                        <div class='col-12'>
+                                            " . alert('warning',"","Drops temporarily tweaked",false) . "
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>33%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        CID Admin Gym Access Scroll
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>33%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Chivalry Gym Scroll
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
+                                            <div class='row'>
+                                                    <div class='col-12'>
+                                                        <small><b>33%</b></small>
+                                                    </div>
+                                                    <div class='col-12'>
+                                                        Invisibility Potion
+                                                    </div>
+                                                </div>
+                                        </div>";
                                 }
                                     
                             echo "</div></div>
