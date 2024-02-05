@@ -21,14 +21,20 @@ switch ($_GET['action']) {
 function cidticket()
 {
 	global $h,$db,$api,$userid;
+	$openTime = getCurrentUserPref('cidScratchTime', 0);
 	if (!$api->UserHasItem($userid,210,1))
 	{
 		alert('danger',"Uh Oh!","You need a CID Scratch Ticket to be here.",true,'inventory.php');
 		die($h->endpage());
 	}
+	if (time() <= $openTime + 1400)
+	{
+	    alert('danger',"Uh Oh!","Slow down there buddy, there's a cooldown when scratching {$api->SystemItemIDtoName(210)}s. Try again in " . TimeUntil_Parse($openTime + 1400) . ".",true,'inventory.php');
+	    die($h->endpage());
+	}
 	if (isset($_GET['scratch']))
 	{
-		$rng=Random(1,6);
+		$rng=Random(1,3);
 		if ($rng == 1)
 		{
 			$cash=Random(3,20);
@@ -62,6 +68,7 @@ function cidticket()
 			alert("success","Success!","You scratch this spot off and you win {$cash} VIP Days. Congratulations!",true,'inventory.php');
 			$db->query("UPDATE `users` SET `vip_days` = `vip_days` + {$cash} WHERE `userid` = {$userid}");
 		}
+		setCurrentUserPref("cidScratchTime", time());
 		$api->UserTakeItem($userid,210,1);
 	}
 	else
