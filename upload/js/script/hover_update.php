@@ -46,11 +46,11 @@ $ir['announcements'] = $db->fetch_single(
 ?>
 	<script>
 		document.getElementById("socialRow").innerHTML = "";
-		document.getElementById('ui_token').innerHTML = <?php echo "'" . number_format($ir['secondary_currency']) . "'"; ?>;
-		document.getElementById('ui_copper').innerHTML = <?php echo "'" . number_format($ir['primary_currency']) . "'"; ?>;
-		document.getElementById('ui_mail').innerHTML = <?php echo "'" . number_format($ir['mail']) . "'"; ?>;
-		document.getElementById('ui_notif').innerHTML = <?php echo "'" . number_format($ir['notifications']) . "'"; ?>;
-		document.getElementById('ui_announce').innerHTML = <?php echo "'" . number_format($ir['announcements']) . "'"; ?>;
+		document.getElementById('ui_token').innerHTML = <?php echo "'" . $db->escape(shortNumberParse($ir['secondary_currency'])) . "'"; ?>;
+		document.getElementById('ui_copper').innerHTML = <?php echo "'" . $db->escape(shortNumberParse($ir['primary_currency'])) . "'"; ?>;
+		document.getElementById('ui_mail').innerHTML = <?php echo "'" . $db->escape(shortNumberParse($ir['mail'])) . "'"; ?>;
+		document.getElementById('ui_notif').innerHTML = <?php echo "'" . $db->escape(shortNumberParse($ir['notifications'])) . "'"; ?>;
+		document.getElementById('ui_announce').innerHTML = <?php echo "'" . $db->escape(shortNumberParse($ir['announcements'])) . "'"; ?>;
 		document.getElementById('ui_time').innerHTML = <?php echo "'" .  date('F j, Y') . " " . date('g:i:s a') . "'"; ?>
 	</script>
 <?php
