@@ -121,11 +121,11 @@ function index()
         }
         $ctprice = ($r['imPRICE'] * $r['imQTY']);
         if ($r['imCURRENCY'] == 'primary') {
-            $price = shortNumberParse($r['imPRICE']) . " Copper Coins";
-            $tprice = shortNumberParse($ctprice) . " Copper Coins";
+            $price = shortNumberParse($r['imPRICE']) . " " . loadImageAsset("menu/coin-copper.svg");
+            $tprice = shortNumberParse($ctprice) . " " . loadImageAsset("menu/coin-copper.svg");
         } else {
-            $price = shortNumberParse($r['imPRICE']) . " Chivalry Tokens";
-            $tprice = shortNumberParse($ctprice) . " Chivalry Tokens";
+            $price = shortNumberParse($r['imPRICE']) . " " . loadImageAsset("menu/coin-chivalry.svg");
+            $tprice = shortNumberParse($ctprice) . " " . loadImageAsset("menu/coin-chivalry.svg");
         }
         if ($r['imADDER'] == $userid) {
             $link =
@@ -231,8 +231,8 @@ function index()
 												"agility" => "Agility", "guard" => "Guard",
 												"labor" => "Labor", "iq" => "IQ",
 												"infirmary" => "Infirmary minutes", "dungeon" => "Dungeon minutes",
-												"primary_currency" => "Copper Coins", "secondary_currency"
-											=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+											    "primary_currency" => loadImageAsset("menu/coin-copper.svg"), "secondary_currency"
+											    => loadImageAsset("menu/coin-chivalry.svg"), "crimexp" => "Experience", "vip_days" =>
 												"VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
 										$statformatted = $stats["{$einfo['stat']}"];
 										echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
@@ -343,7 +343,7 @@ function buy()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
+        $curre = ($r['imCURRENCY'] == 'primary') ? loadImageAsset("menu/coin-copper.svg") : loadImageAsset("menu/coin-chivalry.svg");
         $final_price = $r['imPRICE'] * $_POST['QTY'];
 		$remove = 0.02;
 		if ($r['imDEPOSIT'] == 'true')
@@ -354,7 +354,7 @@ function buy()
 			addToEconomyLog('Market Fees', 'token', ($final_price*$remove)*-1);
 		$taxed=$final_price-($final_price*$remove);
         if ($final_price > $ir[$curr]) {
-            alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
+            alert('danger', "Uh Oh!", "You do not have enough {$curre} to buy this offer.");
             die($h->endpage());
         }
         if ($_POST['QTY'] > $r['imQTY']) {
@@ -431,10 +431,10 @@ function gift()
             die($h->endpage());
         }
         $curr = ($r['imCURRENCY'] == 'primary') ? 'primary_currency' : 'secondary_currency';
-        $curre = ($r['imCURRENCY'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
+        $curre = ($r['imCURRENCY'] == 'primary') ? loadImageAsset("menu/coin-copper.svg") : loadImageAsset("menu/coin-chivalry.svg");
         $final_price = $r['imPRICE'] * $_POST['QTY'];
         if ($final_price > $ir[$curr]) {
-            alert('danger', "Uh Oh!", "You do not have enough currency on-hand to buy this offer.");
+            alert('danger', "Uh Oh!", "You do not have enough {$curre} to buy this offer.");
             die($h->endpage());
         }
         if ($_POST['QTY'] > $r['imQTY']) {
@@ -555,7 +555,7 @@ function add()
             $db->free_result($checkq);
             item_remove($userid, $_POST['ID'], $_POST['QTY']);
             $itemname=$api->SystemItemIDtoName($_POST['ID']);
-			$curre = ($_POST['currency'] == 'primary') ? 'Copper Coins' : 'Chivalry Tokens';
+            $curre = ($_POST['currency'] == 'primary') ? loadImageAsset("menu/coin-copper.svg") : loadImageAsset("menu/coin-chivalry.svg");
 			$num_format=shortNumberParse($_POST['price']);
             $imadd_log = $db->escape("Listed " . shortNumberParse($_POST['QTY']) . " {$itemname}(s) on the item market for {$num_format} {$curre}.");
             $api->SystemLogsAdd($userid, 'imarket', $imadd_log);

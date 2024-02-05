@@ -54,23 +54,23 @@ function home()
                                 <small><b>Market Average</b></small>
                             </div>
                             <div class='col-12'>
-                                " . shortNumberParse($avgprice) . " Copper Coins
+                                " . shortNumberParse($avgprice) . " " . loadImageAsset("menu/coin-copper.svg"). "
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xxl-6 col-xxxl'>
                             <div class='col-12'>
-                                <small><b>Your Tokens</b></small>
+                                <small><b>Chivalry Tokens</b></small>
                             </div>
                             <div class='col-12'>
-                                " . shortNumberParse($ir['secondary_currency']) . " Chivalry Tokens
+                                " . shortNumberParse($ir['secondary_currency']) . " " . loadImageAsset("menu/coin-chivalry.svg"). "
                             </div>
                         </div>
                         <div class='col-12 col-sm-6 col-md-12 col-xxl-6 col-xxxl'>
                             <div class='col-12'>
-                                <small><b>Your Copper</b></small>
+                                <small><b>Copper Coins</b></small>
                             </div>
                             <div class='col-12'>
-                                " . shortNumberParse($ir['primary_currency']) . " Copper Coins
+                                " . shortNumberParse($ir['primary_currency']) . " " . loadImageAsset("menu/coin-copper.svg"). "
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@ function home()
         <div class='col-12'>
             <div class='card'>
                 <div class='card-header'>
-                    Chivalry Token Market Offers
+                    Chivalry Token " . loadImageAsset("menu/coin-chivalry.svg"). " Market Offers
                 </div>
                 <div class='card-body'>";
     $q = $db->query("/*qc=on*/SELECT * FROM `sec_market` ORDER BY `sec_cost` ASC");
@@ -116,7 +116,7 @@ function home()
                         <small><b>Offer</b></small>
                     </div>
                     <div class='col-12'>
-                        " . shortNumberParse($r['sec_total']) . " Chivalry Tokens
+                        " . shortNumberParse($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). "
                     </div>
                 </div>
             </div>
@@ -126,7 +126,7 @@ function home()
                         <small><b>Cost per Token</b></small>
                     </div>
                     <div class='col-12'>
-                        " . shortNumberParse($r['sec_cost']) . " Copper Coins
+                        " . shortNumberParse($r['sec_cost']) . " " . loadImageAsset("menu/coin-copper.svg"). "
                     </div>
                 </div>
             </div>
@@ -136,7 +136,7 @@ function home()
                         <small><b>Total Cost</b></small>
                     </div>
                     <div class='col-12'>
-                        " . shortNumberParse($totalcost) . " Copper Coins
+                        " . shortNumberParse($totalcost) . " " . loadImageAsset("menu/coin-copper.svg"). "
                     </div>
                 </div>
                 
@@ -185,17 +185,17 @@ function buy()
 	addToEconomyLog('Market Fees', 'copper', ($totalcost*$remove)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) 
     {
-        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
+        alert('danger', "Uh Oh!", "You need " . shortNumberParse($totalcost) . " " . loadImageAsset("menu/coin-copper.svg"). " to buy this listing.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'secmarket', "Bought " . shortNumberParse($r['sec_total']) . " Chivalry Tokens from the market for " . shortNumberParse($totalcost) . " Copper Coins.");
+    $api->SystemLogsAdd($userid, 'secmarket', "Bought " . shortNumberParse($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " from the market for " . shortNumberParse($totalcost) . " " . loadImageAsset("menu/coin-copper.svg"). ".");
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $api->UserTakeCurrency($userid, 'primary', $totalcost);
     $api->UserGiveCurrency($r['sec_user'], 'primary', $taxed);
     $api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> bought 
-        " . number_format($r['sec_total']) . " Chivalry Tokens from the Chivalry Token Market for a total of " . shortNumberParse($taxed) . " Copper Coins.");
+        " . number_format($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " from the Chivalry Token Market for a total of " . shortNumberParse($taxed) . " " . loadImageAsset("menu/coin-copper.svg"). ".");
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have bought " . shortNumberParse($r['sec_total']) . " Chivalry Tokens for " . shortNumberParse($totalcost) . " Copper Coins.", true, 'secmarket.php');
+    alert('success', "Success!", "You have bought " . shortNumberParse($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " for " . shortNumberParse($totalcost) . " " . loadImageAsset("menu/coin-copper.svg"). ".", true, 'secmarket.php');
     logMarketAvg($r['sec_total'],$totalcost);
 	die($h->endpage());
 }
@@ -239,7 +239,7 @@ function buy2()
 		$totalcost = $r['sec_cost'] * $_POST['qty'];
 		if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) 
 		{
-			alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'secmarket.php');
+			alert('danger', "Uh Oh!", "You need " . shortNumberParse($totalcost). " " . loadImageAsset("menu/coin-copper.svg"). " to buy this listing.", true, 'secmarket.php');
 			die($h->endpage());
 		}
 		$remove = 0.02;
@@ -247,16 +247,16 @@ function buy2()
 			$remove = $remove + 0.05;
 		$taxed=$totalcost-($totalcost*$remove);
 		addToEconomyLog('Market Fees', 'copper', ($totalcost*$remove)*-1);
-		$api->SystemLogsAdd($userid, 'secmarket', "Bought " . shortNumberParse($r['sec_total']) . " Chivalry Tokens from the market for " . shortNumberParse($totalcost) . " Copper Coins.");
+		$api->SystemLogsAdd($userid, 'secmarket', "Bought " . shortNumberParse($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " from the market for " . shortNumberParse($totalcost) . " " . loadImageAsset("menu/coin-copper.svg"). ".");
 		$api->UserGiveCurrency($userid, 'secondary', $_POST['qty']);
 		$api->UserTakeCurrency($userid, 'primary', $totalcost);
 		$api->UserGiveCurrency($r['sec_user'], 'primary', $taxed);
 		$api->GameAddNotification($r['sec_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> bought 
-			" . shortNumberParse($_POST['qty']) . " Chivalry Tokens from the Chivalry Token Market for a total of " . shortNumberParse($taxed) . " Copper Coins.");
+			" . shortNumberParse($_POST['qty']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " from the Chivalry Token Market for a total of " . shortNumberParse($taxed) . " " . loadImageAsset("menu/coin-copper.svg"). ".");
 		$db->query("UPDATE `sec_market` SET `sec_total` = `sec_total` - {$_POST['qty']} WHERE `sec_id` = {$_GET['id']}");
 		$db->query("DELETE FROM `sec_market` WHERE `sec_total` = 0");
 		
-		alert('success', "Success!", "You have bought " . shortNumberParse($_POST['qty']) . " Chivalry Tokens for " . shortNumberParse($totalcost) . " Copper Coins.", true, 'secmarket.php');
+		alert('success', "Success!", "You have bought " . shortNumberParse($_POST['qty']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " for " . shortNumberParse($totalcost) . " " . loadImageAsset("menu/coin-copper.svg"). ".", true, 'secmarket.php');
 		logMarketAvg($_POST['qty'],$totalcost);
 		die($h->endpage());
 	}
@@ -273,14 +273,14 @@ function buy2()
                         <div class='card-body'>
                             <div class='row'>
                                 <div class='col-12'>";
-									alert("info","","This listing has " . shortNumberParse($r['sec_total']) . " Chivalry Tokens for sale 
-									at " . shortNumberParse($r['sec_cost']) . " Copper Coins each. How many do you wish to purhcase? You have 
-									" . shortNumberParse($ir['primary_currency']) . " Copper Coins",false);
+									alert("info","","This listing has " . shortNumberParse($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " for sale 
+									at " . shortNumberParse($r['sec_cost']) . " " . loadImageAsset("menu/coin-copper.svg"). " each. How many do you wish to purhcase? You have 
+									" . shortNumberParse($ir['primary_currency']) . " " . loadImageAsset("menu/coin-copper.svg"). "",false);
                                 echo"</div>
                                 <div class='col-12 col-sm-4 col-xl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <b><small>Chivalry Tokens</small></b>
+                                            <b><small>Purchase " . loadImageAsset("menu/coin-chivalry.svg"). "</small></b>
                                         </div>
                                         <div class='col-12'>
                                             <input type='number' name='qty' class='form-control' required='1' min='1' value='{$r["sec_total"]}' max='{$r["sec_total"]}'>
@@ -325,10 +325,10 @@ function remove()
         alert('danger', "Uh Oh!", "You are trying to remove a lising you do not own.", true, 'secmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'secmarket', "Removed " . shortNumberParse($r['sec_total']) . " Chivalry Tokens from the market.");
+    $api->SystemLogsAdd($userid, 'secmarket', "Removed " . shortNumberParse($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " from the market.");
     $api->UserGiveCurrency($userid, 'secondary', $r['sec_total']);
     $db->query("DELETE FROM `sec_market` WHERE `sec_id` = {$_GET['id']}");
-    alert('success', "Success!", "You have removed your listing for " . shortNumberParse($r['sec_total']) . " Chivalry Tokens from the market.", false);
+    alert('success', "Success!", "You have removed your listing for " . shortNumberParse($r['sec_total']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " from the market.", false);
 	home();
     die($h->endpage());
 }
@@ -345,25 +345,25 @@ function add()
             die($h->endpage());
         }
         if (!($api->UserHasCurrency($userid, 'secondary', $_POST['qty']))) {
-            alert('danger', "Uh Oh!", "You are trying to add more Chivalry Tokens than you currently have.");
+            alert('danger', "Uh Oh!", "You are trying to add more " . loadImageAsset("menu/coin-chivalry.svg"). " than you currently have.");
             die($h->endpage());
         }
 		if ($_POST['cost'] > $set['token_maximum'])
 		{
-		    alert('danger', "Uh Oh!", "The pricing you set is too expensive. The maximum price is " . shortNumberParse($set['token_maximum']) . " Copper Coins per Chivalry Token.");
+		    alert('danger', "Uh Oh!", "The pricing you set is too expensive. The maximum price is " . shortNumberParse($set['token_maximum']) . " " . loadImageAsset("menu/coin-copper.svg"). " per Chivalry Token.");
             die($h->endpage());
 		}
 		if ($_POST['cost'] < $set['token_minimum'])
 		{
-		    alert('danger', "Uh Oh!", "The pricing you set is too cheap. The minimum price is " . shortNumberParse($set['token_minimum']) . " Copper Coins per Chivalry Token.");
+		    alert('danger', "Uh Oh!", "The pricing you set is too cheap. The minimum price is " . shortNumberParse($set['token_minimum']) . " " . loadImageAsset("menu/coin-copper.svg"). " per Chivalry Token.");
             die($h->endpage());
 		}
         $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`, `sec_deposit`)
 					VALUES ('{$userid}', '{$_POST['cost']}', '{$_POST['qty']}', '{$_POST['deposit']}');");
         $api->UserTakeCurrency($userid, 'secondary', $_POST['qty']);
-        $api->SystemLogsAdd($userid, 'secmarket', "Added " . number_format($_POST['qty']) . " to the secondary market for " . number_format($_POST['cost']) . " Copper Coins each.");
-        alert('success', "Success!", "You have added your " . number_format($_POST['qty']) . " Chivalry Tokens to the market for
-		    " . number_format($_POST['cost']) . " Copper Coins each.", true, 'secmarket.php');
+        $api->SystemLogsAdd($userid, 'secmarket', "Added " . shortNumberParse($_POST['qty']) . " to the secondary market for " . shortNumberParse($_POST['cost']) . " " . loadImageAsset("menu/coin-copper.svg"). " each.");
+        alert('success', "Success!", "You have added your " . shortNumberParse($_POST['qty']) . " " . loadImageAsset("menu/coin-chivalry.svg"). " to the market for
+		    " . shortNumberParse($_POST['cost']) . " " . loadImageAsset("menu/coin-copper.svg"). " each.", true, 'secmarket.php');
         die($h->endpage());
     } else {
         echo "
@@ -372,7 +372,7 @@ function add()
                 <div class='col-12'>
                     <div class='card'>
                         <div class='card-header'>
-                            Creating Chivalry Token Listing
+                            Creating " . loadImageAsset("menu/coin-chivalry.svg"). " Listing
                         </div>
                         <div class='card-body'>
                             <div class='row'>
@@ -384,7 +384,7 @@ function add()
                                 <div class='col-12 col-sm-4 col-xl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <b><small>Chivalry Tokens</small></b>
+                                            <b><small>" . loadImageAsset("menu/coin-chivalry.svg"). " to Sell</small></b>
                                         </div>
                                         <div class='col-12'>
                                             <input type='number' name='qty' class='form-control' required='1' min='1' value='{$ir['secondary_currency']}' max='{$ir['secondary_currency']}'>
@@ -395,7 +395,7 @@ function add()
                                 <div class='col-12 col-sm-4 col-xl'>
                                     <div class='row'>
                                         <div class='col-12'>
-                                            <b><small>Per Token Cost</small></b>
+                                            <b><small>" . loadImageAsset("menu/coin-copper.svg"). " -> " . loadImageAsset("menu/coin-chivalry.svg"). "</small></b>
                                         </div>
                                         <div class='col-12'>
                                             <input type='number' name='cost' class='form-control' required='1' min='{$set['token_minimum']}' max='{$set['token_maximum']}' value='{$avgprice}'>

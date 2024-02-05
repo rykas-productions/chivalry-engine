@@ -16,7 +16,7 @@ function calcWeaponEffectiveness($weapID, $attacker)
     if (getUserSkill($attacker, 9) > 0)
         $r['weapon'] += ($r['weapon'] * ((getUserSkill($attacker, 8) * getSkillBonus(8))/100));
     if ($weapID == 235)
-        $r['weapon'] = ($r['weapon'] * 0.25) * $api->UserInfoGet($attacker, "level");
+        $r['weapon'] = ($r['weapon'] * $r['weapon']) * levelMultiplier($api->UserInfoGet($attacker, "level"), getUserMasteryRank($attacker));
     return $r['weapon'];
 }
 

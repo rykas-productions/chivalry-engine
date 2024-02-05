@@ -243,11 +243,4 @@ function start()
 	                            complete in " . round(getCourseTime($course['ac_days']), 2) . " days.", true, 'index.php');
 }
 
-function getCourseTime($academyTime)
-{
-    global $ir;
-    $return = $academyTime / levelMultiplier(1, $ir['reset']);
-    return $return;
-}
-
 $h->endpage();

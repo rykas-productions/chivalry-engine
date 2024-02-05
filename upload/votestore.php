@@ -75,7 +75,7 @@ function buy()
         $tokens = round($vote['baseTokens'] * levelMultiplier($ir['level'], $ir['reset']));
         $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` + 500 WHERE `userid` = {$userid}");
         addToEconomyLog('Vote Rewards', 'token', $tokens);
-        $rewardTxt = "You've been credited " . shortNumberParse($tokens) . " Chivalry Tokens.";
+        $rewardTxt = "You've been credited " . tokenParse($tokens);
     }
     //50 Boxes of Random
     if ($_GET['option'] == 2)
@@ -90,7 +90,7 @@ function buy()
         $copper = round($vote['baseCopper'] * levelMultiplier($ir['level'], $ir['reset']));
         $db->query("UPDATE `users` SET `primary_currency` = `primary_currency` + 250000 WHERE `userid` = {$userid}");
 		addToEconomyLog('Vote Rewards', 'copper', $copper);
-		$rewardTxt = "You've been credited " . shortNumberParse($copper) . " Copper Coins.";
+		$rewardTxt = "You've been credited " . copperParse($copper);
     }
     //25 Hexbags
     if ($_GET['option'] == 4)
@@ -223,7 +223,7 @@ function home()
                             <small><b>Reward</b></small>
                         </div>
                         <div class='col-12'>
-                            " . shortNumberParse(round($vote['baseCopper'] * levelMultiplier($ir['level'], $ir['reset']))) . " Copper Coins
+                            " . copperParse(round($vote['baseCopper'] * levelMultiplier($ir['level'], $ir['reset']))) . "
                         </div>
                     </div>
                 </div>
@@ -281,7 +281,7 @@ function home()
                             <small><b>Reward</b></small>
                         </div>
                         <div class='col-12'>
-                            " . shortNumberParse(round($vote['baseTokens'] * levelMultiplier($ir['level'], $ir['reset']))) . " Chivalry Tokens
+                            " . tokenParse(round($vote['baseTokens'] * levelMultiplier($ir['level'], $ir['reset']))) . "
                         </div>
                     </div>
                 </div>

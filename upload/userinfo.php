@@ -110,7 +110,7 @@ echo "
 						<small><b>Copper Coins</b> [<a href='allbank.php'>Bank</a>]</small>
 					</div>
 					<div class='col-12'>
-						<span id='ui_copper'>" . shortNumberParse($ir['primary_currency']) . "</span>
+						<span id='ui_copper'>" . shortNumberParse($ir['primary_currency']) . " </span> " . loadImageAsset("menu/coin-copper.svg") . "
 					</div>
 				</div>  
 			</div>
@@ -120,7 +120,7 @@ echo "
 						<small><b>Chivalry Tokens</b> [<a href='alltoken.php'>Bank</a>]</small>
 					</div>
 					<div class='col-12'>
-						<span id='ui_token'>" . shortNumberParse($ir['secondary_currency']) . "</span>
+						<span id='ui_token'>" . shortNumberParse($ir['secondary_currency']) . "</span> " . loadImageAsset("menu/coin-chivalry.svg") . "
 					</div>
 				</div>
 			</div>

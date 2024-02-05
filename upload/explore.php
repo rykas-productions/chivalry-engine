@@ -73,6 +73,30 @@ $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FR
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 $estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `estate_market`"));
 $miningenergy = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
+$npccount = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`botid`) FROM `botlist`")));
+if ($ir['course'] > 0)
+{
+    
+    $cd =
+    $db->query(
+        "/*qc=on*/SELECT `ac_days`
+    				 FROM `academy`
+    				 WHERE `ac_id` = {$ir['course']}");
+    $coud = $db->fetch_row($cd);
+    
+    $daystoseconds=getCourseTime($coud['ac_days'])*86400;
+    $actualReset = $ir['reset'] - 1;
+    if ($actualReset > 0)
+        $daystoseconds = $daystoseconds - ($daystoseconds * ($actualReset * 0.08));
+    $starttime=time()-($ir['course_complete']-$daystoseconds);
+    $academy = round(($starttime/$daystoseconds)*100) . "%";
+}
+else
+{
+    $courseTotal = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`ac_id`) FROM `academy`"));
+    $courseDone = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `academy_done` WHERE `userid` = {$userid}"));
+    $academy = $courseTotal - $courseDone;
+}
 if (empty($dung_count)) {
     $dung_count = 0;
 }
@@ -216,7 +240,7 @@ echo"
 						<a href='gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym.svg") . " The Gym</a>
 					</div>
 					<div class='col-auto'>
-						<a href='bottent.php' class='{$txtClass}'>" . loadImageAsset("explore/npc_list.svg") . " NPC Battle List</a>
+						<a href='bottent.php' class='{$txtClass}'>" . loadImageAsset("explore/npc_list.svg") . " NPC Battle List <span class='badge badge-pill badge-primary'>{$npccount}</span></a>
 					</div>
 					<div class='col-auto'>
 						<a href='chivalry_gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym_chiv.svg") . " Chivalry Gym</a>
@@ -236,7 +260,7 @@ echo"
 						}
 					echo"
 					<div class='col-auto'>
-						<a href='academy.php' class='{$txtClass}'>" . loadImageAsset("explore/academy.svg") . " Local Academy</a>
+						<a href='academy.php' class='{$txtClass}'>" . loadImageAsset("explore/academy.svg") . " Local Academy <span class='badge badge-pill badge-primary'>{$academy}</span></a>
 					</div>
 					<div class='col-auto'>
 						<a href='achievements.php'>" . loadImageAsset("explore/achievements.svg") . "  Achievements</a>

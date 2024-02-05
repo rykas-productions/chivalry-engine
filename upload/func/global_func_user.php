@@ -1619,3 +1619,10 @@ function cidDebugAccess()
     else
         return false;
 }
+
+function getCourseTime($academyTime)
+{
+    global $ir;
+    $return = $academyTime / levelMultiplier(1, $ir['reset']);
+    return $return;
+}

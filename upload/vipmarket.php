@@ -32,7 +32,7 @@ function index()
     $q=$db->query("SELECT * FROM `vip_market`");
    if ($db->num_rows($q) == 0)
    {
-       alert('danger',"Uh Oh!","There's no VIP Day offers on the marekt at this time. You may <a href='?action=add'>add your own</a>.",true,'explore.php');
+       alert('danger',"Uh Oh!","There's no VIP Day offers on the market at this time. Maybe you should <a href='?action=add'>add your own</a>?",true,'explore.php');
        die($h->endpage());
    }
     echo "
@@ -58,16 +58,16 @@ function index()
         $total=$r['vip_days']*$r['vip_cost'];
         echo "<tr>
             <td>
-                <a href='profile.php?user={$r['vip_user']}'>{$api->SystemUserIDtoName($r['vip_user'])}</a> [{$r['vip_user']}]
+                <a href='profile.php?user={$r['vip_user']}'>{$api->SystemUserIDtoName($r['vip_user'])}</a> " . parseUserID($r['vip_user']) . "
             </td>
             <td>
-                " . number_format($r['vip_days']) . " Day(s)
+                " . shortNumberParse($r['vip_days']) . " Day(s)
             </td>
             <td>
-                " . number_format($r['vip_cost']) . " Copper Coins
+                " . copperParse($r['vip_cost']) . "
             </td>
             <td>
-                " . number_format($total) . " Copper Coins
+                " . copperParse($total) . " Copper Coins
             </td>
             <td>
                 {$link}
@@ -94,21 +94,21 @@ function add()
         } else {
             if ($_POST['price'] < 250000)
             {
-                alert('danger','Uh Oh!',"You cannot charge less than 250K Copper Coins per VIP Day.");
+                alert('danger','Uh Oh!',"You cannot charge less than " . copperParse(250000) . " per VIP Day.");
                 die($h->endpage());
             }
             if ($_POST['price'] > 10000000)
             {
-                alert('danger','Uh Oh!',"You cannot charge more than 10M Copper Coins per VIP Day.");
+                alert('danger','Uh Oh!',"You cannot charge more than " . copperParse(10000000) . " Copper Coins per VIP Day.");
                 die($h->endpage());
             }
             $db->query("INSERT INTO `vip_market` (`vip_user`, `vip_cost`, `vip_days`, `vip_deposit`) VALUES ('{$userid}', '{$_POST['price']}', '{$_POST['QTY']}', '{$_POST['deposit']}')");
             $db->query("UPDATE `users` SET `vip_days` = `vip_days` - {$_POST['QTY']} WHERE `userid` = {$userid}");
-            $imadd_log = $db->escape("Listed {$_POST['QTY']} VIP Days(s) on the item market for {$_POST['price']} Copper Coins.");
+            $imadd_log = $db->escape("Listed " . shortNumberParse($_POST['QTY']) . " VIP Days(s) on the item market for " . copperParse($_POST['price']));
             $api->SystemLogsAdd($userid, 'vipmarket', $imadd_log);
-			$num_format=number_format($_POST['price']);
-            alert('success', "Success!", "You have successfully listed {$_POST['QTY']} VIP Days(s) on the VIP
-			    market for {$num_format} Copper Coins.", true, 'vipmarket.php');
+            $num_format=copperParse($_POST['price']);
+            alert('success', "Success!", "You have successfully listed " . shortNumberParse($_POST['QTY']) . " VIP Days(s) on the VIP
+			    market for {$num_format}.", true, 'vipmarket.php');
                 $h->endpage();
         }
     } else {
@@ -131,7 +131,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					Price per Token<br />
+					" . loadImageAsset("menu/coin-copper.svg") . "/VIP Day<br />
 					<small>Subject to a 2% market fee.</small>
 				</th>
 				<td>
@@ -192,18 +192,18 @@ function buy()
 	$taxed=$totalcost-($totalcost*$remove);
 	addToEconomyLog('Market Fees', 'copper', ($totalcost*$remove)*-1);
     if ($api->UserHasCurrency($userid, 'primary', $totalcost) == false) {
-        alert('danger', "Uh Oh!", "You do not have enough Copper Coins to buy this listing.", true, 'vipmarket.php');
+        alert('danger', "Uh Oh!", "You need " . copperParse($totalcost) . " to buy this listing.", true, 'vipmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'vipmarket', "Bought " . number_format($r['vip_days']) . " VIP Days from the market for " . number_format($totalcost) . " Copper Coins.");
+    $api->SystemLogsAdd($userid, 'vipmarket', "Bought " . shortNumberParse($r['vip_days']) . " VIP Days from the market for " . copperParse($totalcost));
     $api->UserGiveCurrency($userid, 'secondary', $r['vip_days']);
     $db->query("UPDATE `users` SET `vip_days` = `vip_days` + {$r['vip_days']} WHERE `userid` = {$userid}");
     $api->UserTakeCurrency($userid, 'primary', $totalcost);
     $api->UserGiveCurrency($r['vip_user'], 'primary', $taxed);
     $api->GameAddNotification($r['vip_user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has bought your
-        {$r['vip_days']} VIP Day(s) offer from the market for a total of " . number_format($taxed) . " Copper Coins.");
+        " . shortNumberParse($r['vip_days']) . " VIP Day(s) offer from the market for a total of " . copperParse($taxed) . " Copper Coins.");
     $db->query("DELETE FROM `vip_market` WHERE `vip_id` = {$_GET['ID']}");
-    alert('success', "Success!", "You have bought " . number_format($r['vip_days']) . " VIP Day(s) for " . number_format($totalcost) . " Copper Coins.", true, 'vipmarket.php');
+    alert('success', "Success!", "You have bought " . shortNumberParse($r['vip_days']) . " VIP Day(s) for " . copperParse($totalcost), true, 'vipmarket.php');
     die($h->endpage());
 }
 
@@ -225,9 +225,9 @@ function remove()
         alert('danger', "Uh Oh!", "You are trying to remove a lising you do not own.", true, 'vipmarket.php');
         die($h->endpage());
     }
-    $api->SystemLogsAdd($userid, 'vipmarket', "Removed " . number_format($r['vip_days']) . " VIP Days from the market.");
+    $api->SystemLogsAdd($userid, 'vipmarket', "Removed " . shortNumberParse($r['vip_days']) . " VIP Days from the market.");
     $db->query("UPDATE `users` SET `vip_days` = `vip_days` + {$r['vip_days']} WHERE `userid` = {$userid}");
     $db->query("DELETE FROM `vip_market` WHERE `vip_id` = {$_GET['ID']}");
-    alert('success', "Success!", "You have removed your listing for " . number_format($r['vip_days']) . " VIP Days from the market.", true, 'vipmarket.php');
+    alert('success', "Success!", "You have removed your listing for " . shortNumberParse($r['vip_days']) . " VIP Days from the market.", true, 'vipmarket.php');
     die($h->endpage());
 }

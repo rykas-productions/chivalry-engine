@@ -127,3 +127,13 @@ function parseUserID($userid)
 {
     return createBadge($userid);
 }
+
+function copperParse($int)
+{
+    return shortNumberParse($int) . " " . loadImageAsset("menu/coin-copper.svg");     
+}
+
+function tokenParse($int)
+{
+    return shortNumberParse($int) . " " . loadImageAsset("menu/coin-chivalry.svg");
+}

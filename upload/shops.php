@@ -82,7 +82,7 @@ function shop()
 		{
 		    //Bargaining Skill
 			$specialnumber = ((getUserSkill($userid, 12) * getSkillBonus(12)) / 100);
-            echo "You begin browsing the stock at {$shopdata['shopNAME']}<br />";
+            alert('info',"","You have " . shortNumberParse($ir['primary_currency']) . " " . loadImageAsset("menu/coin-copper.svg") . " to spend while you're at the {$shopdata['shopNAME']} shop.",false);
             $qtwo =
                 $db->query(
                     "/*qc=on*/SELECT `i`.*, `itmtypename`, `sitemID`
@@ -139,7 +139,7 @@ function shop()
 											</div>
 											<div class='col'>
 												<b>Price</b><br />
-												<small>" . shortNumberParse($r['itmbuyprice']) . " Copper Coins</small>
+												<small>" . shortNumberParse($r['itmbuyprice']) . " " . loadImageAsset("menu/coin-copper.svg") . "</small>
 											</div>
 											<br />
 										</div>
@@ -191,8 +191,8 @@ function shop()
 												"agility" => "Agility", "guard" => "Guard",
 												"labor" => "Labor", "iq" => "IQ",
 												"infirmary" => "Infirmary minutes", "dungeon" => "Dungeon minutes",
-												"primary_currency" => "Copper Coins", "secondary_currency"
-											=> "Chivalry Tokens", "crimexp" => "Experience", "vip_days" =>
+											    "primary_currency" => loadImageAsset("menu/coin-copper.svg"), "secondary_currency"
+											    => loadImageAsset("menu/coin-chivalry.svg"), "crimexp" => "Experience", "vip_days" =>
 												"VIP Days", "luck" => "Luck", "premium_currency" => "Mutton");
 										$statformatted = $stats["{$einfo['stat']}"];
 										echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
@@ -215,7 +215,7 @@ function shop()
 						<div class='row'>
 							<div class='col'>
 								<b>Sell</b><br />
-								<small>" . shortNumberParse($r['itmsellprice']) . " Copper Coins</small>
+								<small>" . shortNumberParse($r['itmsellprice']) . " " . loadImageAsset("menu/coin-copper.svg") . "</small>
 							</div>
 							<div class='col'>
 								<b>Circulating</b><br />

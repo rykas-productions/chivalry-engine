@@ -51,7 +51,7 @@ function index()
 		<tr>
 			<th>Listing Owner</th>
 			<th>Requesting</th>
-			<th>Copper/item</th>
+			<th>" . loadImageAsset("menu/coin-copper.svg"). "/item</th>
 			<th>Links</th>
 		</tr>
    ";
@@ -118,7 +118,7 @@ function index()
 				</tr>";
         }
         $ctprice = ($r['irCOST'] * $r['irQTY']);
-        $price = shortNumberParse($r['irCOST']) . " Copper Coins";
+        $price = shortNumberParse($r['irCOST']) . " " . loadImageAsset("menu/coin-copper.svg");
         if ($r['irUSER'] == $userid) {
             $link =
                 "[<a href='?action=remove&ID={$r['irID']}'>Remove</a>]";
@@ -171,9 +171,9 @@ function remove()
     $r = $db->fetch_row($q);
     $api->UserGiveCurrency($userid,'primary',$r['irCOST']*$r['irQTY']);
     $db->query("DELETE FROM `itemrequest` WHERE `irID` = {$_GET['ID']}");
-    $imr_log = $db->escape("Removed request for {$r['itmname']} x {$r['irQTY']} at {$r['irCOST']} Copper Coins each.");
+    $imr_log = $db->escape("Removed request for {$r['itmname']} x {$r['irQTY']} at {$r['irCOST']} " . loadImageAsset("menu/coin-copper.svg"). " each.");
     $api->SystemLogsAdd($userid, 'irequest', $imr_log);
-    alert('success', "Success!", "You have removed your offer successfully. Your copper has been returned to you."
+    alert('success', "Success!", "You have removed your offer successfully. Your " . loadImageAsset("menu/coin-copper.svg"). " has been returned to you."
         , true, 'itemrequest.php');
 }
 
@@ -199,9 +199,9 @@ function buy()
 		<table class='table table-bordered'>
 			<tr>
 				<th colspan='2'>
-					Enter however many {$r['itmname']}(s) you wish to give towards this request. The listing 
-					needs {$r['irQTY']} more before its completed. You will be charged a 2% processing fee upon fulfilling 
-					the request.
+                    You are contributing {$r['itmname']}(s) to this offer request. The offer needs " . shortNumberParse($r['irQTY']) . " 
+                    more {$r['itmname']}(s) to complete. You can contribute {$r['itmname']}(s) at " . shortNumberParse($r['irCOST']) . " 
+                    " . loadImageAsset("menu/coin-copper.svg"). " each. You will be charged a 2% market processing fee.
 				</th>
 			</tr>
 			<tr>
@@ -267,10 +267,10 @@ function buy()
 		$api->UserGiveCurrency($userid,'primary',$taxed);
 		$api->UserTakeItem($userid,$r['irITEM'],$_POST['QTY']);
         notification_add($r['irUSER'], "<a href='profile.php?user=$userid'>{$ir['username']}</a> helped to fulfill your item request by giving
-                {$_POST['QTY']} {$r['itmname']}(s) " . number_format($taxed) . " in exchange for {$final_price} Copper Coins.");
-        $imb_log = $db->escape("Contributed {$r['itmname']} x {$_POST['QTY']} to User ID {$r['irUSER']}'s item request, in exchange for " . number_format($final_price) . " Copper Coins.");
+                {$_POST['QTY']} {$r['itmname']}(s) " . shortNumberParse($taxed) . " in exchange for " . shortNumberParse($final_price) . " " . loadImageAsset("menu/coin-copper.svg"). ".");
+        $imb_log = $db->escape("Contributed {$r['itmname']} x " . shortNumberParse($_POST['QTY']) . " to {$api->SystemUserIDtoName($r['irUSER'])} " . parseUserID($r['irUSER']). "'s item request, in exchange for " . shortNumberParse($final_price) . " " . loadImageAsset("menu/coin-copper.svg"). ".");
         alert('success', "Success!", "You have contributed {$r['itmname']} x {$_POST['QTY']} towards this offer and received 
-		" . number_format($taxed) . " Copper Coins.", true, 'itemrequest.php');
+		" . shortNumberParse($taxed) . " " . loadImageAsset("menu/coin-copper.svg"). ".", true, 'itemrequest.php');
         $api->SystemLogsAdd($userid, 'irequest', $imb_log);
     }
 }
@@ -288,7 +288,7 @@ function add()
         }
         $haveitem=$api->UserHasCurrency($userid,'primary',$_POST['QTY']*$_POST['price']);
         if (!$haveitem) {
-            alert('danger', "Uh Oh!", "You are trying to set a cost that you cannot pay for. Have your Copper Coins on you when you create this offer.", true, 'inventory.php');
+            alert('danger', "Uh Oh!", "You need at least " . shortNumberParse($_POST['QTY']*$_POST['price']) . " " . loadImageAsset("menu/coin-copper.svg"). " to make this offer.", true, 'inventory.php');
             die($h->endpage());
         } else {
 			if (!$api->SystemItemIDtoName($_POST['ID']))
@@ -302,9 +302,9 @@ function add()
             $itemname=$api->SystemItemIDtoName($_POST['ID']);
             $imadd_log = $db->escape("Requested {$_POST['QTY']} {$itemname}(s) for {$_POST['price']} Copper Coins (each).");
             $api->SystemLogsAdd($userid, 'irequest', $imadd_log);
-			$num_format=number_format($_POST['price']);
-            alert('success', "Success!", "You have successfully requested {$_POST['QTY']} {$itemname}(s) on the item
-			    market for {$num_format} Copper Coins (each).", true, 'itemrequest.php');
+			$num_format=shortNumberParse($_POST['price']);
+            alert('success', "Success!", "You have successfully requested " . shortNumberParse($_POST['QTY']) . " {$itemname}(s) on the item
+			    market for {$num_format} " . loadImageAsset("menu/coin-copper.svg"). " (each).", true, 'itemrequest.php');
         }
     } else {
         $csrf = request_csrf_html("imadd_form");
@@ -333,7 +333,7 @@ function add()
 			</tr>
 			<tr>
 				<th>
-					Price per Item
+					" . loadImageAsset("menu/coin-copper.svg"). "/item
 				</th>
 				<td>
 					<input  type='number' min='1' required='1' class='form-control' name='price' />
