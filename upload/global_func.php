@@ -1340,13 +1340,14 @@ function verify_user_password($input, $pass)
  *
  * @return string    The resulting encoded password.
  */
-function encode_password($password)
+function encode_password($password, $type = PASSWORD_DEFAULT)
 {
     global $set;
-    //Set the password cost via settings.
-    $options = ['cost' => $set['Password_Effort'],];
-    //Return the generated password.
-    return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_DEFAULT, $options);
+	if ($type == PASSWORD_BCRYPT)
+		$options = ['cost' => $set['Password_Effort'],];
+		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+	else
+		return password_hash(base64_encode(hash('sha256', $password, true)), $type);
 }
 
 /**
