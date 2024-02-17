@@ -1013,7 +1013,7 @@ function check_data()
         $ev = substr($ev, 1);
         //Update the user's stats as needed, set their course to 0, and course completion time to 0.
         $db->query("UPDATE `users` AS `u` INNER JOIN `userstats` AS `us` ON `u`.`userid` = `us`.`userid`
-		SET `u`.`course` = 0, `course_complete` = 0{$upd} WHERE `u`.`userid` = {$r['userid']}");
+		SET `u`.`course` = 0, `course_complete` = 0 WHERE `u`.`userid` = {$r['userid']}");
         //Give the user a notification saying they've completed their course.
         notification_add($r['userid'], "Congratulations, you completed the {$coud['ac_name']} course and gained {$ev}!");
     }
