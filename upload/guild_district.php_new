@@ -74,9 +74,9 @@ if ($ir['guild'] > 0)
 	if ($db->num_rows($distQ) == 0)
 	{
 		$db->query("INSERT INTO `guild_district_info` 
-					(`guild_id`, `barracks_warriors`, `barracks_archers`, `barracks_generals`, `moves`, `barracks_captains`) 
+					(`guild_id`, `barracks_warriors`, `barracks_archers`, `barracks_generals`, `moves`) 
 					VALUES 
-					('{$ir['guild']}', '0', '0', '0', '2', '0')");
+					('{$ir['guild']}', '0', '0', '0', '2')");
 	}
 	$gdi = ($db->fetch_row($db->query("SELECT * FROM `guild_district_info` WHERE `guild_id` = {$ir['guild']}")));
 	$gi = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$ir['guild']}"));
@@ -87,7 +87,7 @@ if (!isset($_GET['action']))
 }
 switch ($_GET['action']) 
 {
-    case 'view':
+    /*case 'view':
         view();
         break;
 	case 'attackform':
@@ -135,15 +135,12 @@ switch ($_GET['action'])
 	case 'homeBeta':
 	     home2();
 	     break;
-	case 'resetTime':
-	    test();
-	    break;
 	default:
         home2();
-        break;
-	/*default:
+        break;*/
+	default:
 	   tempclosed();
-	   break;*/
+	   break;
 }
 
 function tempclosed()
@@ -179,12 +176,12 @@ function home2()
             echo "<div class='col-12 col-sm-6 col-md-4 col-xl'>
                     <div class='card {$class} text-muted'>
                         <div class='card-header'>
-                            Y: {$r['district_y']}; X: {$r['district_x']} " . returnTileIcon($r['district_id']) . "
+                            Y: {$r['district_y']}; X: {$r['district_x']}
                         </div>
                         <div class='card-body'>
                             <div class='row'>
                                 <div class='col-auto'>
-                                    <small><b>Guild</b></small>
+                                    Guild
                                 </div>
                                 <div class='col-12 col-xxxl-8'>
                                     <a href='guilds.php?action=view&id={$r['district_owner']}'>{$api->GuildFetchInfo($r['district_owner'],'guild_name')}</a>
@@ -447,7 +444,7 @@ function explodedistrict()
             die($h->endpage());
         }
         $random = Random(1,100);
-        if ($random <= 80)
+        if ($random <= 60)
         {
             $db->query("UPDATE `guild_districts` SET `district_fortify` = `district_fortify` - 1 WHERE `district_id` = {$attack_to}");
             alert('success',"","You have successfully sabotage this tile (" . resolveCoordinates($attack_to) .") using a large explosive.",true,'guild_district.php');

@@ -1,25 +1,45 @@
 <?php
 //Module config
-$districtConfig['MaxSizeX'] = 7;
+$districtConfig['MaxSizeX'] = 5;
 $districtConfig['MaxSizeY'] = 5;
-$districtConfig['BarracksMaxWarriors'] = 10000;
-$districtConfig['BarracksMaxArchers'] = 5000;
+$districtConfig['BarracksMaxWarriors'] = 3000;
+$districtConfig['BarracksMaxArchers'] = 1500;
 $districtConfig['GeneralBuff'] = 0.1821715;
 $districtConfig['GeneralTroops'] = 2500;
-$districtConfig['GeneralCost'] = 2500000;
-$districtConfig['GeneralCostDaily'] = 300000;
-$districtConfig['WarriorCost'] = 45000;
-$districtConfig['WarriorCostDaily'] = 5500;
+$districtConfig['GeneralCost'] = 250000;
+$districtConfig['GeneralCostDaily'] = 30000;
+
+//Warriors
+$districtConfig['WarriorCost'] = 4500;
+$districtConfig['WarriorCostDaily'] = 550;
 $districtConfig['WarriorMeleeDmg'] = 200;
 $districtConfig['WarriorRngDmg'] = 0;
-$districtConfig['WarriorMeleeProt'] = 125;
-$districtConfig['WarriorRngProt'] = 0;
-$districtConfig['ArcherCost'] = 80000;
-$districtConfig['ArcherCostDaily'] = 11000;
+$districtConfig['WarriorShrpDmg'] = 0;
+$districtConfig['WarriorMeleeProt'] = 65;
+$districtConfig['WarriorRngProt'] = 176;
+$districtConfig['WarriorShrpProt'] = 18;
+
+//ARchers
+$districtConfig['ArcherCost'] = 8000;
+$districtConfig['ArcherCostDaily'] = 1100;
 $districtConfig['ArcherMeleeDmg'] = 0;
 $districtConfig['ArcherRngDmg'] = 225;
-$districtConfig['ArcherMeleeProt'] = 0;
-$districtConfig['ArcherRngProt'] = 175;
+$districtConfig['ArcherShrpDmg'] = 0;
+$districtConfig['ArcherMeleeProt'] = 22;
+$districtConfig['ArcherRngProt'] = 75;
+$districtConfig['ArcherShrpProt'] = 184;
+
+//Calvary
+$districtConfig['CalvaryCost'] = 8000;
+$districtConfig['CalvaryCostDaily'] = 750;
+$districtConfig['CalvaryMeleeDmg'] = 0;
+$districtConfig['CalvaryRngDmg'] = 0;
+$districtConfig['CalvaryShrpDmg'] = 178;
+$districtConfig['CalvaryMeleeProt'] = 64;
+$districtConfig['CalvaryRngProt'] = 135;
+$districtConfig['CalvaryShrpProt'] = 32;
+
+
 $districtConfig['copperPerFortify']=5000;
 $districtConfig['xpPerFortify']=125;
 $districtConfig['xpPerFortifyMulti']=2.2578721;
@@ -28,16 +48,16 @@ $districtConfig['attackRangeDmgMulti']=1.194115;
 $districtConfig['attackDmgWeakeness']=0.741294;
 $districtConfig['attackDmgStrength']=1.04901724;
 $districtConfig['attackDefenseAdvantage']=1.1582412;
-$districtConfig['maxGenerals'] = 32;
+$districtConfig['maxGenerals'] = 2;
 $districtConfig['maxFortify'] = 5;
 $districtConfig['sabotageItem'] = 62;
-$districtConfig['townLessCost'] = 0.18;
-$districtConfig['outpostExtraTroops'] = 0.21;
+$districtConfig['townLessCost'] = 0.15;
+$districtConfig['outpostExtraTroops'] = 0.15;
 $districtConfig['CaptainBuff'] = 0.211240;
 $districtConfig['CaptainCost'] = 175000;
-$districtConfig['CaptainCostUse'] = 250000;
+$districtConfig['CaptainCostUse'] = 25000;
 $districtConfig['CaptainTroops'] = $districtConfig['GeneralTroops'];
-$districtConfig['upkeepPerTile'] = 1000000;
+$districtConfig['upkeepPerTile'] = 10000;
 
 //end module config
 
@@ -279,13 +299,13 @@ function isGuildDistrict($district_id)
  * @param float $defenseBuff Buff levels for the defenders, defaults to 1.0
  * @return string json containing attack result.
  */
-function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior, $defenseArcher, 
+function doAttack($attackWarrior, $attackArcher, $attackCalv, $attackCaptain, $defenseWarrior, $defenseArcher, $defenseCalv,
     $defenseGeneral = 0, $attackBuff = 1.0, $defenseBuff = 1.0)
 {
     global $districtConfig;
     
-    $attackTotal = $attackWarrior + $attackArcher;
-    $defenseTotal = $defenseWarrior + $defenseArcher;
+    $attackTotal = $attackWarrior + $attackArcher + $attackCalv;
+    $defenseTotal = $defenseWarrior + $defenseArcher + $defenseCalv;
     
     $attackluck = Random(-30,30) / 100;
     $defenseluck = Random(-30,30) / 100;
@@ -299,16 +319,20 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
     $result['winner'] = '';
     $result['attack_warrior_lost'] = 0;
     $result['attack_archer_lost'] = 0;
+    $result['attack_calvary_lost'] = 0;
     $result['attack_captain_lost'] = 0;
     $result['defense_warrior_lost'] = 0;
     $result['defense_archer_lost'] = 0;
+    $result['defense_calvary_lost'] = 0;
     $result['defense_general_lost'] = 0;
     
     //Starting values
-    $attMeleeRating = ($attackWarrior * $districtConfig['WarriorMeleeDmg']) + ($attackArcher * $districtConfig['ArcherMeleeDmg']);
-    $attRangeRating = ($attackWarrior * $districtConfig['WarriorRngDmg']) + ($attackArcher * $districtConfig['ArcherRngDmg']);
-    $defMeleeRating = ($defenseWarrior * $districtConfig['WarriorMeleeProt']) + ($defenseArcher * $districtConfig['ArcherMeleeProt']);
-    $defRangeRating = ($defenseWarrior * $districtConfig['WarriorRngProt']) + ($defenseArcher * $districtConfig['ArcherRngProt']);
+    $attMeleeRating = ($attackWarrior * $districtConfig['WarriorMeleeDmg']) + ($attackArcher * $districtConfig['ArcherMeleeDmg']) + ($attackCalv * $districtConfig['CalvaryMeleeDmg']);
+    $attRangeRating = ($attackWarrior * $districtConfig['WarriorRngDmg']) + ($attackArcher * $districtConfig['ArcherRngDmg']) + ($attackCalv * $districtConfig['CalvaryRngDmg']);
+    $attShrpRating = ($attackWarrior * $districtConfig['WarriorShrpDmg']) + ($attackArcher * $districtConfig['ArcherShrpDmg']) + ($attackCalv * $districtConfig['CalvaryShrpDmg']);
+    $defMeleeRating = ($defenseWarrior * $districtConfig['WarriorMeleeProt']) + ($defenseArcher * $districtConfig['ArcherMeleeProt']) + ($attackCalv * $districtConfig['CalvaryMeleeProt']);
+    $defRangeRating = ($defenseWarrior * $districtConfig['WarriorRngProt']) + ($defenseArcher * $districtConfig['ArcherRngProt']) + ($attackCalv * $districtConfig['CalvaryRngProt']);
+    $defShrpRating = ($defenseWarrior * $districtConfig['WarriorShrpProt']) + ($defenseArcher * $districtConfig['ArcherShrpProt']) + ($attackCalv * $districtConfig['CalvaryShrpProt']);
     
     //Captain buffs to attack
     if ($attackCaptain > 0)
@@ -331,13 +355,19 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
     
     $attMeleeStart = $attMeleeRating;
     $attRangeStart = $attRangeRating;
+    $attSharpStart = $attShrpRating;
     $defMeleeStart = $defMeleeRating;
     $defRangeStart = $defRangeRating;
+    $defSharpStart = $defShrpRating;
     
     $attMeleePerRating = ($attMeleeRating > 0) ? $attMeleeRating / $attackWarrior : 0;
     $attRangePerRating = ($attRangeRating > 0) ? $attRangeRating / $attackArcher : 0;
+    $attSharpPerRating = ($attShrpRating > 0) ? $attShrpRating / $attackCalv : 0;
     $defMeleePerRating = ($defMeleeRating > 0) ? $defMeleeRating / $defenseWarrior : 0;
     $defRangePerRating = ($defRangeRating > 0) ? $defRangeRating / $defenseArcher : 0;
+    $defSharpPerRating = ($defShrpRating > 0) ? $defShrpRating / $defenseCalv : 0;
+    
+    
     
     //Calculate losses
     $itt=0;
@@ -356,7 +386,7 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
         }
         elseif (($defMeleeRating == $attMeleeRating) && ($defMeleeRating != 0)) //even melee rating on both sides
         {
-            $defMeleeRating -= 0;
+            $defMeleeRating = 0;
             $attMeleeRating = 0;
         }
         
@@ -376,42 +406,134 @@ function doAttack($attackWarrior, $attackArcher, $attackCaptain, $defenseWarrior
             $attRangeRating = 0;
         }
         
-        if (($attMeleeRating <= 0) && ($attRangeRating > 0))  //attacker warriors are dead.
+        if ($attShrpRating > $defShrpRating)  //attacker sharp stronger than defender sharp
         {
-            if (($attRangeRating * 0.75) > ($defMeleeRating))    //attack range is better than def melee
+            $attShrpRating -= $defShrpRating;
+            $defShrpRating = 0;
+        }
+        elseif ($attShrpRating < $defShrpRating)  //attacker sharp weaker than defender sharp
+        {
+            $defShrpRating -= $attShrpRating;
+            $attShrpRating = 0;
+        }
+        elseif (($defShrpRating == $attShrpRating) && ($defShrpRating != 0)) //even sharp on both sides
+        {
+            $defShrpRating = 0;
+            $attShrpRating = 0;
+        }
+        
+        if (($attMeleeRating <= 0) && ($attRangeRating > 0))  //attacker warriors are dead, range alive
+        {
+            if (($attRangeRating) > ($defMeleeRating))    //attack range is better than def melee
             {
                 $attRangeRating -= $defMeleeRating;
                 $defMeleeRating = 0;
             }
-            elseif (($attRangeRating * 0.75) < ($defMeleeRating))    //attack range is better than def melee
+            elseif (($attRangeRating) < ($defMeleeRating))    //attack range is better than def melee
             {
-                $defMeleeRating -= $defMeleeRating * 0.75;
+                $defMeleeRating -= $defMeleeRating;
                 $attRangeRating = 0;
             }
-            elseif ((($attRangeRating * 0.75) == ($defMeleeRating)) && ($defMeleeRating != 0))  //attack range = defense melee
+            elseif ((($attRangeRating) == ($defMeleeRating)) && ($defMeleeRating != 0))  //attack range = defense melee
             {
                 $defRangeRating = 0;
                 $attRangeRating = 0;
             }
         }
         
-        
-        if (($attRangeRating <= 0) && ($attMeleeRating > 0))  //attacker warriors are dead.
+        if (($attMeleeRating <= 0) && ($attShrpRating > 0))  //attacker warriors are dead, sharp alive
         {
-            if (($attMeleeRating) > ($defMeleeRating * 0.75))    //attack range is better than def melee
+            if (($attShrpRating) > ($defMeleeRating))    //attack range is better than def melee
             {
-                $attRangeRating -= $defMeleeRating;
+                $attShrpRating -= $defMeleeRating;
                 $defMeleeRating = 0;
             }
-            elseif (($attMeleeRating) < ($defRangeRating * 0.75))    //attack range is better than def melee
+            elseif (($attShrpRating) < ($defMeleeRating))    //attack range is better than def melee
             {
-                $defMeleeRating -= $defMeleeRating * 0.75;
-                $attRangeRating = 0;
+                $defMeleeRating -= $defMeleeRating;
+                $attShrpRating = 0;
             }
-            elseif ((($attMeleeRating) == ($defRangeRating * 0.75)) && ($defRangeRating != 0))  //attack range = defense melee
+            elseif ((($attShrpRating) == ($defMeleeRating)) && ($defMeleeRating != 0))  //attack range = defense melee
+            {
+                $defRangeRating = 0;
+                $attShrpRating = 0;
+            }
+        }
+        
+        
+        if (($attRangeRating <= 0) && ($attMeleeRating > 0))  //attacker range are dead, warrios alive
+        {
+            if (($attMeleeRating) > ($defMeleeRating))    //attack range is better than def melee
+            {
+                $attMeleeRating -= $defMeleeRating;
+                $defMeleeRating = 0;
+            }
+            elseif (($attMeleeRating) < ($defRangeRating))    //attack range is better than def melee
+            {
+                $defMeleeRating -= $defMeleeRating;
+                $attMeleeRating = 0;
+            }
+            elseif ((($attMeleeRating) == ($defRangeRating)) && ($defRangeRating != 0))  //attack range = defense melee
             {
                 $defRangeRating = 0;
                 $attRangeRating = 0;
+            }
+        }
+        
+        if (($attRangeRating <= 0) && ($attShrpRating > 0))  //attacker range are dead, sharp alive
+        {
+            if (($attShrpRating ) > ($defMeleeRating))    //attack sharp is better than def melee
+            {
+                $attShrpRating  -= $defMeleeRating;
+                $defMeleeRating = 0;
+            }
+            elseif (($attShrpRating ) < ($defRangeRating))    //attack sharp is better than def melee
+            {
+                $defMeleeRating -= $defMeleeRating;
+                $attShrpRating  = 0;
+            }
+            elseif ((($attMeleeRating) == ($defRangeRating) && ($defRangeRating != 0)))  //attack sharp = defense melee
+            {
+                $defRangeRating = 0;
+                $attShrpRating  = 0;
+            }
+        }
+        
+        if (($attShrpRating <= 0) && ($attMeleeRating > 0))  //attacker sharp are dead, warrios alive
+        {
+            if (($attMeleeRating) > ($defMeleeRating))    //attack range is better than def melee
+            {
+                $attMeleeRating -= $defMeleeRating;
+                $defMeleeRating = 0;
+            }
+            elseif (($attMeleeRating) < ($defRangeRating))    //attack range is better than def melee
+            {
+                $defMeleeRating -= $defMeleeRating;
+                $attMeleeRating = 0;
+            }
+            elseif ((($attMeleeRating) == ($defRangeRating)) && ($defRangeRating != 0))  //attack range = defense melee
+            {
+                $defRangeRating = 0;
+                $attRangeRating = 0;
+            }
+        }
+        
+        if (($attRangeRating <= 0) && ($attShrpRating > 0))  //attacker range are dead, sharp alive
+        {
+            if (($attShrpRating ) > ($defMeleeRating))    //attack sharp is better than def melee
+            {
+                $attShrpRating  -= $defMeleeRating;
+                $defMeleeRating = 0;
+            }
+            elseif (($attShrpRating ) < ($defRangeRating))    //attack sharp is better than def melee
+            {
+                $defMeleeRating -= $defMeleeRating;
+                $attShrpRating  = 0;
+            }
+            elseif ((($attMeleeRating) == ($defRangeRating) && ($defRangeRating != 0)))  //attack sharp = defense melee
+            {
+                $defRangeRating = 0;
+                $attShrpRating  = 0;
             }
         }
         $attTotalRating = $attMeleeRating + $attRangeRating;
@@ -775,7 +897,7 @@ function parseTile(int $districtID, $extra = '')
             echo "
             <div class='card {$class} text-muted'>
                 <div class='card-header'>
-                    Y: {$r['district_y']}; X: {$r['district_x']} " . returnTileIcon($r['district_id']) . "
+                    Y: {$r['district_y']}; X: {$r['district_x']}
                 </div>
                 <div class='card-body'>
                     <div class='row'>
@@ -1111,13 +1233,4 @@ function returnTileClass($district)
     if ($r['district_fortify'] > 0)
         $class .= " fortify_{$r['district_fortify']}";
     return $class;
-}
-
-function returnTileIcon($district)
-{
-    global $db;
-    $q=$db->query("SELECT * FROM `guild_districts` WHERE `district_id` = {$district}");
-    $r=$db->fetch_row($q);
-    if ($r['district_type'] != 'normal')
-        return loadImageAsset("districts/tile-{$r['district_type']}.svg", 1.1);
 }
