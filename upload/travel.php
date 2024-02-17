@@ -118,16 +118,13 @@ if (empty($_GET['to'])) {
         alert('danger', "Uh Oh!", "Why would you want to travel to the town you're already in.", true, "travel.php");
         die($h->endpage());
     } 
-    elseif ($_GET['to'] == 27)
+    else 
     {
-        if (!isCourseComplete($userid, 29))
+        if (!isCourseComplete($ir['userid'], 29) && ($_GET['to'] == 27))
         {
             alert('danger',"Uh Oh!", "Please complete the <i>Runic Mysteries</i> academic course to learn the way to travel to the Essence Isle.", true, "travel.php");
             die($h->endpage());
         }
-    }
-    else 
-    {
         //Select town info.
         $q = $db->query("/*qc=on*/SELECT `town_name` FROM `town` WHERE `town_id` = {$_GET['to']} AND `town_min_level` <= {$ir['level']}");
 
