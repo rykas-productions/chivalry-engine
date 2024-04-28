@@ -1399,6 +1399,8 @@ function calculateUserMaxBet($userid)
     $maxbet += ($maxbet * levelMultiplier($r['level'], $r['reset']));    //add level multipler at the end.
     
     $maxbet += ($maxbet * $gamblingManBuff);    //buff for gambling man
+    if (currentMonth() == 8)
+        $maxbet *= 2.25;
     return round($maxbet);
 }
 
