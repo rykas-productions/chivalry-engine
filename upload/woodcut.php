@@ -3,14 +3,25 @@
 //INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'cutter_capacity', '5000'), (NULL, 'cutter_capacity_max', '5000')
 //INSERT INTO `settings` (`setting_id`, `setting_name`, `setting_value`) VALUES (NULL, 'cutter_cost', '1250')
 $macropage = ('woodcut.php');
+$multi = 1;
+$xpmulti = 1;
 require('globals.php');
+$logAlgo = (25 + (round($set['cutter_level'] / 10)));
+if (currentMonth() == 5)
+{
+    $set['cutter_cost'] *= 0.5;
+    $xpmulti = 0.75;
+    $logAlgo *= 1.5;
+}
+if (isHoliday())
+    $logAlgo *= 1.75;
 echo "<h3>Wood Cutter</h3><hr />";
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
 {
     alert('danger',"Uh Oh!","You cannot get your wood cut while at the dungeon or infirmary.",true,'explore.php');
     die($h->endpage());
 }
-$set['cutter_xp_needed'] = 25000 * (($set['cutter_level'] * 1.1) + ($set['cutter_level'] * 1.1));
+$set['cutter_xp_needed'] = round(25000 * (($set['cutter_level'] * 1.1) + ($set['cutter_level'] * 1.1)) * $xpmulti);
 $frmeen = min(round($set['cutter_capacity'] / $set['cutter_capacity_max'] * 100), 100);
 $frmexp = min(round($set['cutter_upgrade'] / $set['cutter_xp_needed'] * 100), 100);
 cutterUpgrade();
@@ -64,11 +75,8 @@ switch ($_GET['action']) {
 
 function home()
 {
-    global $db, $userid, $api, $h, $set;
-    $baseNumber = 25;
-    if (isHoliday())
-        $baseNumber*=1.75;
-    $logs = $baseNumber + (round($set['cutter_level'] / 10));
+    global $db, $userid, $api, $h, $set, $logAlgo;
+    $logs = $logAlgo;
     $userLogs = $api->UserCountItem($userid, 410);
     //@todo grid the butyons here.
     echo "<div class='card'>
@@ -98,7 +106,7 @@ function home()
 
 function cutwood()
 {
-    global $db, $userid, $api, $h, $set, $ir;
+    global $db, $userid, $api, $h, $set, $ir, $logAlgo;
     $log = (isset($_POST['logs']) && is_numeric($_POST['logs'])) ? abs($_POST['logs']) : '';
     $woodLogID = $api->SystemItemNametoID("Wood Log");
     $woodCount = $api->UserCountItem($userid, $woodLogID);
@@ -129,7 +137,7 @@ function cutwood()
         alert('danger',"Uh Oh!","You need " . shortNumberParse($totalCost) . " Copper Coins to cut " . shortNumberParse($log) . " Wood Logs. You only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", false);
         die(home());
     }
-    $quantity = $log * (25 + (round($set['cutter_level'] / 10)));
+    $quantity = $log * $logAlgo;
     $api->UserTakeItem($userid, $woodLogID, $log);
     $api->UserGiveItem($userid, 1, $quantity);
     $api->UserTakeCurrency($userid, "primary", $totalCost);
