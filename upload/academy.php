@@ -13,7 +13,6 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot visit the academy when you're in the infirmary or dungeon.",true,'explore.php');
 	die($h->endpage());
 }
-echo "<h4><i class='game-icon game-icon-diploma'></i> Local Academy</h4><hr>";
 if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and stop them
     //And stop them from taking another.
 {
@@ -51,7 +50,6 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
 						`course_complete` = 0 
 						WHERE `userid` = {$userid}");
 			alert("success","Success!","You have successfully dropped out of your course. You have been refunded " . shortNumberParse($coud['ac_cost']) . " Copper Coins.",true,'academy.php');
-			die($h->endpage());
 		}
 		elseif (($percentcomplete > 33) && ($percentcomplete <= 66))
 		{
@@ -60,7 +58,6 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
 						`course_complete` = 0 
 						WHERE `userid` = {$userid}");
 			alert("success","Success!","You have successfully dropped out of your course.",true,'academy.php');
-			die($h->endpage());
 		}
 		else
 		{
@@ -89,8 +86,7 @@ if ($ir['course'] > 0)  //User is enrolled in a course, so lets tell them and st
                 </div>
             </div>
         </div>
-    </div>";
-    die($h->endpage());
+    </div><br />";
 }
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
@@ -112,6 +108,12 @@ function menu()
     global $db, $userid, $ir;
     //Select the courses from in-game.
     $acadq = $db->query("/*qc=on*/SELECT * FROM `academy` ORDER BY `ac_level` ASC, `ac_cost` ASC");
+    echo "<div class='row'>
+            <div class='col-12'>
+                <div class='card'>
+                    <div class='card-header'>
+                        <b>Academy Courses</b>
+                    </div>";
     while ($academy = $db->fetch_row($acadq)) {
         $cdo = $db->query("/*qc=on*/SELECT COUNT(`userid`)
                              FROM `academy_done`
@@ -125,22 +127,22 @@ function menu()
             $do = "<a href='#' class='disabled btn-success btn btn-block updateHoverBtn'>Graduated</a>";
         elseif ($ir['level'] < $academy['ac_level'])
             $do = "<a href='#' class='disabled btn-danger btn btn-block updateHoverBtn'>Level too low</a>";
-            
 		elseif ($ir['primary_currency'] < $academy['ac_cost'])
 			$do = "<a href='#' class='disabled btn-danger btn btn-block updateHoverBtn'>Not enough Copper</a>";
+		elseif ($ir['course'] > 0)
+			$do = "<a href='#' class='disabled btn-danger btn btn-block updateHoverBtn'>Another course enrolled</a>";
 		else
             $do = "<a href='?action=start&id={$academy['ac_id']}' class='btn btn-primary btn-block updateHoverBtn'>Start Course</a>";
 		
         $costClass='';
         $lvlClass='';
+        if ($ir['course'] > 0)
+            $lvlClass = "class='text-danger'";
         if ($ir['level'] < $academy['ac_level'])
             $lvlClass = "class='text-danger'";
         if ($ir['primary_currency'] < $academy['ac_cost'])
             $costClass = "class='text-danger'";
 		echo "
-        <div class='row'>
-            <div class='col-12'>
-                <div class='card'>
                     <div class='card-body'>
                         <div class='row'>
                             <div class='col-12 col-lg-8 col-xl-9'>
@@ -174,10 +176,7 @@ function menu()
                                 {$do}
                             </div>
                          </div>
-                    </div>
-                </div>
-            </div>
-        </div>";
+                    </div>";
     }
 }
 
