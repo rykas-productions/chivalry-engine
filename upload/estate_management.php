@@ -4,15 +4,17 @@ if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
 $rssPrice = 1;
+$propCost = 1;
 if (isHoliday())
 {
     $rssPrice*=0.75;
+    $propCost*=0.75;
     alert('info',"","Since its a holiday in the kingdom of Chivalry is Dead, resource costs for estates have been reduced by 25%!",false);
 }
-if (currentYear() == 2024 && currentMonth() == 2)
+if (currentMonth() == 2)
 {
-    alert('info',"","Through the month of Feburary, resource costs for estate upgrades have been reduced by 40%!",false);
-    $rssPrice *= 0.60;
+    $rssPrice *= 0.75;
+    $propCost *= 0.5;
 }
 $estate=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$ir['estate']}"));
 $edb=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$estate['estate']}"));
@@ -1010,7 +1012,7 @@ function convert()
 
 function buy_property()
 {
-	global $db, $ir, $userid, $estate, $edb, $h, $api;
+    global $db, $ir, $userid, $estate, $edb, $h, $api, $propCost;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
 	if (empty($_GET['id']))
 	{
@@ -1024,20 +1026,21 @@ function buy_property()
 		die($h->endpage());
 	}
 	$r=$db->fetch_row($q);
-	if (!$api->UserHasCurrency($userid, 'primary', $r['house_price']))
+	$hCost = $r['house_price'] * $propCost;
+	if (!$api->UserHasCurrency($userid, 'primary', $hCost))
 	{
-	    alert('danger',"Uh Oh!","You need " . shortNumberParse($r['house_price']) . " Copper Coins to purchase this property. 
+	    alert('danger',"Uh Oh!","You need " . shortNumberParse($hCost) . " Copper Coins to purchase this property. 
 		You only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", true, '?action=sellList');
 		die($h->endpage());
 	}
 	if ($ir['level'] < $r['house_level'])
 	{
-		alert('danger',"Uh Oh!","You need to be at least level " . number_format($r['house_level']) . " before you can 
-		purchase this property.", true, '?action=sellList');
+		alert('danger',"Uh Oh!","You need to be at least level " . shortNumberParse($r['house_level']) . " before you can 
+		purchase this property. You are only level " . shortNumberParse($ir['level']) . ".", true, '?action=sellList');
 		die($h->endpage());
 	}
 	buyEstate($userid, $_GET['id']);
-	$api->UserTakeCurrency($userid, 'primary', $r['house_price']);
+	$api->UserTakeCurrency($userid, 'primary', $hCost);
 	alert('success',"Success!","You have successfully bought {$r['house_name']} for " . shortNumberParse($r['house_price']) . " 
 	Copper Coins. You may move into this property by checking your property list.", true, '?action=sellList');
 	addToEconomyLog('Estates', 'copper', $r['house_price']*-1);
@@ -1105,7 +1108,7 @@ function sell_property()
 
 function game_properties()
 {
-	global $db, $ir, $userid, $estate, $edb, $h, $api;
+    global $db, $ir, $userid, $estate, $edb, $h, $api, $propCost;
 	$hq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` > 100 ORDER BY `house_will` ASC");
 	echo "<div class='card'>
             <div class='card-body'><div class='row'>
@@ -1128,6 +1131,7 @@ function game_properties()
 		$lvl = ($ir['level'] >= $r['house_level']) ? "" : "text-danger";
 		$disabled = (!empty($class)) ? "disabled" : "";
 		$disabled1 = (!empty($lvl)) ? "disabled" : "";
+		$hCost = $r['house_price'] * $propCost;
 		echo "<div class='row'>
 			<div class='col-12'>
 				<div class='card'>
@@ -1159,7 +1163,7 @@ function game_properties()
 										<small><b>Lvl Required</b></small>
 									</div>
 									<div class='col-12'>
-										" . shortNumberParse($r['house_level']) . "
+										" . shortNumberParse($hCost) . "
 									</div>
 								</div>
 							</div>
