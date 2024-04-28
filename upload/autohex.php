@@ -5,7 +5,9 @@ require('globals.php');
 if (isHoliday())
     $multipler = 2.0;
 if (reachedMonthlyDonationGoal())
-    $multipler = $multipler + 0.5;
+    $multipler += 0.5;
+if (currentMonth() == 9)
+    $multipler *= 2.0;
 if ($ir['autohex'] == 0)
 {
 	alert('danger',"Uh Oh!","You need to have an Auto Hexbag Opener redeemed on your account to use this feature.",true,'explore.php');

@@ -152,16 +152,16 @@ if (isset($_POST['open']))
 	addToEconomyLog('Begging', 'copper', $copper);
 	addToEconomyLog('Begging', 'token', $tokens);
 	//Logs
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($copper) . " Copper Coins.");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($tokens) . " Chivalry Tokens.");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($fish) . " Fish.");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($apple) . " Apple(s).");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($ham) . " Ham Shank(s).");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($choco) . " Chocolate Bar(s).");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($rock) . " Heavy Rocks(s).");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($stick) . " Sharpened Stick(s).");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($bucket) . " Empty Bucket(s).");
-	$api->SystemLogsAdd($userid,"begging","Received " . number_format($log) . " Wood Log(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($copper) . " Copper Coins.");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($tokens) . " Chivalry Tokens.");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($fish) . " Fish.");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($apple) . " Apple(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($ham) . " Ham Shank(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($choco) . " Chocolate Bar(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($rock) . " Heavy Rocks(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($stick) . " Sharpened Stick(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($bucket) . " Empty Bucket(s).");
+	$api->SystemLogsAdd($userid,"begging","Received " . shortNumberParse($log) . " Wood Log(s).");
 }
 else
 {

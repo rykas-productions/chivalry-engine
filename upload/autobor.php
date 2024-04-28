@@ -5,7 +5,9 @@ require('globals.php');
 if (isHoliday())
     $multipler = 2.0;
 if (reachedMonthlyDonationGoal())
-    $multipler = $multipler + 0.5;
+    $multipler += 0.5;
+if (currentMonth() == 9)
+    $multipler *= 2.0;
 if ($ir['bor'] == 0)
 {
     alert('danger',"Uh Oh!","You cannot open anymore Boxes of Random today. Try again in " . TimeUntil_Parse(getNextDayReset()) .".",true,'explore.php');
