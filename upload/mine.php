@@ -14,14 +14,18 @@ require('globals.php');
 //2021 Halloween event
 $month = date('n');
 $day = date('j');
+if ($month == 6)
+{
+    $energyCost *= 0.5;
+}
 if (isHoliday())
 {
-    $energyCost -= 0.5;
+    $energyCost *= 0.5;
     alert('info',"","Since its a holiday in the kingdom of Chivalry is Dead, mining power requirements have been reduced by 50%!",false);
 }
 if ((!isCourseComplete($userid, 23)) && ($userid != 1))
 {
-	alert('danger', "Uh Oh!", "Please complete the Precious Metals academic course before you first attempt mining.", true, 'explore.php');
+	alert('danger', "Uh Oh!", "Please complete the 'Artisan Warrior: Crafting and Combat' academic course before you first attempt mining.", true, 'explore.php');
     die($h->endpage());
 }
 if (userHasEffect($userid, effect_mining_fear))
@@ -256,6 +260,8 @@ function mine()
 			    $MSI['mine_power_use'] /= 2;
 			if (isHoliday())
 			    $MSI['mine_power_use'] /= 2;
+			if (isCourseComplete($userid, 46))
+			    $MSI['mine_power_use'] *= 0.85;
 			$nextspot=$spot+1;
 			$nextmineslevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$nextspot}"));
 			/*if ($MSI['mine_level'] >= $nextmineslevel)
