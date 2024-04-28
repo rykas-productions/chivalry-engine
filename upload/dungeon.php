@@ -39,9 +39,6 @@ function home()
     $CurrentTime = time();
     //Count how many users are in the dungeon.
     $PlayerCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`dungeon_user`) FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime}"));
-    echo "<h3><i class='game-icon game-icon-cage'></i> The Dungeon</h3><hr />
-	<small>There's currently " . number_format($PlayerCount) . " players in the dungeon.</small>
-	<hr />";
     $query = $db->query("/*qc=on*/SELECT * FROM `dungeon` WHERE `dungeon_out` > {$CurrentTime} ORDER BY `dungeon_out` DESC");
     echo "<div class='card'>
             <div class='card-header'>

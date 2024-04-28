@@ -28,16 +28,23 @@ function home()
     //Select player count of those in the infirmary.
     $PlayerCount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`infirmary_user`) FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime}"));
     //List them out now.
-    echo "<h3><i class='game-icon game-icon-hospital-cross'></i> The Infirmary</h3><hr />
-	<small>There's currently " . number_format($PlayerCount) . " users in the infirmary.</small>
-	<hr />";
+    echo "<div class='card'>
+            <div class='card-header'>
+                <div class='row'>
+                    <div class='col-auto'>
+                        <i class='game-icon game-icon-cage'></i>
+                    </div>
+                    <div class='col-auto'>
+                        There's currently " . shortNumberParse($PlayerCount) . " players in the infirmary.
+                    </div>
+                </div>
+            </div>
+            <div class='card-body'>";
     $query = $db->query("/*qc=on*/SELECT * FROM `infirmary` WHERE `infirmary_out` > {$CurrentTime} ORDER BY `infirmary_out` DESC");
     while ($Infirmary = $db->fetch_row($query)) 
 	{
 		$displaypic = "<img src='" . parseImage(parseDisplayPic($Infirmary['infirmary_user'])) . "' height='75' alt='' title=''>";
 		echo "
-		<div class='card'>
-			<div class='card-body'>
 				<div class='row'>
 					<div class='col-6 col-sm-4 col-md-3 col-lg-2'>
 						{$displaypic}
@@ -57,9 +64,7 @@ function home()
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>";
+				</div>";
     }
 }
 
