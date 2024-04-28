@@ -11,12 +11,12 @@ if ($db->num_rows($am) == 0)
 	if (isset($_GET['accept']))
 	{
 		$days=Random(2, 7);   //upped from 3
-		$kills=(Random(5,15)+Random($ir['level']/4,$ir['level']/2))*$days;
+		$kills=round(((Random(5,15)+Random($ir['level']/4,$ir['level']/2))*$days) / 10);
 		$reward = 0;
 		$loops = 0;
 		while ($loops != $kills)
 		{
-		    $random = Random(4000, 20000);
+		    $random = Random(500000, 2500000);
 		    $reward = $reward + round($random + ($random * levelMultiplier($ir['level'], $ir['reset'])));
 		    $loops++;
 		}
