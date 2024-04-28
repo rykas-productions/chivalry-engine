@@ -229,7 +229,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 function getVPSData()
 {
     global $_CONFIG;
-    $cacheFile = returnCacheDir() . "/serv/vps.json";
+    $cacheFile = returnCacheDir() . "serv/vps.json";
     if (file_exists($cacheFile))
     {
         $file_time = filemtime($cacheFile);
