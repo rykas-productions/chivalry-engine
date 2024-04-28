@@ -24,10 +24,10 @@ function error_critical($human_error, $debug_error, $action, $context = array())
     }
     if (DEBUG) 
     {
-        alert("danger","","{$debug_error} {$action}<hr />Check out Chivalry is 
+        echo "<b>{$debug_error}</b> {$action}<hr />Check out Chivalry is 
         Dead on <a href='https://www.facebook.com/officialcidgame/'>Facebook</a> or 
         <a href='https://twitter.com/cidgame'>Twitter</a> for more information if you cannot use the 
-        game. ",false);
+        game. ";
         // Only uncomment the below if you know what you're doing,
         // for debug purposes.
         if (CONTEXT_TRACE) 
