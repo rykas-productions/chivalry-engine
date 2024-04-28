@@ -1,8 +1,16 @@
 <?php
 $expMod=1.0;
 $waterIncr = 5;
+$timeMod = 1;
 $macropage = ('farm.php');
 require('globals.php');
+if (currentMonth() == 7)
+{
+    $expMod *= 2.0;
+    $waterIncr *= 2;
+    $timeMod *= 0.5;
+    $farmconfig['farmlandCost'] *= 0.75;
+}
 echo "<h3>" . loadImageAsset("explore/farming.svg", 1.8) . " Farming</h3><hr />";
 if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary'))
 {
@@ -45,7 +53,7 @@ if ($FU['farm_water_max'] == 0)
         else
         {
             $api->UserTakeItem($userid,2,500);
-            $db->query("UPDATE `farm_users` SET `farm_water_available` = 5, `farm_water_max` = 5 WHERE `userid` = {$userid}");
+            $db->query("UPDATE `farm_users` SET `farm_water_available` = {$waterIncr}, `farm_water_max` = {$waterIncr} WHERE `userid` = {$userid}");
             alert('success',"Success!","You have successfully constructed your farm's well and filled it with water.",true,'farm.php','Get Farming!');
 			$loop=0;
 			while ($loop < $farmconfig['startingFields'] )
@@ -244,7 +252,7 @@ function buyland()
 
 function plantland()
 {
-	global $db,$userid,$api,$h,$ir,$farmconfig,$FU;
+    global $db,$userid,$api,$h,$ir,$farmconfig,$FU,$timeMod;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
     if (empty($_GET['id'])) 
 	{
@@ -298,7 +306,7 @@ function plantland()
 			$farmconfig['wellnessPerPlant']=$r['farm_wellness'];
 		if (getUserSkill($userid, 30) > 0)
 			$sr['seed_time'] /= 2;
-		$stagetime=time()+$sr['seed_time'];
+		$stagetime=time()+round($sr['seed_time']*$timeMod);
 		
 		$db->query("UPDATE `farm_data` SET `farm_seed` = {$_POST['seed']}, `farm_time` = {$stagetime}, `farm_stage` = 1, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerPlant']} WHERE `farm_id` = {$_GET['id']}");
 		$api->UserTakeItem($userid,$_POST['seed'],1);
@@ -660,7 +668,7 @@ function collect()
 
 function tend()
 {
-	global $db,$userid,$api,$h,$ir,$farmconfig,$FU;
+	global $db,$userid,$api,$h,$ir,$farmconfig,$FU,$timeMod;
 	$_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : '';
     if (empty($_GET['id'])) 
 	{
@@ -700,19 +708,19 @@ function tend()
 			$farmconfig['wellnessPerTend']=$r['farm_wellness'];
 		if (($r['farm_stage'] - 1) == 10)
 		{
-			$stagetime=time()+$sr['seed_time'];
+			$stagetime=time()+round($sr['seed_time']*$timeMod);
 			$db->query("UPDATE `farm_data` SET `farm_time` = {$stagetime}, `farm_stage` = 2, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerTend']} WHERE `farm_id` = {$_GET['id']}");
 			alert('success', "Success!", "You've tended your {$cropSeedName}. It appears you're closing in on the final harvest.", true, 'farm.php');
 		}
 		elseif ($r['farm_stage'] == 1)
 		{
-			$stagetime=time()+$sr['seed_time'];
+			$stagetime=time()+round($sr['seed_time']*$timeMod);
 			$db->query("UPDATE `farm_data` SET `farm_time` = {$stagetime}, `farm_stage` = 10, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerTend']} WHERE `farm_id` = {$_GET['id']}");
 			alert('success', "Success!", "You've tended your {$cropSeedName}. You will seriously maximize your harvest by keeping up with tending the plot.", true, 'farm.php');
 		}
 		else
 		{
-			$stagetime=time()+$sr['seed_time'];
+			$stagetime=time()+round($sr['seed_time']*$timeMod);
 			$db->query("UPDATE `farm_data` SET `farm_time` = {$stagetime}, `farm_stage` = `farm_stage` + 1, `farm_wellness` = `farm_wellness` - {$farmconfig['wellnessPerTend']} WHERE `farm_id` = {$_GET['id']}");
 			alert('success', "Success!", "You've tended your {$cropSeedName}. Remember to keep up with the TLC.", true, 'farm.php');
 		}
