@@ -1163,7 +1163,7 @@ function game_properties()
 										<small><b>Lvl Required</b></small>
 									</div>
 									<div class='col-12'>
-										" . shortNumberParse($hCost) . "
+										" . shortNumberParse($r['house_level']) . "
 									</div>
 								</div>
 							</div>
@@ -1173,7 +1173,7 @@ function game_properties()
 										<small><b>Cost</b></small>
 									</div>
 									<div class='col-12'>
-										" . shortNumberParse($r['house_price']) . " Copper Coins
+										" . shortNumberParse($hCost) . " Copper Coins
 									</div>
 								</div>
 							</div>
