@@ -1448,6 +1448,8 @@ function doHourlyJobRewards()
         while ($r = $db->fetch_row($q))
         {
             $multi = 1.0;
+            if (currentMonth() == 12)
+                $multi *= 1.75;
             if ($r['laston'] > $lastHr)
                 $multi = $multi + 0.33;
             if (reachedMonthlyDonationGoal())
@@ -1455,13 +1457,13 @@ function doHourlyJobRewards()
             $jr = $db->fetch_row($db->query("SELECT * FROM `job_ranks` WHERE `jrID` = {$r['jobrank']}"));
             if ($jr['jrPRIMPAY'] > 0)
             {
-                $api->UserGiveCurrency($r['userid'], "primary", $jr['jrPRIMPAY'] * $multi);
-                addToEconomyLog('Job', 'copper', $jr['jrPRIMPAY'] * $multi);
+                $api->UserGiveCurrency($r['userid'], "primary", round($jr['jrPRIMPAY'] * $multi));
+                addToEconomyLog('Job', 'copper', round($jr['jrPRIMPAY'] * $multi));
             }
             if ($jr['jrSECONDARY'] > 0)
             {
-                $api->UserGiveCurrency($r['userid'], "secondary", $jr['jrSECONDARY'] * $multi);
-                addToEconomyLog('Job', 'token', $jr['jrSECONDARY'] * $multi);
+                $api->UserGiveCurrency($r['userid'], "secondary", round($jr['jrSECONDARY'] * $multi));
+                addToEconomyLog('Job', 'token', round($jr['jrSECONDARY'] * $multi));
             }
         }
     }
