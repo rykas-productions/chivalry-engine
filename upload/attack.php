@@ -1397,6 +1397,8 @@ function xp()
             }
             if ($expgain < 1)
                 $expgain = 1;
+            if (currentMonth() == 1)
+                $expgain *= 1.5;
             $expperc = round($expgain / $ir['xp_needed'] * 100);
             $hosptime = Random(5, 15) + floor($ir['level'] / 10);
             //Give user XP.
