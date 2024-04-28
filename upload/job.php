@@ -18,35 +18,59 @@ if (empty($ir['job']))
 {
     if (empty($_GET['interview'])) 
     {
-        alert('info', "", "It appears you are unemployed. A list of businesses hiring are listed below.", false);
         $q = $db->query("/*qc=on*/SELECT * FROM `jobs`");
-        echo "<div class='row'>";
+        echo "<div class='card'>
+            <div class='card-header'>
+                <div class='row'>
+                    <div class='col-auto'>
+                        <i class='game-icon game-icon-cage'></i>
+                    </div>
+                    <div class='col-auto'>
+                        A list of businesses hiring are listed below.
+                    </div>
+                </div>
+            </div>
+            <div class='card-body'>";
         while ($r = $db->fetch_row($q)) 
         {
-            echo "
-                    <div class='col-12 col-md-6 col-xl-4 col-xxxl-3'>
-                        <div class='card'>
-                            <div class='card-header'>
-                                {$r['jNAME']}
-                            </div>
-                            <div class='card-body'>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        <i>{$r['jDESC']}</i>
-                                    </div>
-                                    <div class='col-12'>
-                                        <b>Boss: {$r['jBOSS']}</b>
-                                    </div>
-                                    <div class='col-12'>
-                                        <a href='?interview={$r['jRANK']}' class='btn btn-block btn-primary'>Attend Interview</a>
-                                    </div>
+            echo "  
+                    <div class='row'>
+                        <div class='col-auto col-md-5 col-lg-12 col-xl-3 col-xxl-2 col-xxxl-1'>
+                            <div class='row'>
+                                <div class='col-12'>
+        				            <small><b>Job Listing</b></small>
+                                </div>
+                                <div class='col-12'>
+        				            {$r['jNAME']}
                                 </div>
                             </div>
                         </div>
-                        <br />
+                        <div class='col-auto col-md-5 col-lg-12 col-xl-7 col-xxl-8 col-xxxl-9'>
+                            <div class='row'>
+                                <div class='col-12'>
+        				            <small><b>Listing Info</b></small>
+                                </div>
+                                <div class='col-12'>
+        				            {$r['jDESC']}
+                                </div>
+                                <div class='col-12'>
+        				            <small>Operated by {$r['jBOSS']}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-auto col-md-5 col-lg-12 col-xl-2'>
+                            <div class='row'>
+                                <div class='col-12'>
+        				            <small><b>Interview?</b></small>
+                                </div>
+                                <div class='col-12'>
+        				            <a href='?interview={$r['jRANK']}' class='btn btn-block btn-primary'>Attend Interview</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>";
         }
-        echo "</div>";
+        echo "</div></div>";
         $db->free_result($q);
     } 
     else 
