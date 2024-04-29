@@ -13,15 +13,15 @@ if (!defined('MONO_ON')) {
 
 class api
 {
-    /*
+    /**
         Returns the API version.
     */
     function SystemReturnAPIVersion()
     {
-        return "23.7.1";    //Last Updated 7/9/2023
+        return "24.4.1";    //Last Updated 4/29/2024
     }
 
-    /*
+    /**
         Tests to see if specified user has at least the specified amount of money.
         @param int user = User ID to test for.
         @param int type = Currency type. [Ex. primary or secondary]
@@ -48,8 +48,18 @@ class api
             }
         }
     }
+    
+    function UserHasPrimaryCurrency($user, $minimum)
+    {
+        return $this->UserHasCurrency($user, 'primary', $minimum);
+    }
+    
+    function UserHasSecondaryCurrency($user, $minimum)
+    {
+        return $this->UserHasCurrency($user, 'secondary', $minimum);
+    }
 
-    /*
+    /**
         Gives the user the specified item and quantity
         @param int user = User ID to test for.
         @param int item = Item ID to give to the user.
@@ -68,7 +78,7 @@ class api
         }
     }
 
-    /*
+    /**
         Removes an item from the user specified
         @param int user = User ID to test for.
         @param int item = Item ID to take from the user.
@@ -87,7 +97,7 @@ class api
         }
     }
 
-    /*
+    /**
         Gives user specified amount of currency type.
         @param int user = User ID to give currency to.
         @param int type = Currency type. [Ex. primary and secondary]
@@ -113,7 +123,7 @@ class api
         }
     }
 
-    /*
+    /**
         Takes qunatity of currency type from the user specified.
         @param int user = User ID to give currency to.
         @param int type = Currency type. [Ex. primary and secondary]
@@ -140,7 +150,7 @@ class api
         }
     }
 
-    /*
+    /**
         Tests to see what the user has equipped.
         @param int user = User ID to test against.
         @param int slot = Equipment slot to test. [Ex. Primary, Secondary, Armor]
@@ -180,7 +190,7 @@ class api
         }
     }
 
-    /*
+    /**
         Tests the inputted user to see if they're in the dungeon or infirmary
         @param int user = User ID to test against.
         @param int status = Place to test. [Infirmary or dungeon]
@@ -199,7 +209,7 @@ class api
         }
     }
 
-    /*
+    /**
         Places or removes dungeon/infirmary time on the specified user.
         @param int user = User ID to test against.
         @param int place = Place to test. [Ex. Dungeon and Infirmary]
@@ -240,7 +250,7 @@ class api
         }
     }
 
-    /*
+    /**
         Adds a notification for the specified user.
         @param int user = User ID to send notification to.
         @param text text = Notification text.
@@ -252,7 +262,7 @@ class api
         return true;
     }
 
-    /*
+    /**
         Adds an in-game message for the player specified.
         @param int user = User ID message is sent to.
         @param text subj = Message subject.
@@ -282,7 +292,7 @@ class api
         }
     }
 
-    /*
+    /**
         Adds an in-game announcement.
         @param text text = Announcement text.
         @param int poster = User ID of poster. Optional. [Defaults = 1]
@@ -305,15 +315,15 @@ class api
         }
     }
 
-    /*
+    /**
         Get the user's member level. Can test for exact member level, or if user is above specified member level.
         @param int user = User to test on.
         @param text level = Member level to test for. [Valid: npc, member, web dev, forum moderator, assistant, admin]
         @param boolean exact = Return true if ranked ONLY specified level. [Default: false]
         Returns true if user is exactly or equal to/above specified member level. False if not.
+        @todo Refactor function later
     */
 
-    //This function needs refactored ASAP
     function UserMemberLevelGet($user, $level, $exact = false)
     {
         global $db;
@@ -362,7 +372,7 @@ class api
         }
     }
 
-    /*
+    /**
         Test to see whether or not the specified user has the item and optionally, an amount of the item.
         @param int user = User to test on.
         @param int item = Item ID to test for.
@@ -390,14 +400,13 @@ class api
         }
     }
 
-    /*
+    /**
         Returns the specified user's stat, optionally as a percent.
         @param int user = User to test on.
         @param text stat = User's table row to return.
         @param boolean percent = Return as a percent. [Default: false]
         Returns the value in the stat specified, optionally as a percent.
-    Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
-
+        Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
     function UserInfoGet($user, $stat, $percent = false)
     {
@@ -417,7 +426,7 @@ class api
         }
     }
 
-    /*
+    /**
         Set the specified user's stat to a value, optionally as a percent.
         @param int user = User to test on.
         @param text stat = User's table row to return.
@@ -468,7 +477,7 @@ class api
         }
     }
 
-    /*
+    /**
         Adds an entry to the main logging data table.
         @param int user = User who is attached to this log.
         @param text logtype = Log type. Can be whatever. See available logs in staff panel for standardized names.
@@ -485,7 +494,7 @@ class api
         $db->query("INSERT INTO `logs` (`log_id`, `log_type`, `log_user`, `log_time`, `log_text`, `log_ip`) VALUES (NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
     }
 
-    /*
+    /**
         Returns the username of the user id specified.
         @param int user = User's name we're trying to fetch.
         On success, returns the user id's name, on failure, it returns false.
@@ -501,7 +510,7 @@ class api
         }
     }
 
-    /*
+    /**
         Returns the userid  of the username specified.
         @param string name = User's ID we're trying to fetch.
         On success, returns the user's id, on failure, it returns false.
@@ -517,7 +526,7 @@ class api
         }
     }
 
-    /*
+    /**
         Returns the item name of the item id specified.
         @param int itemid = Item's name we're trying to fetch.
         On success, returns the item id's name, on failure, it returns false.
@@ -533,7 +542,7 @@ class api
         }
     }
 
-    /*
+    /**
         Returns the item id of the item specified.
         @param string name = Item's ID we're trying to fetch.
         On success, returns the item's id, on failure, it returns false.
@@ -549,7 +558,7 @@ class api
         }
     }
 
-    /*
+    /**
         Returns the town name of the town id specified.
         @param int id = Town ID's name we're trying to getch.
         On success, returns the town's name, on failure, it returns false.
@@ -565,7 +574,7 @@ class api
         }
     }
 
-    /*
+    /**
         Function that does all the hard work when it comes to item buying.
         @param int user = User to give item to, if bought successfully.
         @param int currency = Currency type. [1 = Primary, 2 = Secondary]
@@ -592,7 +601,7 @@ class api
         }
     }
 
-    /*
+    /**
         Function to return the inputted value with a tax percent added onto it.
         @param int number = Number to add a tax percent onto.
         @param int tax = Tax percentage. Optional. (Number between 0-100)
@@ -611,7 +620,7 @@ class api
         return $number + ($number * ($tax / 100));
     }
 
-    /*
+    /**
         Function to return the tax value of the inputted number only (Ex: 10% of 100 is 10).
         @param int number = Number to add a tax percent onto.
         @param int tax = Tax percentage. Optional. (Number between 0-100)
@@ -630,7 +639,7 @@ class api
         return $number - $number + ($number * ($tax / 100));
     }
 
-    /*
+    /**
         Function to credit the inputted guild with the inputted number.
         @param int number = Number to credit to the guild
         @param int curr = Currency type. [1 = Primary, 2 = Secondary]
@@ -649,7 +658,7 @@ class api
         $db->query("UPDATE `guild` SET `guild_{$cur}curr` = `guild_{$cur}curr` + {$number} WHERE `guild_id` = {$guild}");
     }
 
-    /*
+    /**
         Function to fetch all or a specific field of information from the specified guild.
         @param int guild_id = Guild ID to fetch info from.
         @param text field = Data field to return. Optional. If left null/empty, will return all fields.
@@ -672,7 +681,7 @@ class api
         }
     }
 
-    /*
+    /**
         Function to add a guild notification to a guild.
         @param int guild_id = ID of the guild you wish to add a notification to.
         @param text notification = Notification text.
@@ -693,7 +702,7 @@ class api
         }
     }
 
-    /*
+    /**
         Function to set a user's info a static value.
         @param int user = User ID you wish to set a specific stat to.
         @param text stat = Stat to alter.
@@ -724,7 +733,7 @@ class api
         }
     }
 
-    /*
+    /**
         Function to test if the inputted users share IPs at all.
         @param int user1 = User ID of the first player.
         @param int user2 = User ID of the second player.
@@ -746,7 +755,7 @@ class api
         }
     }
 
-    /*
+    /**
         Function to fetch item count from a user's inventory.
         @param int userid = User ID of the player to test inventory.
         @param int itemid = Item ID to count.
@@ -763,7 +772,7 @@ class api
         }
     }
 
-    /*
+    /**
      * Function to simulate a user training.
      * @param int userid = User ID of the player you wish to simular.
      * @param text stat = Stat you wish for the user to train.
@@ -849,7 +858,7 @@ class api
         return $gain;
     }
 
-    /*
+    /**
      * Function to send a game email
      * @param email to = Email address so send email to.
      * @param text body = Body of the email.
@@ -870,7 +879,7 @@ class api
         return mail($to, $subject, $body, implode("\r\n", $headers));
     }
 
-    /*
+    /**
      * API to give an item to a guild.
      * @param int guild = Guild ID to give the item to.
      * @param int item = Item ID to give to the guild.
@@ -900,7 +909,7 @@ class api
         }
     }
 
-    /*
+    /**
      * API to remove an item from a guild.
      * @param int guild = Guild ID to remove the item from.
      * @param int item = Item ID to remove.
