@@ -41,20 +41,20 @@ if (!empty($_POST['qty']) && !empty($_POST['user'])) {
         } else {
             if (empty($_POST['msg']))
             {
-                notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
+                notification_add($_POST['user'], "You have been sent " . shortNumberParse($_POST['qty']) . " x {$r['itmname']}(s)
                 from <a href='profile.php?user=$userid'>{$ir['username']}</a>.", 'fas fa-share-square', 'green');
             }
             else
             {
-                notification_add($_POST['user'], "You have been sent {$_POST['qty']} {$r['itmname']}(s)
+                notification_add($_POST['user'], "You have been sent " . shortNumberParse($_POST['qty']) . " x {$r['itmname']}(s)
                 from <a href='profile.php?user=$userid'>{$ir['username']}</a> with the message: <u>{$_POST['msg']}</u>.", 'fas fa-share-square', 'green');
             }
             $rm = $db->fetch_row($m);
             item_remove($userid, $r['inv_itemid'], $_POST['qty']);
             item_add($_POST['user'], $r['inv_itemid'], $_POST['qty']);
-            alert('success', "Success!", "You have successfully sent {$_POST['qty']} {$r['itmname']}(s) to
+            alert('success', "Success!", "You have successfully sent " . shortNumberParse($_POST['qty']) . " x {$r['itmname']}(s) to
 			    {$rm['username']}.", true, 'inventory.php');
-            $log = $db->escape("Sent {$_POST['qty']} {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
+            $log = $db->escape("Sent " . shortNumberParse($_POST['qty']) . " x {$r['itmname']}(s) to {$rm['username']} [{$_POST['user']}].");
             $api->SystemLogsAdd($userid, 'itemsend', $log);
         }
         $db->free_result($m);
