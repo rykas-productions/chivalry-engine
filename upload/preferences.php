@@ -998,6 +998,7 @@ function assetalert()
 function classreset()
 {
     global $db,$userid,$api,$h,$ir;
+    $cost = round(userCalculateNetworth($userid) * 0.025);
     if (isset($_POST['class']))
     {
         if ($_POST['class'] == $ir['class'])
@@ -1010,112 +1011,112 @@ function classreset()
             alert('danger',"Uh Oh!","Invalid class selected.");
             die($h->endpage());
         }
-        if ($ir['iq'] < 50000)
+        if (!$api->UserHasCurrency($userid, 'primary', $cost))
         {
-            alert('danger',"Uh Oh!","You need at least 50,000 IQ to change your class.");
+            alert('danger',"Uh Oh!","You need at least " . shortNumberParse($cost) . " Copper Coins to change your class.");
             die($h->endpage());
         }
         if ($ir['class'] == 'Guardian')
         {
             if ($_POST['class'] == 'Warrior')
             {
-                $strength=$ir['guard']-($ir['guard']*0.25);
-                $agility=$ir['strength']-($ir['strength']*0.25);
-                $guard=$ir['agility']-($ir['agility']*0.25);
+                $strength=$ir['guard']-($ir['guard']*0.20);
+                $agility=$ir['strength']-($ir['strength']*0.20);
+                $guard=$ir['agility']-($ir['agility']*0.20);
             }
             if ($_POST['class'] == 'Rogue')
             {
-                $strength=$ir['agility']-($ir['agility']*0.25);
-                $agility=$ir['guard']-($ir['guard']*0.25);
-                $guard=$ir['strength']-($ir['strength']*0.25);
+                $strength=$ir['agility']-($ir['agility']*0.20);
+                $agility=$ir['guard']-($ir['guard']*0.20);
+                $guard=$ir['strength']-($ir['strength']*0.20);
             }
         }
         if ($ir['class'] == 'Rogue')
         {
             if ($_POST['class'] == 'Warrior')
             {
-                $strength=$ir['agility']-($ir['agility']*0.25);
-                $agility=$ir['guard']-($ir['guard']*0.25);
-                $guard=$ir['strength']-($ir['strength']*0.25);
+                $strength=$ir['agility']-($ir['agility']*0.20);
+                $agility=$ir['guard']-($ir['guard']*0.20);
+                $guard=$ir['strength']-($ir['strength']*0.20);
             }
             if ($_POST['class'] == 'Guardian')
             {
-                $strength=$ir['guard']-($ir['guard']*0.25);
-                $agility=$ir['strength']-($ir['strength']*0.25);
-                $guard=$ir['agility']-($ir['agility']*0.25);
+                $strength=$ir['guard']-($ir['guard']*0.20);
+                $agility=$ir['strength']-($ir['strength']*0.20);
+                $guard=$ir['agility']-($ir['agility']*0.20);
             }
         }
         if ($ir['class'] == 'Warrior')
         {
             if ($_POST['class'] == 'Rogue')
             {
-                $strength=$ir['guard']-($ir['guard']*0.25);
-                $agility=$ir['strength']-($ir['strength']*0.25);
-                $guard=$ir['agility']-($ir['agility']*0.25);
+                $strength=$ir['guard']-($ir['guard']*0.20);
+                $agility=$ir['strength']-($ir['strength']*0.20);
+                $guard=$ir['agility']-($ir['agility']*0.20);
             }
             if ($_POST['class'] == 'Guardian')
             {
-                $strength=$ir['agility']-($ir['agility']*0.25);
-                $agility=$ir['guard']-($ir['guard']*0.25);
-                $guard=$ir['strength']-($ir['strength']*0.25);
+                $strength=$ir['agility']-($ir['agility']*0.20);
+                $agility=$ir['guard']-($ir['guard']*0.20);
+                $guard=$ir['strength']-($ir['strength']*0.20);
             }
         }
         $strength=round($strength);
         $agility=round($agility);
         $guard=round($guard);
+        $api->UserTakeCurrency($userid, "primary", $cost);
         $db->query("UPDATE `userstats` 
                     SET `strength` = {$strength}, 
                     `agility` = {$agility}, 
-                    `guard` = {$guard}, 
-                    `iq` = `iq` - 50000 
+                    `guard` = {$guard} 
                     WHERE `userid` = {$userid}");
         $db->query("UPDATE `users` SET `class` = '{$_POST['class']}' WHERE `userid` = {$userid}");
-        $api->SystemLogsAdd($userid, 'preferences', "Changed class to {$_POST['class']}.");
-        alert('success',"Success!","You have successfully changed your class to {$_POST['class']} for 50K IQ.",true,'preferences.php');
+        $api->SystemLogsAdd($userid, 'preferences', "Changed class to {$_POST['class']} for " . shortNumberParse($cost) . " Copper Coins..");
+        alert('success',"Success!","You have successfully changed your class to {$_POST['class']} for " . shortNumberParse($cost) . " Copper Coins.",true,'preferences.php');
     }
     else
     {
         if ($ir['class'] == 'Warrior')
         {
-            $warr['strength'] = $ir['strength'] * 0.75;
-            $warr['agility'] = $ir['agility'] * 0.75;
-            $warr['guard'] = $ir['guard'] * 0.75;
+            $warr['strength'] = $ir['strength'] * 0.8;
+            $warr['agility'] = $ir['agility'] * 0.8;
+            $warr['guard'] = $ir['guard'] * 0.8;
             
-            $rog['strength'] = $ir['guard'] * 0.75;
-            $rog['agility'] = $ir['strength'] * 0.75;
-            $rog['guard'] = $ir['agility'] * 0.75;
+            $rog['strength'] = $ir['guard'] * 0.8;
+            $rog['agility'] = $ir['strength'] * 0.8;
+            $rog['guard'] = $ir['agility'] * 0.8;
             
-            $gurd['strength'] = $ir['agility'] * 0.75;
-            $gurd['agility'] = $ir['guard'] * 0.75;
-            $gurd['guard'] = $ir['strength'] * 0.75;
+            $gurd['strength'] = $ir['agility'] * 0.8;
+            $gurd['agility'] = $ir['guard'] * 0.8;
+            $gurd['guard'] = $ir['strength'] * 0.8;
         }
         elseif ($ir['class'] == 'Rogue')
         {
-            $warr['strength'] = $ir['agility'] * 0.75;
-            $warr['agility'] = $ir['guard'] * 0.75;
-            $warr['guard'] = $ir['strength'] * 0.75;
+            $warr['strength'] = $ir['agility'] * 0.8;
+            $warr['agility'] = $ir['guard'] * 0.8;
+            $warr['guard'] = $ir['strength'] * 0.8;
             
-            $rog['strength'] = $ir['strength'] * 0.75;
-            $rog['agility'] = $ir['agility'] * 0.75;
-            $rog['guard'] = $ir['guard'] * 0.75;
+            $rog['strength'] = $ir['strength'] * 0.8;
+            $rog['agility'] = $ir['agility'] * 0.8;
+            $rog['guard'] = $ir['guard'] * 0.8;
             
-            $gurd['strength'] = $ir['guard'] * 0.75;
-            $gurd['agility'] = $ir['strength'] * 0.75;
-            $gurd['guard'] = $ir['agility'] * 0.75;
+            $gurd['strength'] = $ir['guard'] * 0.8;
+            $gurd['agility'] = $ir['strength'] * 0.8;
+            $gurd['guard'] = $ir['agility'] * 0.8;
         }
         elseif ($ir['class'] == 'Guardian')
         {
-            $warr['strength'] = $ir['guard'] * 0.75;
-            $warr['agility'] = $ir['strength'] * 0.75;
-            $warr['guard'] = $ir['agility'] * 0.75;
+            $warr['strength'] = $ir['guard'] * 0.8;
+            $warr['agility'] = $ir['strength'] * 0.8;
+            $warr['guard'] = $ir['agility'] * 0.8;
             
-            $rog['strength'] = $ir['agility'] * 0.75;
-            $rog['agility'] = $ir['guard'] * 0.75;
-            $rog['guard'] = $ir['strength'] * 0.75;
+            $rog['strength'] = $ir['agility'] * 0.8;
+            $rog['agility'] = $ir['guard'] * 0.8;
+            $rog['guard'] = $ir['strength'] * 0.8;
             
-            $gurd['strength'] = $ir['strength'] * 0.75;
-            $gurd['agility'] = $ir['agility'] * 0.75;
-            $gurd['guard'] = $ir['guard'] * 0.75;
+            $gurd['strength'] = $ir['strength'] * 0.8;
+            $gurd['agility'] = $ir['agility'] * 0.8;
+            $gurd['guard'] = $ir['guard'] * 0.8;
         }
         echo "<div class='row'>
             <div class='col-12 col-xxxl-3'>
@@ -1124,9 +1125,9 @@ function classreset()
                         Change your class (Currently {$ir['class']})
                     </div>
                     <div class='card-body'>
-                        This function will change your class, along with your stats. Note your stats will be docked 25% to 
-                        deter switching on the fly. You must have at least 50K IQ to use this feature. We recommend reading 
-                        below to see what your new stats will be.
+                        This function will change your class, along with your stats. Note your stats will be docked 20% to 
+                        deter switching on the fly. Your costs will be 2.5% of your total networth, or " . shortNumberParse($cost) . " at this time.  
+                        We recommend reading below to see what your new stats will be.
                         <form method='post'>
                             <select name='class' id='class' class='form-control' type='dropdown'>
                                 <option value='Warrior'>Warrior</option>

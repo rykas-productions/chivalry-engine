@@ -21,7 +21,7 @@ function home()
 {
     global $ir,$userid,$api,$db;
     $q = $db->query("SELECT * FROM `user_skills_define` ORDER BY `skCost` ASC");
-    alert('warning',"","Your skill tree is NOT permanent. You can pay 75,000 IQ to reset it at any time!", true, '?action=reset', "Reset Skills");
+    alert('warning',"","Your skill tree is NOT permanent. You can pay to reset it at any time!", true, '?action=reset', "Reset Skills");
     echo "<div class='card'>
             <div class='card-header'>
                 Skills " . createPrimaryBadge(shortNumberParse($ir['skill_points']) . " Skill Points") . "
@@ -158,11 +158,12 @@ function skill()
 function skill_reset()
 {
     global $db,$ir,$api,$userid,$h;
+    $cost = round(userCalculateNetworth($userid) * 0.0175);
     if (isset($_POST['confirm']))
     {
-        if ($ir['iq'] < 75000)
+        if (!$api->UserHasCurrency($userid, 'primary', $cost))
         {
-            alert('danger',"Uh Oh!","You need at least 75,000 IQ to reset your skill tree.");
+            alert('danger',"Uh Oh!","You need at least " . shortNumberParse($cost) . " Copper Coins to reset your Skill tree.");
             die($h->endpage());
         }
         $q=$db->query("/*qc=on*/SELECT * FROM `user_skills` WHERE `userid` = {$userid}");
@@ -175,10 +176,10 @@ function skill_reset()
         $db->query("UPDATE `farm_users` SET `farm_water_max` = `farm_water_max` - {$well} WHERE `userid` = {$userid}");
         $q2=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `achievements_done` WHERE `userid` = {$userid}"));
         $db->query("DELETE FROM `user_skills` WHERE `userid` = {$userid}");
-        $db->query("UPDATE `userstats` SET `iq` = `iq` - 75000 WHERE `userid` = {$userid}");
+        $api->UserTakeCurrency($userid, "primary", $cost);
         $points=1+$q2;
         $db->query("UPDATE `user_settings` SET `skill_points` = {$points} WHERE `userid` = {$userid}");
-        alert('success',"Success!","You have spent 75K IQ and have successfully reset your Skill Tree. You now have  gained {$points} skill point.",true,'skills.php');
+        alert('success',"Success!","You have spent " . shortNumberParse($cost) . " Copper Coins and have reset your Skill Tree. You now have gained {$points} skill points.",true,'skills.php');
     }
     else
     {
@@ -189,7 +190,7 @@ function skill_reset()
             <div class='card-body'>
                 <div class='row'>
                     <div class='col-12'>
-                        You may pay 75,000 IQ to reset your skill tree here. You may spend the gained points however you see fit.
+                        You may pay " . shortNumberParse($cost) . " Copper Coins (or 1.75% your networth) to reset your skill tree here. You may spend the gained points however you see fit.
                     </div>
                 </div>
                 <form method='post'>
