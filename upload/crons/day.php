@@ -76,9 +76,37 @@ $month = currentMonth();
 $day = currentDay();
 $year = currentYear();
 
+if (($month == 1) && ($day == 1))
+{
+    $api->GameAddAnnouncement("Happy new year!!<br />What better way to bring in {$year} by having a 50% combat experience event? Sounds good to me! From now until the end of the month, enjoy the bonus experience!");
+}
+if (($month == 2) && ($day == 1))
+{
+    $api->GameAddAnnouncement("Welcome to the second month of the year, February!<br />This month's event revolves around the estates. Prices at the estate management have been reduced by 50%, and resource costs to upgrade your estates have been reduced by 25%! Its a great month to get into a home you like. See you in March!");
+}
+if (($month == 5) && ($day == 1))
+{
+    $api->GameAddAnnouncement("Greetings folks!<br />Welcome to the month of May, this month's event is reduced costs at the Wood Cutter! Through now until the end of May, the cost to cut a log has been halved, stick output increased by 50% and upgrade costs are now 25% off! See you for next month's event!");
+}
+if (($month == 6) && ($day == 1))
+{
+    $api->GameAddAnnouncement("Hey folks!<br />We're welcoming in the summer with the month of June, this month's event is reduced consumption at the mines by 50%! Hope to see some major power mining this month! See you next month for whatever July has in store for us!");
+}
+if (($month == 7) && ($day == 1))
+{
+    $api->GameAddAnnouncement("Good early morning everyone!<br />The summer heat's starting to get intolerable but we're still going strong in the farmlands this July. Expect 50% faster grow times, double experience AND your Well will grow by double each level! See you in August!");
+}
+if (($month == 8) && ($day == 1))
+{
+    $api->GameAddAnnouncement("Hope everyone enjoyed the summer break, but its now time to get back into working order.<br />The month of August has us getting the daily gambling bet cap increased by 225% for the entirety of the month. Enjoy it! Don't go broke. See you for September!");
+}
+if (($month == 9) && ($day == 1))
+{
+    $api->GameAddAnnouncement("...I really didn't want to be woke up until the end of this month....<br />But fine, whatever.... for the month of September the Hexbags and Boxes of Random have had their rewards doubled! Street begging will regenerate at 50 per hour and will be capped at 200. All this through now until the end of September. See you for the Halloween festivities next month!");
+}
 if (($month == 10) && ($day == 1))
 {
-    $api->GameAddAnnouncement("Hey folks! To kickstart the Halloween season, you may now visit a player's profile and Trick or Treat using the now-available link under the action section. You may trick or treat on a player once an hour. Doing so will grant you random candies that may be helpful on your journey. Stay tuned for more Halloween tricks as we get closer to the holiday!");
+    $api->GameAddAnnouncement("Hey folks! To kickstart the Halloween season, you may now visit a player's profile and Trick or Treat using the now-available link under the action section. You may trick or treat on a player once an hour. Doing so will grant you random candies that may be helpful on your journey. Also, on the Explore page, you will now see a link to the Pumpkin Chuck. You should participate to get the best distance and hopefully win some nice prizes! Stay tuned for more Halloween tricks as we get closer to the holiday!");
 }
 
 if (($month == 11) && ($day == 1))
@@ -89,7 +117,7 @@ if (($month == 11) && ($day == 1))
 if (($month == 12) && ($day == 1))
 {
     $db->query("TRUNCATE TABLE `advent_calender`");
-    $api->GameAddAnnouncement("Greetings folks!<br />Thank you to everyone who participated in the Turkey hunt this year. Hope everyone who wanted the armor was able to craft it. I'll probably leave that reciep available until the new year.<br />Since its December now, its the first day of our Advent Calendar. Check the page on explore each day and you can receive nice prizes every day you log in.");
+    $api->GameAddAnnouncement("Greetings folks!<br />Thanks to everyone who participated in the Thankgiving event. That was awesome! Hope you get time to craft the armor. To start off December, your employers are now giving out 75% extra wages the entirety of the month! How nice of them! Don't forget the {$year} Advent Calendar is now live on the Explore page. Stay tuned for more Christmas events from now until the holidays!");
 }
 
 ?>
