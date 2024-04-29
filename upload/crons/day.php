@@ -74,6 +74,7 @@ $db->query("UPDATE `user_settings` SET `winnings_this_hour` = 0");
 
 $month = currentMonth();
 $day = currentDay();
+$hour = currentHour();
 $year = currentYear();
 
 if (($month == 1) && ($day == 1))
@@ -119,5 +120,19 @@ if (($month == 12) && ($day == 1))
     $db->query("TRUNCATE TABLE `advent_calender`");
     $api->GameAddAnnouncement("Greetings folks!<br />Thanks to everyone who participated in the Thankgiving event. That was awesome! Hope you get time to craft the armor. To start off December, your employers are now giving out 75% extra wages the entirety of the month! How nice of them! Don't forget the {$year} Advent Calendar is now live on the Explore page. Stay tuned for more Christmas events from now until the holidays!");
 }
-
+if (($day == 1) && ($hour == 12))
+{
+    $q=$db->query("SELECT * FROM `vote_raffle` WHERE `userid` != 1 ORDER BY RAND() LIMIT 1");
+    if ($db->num_rows($q) > 0)
+    {
+        $r=$db->fetch_row($q);
+        $r['username'] = parseUsername($r['userid']);
+        $announcement = "<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}] has won this month's voting raffle and received a $3 VIP Pack. Thanks for voting! The raffle has been reset, and everyone now has an equal shot to win this month's raffle!!";
+        $api->GameAddAnnouncement($announcement, 1);
+        $api->UserGiveItem($r['userid'],13,1);
+        $api->GameAddNotification($r['userid'],"You were selected as the Monthly Vote Raffle winner! You've received a $3 VIP Pack to your inventory!");
+        $db->query("TRUNCATE TABLE `vote_raffle`");
+    }
+    $db->query("UPDATE `settings` SET `setting_value` = '0.00' WHERE `setting_name` = 'MonthlyDonationGoal'");
+}
 ?>
