@@ -32,19 +32,29 @@ switch ($_GET['action']) {
 function addtown()
 {
     global $db, $userid, $h, $api;
-    echo "<h3>Add Town</h3><hr />";
     if (isset($_POST['name'])) {
         $level = (isset($_POST['minlevel']) && is_numeric($_POST['minlevel'])) ? abs(intval($_POST['minlevel'])) : 1;
         $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
         $tax = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs(intval($_POST['tax'])) : 0;
+        $desc = (isset($_POST['desc'])) ? $db->escape(strip_tags(stripslashes($_POST['desc']))) : '';
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_addtown', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
+            die($h->endpage());
+        }
+        if (empty($name) || (!isset($name)))
+        {
+            alert('danger', "Uh Oh!", "Please fill out the town name correctly.");
             die($h->endpage());
         }
         $q = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_name` = '{$name}'");
         if ($db->fetch_single($q) > 0) {
             $db->free_result($q);
             alert('danger', "Uh Oh!", "The town name you've chosen is already in use.");
+            die($h->endpage());
+        }
+        if (empty($desc) || (!isset($desc)))
+        {
+            alert('danger', "Action Blocked!", "Please input a valid town description.");
             die($h->endpage());
         }
         if ($tax < 0 || $tax > 20) {
@@ -56,57 +66,78 @@ function addtown()
             die($h->endpage());
         }
         $db->free_result($q);
-        $db->query("INSERT INTO `town` (`town_name`, `town_min_level`, `town_guild_owner`, `town_tax`) VALUES ('{$name}', '{$level}', '0', '{$tax}');");
+        $db->query("INSERT INTO `town` (`town_name`, `town_min_level`, `town_guild_owner`, `town_tax`, `town_desc`) VALUES ('{$name}', '{$level}', '0', '{$tax}', '{$desc}');");
         $api->SystemLogsAdd($userid, 'staff', "Created a town named {$name}.");
-        alert('success', "Success!", "You have successfully created the {$name} town.", true, 'index.php');
+        alert('success', "Success!", "You have successfully created the town: <b>{$name}</b>", true, 'index.php');
     } else {
         $csrf = request_csrf_html('staff_addtown');
-        echo "<form action='?action=addtown' method='post'>
-		<table class='table table-bordered'>
-			<tr>
-				<th colspan='2'>
-					You can add towns to the game using this form.
-				</th>
-			</tr>
-			<tr>
-				<th>
-					Town Name
-				</th>
-				<td>
-					<input type='text' name='name' required='1' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Level Requirement
-				</th>
-				<td>
-					<input type='number' name='minlevel' min='0' required='1' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<th>
-					Taxation Level
-				</th>
-				<td>
-					<input type='number' name='tax' min='0' max='20' required='1' class='form-control'>
-				</td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-					<input type='submit' class='btn btn-primary' value='Create Town'>
-				</td>
-			</tr>
-			{$csrf}
-		</table>
-		</form>";
+        echo "  <form action='?action=addtown' method='post'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Create town
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Town Name</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='text' name='name' required='1' class='form-control'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Town Description</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <textarea name='desc' required='1' class='form-control'></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Level Requirement</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='number' name='minlevel' min='1' required='1' class='form-control'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Tax Level</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='number' name='tax' min='0' max='20' required='1' class='form-control'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Confirm?</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary' value='Create Town'>
+                                    </div>
+                                </div>
+                            </div>
+                            {$csrf}
+                        </div>
+                    </div>
+                </div></form>";
     }
 }
 
 function deltown()
 {
     global $db, $userid, $api, $h;
-    echo "<h3>Removing a Town</h3><hr />";
     if (isset($_POST['town'])) {
         $town = (isset($_POST['town']) && is_numeric($_POST['town'])) ? abs(intval($_POST['town'])) : 0;
         $q = $db->query("/*qc=on*/SELECT `town_id`, `town_name` FROM `town` WHERE `town_id` = {$town}");
@@ -132,30 +163,38 @@ function deltown()
         $api->SystemLogsAdd($userid, 'staff', "Deleted the town called {$old['town_name']}.");
     } else {
         $csrf = request_csrf_html('staff_deltown');
-        echo "
-		<form action='?action=deltown' method='post'>
-			<table class='table table-bordered'>
-				<tr>
-					<th colspan='2'>
-						Select the town you wish to delete.
-					</th>
-				</tr>
-				<tr>
-					<th>
-						Town
-					</th>
-					<td>
-						" . location_dropdown("town") . "
-					</td>
-				</tr>
-				<tr>
-					<td colspan='2'>
-						<input type='submit' class='btn btn-primary' value='Delete Town'>
-					</td>
-				</tr>
-				{$csrf}
-			</table>
-		</form>";
+        echo "  <form method='post'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Delete town
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-md-8 col-lg-9 col-xl-10'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Select Town</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . location_dropdown("town") . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Action</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary' value='Delete Town'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {$csrf}
+                </form>";
     }
 }
 
@@ -171,6 +210,7 @@ function edittown()
             $name = (isset($_POST['name']) && is_string($_POST['name'])) ? $db->escape(htmlentities($_POST['name'])) : '';
             $tax = (isset($_POST['tax']) && is_numeric($_POST['tax'])) ? abs(intval($_POST['tax'])) : 0;
             $id = (isset($_POST['id']) && is_numeric($_POST['id'])) ? abs(intval($_POST['id'])) : 0;
+            $desc = (isset($_POST['desc'])) ? $db->escape(strip_tags(stripslashes($_POST['desc']))) : '';
             $q = $db->query("/*qc=on*/SELECT * FROM `town` WHERE `town_id` = {$id}");
             if ($db->num_rows($q) == 0) {
                 $db->free_result($q);
@@ -179,6 +219,16 @@ function edittown()
             }
             if (!isset($_POST['verf']) || !verify_csrf_code('staff_edittown2', stripslashes($_POST['verf']))) {
                 alert('danger', "Action Blocked!", "This action has been blocked for your security. Please submit the form quickly");
+                die($h->endpage());
+            }
+            if (empty($name) || (!isset($name)))
+            {
+                alert('danger', "Uh Oh!", "Please fill out the town name correctly.");
+                die($h->endpage());
+            }
+            if (empty($desc) || (!isset($desc)))
+            {
+                alert('danger', "Action Blocked!", "Please input a valid town description.");
                 die($h->endpage());
             }
             $q = $db->query("/*qc=on*/SELECT COUNT(`town_id`) FROM `town` WHERE `town_name` = '{$name}' && `town_id` != {$id}");
@@ -197,7 +247,10 @@ function edittown()
             }
             $db->free_result($q);
             $db->query("UPDATE `town`
-                        SET `town_name` = '{$name}', `town_min_level` = {$level}, `town_tax` = {$tax}
+                        SET `town_name` = '{$name}', 
+                            `town_min_level` = {$level}, 
+                            `town_tax` = {$tax},
+                            `town_desc` = '{$desc}'
                         WHERE `town_id` = {$id}");
             alert("success", "Success!", "You have successfully edited the {$name} town.", true, 'index.php');
             $api->SystemLogsAdd($userid, 'staff', "Edited the {$name} town.");
@@ -216,58 +269,106 @@ function edittown()
             }
             $r = $db->fetch_row($q);
             $csrf = request_csrf_html('staff_edittown2');
-            echo "<form method='post'>
+            echo "  <form method='post'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Create town
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Town Name</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='text' name='name' required='1' value='{$r['town_name']}' class='form-control'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Town Description</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <textarea name='desc' required='1' class='form-control'>{$r['town_desc']}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Level Requirement</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='number' name='minlevel' min='1' required='1' value='{$r['town_min_level']}' class='form-control'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Tax Level</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='number' name='tax' min='0' max='20' required='1' value='{$r['town_tax']}' class='form-control'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Confirm?</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='submit' class='btn btn-primary' value='Edit Town'>
+                                    </div>
+                                </div>
+                            </div>
+                            {$csrf}
+                        </div>
+                    </div>
+                </div>
                 <input type='hidden' name='step' value='2' />
         	    <input type='hidden' name='id' value='{$_POST['location']}' />
-                <table class='table table-bordered'>
-                    <tr>
-                        <th colspan='2'>
-                            Edit the town using this form.
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            Town Name
-                        </th>
-                        <td>
-                            <input type='text' name='name' required='1' class='form-control' value='{$r['town_name']}'>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Level Requirement
-                        </th>
-                        <td>
-                            <input type='number' name='minlevel' min='0' required='1' class='form-control' value='{$r['town_min_level']}'>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            Taxation Level
-                        </th>
-                        <td>
-                            <input type='number' name='tax' min='0' max='20' required='1' class='form-control' value='{$r['town_tax']}'>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan='2'>
-                            <input type='submit' class='btn btn-primary' value='Edit Town'>
-                        </td>
-                    </tr>
-                    {$csrf}
-                </table>
                 </form>";
             break;
         default:
             $csrf = request_csrf_html('staff_edittown1');
-            echo "<h3>Edit a Town</h3><hr />
-            Please select the town you wish to edit.<br />
-            <form method='post'>
-                <input type='hidden' name='step' value='1'>
-                " . location_dropdown() . " <br />
+            echo "  <form method='post'>
+                <div class='card'>
+                    <div class='card-header'>
+                        Edit town
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12 col-md-8 col-lg-9 col-xl-10'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Select Town</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . location_dropdown("location") . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12 col-md'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Action</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        <input type='submit' value='Edit Town' class='btn btn-primary'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {$csrf}
-                <input type='submit' value='Edit Town' class='btn btn-primary'>
-            </form>";
+                <input type='hidden' name='step' value='1'>
+                </form>";
             break;
     }
 }
