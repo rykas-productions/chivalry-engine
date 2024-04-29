@@ -1436,3 +1436,8 @@ function currentMonth()
 {
     return date('n');
 }
+
+function currentHour()
+{
+    return date('G');
+}
