@@ -325,10 +325,10 @@ echo "<h3>{$user_name}'s Profile</h3>
 							<div class='col-auto'>
 								<a href='attack.php?user={$r['userid']}' onmouseover='profileButtonAttack(\"{$r['username']}\", {$attbutton})' class='btn btn-danger btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/attack-btn.svg", 1.75) . "</a><br />
 							</div>";
-						      if (date('n') == 10)
+						      if (currentMonth() == 10)
 						      {
     						       echo"<div class='col-auto'>
-    								<a href='23halloween.php?action=tnt&user={$r['userid']}' onmouseover='profileButtonHalloweenVisit(\"{$r['username']}\")' class='btn btn-warning btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/halloween-btn.svg", 1.75) . "</a><br />
+    								<a href='halloween.php?action=tnt&user={$r['userid']}' onmouseover='profileButtonHalloweenVisit(\"{$r['username']}\")' class='btn btn-warning btn-block' style='font-size: 1.75rem;'>" . loadImageAsset("menu/profile/halloween-btn.svg", 1.75) . "</a><br />
     							</div>";   
 						      }
 						    echo"

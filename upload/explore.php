@@ -137,6 +137,13 @@ echo"
                     if ($month == 11)
                     {
                         echo "
+                            <div class='col-auto'>
+        						<a href='halloween.php?action=chuck'>Pumpkin Chuck</a>
+        					</div>";
+                    }
+                    if ($month == 11)
+                    {
+                        echo "
                         <div class='col-auto'>
     						<a href='attack.php?user=21'>Participate in Turkey Hunt</a>
     					</div>";
