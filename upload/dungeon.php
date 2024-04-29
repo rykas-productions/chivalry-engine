@@ -148,15 +148,14 @@ function bail()
         //User does not have enough Copper Coins to bail this user out.
         if ($api->UserHasCurrency($userid, 'primary', $cost) == false) {
             alert('danger', "Uh Oh!", "You do not have enough Copper Coins to bail this user out. You need
-			    " . shortNumberParse($cost) . " Copper Coins.", true, 'dungeon.php');
+			    " . shortNumberParse($cost) . " Copper Coins. You only have " . shortNumberParse($ir['primary_currency']) . " Copper Coins.", true, 'dungeon.php');
             die($h->endpage());
         }
         //Person specified is bailed out. Take user's currency, log the action, and tell the person what happened.
         $api->UserTakeCurrency($userid, 'primary', $cost);
 		if (($api->UserStatus($userid, 'dungeon')) && ($_GET['user'] != $userid))
 		{
-			$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
-				successfully bailed you out of the dungeon.");
+			$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has paid off your dungeon bail of " . shortNumberParse($cost) . " Copper Coins.");
 		}
         alert('success', "Success!", "You have successfully bailed out {$api->SystemUserIDtoName($_GET['user'])} for " . shortNumberParse($cost) . " Copper Coins.", true, 'dungeon.php');
         $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
@@ -170,6 +169,7 @@ function bail()
 function bust()
 {
     global $db, $userid, $ir, $h, $api;
+    $bustBrave = 25;
     if (isset($_GET['user'])) {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
         //Person input is invalid or empty.
@@ -191,18 +191,18 @@ function bust()
 		//User is in the dungeon.
         if ($api->UserStatus($userid, 'infirmary'))
 		{
-            alert('danger', "Uh Oh!", "You are being treated in the infirmary and cannot bust other warriosr out now.", true, 'dungeon.php');
+            alert('danger', "Uh Oh!", "You are being treated in the the dungeon's infirmary ward and cannot bust others out now.", true, 'dungeon.php');
             die($h->endpage());
         }
         //User does not have 10% brave.
 		$brave=$api->UserInfoGet($userid, 'brave', false);
-        if ($brave < 25) {
-            alert('danger', "Uh Oh!", "You are not brave enough to bust someone out. You need 25 Brave, and you only have
-			    " . number_format($brave) . ".", true, 'dungeon.php');
+		if ($brave < $bustBrave) {
+		    alert('danger', "Uh Oh!", "You need at least " . shortNumberParse($bustBrave) . " Bravery to bust someone out of the dungeon. You only have
+			    " . shortNumberParse($brave) . " Bravery.", true, 'dungeon.php');
             die($h->endpage());
         }
         //Update user's info.
-        $api->UserInfoSet($userid, 'brave', -25, false);
+        $api->UserInfoSet($userid, 'brave', $bustBrave*-1, false);
 		$lvl=$api->UserInfoGet($_GET['user'], 'level');
 		$mult = Random($lvl+($lvl/2),$lvl*$lvl);
         $chance = min(($ir['level'] / $mult) * 50 + 1, 95);
@@ -217,7 +217,7 @@ function bust()
             alert('success', "Success!", "You have successfully busted {$api->SystemUserIDtoName($_GET['user'])} out of the dungeon, and got a little XP too.", true, 'dungeon.php');
             $db->query("UPDATE `dungeon` SET `dungeon_out` = 0 WHERE `dungeon_user` = {$_GET['user']}");
             $db->query("UPDATE `users` SET `busts` = `busts` + 1 WHERE `userid` = {$userid}");
-			$xpgained=($ir['xp_needed']/100)*2;
+			$xpgained=($ir['xp_needed']/100)*Random(2,8);
             $db->query("UPDATE `users` SET `xp` = `xp` + {$xpgained} WHERE `userid` = {$userid}");
 			die($h->endpage());
         } //User failed. Tell person and throw user in dungeon.
@@ -226,10 +226,9 @@ function bust()
             $reason = $db->escape("Caught trying to bust out {$api->SystemUserIDtoName($_GET['user'])}");
 			if ($_GET['user'] != $userid)
 			{
-				$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has
-					failed to bust you out of the dungeon.");
+				$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> was caught trying to bust you out of the dungeon.");
 			}
-            alert('danger', "Uh Oh!", "While trying to bust your friend out, you were spotted by a guard.", true, 'dungeon.php');
+            alert('danger', "Uh Oh!", "While trying to bust your friend out, you were spotted by a guard. He drags you in with your friend. You now have a {$time} minute sentence.", true, 'dungeon.php');
             $api->UserStatusSet($userid, 'dungeon', $time, $reason);
             die($h->endpage());
         }
