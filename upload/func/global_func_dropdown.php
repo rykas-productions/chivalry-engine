@@ -196,7 +196,7 @@ function location_dropdown($ddname = "location", $selected = -1)
             $ret .= " selected='selected'";
             $first = 1;
         }
-        $ret .= ">{$r['town_name']} (Level {$r['town_min_level']})</option>";
+        $ret .= ">{$r['town_name']} (Level " . number_format($r['town_min_level']) .")</option>";
     }
     $db->free_result($q);
     $ret .= "\n</select>";
