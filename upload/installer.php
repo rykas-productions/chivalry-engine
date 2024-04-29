@@ -11,8 +11,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('1.0.2b');
-$Build=('102b');
+$Version=('1.0.3');
+$Build=('103');
 define('MONO_ON', 1);
 session_name('CENGINE');
 session_start();
@@ -69,7 +69,7 @@ function menuprint($highlight)
 
 function diagnostics()
 {
-	global $Build;
+	global $Build, $Version;
     menuprint("diag");
     if (version_compare(phpversion(), '5.5.0') < 0)
     {
@@ -90,6 +90,16 @@ function diagnostics()
     {
         $wv = '<span style="color: red">Fail!</span>';
         $wvf = 0;
+    }
+	if (is_writable('./cache'))
+    {
+        $cv = '<span style="color: green">Pass! Cache folder is writable.</span>';
+        $cvf = 1;
+    }
+	else
+    {
+        $cv = '<span style="color: red">Cache folder unwritable.</span>';
+        $cvf = 0;
     }
 	if (function_exists('openssl_random_pseudo_bytes'))
     {
@@ -149,10 +159,18 @@ function diagnostics()
     			<td>OpenSSL Random Pseudo Bytes avaliable?</td>
     			<td>{$ov}</td>
     		</tr>
+			<tr>
+    			<td>Chivalry Engine Version</td>
+    			<td>{$Version}</td>
+    		</tr>
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
-    			<td>
-        			" . version_json() . "
+    			<td>";
+					if ($cvf == 1)
+						echo version_json();
+					else
+						$cv;
+					echo"
         		</td>
         	</tr>
     </table>
@@ -694,8 +712,8 @@ function update_file($url)
  */
 function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
-    global $set;
-    $engine_version = $set['Version_Number'];
+    global $Version;
+    $engine_version = $Version;
     $json = json_decode(get_cached_file($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
         return "Update checker failed.";
