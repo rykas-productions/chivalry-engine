@@ -126,6 +126,7 @@ function home()
 function bail()
 {
     global $db, $userid, $ir, $h, $api;
+    $bailBase = 5;
     if (isset($_GET['user'])) {
         $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : 0;
         //Specified user is invalid or empty.
@@ -144,7 +145,9 @@ function bail()
             alert('danger', "Uh Oh!", "You are already in the dungeon, so you cannot bail others others out.", true, 'dungeon.php');
             die($h->endpage());
         }
-        $cost = round(175 + (175 * levelMultiplier($api->UserInfoGet($_GET['user'], 'level', false), getUserResetCount($_GET['user']))));
+        $DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$_GET['user']}"));
+        $secsRemain = $DungeonOut - time();
+        $cost = round(($secsRemain * $bailBase) * levelMultiplier($api->UserInfoGet($_GET['user'], 'level', false), getUserResetCount($_GET['user'])));
         //User does not have enough Copper Coins to bail this user out.
         if ($api->UserHasCurrency($userid, 'primary', $cost) == false) {
             alert('danger', "Uh Oh!", "You do not have enough Copper Coins to bail this user out. You need
