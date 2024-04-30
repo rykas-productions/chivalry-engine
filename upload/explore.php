@@ -68,6 +68,7 @@ $rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `ru
 $bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
 $bigbank = ($ir['bigbank'] > -1) ? shortNumberParse($ir['bigbank']) : "N/A";
 $vaultbank = ($ir['vaultbank'] > -1) ? shortNumberParse($ir['vaultbank']) : "N/A";
+$storebank = (getCurrentUserPref("storageAcc{$ir['location']}", -1) > -1) ? shortNumberParse(getCurrentUserPref("storageAcc{$ir['location']}", -1)) : "N/A";
 $tbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "N/A";
 $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
@@ -196,18 +197,25 @@ echo"
 					<div class='col-auto col-xxxl-6'>
 						<a href='bank.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a>
 					</div>";
-					if ($ir['level'] > 74) 
+					if ($ir['level'] >= 75) 
 					{
 						echo "
 					<div class='col-auto col-xxxl-6'>
 						<a href='bigbank.php' class='{$txtClass}'>" . loadImageAsset("explore/fed_bank.svg") . " Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a>
 					</div>";
 					}
-					if ($ir['level'] > 174) 
+					if ($ir['level'] >= 175) 
 					{
 						echo "
 					<div class='col-auto col-xxxl-6'>
 						<a href='vaultbank.php' class='{$txtClass}'>" . loadImageAsset("explore/vault_bank.svg") . " Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a>
+					</div>";
+					}
+					if ($ir['level'] >= 325)
+					{
+					    echo "
+					<div class='col-auto col-xxxl-12'>
+						<a href='bankstore.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a>
 					</div>";
 					}
 					echo "

@@ -71,6 +71,7 @@ $bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
 $bigbank = ($ir['bigbank'] > -1) ? shortNumberParse($ir['bigbank']) : "N/A";
 $vaultbank = ($ir['vaultbank'] > -1) ? shortNumberParse($ir['vaultbank']) : "N/A";
 $tbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "N/A";
+$storebank = (getCurrentUserPref("storageAcc{$ir['location']}", -1) > -1) ? shortNumberParse(getCurrentUserPref("storageAcc{$ir['location']}", -1)) : "N/A";
 $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
 $estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `estate_market`"));
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
@@ -168,11 +169,14 @@ echo "
 				<div class='card-body'>
 				    <a href='job.php' class='{$txtClass}'><i class='game-icon game-icon-push'></i> Work Center</a><br />
 					<a href='bank.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a><br />";
-if ($ir['level'] > 74) {
+if ($ir['level'] >= 75) {
     echo "<a href='bigbank.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a><br />";
 }
-if ($ir['level'] > 174) {
+if ($ir['level'] >= 175) {
     echo "<a href='vaultbank.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a><br />";
+}
+if ($ir['level'] >= 325) {
+    echo "<a href='bankstore.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a><br />";
 }
 echo "
 					<a href='tokenbank.php' class='{$txtClass}'><i class='game-icon game-icon-chest'></i> Chivalry Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a><br />
