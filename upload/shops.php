@@ -30,7 +30,6 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $ir;
-    echo "You begin looking through town to see the shops that interest you. You find a small handful.<br />";
     $q = $db->query("/*qc=on*/SELECT `shopID`, `shopNAME`, `shopDESCRIPTION` FROM `shops` WHERE `shopLOCATION` = {$ir['location']}");
     if ($db->num_rows($q) == 0) 
 	{
@@ -38,34 +37,38 @@ function home()
     } 
 	else 
 	{
-		echo "<div class='row'>";
+	    echo "<div class='card'>
+                <div class='card-header'>
+                    Town Shops
+                </div>
+                <div class='card-body'>";
         while ($r = $db->fetch_row($q)) 
 		{
-			echo "
-			<div class='col-md-4'>
-				<a href='?action=shop&shop={$r['shopID']}'>
-					<div class='card'>
-						<div class='card-header'>
-							<h2 class='mb-0'>
-								<button class='btn btn-block btn-block text-left' type='button'>
-									<div class='row'>
-										<div class='col-md'>
-											<div class='row'>
-												<div class='col'>
-													{$r['shopNAME']}<br />
-													<small>{$r['shopDESCRIPTION']}</small>
-												</div>
-											</div>
-										</div>
-									</div>
-								</button>
-							</h2>
-						</div>
-					</div>
-				</a>
-			</div>";
+           echo "     
+                <div class='row'>
+                    <div class='col-12 col-lg-4 col-xl-3 col-xxxl-2'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Shop Name</b></small>
+                            </div>
+                            <div class='col-12'>
+                                <a href='?action=shop&shop={$r['shopID']}'>{$r['shopNAME']}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-lg'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small><b>Shop Description</b></small>
+                            </div>
+                            <div class='col-12'>
+                                {$r['shopDESCRIPTION']}
+                            </div>
+                        </div>
+                    </div>
+                </div>";
         }
-        echo "</div><br />
+        echo "</div></div><br />
 		<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819462/shop.jpg' class='img-thumbnail img-responsive'>";
         $db->free_result($q);
     }
