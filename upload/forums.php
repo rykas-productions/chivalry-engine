@@ -302,7 +302,9 @@ function viewforum()
         $votes = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`rating`) FROM `forum_tops_rating` WHERE `topic_id` = {$r2['ft_id']}"));
 		$votes = number_format($votes);
         $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumbtack' aria-hidden='true'></i>" : "" ;
+        $pc = ($r2['ft_pinned']) ? "font-italic" : "" ;
         $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
+        $lc = ($r2['ft_locked']) ? "text-muted" : "" ;
         $pn1['username'] = parseUsername($r2['ft_owner_id']);
         $pn2['username'] = parseUsername($r2['ft_last_id']);
         $pcq = $db->query("/*qc=on*/SELECT COUNT(`fp_id`) FROM `forum_posts` WHERE `fp_topic_id` = {$r2['ft_id']}");
@@ -332,7 +334,7 @@ function viewforum()
 									</div>
 									<div class='col-8 col-sm-7 col-md-4'>
 										<div class='row'>
-											<a href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a>
+											<a class='{$pc} {$lc}' href='?viewtopic={$r2['ft_id']}&lastpost=1'>{$r2['ft_name']}</a>
 										</div>
 										<div class='row'><small>";
 											if (!empty($r2['ft_desc']))
