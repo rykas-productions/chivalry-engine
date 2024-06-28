@@ -213,6 +213,32 @@ if ($ir['rewarded'] == 0)
                                                 " . shortNumberParse($tokenreward) . " Chivalry Tokens. Thank you for playing.");
         }
     }
+    if ($month == 5)
+    {
+        if (($day >= 2) && ($day <= 6))
+        {
+            $random = Random(1,8);
+            if ($random == 1)
+                $itemid = 236;
+            elseif ($random == 2)
+                $itemid = 243;
+            elseif ($random == 3)
+                $itemid = 242;
+            elseif ($random == 4)
+                $itemid = 241;
+            elseif ($random == 5)
+                $itemid = 237;
+            elseif ($random == 6)
+                $itemid = 238;
+            elseif ($random == 7)
+                $itemid = 239;
+            elseif ($random == 8)
+                $itemid = 240;
+
+            $sword = $api->SystemItemIDtoName($itemid);
+            $api->GameAddNotification($userid, "May 4th is Star Wars day. From now until May 6th, logging in grant you a unique weapon, today's reward: <b>{$sword}</b>! <i>May the force be with you.</i>");
+        }
+    }
     //Month = October
     if ($month == 10)
     {
