@@ -18,4 +18,5 @@ doAutoMiner();
 sleepTick();
 runMarketTick(5);   //high risk stock
 doEffectTick();
+//sendData();
 ?>
