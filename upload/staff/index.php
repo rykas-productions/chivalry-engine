@@ -20,11 +20,11 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
         <div class='col-12 col-lg-6 col-xxl-5 col-xxxl-4'>
             <div class='card'>
                 <div class='card-header'>
-                    System Info
+                    Chivalry Engine Info
                 </div>
                 <div class='card-body'>
                     <div class='row'>
-                        <div class='col-12 col-sm-6'>
+                        <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>PHP Version</b></small>
@@ -34,73 +34,26 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6'>
+                        <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small><b>Database Version</b></small>
+                                    <small><b>DB Version</b></small>
                                 </div>
                                 <div class='col-12'>
                                     " . $MySQLIVersion . "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12 col-sm-6'>
+                        <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
-                                    <small><b>Apache Version</b></small>
+                                    <small><b>Web Server</b></small>
                                 </div>
                                 <div class='col-12'>
                                     " . apache_get_version() . "
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12'>
-                            <div class='row'>
-                                <div class='col-12'>
-                                    <small><b>Disk Free</b></small>
-                                </div>
-                                <div class='col-12'>
-                                    <div class='row'>
-                                        <div class='col-12 col-sm-6'>
-                                            " . numberToByteParse(disk_free_space("/")) . " / " . numberToByteParse(disk_total_space("/")) . "
-                                        </div>
-                                        <div class='col-12 col-sm-6'>
-                                            " . scaledColorProgressBar(disk_free_space("/"), 0, disk_total_space("/"), true) . "
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class='col-12'>
-                            <div class='row'>
-                                <div class='col-12'>
-                                    <small><b>Bandwidth Transferred</b></small>
-                                </div>
-                                <div class='col-12'>
-                                    <div class='row'>
-                                        <div class='col-12 col-sm-6'>
-                                            " . numberToByteParse(returnVPSBandwidth()) . " / " . numberToByteParse(1024*1024*1024*1024*3) . "
-                                        </div>
-                                        <div class='col-12 col-sm-6'>
-                                            " . scaledColorProgressBar(returnVPSBandwidth(), 0, 1024*1024*1024*1024*3, true) . "
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br />
-        </div>
-        <div class='col-12 col-lg-6 col-xxl-5 col-xxxl-4'>
-            <div class='card'>
-                <div class='card-header'>
-                    Chivalry Engine Info
-                </div>
-                <div class='card-body'>
-                    <div class='row'>
                         <div class='col-12 col-sm-6 col-xxxl-4'>
                             <div class='row'>
                                 <div class='col-12'>
@@ -141,13 +94,60 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12'>
+                        <div class='col-12 col-xxxl-8'>
                             <div class='row'>
                                 <div class='col-12'>
                                     <small><b>Engine Updates</b></small>
                                 </div>
                                 <div class='col-12'>
                                     " . version_json() . "
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+        <div class='col-12 col-lg-6 col-xxl-5 col-xxxl-4'>
+            <div class='card'>
+                <div class='card-header'>
+                    System Info
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Disk Free</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            " . scaledColorProgressBar(disk_free_space("/"), 0, disk_total_space("/"), true) . "
+                                        </div>
+                                        <div class='col-12'>
+                                            <small><i>" . numberToByteParse(disk_free_space("/")) . " / " . numberToByteParse(disk_total_space("/")) . "</small></i>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-sm-6'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Bandwidth Transferred</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <div class='row'>
+                                        <div class='col-12'>
+                                            " . scaledColorProgressBar(returnVPSBandwidth(), 0, 1024*1024*1024*1024*3, true) . "
+                                        </div>
+                                        <div class='col-12'>
+                                            <small><i>" . numberToByteParse(returnVPSBandwidth()) . " / " . numberToByteParse(1024*1024*1024*1024*3) . "</i></small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
