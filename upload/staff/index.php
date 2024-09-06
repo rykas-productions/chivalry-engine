@@ -80,10 +80,10 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                                 <div class='col-12'>
                                     <div class='row'>
                                         <div class='col-12 col-sm-6'>
-                                            " . numberToByteParse(returnVPSBandwidth()) . " / " . numberToByteParse(1024*1024*1024*1024*4) . "
+                                            " . numberToByteParse(returnVPSBandwidth()) . " / " . numberToByteParse(1024*1024*1024*1024*3) . "
                                         </div>
                                         <div class='col-12 col-sm-6'>
-                                            " . scaledColorProgressBar(returnVPSBandwidth(), 0, 1024*1024*1024*1024*4, true) . "
+                                            " . scaledColorProgressBar(returnVPSBandwidth(), 0, 1024*1024*1024*1024*3, true) . "
                                         </div>
                                     </div>
                                 </div>
