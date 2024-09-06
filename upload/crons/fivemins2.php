@@ -38,4 +38,6 @@ $db->query("UPDATE `settings` SET `setting_value` = {$set['cutter_capacity_max']
 doHealthRegenTick();
 fiveMinuteFarm();
 runMarketTick(4);   //med-high risk market
+
+//sendData();
 ?>
