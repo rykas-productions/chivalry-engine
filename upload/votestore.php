@@ -159,7 +159,7 @@ function buy()
 	//Book
     if ($_GET['option'] == 13)
     {
-        $api->UserGiveItem($userid,249,1);
+        $api->UserGiveItem($userid,249,$vote['singelItemMulti']);
         $rewardTxt = "You've been credited " . shortNumberParse($vote['singelItemMulti']) . " x {$api->SystemItemIDtoName(249)}(s) to your inventory.";
     }
 	//Mining Energy Potion
