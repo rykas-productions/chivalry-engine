@@ -1,35 +1,33 @@
 <?php
-function returnIcon($item,$size=1)
+function returnIcon($item, $size = 1)
 {
-	global $db;
-	$q = "/*qc=on*/SELECT `icon`,`color` FROM `items` WHERE `itmid` = {$item}";
-	$cache = fetchCachedItemIcon($q);
-	if (!empty($cache))
-	    $r = fetchCachedItemIcon($q);
-	else 
-	   $r = $db->fetch_row($db->query($q));
-	if (empty($r['icon']))
-	{
-		return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
-	}
-	elseif ($r['color'] == 'img')
-	{
-	    cacheItemIcon($q, $r);
-		return "<img src='{$r['icon']}' style='width:{$size}rem;'>";
-	}
-	else
-	{
-	    cacheItemIcon($q, $r);
-		if (!empty($r['color']))
-		{
-			return "<i class='{$r['icon']}' style='font-size:{$size}rem; color: {$r['color']};'></i>";
-		}
-		else
-		{
-			return "<i class='{$r['icon']}' style='font-size:{$size}rem;'></i>";
-		}
-		
-	}
+    global $db;
+    $q = "/*qc=on*/SELECT `icon`, `color` FROM `items` WHERE `itmid` = {$item}";
+    
+    // Check cache first
+    $cache = fetchCachedItemIcon($q);
+    
+    if (!empty($cache)) {
+        $r = $cache; // Use cached result if available
+    } else {
+        // Query database only if no cache found
+        $r = $db->fetch_row($db->query($q));
+        cacheItemIcon($q, $r); // Cache the result for future use
+    }
+    
+    // Default icon if no result
+    if (empty($r['icon'])) {
+        return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
+    }
+    
+    // If the icon is an image
+    if ($r['color'] == 'img') {
+        return "<img src='{$r['icon']}' style='width:{$size}rem;'>";
+    }
+    
+    // Handle icon with or without color
+    $colorStyle = !empty($r['color']) ? "color: {$r['color']};" : "";
+    return "<i class='{$r['icon']}' style='font-size:{$size}rem; {$colorStyle}'></i>";
 }
 
 function parseDungeonItemName($dungItem)
