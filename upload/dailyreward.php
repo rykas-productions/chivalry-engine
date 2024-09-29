@@ -183,7 +183,7 @@ if ($ir['rewarded'] == 0)
     }
     else
     {
-        $api->UserGiveItem($userid,227,1);
+        $api->UserGiveItem($userid,227,$skill);
         $api->GameAddNotification($userid,"You've received {$skill} x {$api->SystemItemIDtoName(227)}(s) for logging into Chivalry is Dead today. Thanks a lot!");
         $api->SystemLogsAdd($userid, "loginreward", "Received {$skill} x {$api->SystemItemIDtoName(227)}(s)");
     }
