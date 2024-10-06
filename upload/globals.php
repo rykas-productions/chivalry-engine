@@ -34,9 +34,7 @@ if (!isset($_SESSION['started'])) {
     $_SESSION['started'] = true;
 }
 if (!isset($_SESSION['disable_alerts']))
-{
     $_SESSION['disable_alerts'] = true;
-}
 //Set user's theme to cookies for 30 days.
 if (!isset($_COOKIE['theme'])) {
     setcookie('theme', '1', time() + 86400);
@@ -172,10 +170,18 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
 }
 //Basic chceks around the game.
 check_level();
-$os=getOS($_SERVER['HTTP_USER_AGENT']);
-$browser=getBrowser($_SERVER['HTTP_USER_AGENT']);
-$ir['os']=$os;
-$ir['browser']=$browser;
+if (isset($_SERVER['HTTP_DNT']) && ($_SERVER['HTTP_DNT'] == 1)) 
+{
+    $os = getOS("Unknown Browser");
+    $browser = getBrowser("Unknown OS");
+}
+else
+{
+    $os = getOS($_SERVER['HTTP_USER_AGENT']);
+    $browser = getBrowser($_SERVER['HTTP_USER_AGENT']);
+}
+$ir['os'] = $os;
+$ir['browser'] = $browser;
 $h = new headers;
 //Include API file.
 include("class/class_api.php");
