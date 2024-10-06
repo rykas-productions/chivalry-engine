@@ -254,8 +254,8 @@ echo "
             </div>
         </div>
     </div>
-</div>
-<h3><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h3><hr />";
+</div><br />";
+            alert('secondary', "", "<h4><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h4>", false);
 $inv =
     $db->query(
         "/*qc=on*/SELECT `iv`.`inv_qty`, `iv`.`inv_id`,
