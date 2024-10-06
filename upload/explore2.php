@@ -153,6 +153,8 @@ echo "
 					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a><br />
 					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a><br />";
                     if ($month == 11)
+                        echo "<a href='halloween.php?action=chuck'>Pumpkin Chuck</a><br />";
+                    if ($month == 11)
                         echo "<a href='attack.php?user=21'>Participate in Turkey Hunt</a><br />";
                     if ($month == 12)
                     {

@@ -6,11 +6,6 @@
     Website: 	https://chivalryisdeadgame.com/
  */
 require('globals.php');						//uncomment if user needs to be auth'd.
-/*if (currentMonth() != 10)
-{
-        alert('danger',"Uh Oh!", "Fool, its not even October! Don't make me tell CID Admin.", true, "profile.php?user={$userid}");
-        die($h->endpage());
-}*/
 if (!isset($_GET['action']))
 {
     $_GET['action'] = '';
@@ -39,6 +34,11 @@ function trick_or_treat()
 {
     global $db, $userid, $api, $h;
     $_GET['user'] = (isset($_GET['user']) && is_numeric($_GET['user'])) ? abs($_GET['user']) : '';
+    if (currentMonth() != 10)
+    {
+        alert('danger',"Uh Oh!", "Fool, its not even October! Don't make me tell CID Admin.", true, "profile.php?user={$userid}");
+        die($h->endpage());
+    }
     if (empty($_GET['user']))
     {
         alert('danger',"Uh Oh!", "Please select a valid player to visit and treat or treat from.", true, "profile.php?user={$userid}");
@@ -59,7 +59,7 @@ function trick_or_treat()
     $q=$db->query("SELECT * FROM `2018_halloween_tot` WHERE `userid` = {$userid} AND `visited` = {$_GET['user']}");
     if ($db->num_rows($q) > 0)
     {
-        alert('danger',"Uh Oh!", "You've already visited this player. It'd be a little rude to visit again so soon.", true, "profile.php?user={$_GET['user']}");
+        alert('danger',"Uh Oh!", "You've already visited this player this hour. It'd be a little rude to visit again so soon.", true, "profile.php?user={$_GET['user']}");
         die($h->endpage());
     }
     $candyItems = array(66,139,201,279,282,466,467,468,469);    //add if more candy
@@ -78,20 +78,26 @@ function trick_or_treat()
 function chuck()
 {
     global $db,$api,$userid,$h,$ir;
+    $maxThrownPerHour = 12;
     $bestThrow = getCurrentUserPref(currentYear() . "halloweenBestThrow", 0);
     $currentThrows = getCurrentUserPref(currentYear() . "halloweenDailyThrow", 0);
     
     if (isset($_GET['throw']))
     {
         $distance=Random(100,10000);
-        /*if (!$api->UserHasItem($userid,64,1))
+        if (currentMonth() != 10)
+        {
+            alert('danger',"Uh Oh!", "Fool, its not even October! Don't make me tell CID Admin.", true, "profile.php?user={$userid}");
+            die($h->endpage());
+        }
+        if (!$api->UserHasItem($userid,64,1))
         {
             alert('danger',"Uh Oh!","You need a Pumpkin to even throw one. You may buy one from the Cornrye Pub.",true,'?action=chuck');
             die($h->endpage());
-        }*/
-        if ($currentThrows == 10)
+        }
+        if ($currentThrows == $maxThrownPerHour)
         {
-            alert('danger',"Uh Oh!","You've already given it your best shot, bud. Let others have a chance.",true,'?action=chuck');
+            alert('danger',"Uh Oh!","You've already given it your best shot, bud. Let others have a chance. You may try again at the top of the hour.",true,'?action=chuck');
             die($h->endpage());
         }
         if ($distance > $bestThrow)
@@ -110,8 +116,9 @@ function chuck()
             </div>
             <div class='card-body'>
                Welcome to the Pumpkin Chuck, {$ir['username']}. You may chuck your pumpkin to see how far it'll go. The player who throws the furthest will
-	           receive a unique prize. The two runner-ups will receive a small little prize as well! Remember, your only your best throw will be put into the scorebook.<br />
-	           <b>You have thrown {$currentThrows} out of 10 times. Your current max distance thrown is " . shortNumberParse($bestThrow) . " meters.</b><br />
+	           receive a unique prize. The two runner-ups will receive a small little prize as well! Remember, your only your best throw will be put into the scorebook.
+                You may throw up to {$maxThrownPerHour} times per hour.<br />
+	           <b>You have thrown {$currentThrows} out of 12 times this hour. Your current max distance thrown is " . shortNumberParse($bestThrow) . " meters.</b><br />
             </div>
         </div>";
         echo "<br />
@@ -132,8 +139,11 @@ function chuck()
                             </div>";
                 }
             echo"</div>
-        </div>
-		<a class='btn btn-primary' href='?action=chuck&throw=1'>Chuck Pumpkin</a>";
+        </div>";
+        if (currentMonth() == 10)
+        {
+            echo "<a class='btn btn-primary' href='?action=chuck&throw=1'>Chuck Pumpkin</a>";
+        }
     }
 }
 
@@ -142,3 +152,4 @@ function doHalloweenVisit($visitor, $visited)
     global $db;
     $db->query("INSERT INTO `2018_halloween_tot` (`userid`, `visited`) VALUES ('{$visitor}', '{$visited}')");
 }
+$h->endpage();

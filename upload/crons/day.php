@@ -105,9 +105,14 @@ if (($month == 9) && ($day == 1))
 {
     $api->GameAddAnnouncement("...I really didn't want to be woke up until the end of this month....<br />But fine, whatever.... for the month of September the Hexbags and Boxes of Random have had their rewards doubled! Street begging will regenerate at 50 per hour and will be capped at 200. All this through now until the end of September. See you for the Halloween festivities next month!");
 }
-if (($month == 10) && ($day == 1))
+if ($month == 10)
 {
-    $api->GameAddAnnouncement("Hey folks! To kickstart the Halloween season, you may now visit a player's profile and Trick or Treat using the now-available link under the action section. You may trick or treat on a player once an hour. Doing so will grant you random candies that may be helpful on your journey. Also, on the Explore page, you will now see a link to the Pumpkin Chuck. You should participate to get the best distance and hopefully win some nice prizes! Stay tuned for more Halloween tricks as we get closer to the holiday!");
+    if ($day == 1)
+    {
+        $api->GameAddAnnouncement("Hey folks! To kickstart the Halloween season, you may now visit a player's profile and Trick or Treat using the now-available link under the action section. You may trick or treat on a player once an hour. Doing so will grant you random candies that may be helpful on your journey. Also, on the Explore page, you will now see a link to the Pumpkin Chuck. You should participate to get the best distance and hopefully win some nice prizes! Stay tuned for more Halloween tricks as we get closer to the holiday!");
+        $db->query("INSERT INTO `shopitems` (`sitemSHOP`, `sitemITEMID`) VALUES(1, 64)"); //add pumpkin to Cornrye pub
+        $db->query("UPDATE `items` SET `itmbuyprice` = '500', `itmsellprice` = '250', `itmbuyable` = 'true' WHERE `itmid` = 64;");  //update pumpkin price, and make sure its buyable
+    }
 }
 
 if (($month == 11) && ($day == 1))

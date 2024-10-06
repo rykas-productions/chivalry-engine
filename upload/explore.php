@@ -137,7 +137,7 @@ echo"
 					<div class='col-auto col-xxxl-12'>
 						<a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a>
 					</div>";
-                    if ($month == 11)
+                    if ($month == 10)
                     {
                         echo "
                             <div class='col-auto col-xxxl-12'>

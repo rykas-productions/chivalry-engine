@@ -41,8 +41,9 @@ if ((date('G') == 6) || (date('G') == 12) || (date('G') == 18))
 }
 backupDatabase();
 giveNPCsMoney();
-//halloween 2023
-$db->query("UPDATE `2018_halloween_chuck` SET `count` = `count` + 2 WHERE `count` < 20");
-$db->query("UPDATE `2018_halloween_chuck` SET `count` = 20 WHERE `count` > 20");
-$db->query("TRUNCATE `2018_halloween_tot`");
+if (currentMonth() == 10)
+{
+    $db->query("DELETE FROM `user_pref` WHERE `preference` = " . currentYear() . "halloweenDailyThrow");
+    $db->query("TRUNCATE `2018_halloween_tot`");
+}
 ?>
