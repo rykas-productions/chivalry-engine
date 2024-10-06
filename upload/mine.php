@@ -405,7 +405,7 @@ function mine_item()
 		            alert('danger', "Uh Oh!", "You consume these herbs and start to trip balls, man. You decide its best to not mine until you clear your head...", true, 'explore.php');
 		            userGiveEffect($userid, effect_mining_fear, Random(600,3600));
 		            userRemoveEffect($userid, mining_xp_boost);
-		            die($h->endpage());
+		            home();
 		        }
 		    }
 		    $newtime = 3600 / ($effectLvl + 1);
@@ -417,11 +417,12 @@ function mine_item()
 		}
 		alert('success',"Success!","You've consumed a set of herbs and feel strangely relaxed, but ready to learn more while you mine! The effects will wear off in an hour.",true,'inventory.php');
 		$api->UserTakeItem($userid, 177, 1);
+		home();
 	}
 	else
 	{
 		alert('danger',"Uh Oh!","You do not have the required item to be here.",true,'inventory.php');
-		die($h->endpage());
+		home();
 	}
 }
 
