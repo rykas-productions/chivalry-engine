@@ -34,7 +34,7 @@ else
 
 
 runMarketTick(3);   //med risk market
-if ((date('G') == 6) || (date('G') == 12) || (date('G') == 18))
+if ((currentHour() == 6) || (currentHour() == 12) || (currentHour() == 18) || (currentHour() == 0))
 {
     runMarketTick(2);   //lower risk
 	addTokenMarketListing();
