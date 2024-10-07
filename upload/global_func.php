@@ -368,9 +368,9 @@ function request_csrf_code($formid)
  * Request a randomly generated phrase.
  * @return string Randomly generated string.
  */
-function randomizer()
+function randomizer($length = 32)
 {
-	return bin2hex(random_bytes(32));
+    return rtrim(base64_encode(random_bytes($length)), '=');
 }
 
 /**
