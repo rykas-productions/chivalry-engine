@@ -431,36 +431,51 @@ function viewtopic()
         $lock = ($topic['ft_locked'] == 0) ? 'Lock Topic' : 'Unlock Topic' ;
         $pin = ($topic['ft_pinned'] == 0) ? 'Pin Topic' : 'Unpin Topic' ;
         echo "
-	<form action='?act=move&topic={$_GET['viewtopic']}' method='post'>
-    <b>Move Topic To</b> " . forum_dropdown('forum')
-            . "
-	<input type='submit' value='Move Topic' class='btn btn-primary' />
-	</form>
-	<br />
-	<div class='row'>
-		<div class='col-sm'>
-			<form>
-				<input type='hidden' value='pin' name='act'>
-				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-				<input type='submit' class='btn btn-primary' value='{$pin}'>
-			</form>
-		</div>
-		<div class='col-sm'>
-			<form>
-				<input type='hidden' value='lock' name='act'>
-				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-				<input type='submit' class='btn btn-primary' value='{$lock}'>
-			</form>
-		</div>
-		<div class='col-sm'>
-			<form action='?act=deletopic'>
-				<input type='hidden' value='deletopic' name='act'>
-				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
-				<input type='submit' class='btn btn-primary' value='Delete'>
-			</form>
-		</div>
-	</div>
-	<br /> ";
+    <div class='card'>
+        <div class='card-header'>
+            <b>Staff Menu</b>
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                 <div class='col-auto col-sm-6 col-xxl-auto'>
+                    <form action='?act=move&topic={$_GET['viewtopic']}' method='post'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Move Topic</b></small>
+                        </div>
+                        <div class='col-12'>
+                            " . forum_dropdown('forum') . "
+                        </div>
+                        <div class='col-12'>
+                            <input type='submit' value='Move Topic' class='btn btn-primary btn-block' />
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <div class='col-auto col-sm-6 col-xxl-auto'>
+                    <form>
+        				<input type='hidden' value='pin' name='act'>
+        				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+        				<input type='submit' class='btn btn-primary btn-block' value='{$pin}'>
+                    </form>
+                </div>
+                <div class='col-auto col-sm-6 col-xxl-auto'>
+                    <form>
+        				<input type='hidden' value='lock' name='act'>
+        				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+        				<input type='submit' class='btn btn-primary btn-block' value='{$lock}'>
+        			</form>
+                </div>
+                <div class='col-auto col-sm-6 col-xxl-auto'>
+                    <form action='?act=deletopic'>
+        				<input type='hidden' value='deletopic' name='act'>
+        				<input type='hidden' name='topic' value='{$_GET['viewtopic']}'>
+        				<input type='submit' class='btn btn-primary btn-block' value='Delete'>
+        			</form>
+                </div>
+            </div>
+        </div>
+    </div><br />";
     }
 	/*if ($ir['guild'] == $forum['ff_owner'])
 	{
@@ -516,13 +531,13 @@ function viewtopic()
         $no++;
         if ($no > 1 and ($api->UserMemberLevelGet($userid, 'forum moderator'))) {
             $dlink =
-                "<a class='btn btn-primary btn-block' href='?act=delepost&post={$r['fp_id']}'><i class='fas fa-trash-alt'></i></a>";
+                "<a class='btn btn-danger btn-block' href='?act=delepost&post={$r['fp_id']}'><i class='fas fa-trash-alt'></i></a>";
         } else {
             $dlink = "";
         }
         if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
-            $wlink = "<a class='btn btn-primary btn-block' href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'><i class='fas fa-exclamation'></i></a>";
-            $blink = "<a class='btn btn-primary btn-block' href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'><i class='fas fa-ban'></i></a>";
+            $wlink = "<a class='btn btn-warning btn-block' href='staff/staff_punish.php?action=forumwarn&user={$r['fp_poster_id']}'><i class='fas fa-exclamation'></i></a>";
+            $blink = "<a class='btn btn-danger btn-block' href='staff/staff_punish.php?action=forumban&user={$r['fp_poster_id']}'><i class='fas fa-ban'></i></a>";
         } else {
             $wlink = "";
             $blink = "";
@@ -556,51 +571,52 @@ function viewtopic()
         }
         if ($memb['userid'] > 0) {
             if ($memb['display_pic']) {
-                $av = "<img src='" . parseImage(parseDisplayPic($memb['userid'])) . "' class='img-fluid' width='350' alt='{$memb['username']}&#39;s display picture' title='{$memb['username']}&#39;s display picture'>";
+                $av = "<img src='" . parseImage(parseDisplayPic($memb['userid'])) . "' class='img-fluid' alt='{$memb['username']}&#39;s display picture' title='{$memb['username']}&#39;s display picture'>";
             } else {
                 $av = "";
             }
             $memb['signature'] = $parser->parse($memb['signature']);
             $memb['signature'] = $parser->getAsHtml($memb['signature']);
         }
-		$rlink="<a class='btn btn-primary btn-block' href='playerreport.php?userid={$r['fp_poster_id']}'><i class='fas fa-flag'></i></a>";
+		$rlink="<a class='btn btn-warning btn-block' href='playerreport.php?userid={$r['fp_poster_id']}'><i class='fas fa-flag'></i></a>";
         //$r['fp_text']=replaceMentions($r['fp_text']);
 		$r['fp_text']=$parser->parse($r['fp_text']);
         $r['fp_text'] = $parser->getAsHtml();
+        
+        
 		echo "<div class='row'>
 					<div class='col-12'>
 						<div class='card'>
 							<div class='card-header'>
 								<div class='row'>
-									<div class='col-4 col-md-2'>
-										Post #{$no}
+									<div class='col-auto'>
+										<b>#{$no}</b>
 									</div>
-									<div class='col-8 col-md-6 col-lg-4'>
+									<div class='col-9 col-auto col-xl-5'> 
 										Posted {$t}
 									</div>
-									<div class='col-2 col-md-1'>
+									<div class='col-2 col-md-2 col-xl-1'>
 										{$qlink}
 									</div>
-									<div class='col-2 col-md-1'>
+									<div class='col-2 col-md-2 col-xl-1'>
 										{$elink}
 									</div>
-									<div class='col-2 col-md-1'>
+									<div class='col-2 col-md-2 col-xl-1'>
 										{$dlink} 
 									</div>
-									<div class='col-2 col-md-1'>
+									<div class='col-2 col-md-2 col-xl-1'>
 										{$wlink}
 									</div>
-									<div class='col-2 col-md-1'>
+									<div class='col-2 col-md-2 col-xl-1'>
 										{$blink}
 									</div>
-									<div class='col-2 col-md-1'>
+									<div class='col-2 col-md-2 col-xl-1'>
 										{$rlink}
 									</div>
 								</div>
 							</div>
 						<div class='card-body'>
-							<div class='col-12'>
-								<div class='row'>";
+							<div class='col-12'>";
         if ($memb['userid'] > 0) {
             $userpostsq = $db->query("/*qc=on*/SELECT COUNT('fp_id') FROM `forum_posts` WHERE `fp_poster_id`={$r['fp_poster_id']}");
             $userposts = $db->fetch_single($userpostsq);
@@ -611,33 +627,56 @@ function viewtopic()
             $dung = ($api->UserStatus($r['fp_poster_id'], 'dungeon')) ? "<i class='game-icon game-icon-cage'></i>" : "" ;
 			echo "
 				<div class='row'>
-				<div class='col-12 col-lg-5 col-xl-4'>
+				<div class='col-12 col-lg-5 col-xl-4 col-xxl-3 col-xxxl-2'>
 					<div class='row'>
 						<div class='col-12'>
 							{$av}
 						</div>
-						<div class='col-6'>
-							<a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a> [{$r['fp_poster_id']}]
-						</div>
-						<div class='col-6'>
-							<b>Rank</b> {$memb['user_level']}
-						</div>
-						<div class='col-6'>
-							<b>Posts</b> {$userposts}
-						</div>
-						<div class='col-6'>
-							<b>Topics</b> {$usertopics}
-						</div>
-						<div class='col-6'>
-						{$dung}
-						</div>
-						<div class='col-6'>
-							{$infirm}
-						</div>
+                        <div class='row'>
+    						<div class='col-12'>
+    							<a href='profile.php?user={$r['fp_poster_id']}'>{$PN['username']}</a> [{$r['fp_poster_id']}]
+    						</div>
+                            <div class='col-auto col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Rank</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$memb['user_level']}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-auto col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Posts</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($userposts) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-auto col-sm-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>Posts</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        " . shortNumberParse($usertopics) . "
+                                    </div>
+                                </div>
+                            </div>
+    						<div class='col-6'>
+    						{$dung}
+    						</div>
+    						<div class='col-6'>
+    							{$infirm}
+    						</div>
+                        </div>
 					</div>
 				</div>";
         } else {
-            print "<div class='col-12 col-lg-5 col-xl-4'><b>Deleted user.</b></div>";
+            print "<div class='col-12 col-lg-5 col-xl-4 col-xxl-3 col-xxxl-2'><b>Deleted user.</b></div>";
         }
 		echo "<div class='col-12 col-lg-7 col-xl-8'>
 			{$r['fp_text']}
@@ -648,44 +687,78 @@ function viewtopic()
 		echo "	</div>
 					</div>
 				</div>
-			</div>
 		</div>";
     }
     $db->free_result($q3);
     echo pagination($postView, $posts_topic, $st, "?viewtopic={$topic['ft_id']}&st=");
-    if ($topic['ft_locked'] == 0) {
+    if ($topic['ft_locked'] == 0) 
+    {
 		if (permission("CanReplyForum",$userid))
 		{
 			echo "
-			<br />
-			<form action='?reply={$topic['ft_id']}' method='post'>
-				<table class='table'>
-					<tr>
-						<th>
-							Post Response
-							</th>
-						<td>
-							<textarea class='form-control' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
-						</td>
-					</tr>
-					<tr>
-						<td colspan='2'> 
-							<input type='submit' value='Submit Reply' class='btn btn-primary btn-block'>
-						</td>
-					</tr>
-				</table>
-				<input type='hidden' name='verf' value='{$code}' />
-			</form>
-			";
+            <form action='?reply={$topic['ft_id']}' method='post'>
+            <div class='card'>
+                <div class='card-header'>
+                    Reply to Thread
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <textarea class='form-control' id='post' placeholder='You can use BBCode.' name='fp_text' required></textarea>
+                        </div>
+                        <div class='col-12'>
+                            <br /><input type='submit' value='Submit Reply' class='btn btn-primary btn-block'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type='hidden' name='verf' value='{$code}' />
+            </form>";
 		}
 		else
 		{
-			echo "<br /><br />You do not have permission to reply to forum topics.";
+			echo "
+            <div class='card'>
+                <div class='card-header'>
+                    Reply to Thread
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 text-danger'>
+                            You do not have permission to reply to forum threads.
+                        </div>
+                        <div class='col-12'>
+                            <textarea class='form-control' placeholder='You do not have permission to reply to forum threads.' disabled>You do not have permission to reply to forum threads.</textarea>
+                        </div>
+                        <div class='col-12'>
+                            <br /><input type='submit' disabled='1' value='Submit Reply' class='btn btn-primary btn-block'>
+                        </div>
+                    </div>
+                </div>
+            </div>";
 		}
-    } else {
-        echo "<br />
-		<br />
-		<i>This topic is locked, and as a result, you cannot reply to it!</i>";
+    } 
+    else 
+    {
+        echo "
+            <div class='card'>
+                <div class='card-header'>
+                    Reply to Thread
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12 text-danger'>
+                            This topic is locked and cannot receive more replies at this time.
+                        </div>
+                        <div class='col-12'>
+                            <textarea class='form-control' placeholder='This topic is locked and cannot receive more replies at this time.' disabled>This topic is locked and cannot receive more replies at this time.</textarea>
+                        </div>
+                        <div class='col-12'>
+                            <br /><input type='submit' disabled='1' value='Submit Reply' class='btn btn-primary btn-block'>
+                        </div>
+                    </div>
+                </div>
+            </div>";
     }
 }
 
@@ -840,41 +913,59 @@ function newtopicform()
 		<li class='breadcrumb-item'><a href='?viewforum={$_GET['forum']}'>{$r['ff_name']}</a></li>
 		<li class='breadcrumb-item active'>New Topic Form</li>
 	</ol>";
-    echo <<<EOF
+    echo "
 <form method='post' action='?act=newtopic&forum={$_GET['forum']}'>
-	<table class='table'>
-		<tr>
-			<th>
-				<label for='ft_name'>Topic Name</label>
-			</th>
-			<td>
-				<input type='text' class='form-control' id='ft_name' name='ft_name' required>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<label for='ft_desc'>Topic Description</label>
-			</th>
-			<td>
-				<input type='text' class='form-control' id='ft_desc' name='ft_desc'>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<label for='fp_text'>Opening Post</label>
-			</th>
-			<td>
-				<textarea class='form-control' placeholder='You can use BBCode!' name='fp_text' id='fp_text' required></textarea>
-			</td>
-		</tr>
-		<tr>
-			<td align='center' colspan='2'>
-				<input type='submit' class='btn btn-lg btn-outline-primary' value='Post Topic' />
-			</td>
-	</table>
-	<input type='hidden' name='verf' value='{$code}' />
-</form>
-EOF;
+    <div class='card'>
+        <div class='card-header'>
+            Creating topic in {$r['ff_name']}
+        </div>
+        <div class='card-body'>
+            <div class='row'>
+                <div class='col-12 col-md-6'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Topic Name</b></small>
+                        </div>
+                        <div class='col-12'>
+                           <input type='text' class='form-control' id='ft_name' name='ft_name' required>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12 col-md-6'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Topic Description</b></small>
+                        </div>
+                        <div class='col-12'>
+                           <input type='text' class='form-control' id='ft_desc' name='ft_desc'>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b>Topic Post</b></small>
+                        </div>
+                        <div class='col-12'>
+                           <textarea class='form-control' placeholder='You can use BBCode!' name='fp_text' id='fp_text' required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-12'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small><b><br /></b></small>
+                        </div>
+                        <div class='col-12'>
+                           <input type='submit' class='btn btn-block btn-primary' value='Post Topic' />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type='hidden' name='verf' value='{$code}' />
+</form>";
 }
 
 function newtopic()
