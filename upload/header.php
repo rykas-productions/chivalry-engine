@@ -608,9 +608,9 @@ class headers
 	{
 		global $set;
 		cslog('log',"CSS is loading.");
-		echo "<link rel='stylesheet' href='css/game-{$set['game_css_version']}.css'>
-				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>
-				<link rel='stylesheet' href='//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css'>";
+		echo "<link rel='stylesheet' href='css/game-{$set['game_css_version']}.css' async>
+				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css' async>
+				<link rel='stylesheet' href='//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css' defer>";
 		
 	}
 	
@@ -630,9 +630,9 @@ class headers
         <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
 		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
 		<script src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
-		<script src='js/underscore-min.js' async defer></script>
-        <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js'></script>
-		<script async src='https://www.googletagmanager.com/gtag/js?id=UA-69718211-1'></script>
+		<script src='js/underscore-min.js' defer></script>
+        <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js' defer></script>
+		<script async src='https://www.googletagmanager.com/gtag/js?id=UA-69718211-1' defer></script>
 		<script>
 		  window.dataLayer = window.dataLayer || [];
 		  function gtag(){dataLayer.push(arguments);}
@@ -641,8 +641,8 @@ class headers
 		  gtag('config', 'UA-69718211-1');
 		</script>";
 		?>
-		<script src="js/sidemenu.js"></script>
-		<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+		<script src="js/sidemenu.js" async></script>
+		<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js" defer></script>
 		<script type="text/javascript">
             jQuery(function ($) {
             $("#close-sidebar").click(function() {
@@ -668,7 +668,7 @@ class headers
             });
         });	
         </script>
-        <script src='js/jquery.canvasjs.min.js'></script>
+        <script src='js/jquery.canvasjs.min.js' defer></script>
 		<?php
 	}
 	
