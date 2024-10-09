@@ -35,7 +35,6 @@ if (userHasEffect($userid, effect_mining_fear))
 }
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
 mining_levelup();
-echo "<h2><i class='game-icon game-icon-mining'></i> Dangerous Mines</h2><hr />";
 if ($api->UserStatus($userid, 'infirmary')) {
     alert('danger', "Unconscious!", "You cannot go mining if you're in the infirmary.");
     die($h->endpage());
@@ -94,100 +93,129 @@ function home()
 	    alert('info',"","You require {$perc}% less mining energy per attempt. This effect wears off in {$xpboostendtime}.",false);
 	    echo "</div>";
 	}
-    echo "</div>
-    Welcome to the dangerous mines, brainless moron! If you're lucky, you'll strike riches. If not... the mine
-        will eat you alive.
-	<hr />
+    echo "</div>";
+        alert('secondary',"","Welcome, foolish soul, to the treacherous depths of these cursed mines. Only the 
+                bravest—or the most dimwitted—dare tread where shadows whisper and fortune is as 
+                fleeting as a summer breeze. If the gods show favor, you may unearth riches beyond your 
+                wildest dreams—gold, silver, gems to rival the crown's own. But be warned, for these 
+                ancient tunnels are no friend to the faint of heart. Many before you have ventured forth, 
+                only to vanish into the darkness, claimed by the very earth they sought to conquer. 
+                Should fate turn against you, it is not riches you will find, but the cold embrace of the grave. 
+                Steel yourself, for the mine hungers, and it will devour those unworthy of its secrets.",false);
+	echo"
 	<div class='row'>
-        <div class='col-md-4 col-xl-3'>
-			Mining Energy - {$mineen}%<br />
-			<small><div class='row'>
-				<div class='col'>
-					[<a href='?action=buypower'>Buy Power Sets</a>]
-				</div>
-				<div class='col'>
-					[<a href='?action=potion'>Drink Mining Potion</a>]
-				</div>
-			</div>
-			</small>
-		</div>
-		<div class='col'>
-			" . scaledColorProgressBar($MUS['miningpower'], 0, $MUS['max_miningpower']) . "
-		</div>
-	</div>
-	<hr />
-	<div class='row'>
-        <div class='col-md-4 col-xl-3'>
-			Mining Experience - {$minexp}%<br />
-			<small>
-				<div class='row'>
-					<div class='col'>
-						Mining Level {$MUS['mining_level']}
-					</div>
-					<div class='col'>
-						[<a href='?action=herb'>Use Mining Herb</a>]
-					</div>
-				</div>
-			</small>
-		</div>
-		<div class='col-sm'>
-			<div class='progress' style='height: 1rem;'>
-				<div class='progress-bar bg-success progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$MUS['miningxp']}' style='width:{$minexp}%' aria-valuemin='0' aria-valuemax='{$MUS['xp_needed']}'>
-					<span>
-						{$minexp}% (" . number_format($MUS['miningxp']) . " / " . number_format($MUS['xp_needed']). ")
-					</span>
-				</div>
-			</div>
-		</div>
+        <div class='col-12 col-md-6'>
+            <div class='card'>
+                <div class='card-header'>
+                    Mining Energy - {$mineen}%
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+        			     " . scaledColorProgressBar($MUS['miningpower'], 0, $MUS['max_miningpower']) . "
+                        <br />
+        		        </div>
+        				<div class='col'>";
+	                       echo createWarningBadge("<a href='?action=buypower'>Buy Power Sets</a>");
+        					echo "<br />
+        				</div>
+        				<div class='col'>";
+        					echo createSuccessBadge("<a href='?action=potion'>Drink Mining Potion</a>");
+        					echo "<br />
+        				</div>
+                    </div>
+        		</div>
+            </div>
+            <br />
+        </div>
+        <div class='col-12 col-md-6'>
+            <div class='card'>
+                <div class='card-header'>
+                    Mining Level " . shortNumberParse($MUS['mining_level']) . " ({$minexp}%)
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+        			     " . scaledColorProgressBar($MUS['miningxp'], 0, $MUS['xp_needed']) . "
+                            <br />
+        		        </div>
+                        <div class='col'>";
+        					echo createDangerBadge("<a href='?action=herb'>Use Mining Herb</a>");
+        					echo "<br />
+        				</div>
+                    </div>
+        		</div>
+            </div>
+            <br />
+        </div>
 	</div>";
     $minesql = $db->query("/*qc=on*/SELECT * FROM `mining_data` ORDER BY `mine_level` ASC");
+    echo "
+    <div class='card'>
+        <div class='card-header'>
+            Known mining locations
+        </div>
+        <div class='card-body'>";
     while ($mines = $db->fetch_row($minesql)) 
 	{
 		$mines['mine_iq'] = calcMineIQ($userid, $mines['mine_id']);
 		
-		$mininglevel = ($MUS['mining_level'] >= $mines['mine_level']) ? "<span class='text-success'><b>Level:</b> " . shortNumberParse($mines['mine_level']) . "</span>" : "<span class='text-danger'><b>Level:</b> " . shortNumberParse($mines['mine_level']) . "</span>";
-		$iq = ($ir['iq'] >= $mines['mine_iq']) ? "<span class='text-success'><b>IQ:</b> " . shortNumberParse($mines['mine_iq']) . "</span>" : "<span class='text-danger'><b>IQ:</b> " . shortNumberParse($mines['mine_iq']) . "</span>";
-		$pickaxe = ($api->UserHasItem($ir['userid'],$mines['mine_pickaxe'],1)) ? "<span class='text-success'><b>Pickaxe:</b> " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>" : "<span class='text-danger'><b>Pickaxe:</b> " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "</span>";
+		$mininglevelClass = ($MUS['mining_level'] >= $mines['mine_level']) ? 'text-success' : 'text-danger';
+		$iqClass = ($ir['iq'] >= $mines['mine_iq']) ? 'text-success' : 'text-danger';
+		$pickaxeClass = ($api->UserHasItem($ir['userid'],$mines['mine_pickaxe'],1))  ? 'text-success' : 'text-danger';
 		$town = ($ir['location'] == $mines['mine_location']) ? "<span class='text-success'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>" : "<span class='text-danger'>" . $api->SystemTownIDtoName($mines['mine_location']) . "</span>";
 		
 		echo "<div class='row'>
 				<div class='col-12'>
-					<div class='card'>
-						<div class='card-body'>
+					<div class='row'>
+						<div class='col-6 col-sm-4 col-md-3 col-xl-2'>
 							<div class='row'>
-								<div class='col-lg-2'>
-									<div class='row'>
-										<div class='col-8 col-lg-12'>
-											{$town}
-										</div>
-										<div class='col-4 col-lg-12'>
-											<small><a href='travel.php?to={$mines['mine_location']}'>Travel</a></small>
-										</div>
-									</div>
+								<div class='col-12'>
+									<small><b>Town</b></small>
 								</div>
-								
-								<div class='col-lg-8'>
-									<div class='row'>
-										<div class='col-6 col-lg'>
-											{$mininglevel}
-										</div>
-										<div class='col-6 col-lg'>
-											{$iq}
-										</div>
-										<div class='col-12 col-lg'>
-											{$pickaxe}
-										</div>
-									</div>									
-								</div>
-								<div class='col-lg-2'>
-									<a href='?action=mine&spot={$mines['mine_id']}' class='btn btn-primary btn-block'>Mine</a>
+								<div class='col-12'>
+                                    <a href='travel.php?to={$mines['mine_location']}'>{$town}</a>
 								</div>
 							</div>
+						</div>
+                        <div class='col-2 col-xxl-1 {$mininglevelClass}'>
+							<div class='row'>
+								<div class='col-12'>
+									<small><b>Level?</b></small>
+								</div>
+								<div class='col-12'>
+                                    " . shortNumberParse($mines['mine_level']) . "
+								</div>
+							</div>
+						</div>
+                        <div class='col-auto col-sm-2 col-xxl-1 {$iqClass}'>
+							<div class='row'>
+								<div class='col-12'>
+									<small><b>IQ?</b></small>
+								</div>
+								<div class='col-12'>
+                                    " . shortNumberParse($mines['mine_iq']) . "
+								</div>
+							</div>
+						</div>
+						<div class='col-6 col-sm-4 col-xl-3 col-xxl-4 {$pickaxeClass}'>
+							<div class='row'>
+								<div class='col-12'>
+									<small><b>Tool?</b></small>
+								</div>
+								<div class='col-12'>
+                                    " . $api->SystemItemIDtoName($mines['mine_pickaxe']) . "
+								</div>
+							</div>
+						</div>
+						<div class='col-auto col-sm'>
+							<a href='?action=mine&spot={$mines['mine_id']}' class='btn btn-primary btn-block'>Mine</a>
 						</div>
 					</div>
 				</div>
 			</div>";
     }
+    echo"</div></div>";
 
 }
 
@@ -403,9 +431,9 @@ function mine_item()
 		        {
 		            $api->UserTakeItem($userid, 177, 1);
 		            alert('danger', "Uh Oh!", "You consume these herbs and start to trip balls, man. You decide its best to not mine until you clear your head...", true, 'explore.php');
-		            userGiveEffect($userid, effect_mining_fear, Random(600,3600));
+		            userGiveEffect($userid, effect_mining_fear, Random(300,3600));
 		            userRemoveEffect($userid, mining_xp_boost);
-		            home();
+		            die($h->endpage());
 		        }
 		    }
 		    $newtime = 3600 / ($effectLvl + 1);
@@ -415,7 +443,7 @@ function mine_item()
 		{
 		    userGiveEffect($userid, constant("mining_xp_boost"), 3600);
 		}
-		alert('success',"Success!","You've consumed a set of herbs and feel strangely relaxed, but ready to learn more while you mine! The effects will wear off in an hour.",true,'inventory.php');
+		alert('success',"Success!","You've consumed a set of herbs and feel strangely relaxed, but ready to learn more while you mine! The effects will wear off in an hour.", false);
 		$api->UserTakeItem($userid, 177, 1);
 		home();
 	}
