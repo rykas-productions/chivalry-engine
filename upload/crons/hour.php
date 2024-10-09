@@ -9,10 +9,10 @@
 */
 $menuhide=1;
 require_once(__DIR__ .'/../globals_nonauth.php');
-/*if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
+if (!isset($_GET['code']) || $_GET['code'] !== $_CONFIG['code'])
 {
     exit;
-}*/
+}
 doHourlyJobRewards();
 
 $db->query("UPDATE `settings` SET `setting_value` = `setting_value` - 1 WHERE `setting_name` = 'raffle_chance' AND `setting_value` > 10");
