@@ -22,7 +22,7 @@ function returnIcon($item, $size = 1)
     
     // If the icon is an image
     if ($r['color'] == 'img') {
-        return "<img src='{$r['icon']}' style='width:{$size}rem;'>";
+        return "<img src='{$r['icon']}' style='width:{$size}rem;' loading='lazy'>";
     }
     
     // Handle icon with or without color
