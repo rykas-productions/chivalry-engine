@@ -1241,9 +1241,9 @@ function addcrime()
         $memb = (isset($_POST['members']) && is_numeric($_POST['members'])) ? abs(intval($_POST['members'])) : 0;
         $min = (isset($_POST['min']) && is_numeric($_POST['min'])) ? abs(intval($_POST['min'])) : 0;
         $max = (isset($_POST['max']) && is_numeric($_POST['max'])) ? abs(intval($_POST['max'])) : 0;
-        $start = $db->escape(htmlentities(stripslashes($_POST['start']), ENT_QUOTES, 'ISO-8859-1'));
-        $success = $db->escape(htmlentities(stripslashes($_POST['success']), ENT_QUOTES, 'ISO-8859-1'));
-        $fail = $db->escape(htmlentities(stripslashes($_POST['fail']), ENT_QUOTES, 'ISO-8859-1'));
+        $start = htmlentities($_POST['start'], ENT_QUOTES, 'UTF-8');
+        $success = htmlentities($_POST['success'], ENT_QUOTES, 'UTF-8');
+        $fail = htmlentities($_POST['fail'], ENT_QUOTES, 'UTF-8');
 
         //Validate CSRF check.
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_create_guild_crime', stripslashes($_POST['verf']))) {
