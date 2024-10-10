@@ -1109,7 +1109,7 @@ function sell_property()
 function game_properties()
 {
     global $db, $ir, $userid, $estate, $edb, $h, $api, $propCost;
-	$hq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE `house_will` > 100 ORDER BY `house_will` ASC");
+	$hq = $db->query("/*qc=on*/SELECT * FROM `estates` WHERE (`house_will` > 100 AND `house_hidden` = 0) ORDER BY `house_will` ASC");
 	echo "<div class='card'>
             <div class='card-body'><div class='row'>
 			<div class='col-auto'>
