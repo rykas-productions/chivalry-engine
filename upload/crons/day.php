@@ -111,6 +111,7 @@ if ($month == 10)
         $api->GameAddAnnouncement("Hey folks! To kickstart the Halloween season, you may now visit a player's profile and Trick or Treat using the now-available link under the action section. You may trick or treat on a player once an hour. Doing so will grant you random candies that may be helpful on your journey. Also, on the Explore page, you will now see a link to the Pumpkin Chuck. You should participate to get the best distance and hopefully win some nice prizes! Stay tuned for more Halloween tricks as we get closer to the holiday!");
         $db->query("INSERT INTO `shopitems` (`sitemSHOP`, `sitemITEMID`) VALUES(1, 64)"); //add pumpkin to Cornrye pub
         $db->query("UPDATE `items` SET `itmbuyprice` = '500', `itmsellprice` = '250', `itmbuyable` = 'true' WHERE `itmid` = 64;");  //update pumpkin price, and make sure its buyable
+        $db->query("UPDATE `estates` SET `house_hidden` = 0 WHERE `house_id` = 52");    //unhide halloween mansion
     }
 }
 
@@ -118,7 +119,9 @@ if ($month == 11)
 {
     if ($day == 1)
     {
-        $api->GameAddAnnouncement("That concludes the Halloween Trick or Treat! I'll be making another announcement shortly after I tally up the prizes. Thank you to everyone who played.<br />Now that its November, however, we need to transition into turkey hunting season. Check out the new link on Explore to start stockpiling feathers and turkeys for the turkey hunt. Get enough feathers and you can build this year's Thanksgiving Armor!");
+        $db->query("UPDATE `estates` SET `house_hidden` = 1 WHERE `house_id` = 52");    //hide halloween mansion til next year
+        $db->query("UPDATE `estates` SET `house_hidden` = 0 WHERE `house_id` = 61");    //unhide thanksgiving estate
+        $api->GameAddAnnouncement("That concludes the Halloween Trick or Treat! I'll be making another announcement shortly after I have out the prizes, if you're curious as to the standings feel free to check the [url=halloffame.php?stat={$year}halloweenCandies]hall of fame[/url]. Thank you to everyone who played.<br />Now that its November, however, we need to transition into turkey hunting season. Check out the new link on Explore to start stockpiling feathers and turkeys for the turkey hunt. Get enough feathers and you can build this year's Thanksgiving Armor! Note, if you didn't get a chance to buy the Halloween themed estate, you now have a chance to purchase the Thanksgiving themed estate!");
         $db->query("DELETE FROM `shopitems` WHERE `sitemSHOP` = 1 AND `sitemITEMID` = 64"); //delete pumpkin from cornrye pub
         $db->query("UPDATE `items` SET `itmbuyprice` = '500000000', `itmsellprice` = '250000000', `itmbuyable` = 'true' WHERE `itmid` = 64;");  //reset pumpkin price
     }
@@ -126,6 +129,7 @@ if ($month == 11)
 
 if (($month == 12) && ($day == 1))
 {
+    $db->query("UPDATE `estates` SET `house_hidden` = 1 WHERE `house_id` = 61");    //hide thanksgiving estate
     $db->query("TRUNCATE TABLE `advent_calender`");
     $api->GameAddAnnouncement("Greetings folks!<br />Thanks to everyone who participated in the Thankgiving event. That was awesome! Hope you get time to craft the armor. To start off December, your employers are now giving out 75% extra wages the entirety of the month! How nice of them! Don't forget the {$year} Advent Calendar is now live on the Explore page. Stay tuned for more Christmas events from now until the holidays!");
 }
