@@ -23,9 +23,9 @@ if (!is_ajax()) {
     exit;
 }
 //Select count of user's unread messages.
-$ir['mail'] = $db->fetch_single(
+/*$ir['mail'] = $db->fetch_single(
 					$db->query("
-							/*qc=on*/SELECT COUNT(`mail_id`) 
+							SELECT COUNT(`mail_id`) 
 							FROM `mail` 
 							WHERE `mail_to` = {$ir['userid']} 
 							AND `mail_status` = 'unread'"));
@@ -83,4 +83,4 @@ if ($ir['announcements'] > 0)
 	echo "<div class='col-auto'>";
 		alert('info', "", "You have " . shortNumberParse($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
 	echo "</div>";
-}
+}*/
