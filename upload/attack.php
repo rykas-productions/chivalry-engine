@@ -12,6 +12,8 @@ $votecount=$db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`voted`) FROM `vo
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
+if ($userid == 101)
+    var_dump($_SESSION);
 switch ($_GET['action']) {
     case 'attacking':
         attacking();
@@ -390,13 +392,6 @@ function attacking()
         if (!isset($_SESSION['tresde'])) 
         {
             $_SESSION['tresde'] = 0;
-        }
-        //If RNG is not the same number stored in session
-        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) 
-        {
-            resetAttackStatus();
-            alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
-            die($h->endpage());
         }
 		if (userHasEffect($userid, basic_protection))
 		{
@@ -1025,7 +1020,7 @@ function attacking()
                     $type = "Potion Item";
                 }
 				echo "<div class='col'>
-				<a href='?action=attacking&nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'><b>{$type}</b><br />
+				<a href='?action=attacking&nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&ref={$ref}'><b>{$type}</b><br />
 					" . returnIcon($r['itmid'],5) . "</a>
 				</div>";
             }

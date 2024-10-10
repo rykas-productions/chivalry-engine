@@ -20,11 +20,11 @@ $_GET['tresde'] = (isset($_GET['tresde']) && is_numeric($_GET['tresde'])) ? abs(
 if (!isset($_SESSION['tresde'])) {
     $_SESSION['tresde'] = 0;
 }
-if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
+/*if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100)
 {
     alert("danger", "Uh Oh!", "Please do not refresh while opening Boxes of Random. Thank you!", true, "?tresde={$tresder}");
     die($h->endpage());
-}
+}*/
 $_SESSION['tresde'] = $_GET['tresde'];
 $left=$ir['bor']-1;
 if ($ir['bor'] == 0)
@@ -187,7 +187,7 @@ else
 echo " You can open another {$left} Boxes of Random today.<hr />
 <div class='row'>
 	<div class='col'>
-		<a href='?tresde={$tresder}' class='btn btn-primary'>Open Another</a>
+		<a href='bor.php' class='btn btn-primary'>Open Another</a>
 	</div>
 	<div class='col'>
 		<a href='inventory' class='btn btn-danger'>Inventory</a>
