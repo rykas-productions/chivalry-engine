@@ -71,32 +71,32 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         //Update energy left and stat's new count.
         if ($stat != 'all')
             $NewStatAmount = $ir[$stat] + $gain;
-        $EnergyLeft = $ir['energy'] - $_POST['amnt'];
+        $EnergyLeft = shortNumberParse($ir['energy'] - $_POST['amnt']);
         //Strength is chosen stat
         if ($stat == "strength") {
             alert('success', "Success!", "You begin to lift weights. You have gained " . shortNumberParse($gain) . " Strength by completing
-			    {$_POST['amnt']} sets of weights. You now have " . number_format($NewStatAmount) . " Strength and {$EnergyLeft} Energy left.", false);
+			    " . shortNumberParse($_POST['amnt']) . " sets of weights. You now have " . shortNumberParse($NewStatAmount) . " Strength and {$EnergyLeft} Energy left.", false);
             //Have strength selected for the next training.
             $str_select = "selected";
 			setcookie('lastTrainedStat', 'strength', time() + 86400);
         } //Agility is the chosen stat.
         elseif ($stat == "agility") {
             alert('success', "Success!", "You begin to run laps. You have gained " . shortNumberParse($gain) . " Agility by completing
-			    {$_POST['amnt']} laps. You now have " . number_format($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
+			    " . shortNumberParse($_POST['amnt']) . " laps. You now have " . shortNumberParse($NewStatAmount) . " Agility and {$EnergyLeft} Energy left.", false);
             //Have agility selected for the next training.
             $agl_select = "selected";
 			setcookie('lastTrainedStat', 'agility', time() + 86400);
         } //Guard is the chosen stat.
         elseif ($stat == "guard") {
             alert('success', "Success!", "You begin swimming in the pool. You have gained " . shortNumberParse($gain) . " Guard by swimming for
-			    {$_POST['amnt']} minutes. You now have " . number_format($NewStatAmount) . " Guard and {$EnergyLeft} left.", false);
+			    " . shortNumberParse($_POST['amnt']) . " minutes. You now have " . shortNumberParse($NewStatAmount) . " Guard and {$EnergyLeft} left.", false);
             //Have guard selected for the next training.
             $grd_select = "selected";
 			setcookie('lastTrainedStat', 'guard', time() + 86400);
         } //Labor is the chosen stat.
         elseif ($stat == "labor") {
             alert('success', "Success!", "You begin moving boxes around the gym. You have gained " . shortNumberParse($gain) . " Labor by moving
-                {$_POST['amnt']} sets of boxes. You now have " . number_format($NewStatAmount) . " and {$EnergyLeft} Energy left.", false);
+                " . shortNumberParse($_POST['amnt']) . " sets of boxes. You now have " . shortNumberParse($NewStatAmount) . " and {$EnergyLeft} Energy left.", false);
             //Have guard selected for the next training.
             $lab_select = "selected";
 			setcookie('lastTrainedStat', 'labor', time() + 86400);
@@ -109,7 +109,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 			setcookie('lastTrainedStat', 'all', time() + 86400);
         }
         //Log the user's training attempt.
-        $api->SystemLogsAdd($userid, 'training', "[CID Admin Gym] {$_POST['amnt']} energy for " . shortNumberParse($gain) . " {$stat}.");
+        $api->SystemLogsAdd($userid, 'training', "[CID Admin Gym] " . shortNumberParse($_POST['amnt']) . " energy for " . shortNumberParse($gain) . " {$stat}.");
         echo "<hr />";
         $ir['energy'] -= $_POST['amnt'];
         if ($stat != 'all')

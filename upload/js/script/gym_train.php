@@ -66,7 +66,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
         //Update energy left and stat's new count.
         if ($stat != 'all')
             $NewStatAmount = $ir[$stat] + $gain;
-        $EnergyLeft = $ir['energy'] - $_POST['amnt'];
+        $EnergyLeft = shortNumberParse($ir['energy'] - $_POST['amnt']);
         //Strength is chosen stat
         if ($stat == "strength") {
             alert('success', "Success!", "You begin to lift weights. You have gained " . shortNumberParse($gain) . " Strength by completing
@@ -104,7 +104,7 @@ if (isset($_POST["stat"]) && $_POST["amnt"])
 			setcookie('lastTrainedStat', 'all', time() + 86400);
         }
         //Log the user's training attempt.
-        $api->SystemLogsAdd($userid, 'training', "[Normal Gym] {$_POST['amnt']} energy for " . shortNumberParse($gain) . " {$stat}.");
+        $api->SystemLogsAdd($userid, 'training', "[Normal Gym] " . shortNumberParse($_POST['amnt']) . " energy for " . shortNumberParse($gain) . " {$stat}.");
         echo "<hr />";
         $ir['energy'] -= $_POST['amnt'];
         if ($stat != 'all')
