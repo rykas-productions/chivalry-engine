@@ -21,11 +21,19 @@ date_default_timezone_set("America/New_York");
 if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false) {
     exit;
 }
+if (isset($_SERVER['HTTP_PURPOSE']) && $_SERVER['HTTP_PURPOSE'] == 'prefetch') {
+    // This is a prefetch request, so avoid triggering critical operations
+    exit();
+} elseif (isset($_SERVER['HTTP_X_PURPOSE']) && $_SERVER['HTTP_X_PURPOSE'] == 'preview') {
+    // This is a prerender request
+    exit();
+}
 $time = time();
 //Set session name and start it.
 session_name('CENGINE');
 @session_start();
 header('X-Frame-Options: SAMEORIGIN');
+header("X-DNS-Prefetch-Control: off");
 //If session is not started, regenerate ID and load it.
 if (!isset($_SESSION['started'])) {
     session_regenerate_id();

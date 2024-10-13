@@ -31,6 +31,7 @@ class headers
                 <link rel="stylesheet" href="https://bootswatch.com/4/united/bootstrap.min.css">
                 <link rel="stylesheet" href="css/floating-labels.css">
 				<meta name="theme-color" content="#772953">
+				<meta http-equiv='x-dns-prefetch-control' content='off'>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>" . returnGameTitle() . " - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; ?>
         </head>

@@ -685,6 +685,7 @@ class headers
                 <meta property='og:title' content='" . returnGameTitle() . "'/>
                 <meta property='og:description' content='{$set['Website_Description']}'/>
                 <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_512/v1520819749/logo.png'/>
+                <meta http-equiv='x-dns-prefetch-control' content='off'>
                 <link rel='shortcut icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' type='image/x-icon'/>
 				<!-- generics -->
 				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_32/v1520819749/logo.png' sizes='32x32'>

@@ -15,10 +15,21 @@ ob_implicit_flush(true);
 if (strpos($_SERVER['PHP_SELF'], "sglobals.php") !== false) {
     exit;
 }
+if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false) {
+    exit;
+}
+if (isset($_SERVER['HTTP_PURPOSE']) && $_SERVER['HTTP_PURPOSE'] == 'prefetch') {
+    // This is a prefetch request, so avoid triggering critical operations
+    exit();
+} elseif (isset($_SERVER['HTTP_X_PURPOSE']) && $_SERVER['HTTP_X_PURPOSE'] == 'preview') {
+    // This is a prerender request
+    exit();
+}
 session_name('CENGINE');
 session_start();
 $time = time();
 header('X-Frame-Options: SAMEORIGIN');
+header("X-DNS-Prefetch-Control: off");
 if (!isset($_SESSION['started'])) {
     session_regenerate_id();
     $_SESSION['started'] = true;
