@@ -3634,13 +3634,13 @@ function staff_crimes()
         //Verify crime exists.
         $cq = $db->query("/*qc=on*/SELECT `gcUSERS` from `guild_crimes` WHERE `gcID` = {$_POST['crime']}");
         if ($db->num_rows($cq) == 0) {
-            alert('danger', "Uh Oh!", "You cannot commit a non-existent crime.");
+            alert('danger', "Uh Oh!", "Your guild cannot commit a non-existent crime.");
             die($h->endpage());
         }
         //Verify guild has enough members to commit this crime.
         $cr = $db->fetch_single($cq);
         if ($cr > $membs) {
-            alert('danger', "Uh Oh!", "You cannot commit this crime as you need {$cr} guild members. You only have {$membs}.");
+            alert('danger', "Uh Oh!", "Your guild cannot commit this crime as you need {$cr} guild members. You only have {$membs}.");
             die($h->endpage());
         }
         //Time to complete crime is +6 hours per crime member required.
@@ -3657,23 +3657,52 @@ function staff_crimes()
         //Select the crimes from database, based on how many members the guild has.
         $q = $db->query("/*qc=on*/SELECT *
                          FROM `guild_crimes`
-                         WHERE `gcUSERS` <= $membs");
+                        ORDER BY `gcUSERS` ASC");
 
         //If there's crimes the guild can commit.
-        if ($db->num_rows($q) > 0) {
+        if ($db->num_rows($q) > 0) 
+        {
             $csrf = request_csrf_html('guild_staff_crimes');
-            echo "/*qc=on*/SELECT the crime you wish your guild to commit.<br />
-            <form method='post'>
-                <select name='crime' type='dropdown' class='form-control'>";
-            while ($r = $db->fetch_row($q)) {
-                echo "<option value='{$r['gcID']}'>{$r['gcNAME']}
-                		({$r['gcUSERS']} members needed)</option>\n";
-            }
+            echo "<div class='card'>
+                <div class='card-header'>
+                    Plan Guild Crime
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            Choose a crime for your guild to commit. Each crime needs time to prep before hand. Each member involved 
+                            will carry their own loot, or in other words More Members = More Reward!
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Crime</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <form method='post'>
+                                    <select name='crime' type='dropdown' class='form-control'>";
+                                    while ($r = $db->fetch_row($q)) {
+                                        echo "<option value='{$r['gcID']}'>{$r['gcNAME']}
+                                        		({$r['gcUSERS']} members needed*)</option>\n";
+                                    }
 
-            echo "</select><br />
-                <input type='submit' value='Plan Crime' class='btn btn-primary'>
-                {$csrf}
-            </form>";
+                                    echo "</select>{$csrf}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12'>
+                            <input type='submit' value='Plan Crime' class='btn btn-primary'></form>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <small>* = 6 Hours Prep Time/Member Required</small>
+                        </div>
+                    </div>
+                </div>
+            </div>";
         } //Guild has no crimes they can commit.
         else {
             alert('danger', "Uh Oh!", "You guild cannot commit any crimes at this time.", true, '?action=staff&act2=idx');
