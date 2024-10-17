@@ -1398,7 +1398,7 @@ function isHoliday()
         return true;
     elseif ($month == 12 && $day == 25)
         return true;
-    elseif ($month == 11 && $day == 23 && $year == 2023)
+    elseif ($month == 11 && $day == 28)
         return true;
     elseif ($month == 1 && $day == 1)
         return true;
