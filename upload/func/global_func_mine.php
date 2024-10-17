@@ -159,7 +159,9 @@ function randMineDropCalc($userid, $mineID, $dropID)
 
 function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
 {
+    global $db;
     $xpMultiplier = 1.0;
+    $mineLevel = $db->fetch_single("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$mineID}");
     if (isHoliday())
         $xpMultiplier+=1.1;
     if (reachedMonthlyDonationGoal())
@@ -176,7 +178,7 @@ function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
     $gainedXP = $baseXP * $dropCount;
     if (userHasEffect($userid, mining_xp_boost))
         $gainedXP = $gainedXP * (returnEffectMultiplier($userid, mining_xp_boost) + 1);
-    $gainedXP = $gainedXP * $mineID;
+    $gainedXP = $gainedXP * $mineLevel;
     if ($mineID == 10)
         $gainedXP = $gainedXP / 7;
     $gainedXP = $gainedXP * $xpMultiplier;
