@@ -350,26 +350,26 @@ function mine()
                 $NegTime = Random($CostForPower/2, $CostForPower*2);
                 if ($NegRolls <= 12) 
                 {
-                    alert('danger', "Uh Oh!", "You begin to mine and touch off a natural gas leak. Kaboom. <b>You have {$remainpower} mining power remaining.</b>", false);
+                    alert('danger', "Uh Oh!", "You begin to mine and touch off a natural gas leak. Kaboom. <b>You have " . shortNumberParse($remainpower) . " mining power remaining.</b>", false);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] {$NegTime} minutes at Infirmary.");
                     $api->UserStatusSet($userid, 'infirmary', $NegTime, "Mining Explosion");
                 } 
                 elseif (($NegRolls <= 24) && ($NegRolls > 12))
                 {
-                    alert('danger', "Uh Oh!", "You hit a vein of gems, except a miner nearby gets jealous and tries to take your gems! You knock them out cold, and a guard arrests you. Wtf. <b>You have {$remainpower} mining power remaining.</b>", false);
+                    alert('danger', "Uh Oh!", "You hit a vein of gems, except a miner nearby gets jealous and tries to take your gems! You knock them out cold, and a guard arrests you. Wtf. <b>You have " . shortNumberParse($remainpower) . " mining power remaining.</b>", false);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] {$NegTime} minutes at Dungeon.");
                     $api->UserStatusSet($userid, 'dungeon', $NegTime, "Mining Selfishness");
                 } 
                 elseif (($NegRolls <= 36) && ($NegRolls > 24))
                 {
-                    alert('danger', "Uh Oh!", "You failed to mine anything of use. <b>You have {$remainpower} mining power remaining.</b>", false);
+                    alert('danger', "Uh Oh!", "You failed to mine anything of use. <b>You have " . shortNumberParse($remainpower) . " mining power remaining.</b>", false);
                     $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Unsuccessful.");
                 }
                 else
                 {
                     alert('danger', "Uh Oh!", "While mining away, you have accidentally struck your secondary hand, injuring it in the process. 
                     Your secondary weapon has be unequipped and you will be unable to use a secondary weapon in combat for {$NegTime} minutes.
-                    <b>You have {$remainpower} mining power remaining.</b>", false);
+                    <b>You have " . shortNumberParse($remainpower) . " mining power remaining.</b>", false);
                     if ($ir['equip_secondary'] > 0)
                         unequipUserSlot($userid, slot_second_wep);
                     userGiveEffect($userid, effect_injure_sec_wep, $NegTime * 60);
@@ -383,7 +383,7 @@ function mine()
                 $dropList = json_decode(getMineDrop($spot, $PosRolls), true);
                 $drops = randMineDropCalc($userid, $spot, $PosRolls);
                 $xpgain = calcMineXPGains($userid, $spot, $PosRolls, $drops);
-                alert('success', "Success!", "You have successfully mined up " . number_format($drops) . " {$api->SystemItemIDtoName($dropList['itemDrop'])}. You have gained " . number_format($xpgain, 2) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
+                alert('success', "Success!", "You have successfully mined up " . shortNumberParse($drops) . " {$api->SystemItemIDtoName($dropList['itemDrop'])}. You have gained " . number_format($xpgain, 2) . " experience points. <b>You have " . shortNumberParse($remainpower) . " mining power remaining.</b>", false);
                 $api->UserGiveItem($userid, $dropList['itemDrop'], $drops);
                 $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined " . number_format($drops) . " x {$api->SystemItemIDtoName($dropList['itemDrop'])}.");
                 $db->query("UPDATE `mining` SET `miningxp`=`miningxp`+ {$xpgain} WHERE `userid` = {$userid}");
@@ -393,7 +393,7 @@ function mine()
                 $dropList = json_decode(getMineDrop($spot, 4), true);
                 $drops = randMineDropCalc($userid, $spot, 4);
                 $xpgain = calcMineXPGains($userid, $spot, 4, $drops);
-                alert('success', "Success!", "You have carefully excavated out {$drops} " . $api->SystemItemIDtoName($dropList['itemDrop']) . "(s). You have gained " . number_format($xpgain) . " experience points. <b>You have {$remainpower} mining power remaining.</b>", false);
+                alert('success', "Success!", "You have carefully excavated out " . shortNumberParse($drops) . " " . $api->SystemItemIDtoName($dropList['itemDrop']) . "(s). You have gained " . number_format($xpgain) . " experience points. <b>You have " . shortNumberParse($remainpower) . " mining power remaining.</b>", false);
                 $api->UserGiveItem($userid, $dropList['itemDrop'], $drops);
                 $api->SystemLogsAdd($userid, 'mining', "[{$api->SystemTownIDtoName($MSI['mine_location'])}] Mined {$api->SystemItemIDtoName($dropList['itemDrop'])}.");
                 $db->query("UPDATE `mining` SET `miningxp`=`miningxp`+ {$xpgain} WHERE `userid` = {$userid}");
