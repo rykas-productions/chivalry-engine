@@ -6,7 +6,7 @@
 	Author:		TheMasterGeneral
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
-/*
+/**
 	Parses the time since the timestamp given.
 	@param int $time_stamp for time since.
 	@param boolean $ago to display the "ago" after the string. (Default = true)
@@ -44,7 +44,7 @@ function DateTime_Parse($time_stamp, $ago = true, $override = false)
     return $date;
 }
 
-/*
+/**
 	Parses how much time until the timestamp given.
 	$param int $time_stamp for the timestamp.
 */
@@ -66,7 +66,7 @@ function TimeUntil_Parse($time_stamp)
     return $date;
 }
 
-/*
+/**
 	Parses the timestamp into a human friendly number.
 */
 function ParseTimestamp($time)
@@ -85,7 +85,7 @@ function ParseTimestamp($time)
     return $date;
 }
 
-/*
+/**
 	The function for testing if a player is in the hospital.
 	@param int $user The user who to test for.
 */
@@ -103,7 +103,7 @@ function user_infirmary($user)
     return $return;
 }
 
-/*
+/**
 	The function for testing if a player is in the dungeon.
 	@param int $user The user who to test for.
 */
@@ -120,7 +120,7 @@ function user_dungeon($user)
     return $return;
 }
 
-/*
+/**
 	The function for putting/adding onto someones infirmary time.
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to add.
@@ -146,7 +146,7 @@ function put_infirmary($user, $time, $reason)
     }
 }
 
-/*
+/**
 	The function for removing someones infirmary time.
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to remove.
@@ -160,7 +160,7 @@ function remove_infirmary($user, $time)
     $db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` - '{$TimeMath}' WHERE `infirmary_user` = {$user}");
 }
 
-/*
+/**
 	The function for putting/adding onto someones dungeon time.
 	@param int $user The user to put in the dungeon
 	@param int $time The time (in minutes) to add.
@@ -186,7 +186,7 @@ function put_dungeon($user, $time, $reason)
     }
 }
 
-/*
+/**
 	The function for removing someones infirmary time.
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to remove.
@@ -200,7 +200,7 @@ function remove_dungeon($user, $time)
     $db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` - '{$TimeMath}' WHERE `dungeon_user` = {$user}");
 }
 
-/*
+/**
 	The function for testing for a valid email.
 	@param text $email The email to test for.
 */
@@ -1344,8 +1344,10 @@ function encode_password($password, $type = PASSWORD_DEFAULT)
 {
     global $set;
 	if ($type == PASSWORD_BCRYPT)
+	{
 		$options = ['cost' => $set['Password_Effort'],];
-		return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+        return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
+	}
 	else
 		return password_hash(base64_encode(hash('sha256', $password, true)), $type);
 }
@@ -1497,7 +1499,7 @@ function get_filesize_remote($url)
     return (int)$headers['content-length'];
 }
 
-/*
+/**
 	Gets the contents of a file if it exists, otherwise grabs and caches 
 */
 function get_fg_cache($file, $ip, $hours = 1)
@@ -1520,7 +1522,7 @@ function get_fg_cache($file, $ip, $hours = 1)
     }
 }
 
-/* 
+/**
 	Gets content from a URL via curl 
 */
 function update_fg_info($ip)
@@ -1558,7 +1560,7 @@ function permission($perm, $user)
         return true;
 }
 
-/*
+/**
    Gets the user's operating system and inserts it into the database.
    @param string $uagent	User agent to test with.
 */
@@ -1600,7 +1602,7 @@ function getOS($uagent)
         $db->query("UPDATE `userdata` SET `useragent` = '{$uagent}', `os` = '{$os_platform}' WHERE `userid` = {$userid}");
 }
 
-/*
+/**
   Gets the user's browser and inserts it into the database.
   @param string $uagent	User agent to test with.
 */
@@ -1635,7 +1637,9 @@ function getBrowser($uagent)
         $db->query("UPDATE `userdata` SET `useragent` = '{$user_agent}', `browser` = '{$browser}' WHERE `userid` = {$userid}");
 }
 
-//Please use $api->SystemLogsAdd(); instead
+/**
+ * Please use $api->SystemLogsAdd(); instead 
+ * */
 function SystemLogsAdd($user, $logtype, $input)
 {
     global $db;
@@ -1650,7 +1654,9 @@ function SystemLogsAdd($user, $logtype, $input)
 				(NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 }
 
-//Fall back for PHP 7 functions on a PHP < 7 versions.
+/**
+ * Fall back for PHP 7 functions on a PHP < 7 versions.
+ * */
 function Random($min = 0, $max = PHP_INT_MAX)
 {
     if (function_exists('random_int'))
@@ -2039,4 +2045,24 @@ function armory_dropdown($ddname = "item", $selected = -1)
     $db->free_result($q);
     $ret .= "\n</select>";
     return $ret;
+}
+/**
+ * Sends a keep alive to TheMasterGeneral.
+ */
+function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php?update')
+{
+    global $Version;
+    $postdata = "domain=" . determine_game_urlbase() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
+    $ch = curl_init();
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6");
+    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_REFERER, $url);
+    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
+    curl_setopt ($ch, CURLOPT_POST, 1);
+    $result = curl_exec ($ch);
+    curl_close($ch);
 }
