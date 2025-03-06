@@ -70,12 +70,37 @@ $rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `ru
 $bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
 $bigbank = ($ir['bigbank'] > -1) ? shortNumberParse($ir['bigbank']) : "N/A";
 $vaultbank = ($ir['vaultbank'] > -1) ? shortNumberParse($ir['vaultbank']) : "N/A";
-$tbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "N/A";
 $storebank = (getCurrentUserPref("storageAcc{$ir['location']}", -1) > -1) ? shortNumberParse(getCurrentUserPref("storageAcc{$ir['location']}", -1)) : "N/A";
+$tbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "N/A";
 $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
-$estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `estate_market`"));
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
+$estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `estate_market`"));
 $miningenergy = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
+$towndesc = $db->fetch_single($db->query("SELECT `town_desc` FROM `town` WHERE `town_id` = {$ir['location']}"));
+$npccount = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`botid`) FROM `botlist`")));
+if ($ir['course'] > 0)
+{
+    
+    $cd =
+    $db->query(
+        "/*qc=on*/SELECT `ac_days`
+    				 FROM `academy`
+    				 WHERE `ac_id` = {$ir['course']}");
+    $coud = $db->fetch_row($cd);
+    
+    $daystoseconds=getCourseTime($coud['ac_days'])*86400;
+    $actualReset = $ir['reset'] - 1;
+    if ($actualReset > 0)
+        $daystoseconds = $daystoseconds - ($daystoseconds * ($actualReset * 0.08));
+        $starttime=time()-($ir['course_complete']-$daystoseconds);
+        $academy = round(($starttime/$daystoseconds)*100) . "%";
+}
+else
+{
+    $courseTotal = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`ac_id`) FROM `academy`"));
+    $courseDone = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`userid`) FROM `academy_done` WHERE `userid` = {$userid}"));
+    $academy = $courseTotal - $courseDone;
+}
 if (empty($dung_count)) {
     $dung_count = 0;
 }
@@ -145,14 +170,14 @@ echo "
 		<div id='SHOPS' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='shops.php' class='{$txtClass}'><i class='game-icon game-icon-shop'></i> Local Shops</a><br />
-					<a href='itemmarket.php'><i class='game-icon game-icon-trade'></i> Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a><br />
-					<a href='itemrequest.php'><i class='game-icon game-icon-trade'></i> Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
-					<a href='secmarket.php'><i class='game-icon game-icon-cash'></i> Chivalry Tokens Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
-                    <a href='votestore.php'>Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a><br />
-					<a href='vipmarket.php'>VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a><br />
-					<a href='estate_management.php?action=estateMarket'>Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a><br />";
-                    if ($month == 11)
+					<a href='shops.php' class='{$txtClass}'>" . loadImageAsset("explore/shop.svg") . " Local Shops</a><br />
+					<a href='itemmarket.php'>" . loadImageAsset("explore/item_market.svg") . " Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a><br />
+					<a href='itemrequest.php'>" . loadImageAsset("explore/item_request.svg") . " Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
+					<a href='secmarket.php'>" . loadImageAsset("explore/token_market.svg") . " Chivalry Token Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
+                    <a href='votestore.php'>" . loadImageAsset("explore/vote_store.svg") . " Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a><br />
+					<a href='vipmarket.php'>" . loadImageAsset("explore/vip_store.svg") . " VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a><br />
+					<a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a><br />";
+                    if ($month == 10)
                         echo "<a href='halloween.php?action=chuck'>Pumpkin Chuck</a><br />";
                     if ($month == 11)
                         echo "<a href='attack.php?user=21'>Participate in Turkey Hunt</a><br />";
@@ -160,7 +185,7 @@ echo "
                     {
                         echo "<a href='adventcalender.php'>CID Advent Calendar</a><br />
                                 <a href='xmastree.php'>CID Christmas Tree</a><br />
-                                <a href='xmastree.php?action=wish'>Christmas Tree</a><br />";
+                                <a href='xmastree.php?action=wish'>Christmas Wish</a><br />";
                     }
                         echo"
 				</div>
@@ -169,45 +194,45 @@ echo "
 		<div id='FD' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-				    <a href='job.php' class='{$txtClass}'><i class='game-icon game-icon-push'></i> Work Center</a><br />
-					<a href='bank.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a><br />";
+				    <a href='job.php' class='{$txtClass}'>" . loadImageAsset("explore/work_center.svg") . " Work Center</a><br />
+					<a href='bank.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a><br />";
 if ($ir['level'] >= 75) {
-    echo "<a href='bigbank.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a><br />";
+    echo "<a href='bigbank.php' class='{$txtClass}'>" . loadImageAsset("explore/fed_bank.svg") . " Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a><br />";
 }
 if ($ir['level'] >= 175) {
-    echo "<a href='vaultbank.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a><br />";
+    echo "<a href='vaultbank.php' class='{$txtClass}'>" . loadImageAsset("explore/vault_bank.svg") . " Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a><br />";
 }
 if ($ir['level'] >= 325) {
-    echo "<a href='bankstore.php' class='{$txtClass}'><i class='game-icon game-icon-bank'></i> {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a><br />";
+    echo "<a href='bankstore.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a><br />";
 }
 echo "
-					<a href='tokenbank.php' class='{$txtClass}'><i class='game-icon game-icon-chest'></i> Chivalry Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a><br />
-					<a href='estate_management.php' class='{$txtClass}'><i class='game-icon game-icon-house'></i> Estate Agent</a><br />
-					<a href='travel.php' class='{$txtClass}'><i class='game-icon game-icon-horseshoe'></i> Travel Agent</a><br />
-					<a href='temple.php' class='{$txtClass}'><i class='game-icon game-icon-mayan-pyramid'></i> Temple of Fortune</a><br />
-                    <a href='investmarket.php' class='{$txtClass}'>Asset Investing</a><br />
+					<a href='tokenbank.php' class='{$txtClass}'>" . loadImageAsset("explore/token_bank.svg") . " Chivalry Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a><br />
+					<a href='estate_management.php' class='{$txtClass}'>" . loadImageAsset("explore/estate_manage.svg") . " Estate Agent</a><br />
+					<a href='travel.php' class='{$txtClass}'>" . loadImageAsset("explore/travel_agent.svg") . " Travel Agent</a><br />
+					<a href='temple.php' class='{$txtClass}'>" . loadImageAsset("explore/temple_fortune.svg") . " Temple of Fortune</a><br />
+                    <a href='investmarket.php' class='{$txtClass}'>Asset Investment</a><br />
 				</div>
 			</div>
 		</div>
 		<div id='HL' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='mine.php' class='{$txtClass}'><i class='game-icon game-icon-mining'></i> Dangerous Mines <span class='badge badge-pill badge-primary'>Power: {$miningenergy}%</span></a><br />
-					<a href='smelt.php' class='{$txtClass}'><i class='game-icon game-icon-anvil'></i> Blacksmith's Smeltery</a><br />
-					<a href='farm.php' class='{$txtClass}'>Farming</a><br />
-					<a href='bottent.php' class='{$txtClass}'><i class='game-icon game-icon-guards'></i> NPC Battle List</a><br />
-					<a href='gym.php' class='{$txtClass}'><i class='game-icon game-icon-weight-lifting-down'></i> The Gym</a><br />
-					<a href='chivalry_gym.php' class='{$txtClass}'><i class='game-icon game-icon-weight-lifting-up'></i> Chivalry Gym</a><br />
-					<a href='criminal.php' class='{$txtClass}'><i class='game-icon game-icon-robber'></i> Criminal Center</a><br />
-					<a href='streetbum.php' class='{$txtClass}'> Street Begging <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['searchtown']) . "</span></a><br />";
+					<a href='mine.php' class='{$txtClass}'>" . loadImageAsset("explore/mine.svg") . " Dangerous Mines <span class='badge badge-pill badge-primary'>{$miningenergy}%</span></a><br />
+					<a href='smelt.php' class='{$txtClass}'>" . loadImageAsset("explore/blacksmith.svg") . " Blacksmith's Smeltery</a><br />
+					<a href='farm.php' class='{$txtClass}'>" . loadImageAsset("explore/farming.svg") . " Farming</a><br />
+					<a href='bottent.php' class='{$txtClass}'>" . loadImageAsset("explore/npc_list.svg") . " NPC Battle List <span class='badge badge-pill badge-primary'>{$npccount}</span></a><br />
+					<a href='gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym.svg") . " The Gym</a><br />
+					<a href='chivalry_gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym_chiv.svg") . " Chivalry Gym</a><br />
+					<a href='criminal.php' class='{$txtClass}'>" . loadImageAsset("explore/crime_center.svg") . " Criminal Center</a><br />
+					<a href='streetbum.php' class='{$txtClass}'>" . loadImageAsset("explore/street_beg.svg") . " Street Begging <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['searchtown']) . "</span></a><br />";
 					if ($ir['autobum'] > 0)
-						echo "<a href='autobum.php' class='{$txtClass}'> Auto Street Bum <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autobum']) . "</span></a><br />";
+						echo "<a href='autobum.php' class='{$txtClass}'>" . loadImageAsset("explore/auto_street_beg.svg") . " Auto Street Bum <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autobum']) . "</span></a><br />";
 					echo"
-					<a href='academy.php' class='{$txtClass}'><i class='game-icon game-icon-diploma'></i> Local Academy</a><br />
-					<a href='achievements.php'><i class='game-icon game-icon-achievement'></i> Achievements</a><br />
-                    <a href='bounty.php' class='{$txtClass}'><i class='game-icon game-icon-game-icon game-icon-shadow-grasp'></i> Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a><br />
-					<a href='missions.php' class='{$txtClass}'><i class='game-icon game-icon-game-icon game-icon-stabbed-note'></i> Missions</a><br />
-                    <a href='woodcut.php' class='{$txtClass}'>Wood Cutter</a><br />
+					<a href='academy.php' class='{$txtClass}'>" . loadImageAsset("explore/academy.svg") . " Local Academy <span class='badge badge-pill badge-primary'>{$academy}</span></a><br />
+					<a href='achievements.php'>" . loadImageAsset("explore/achievements.svg") . " Achievements</a><br />
+                    <a href='bounty.php' class='{$txtClass}'>" . loadImageAsset("explore/bounty_hunter.svg") . " Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a><br />
+					<a href='missions.php' class='{$txtClass}'>" . loadImageAsset("explore/mission.svg") . " Missions</a><br />
+                    <a href='woodcut.php' class='{$txtClass}'>" . loadImageAsset("explore/woodcutter.svg") . "Wood Cutter</a><br />
 				</div>
 			</div>
 		</div>

@@ -253,7 +253,7 @@ echo"
 						<a href='smelt.php' class='{$txtClass}'>" . loadImageAsset("explore/blacksmith.svg") . " Blacksmith's Smeltery</a>
 					</div>
 					<div class='col-auto col-xxxl-6'>
-						<a href='farm.php' class='{$txtClass}'>" . loadImageAsset("explore/farming.svg") . "Farming</a>
+						<a href='farm.php' class='{$txtClass}'>" . loadImageAsset("explore/farming.svg") . " Farming</a>
 					</div>
 					<div class='col-auto col-xxxl-6'>
 						<a href='gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym.svg") . " The Gym</a>
