@@ -62,15 +62,16 @@ function trick_or_treat()
         alert('danger',"Uh Oh!", "You've already visited this player this hour. It'd be a little rude to visit again so soon.", true, "profile.php?user={$_GET['user']}");
         die($h->endpage());
     }
+    $qtyGifted = Random(1,4);
     $candyItems = array(66,139,201,279,282,466,467,468,469);    //add if more candy
     $giftedItem = array_rand($candyItems, 1);
     $candy = $candyItems[$giftedItem];
-    $newValue = getCurrentUserPref(currentYear() . "halloweenCandies",0) + 1;
-    alert('success',"Trick or Treat!","While visiting {$api->SystemUserIDtoName($_GET['user'])}'s property for some candy, you were given a {$api->SystemItemIDtoName($candy)} and sent along your way. You've collected " . shortNumberParse($newValue) . " candies this Halloween season.", true, "profile.php?user={$_GET['user']}");
-    $api->UserGiveItem($userid, $candy, 1);
+    $newValue = getCurrentUserPref(currentYear() . "halloweenCandies",0) + $qtyGifted;
+    alert('success',"Trick or Treat!","While visiting {$api->SystemUserIDtoName($_GET['user'])}'s property for some candy, you were given {$qtyGifted} x {$api->SystemItemIDtoName($candy)}(s) and sent along your way. You've collected " . shortNumberParse($newValue) . " candies this Halloween season.", true, "profile.php?user={$_GET['user']}");
+    $api->UserGiveItem($userid, $candy, $qtyGifted);
     $api->SystemLogsAdd($userid, date('Y') . "halloween", "Given {$api->SystemItemIDtoName($candy)} from {$api->SystemUserIDtoName($_GET['user'])} " . parseUserID($_GET['user']));
     setCurrentUserPref(date('Y') . "halloweenCandies", $newValue);
-    $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . " " . parseUserID($userid) . "</a> has visited you for Halloween! You gave them a {$api->SystemItemIDtoName($candy)} and sent them along their merry way.");
+    $api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>" . parseUsername($userid) . " " . parseUserID($userid) . "</a> has visited you for Halloween! You gave them {$qtyGifted} x {$api->SystemItemIDtoName($candy)}(s) and sent them along their merry way.");
     doHalloweenVisit($userid, $_GET['user']);
     $h->endpage();
 }
