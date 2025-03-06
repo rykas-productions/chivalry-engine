@@ -243,20 +243,29 @@ class headers
 	        if (isset($macropage))
 	        {
 	            //Set User to need verified.
-	            $db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
-	            echo "<center>This is a needed evil. Please confirm you are not a bot. Please be sure Javascript is enabled.<br />"; ?>
-                <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+	            $db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}"); ?>
+                <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
     			<noscript>
                 <?php
                 //User doesn't have javascript turned on, so lets tell them.
     				alert('warning', "", "{$set['WebsiteName']}'s reCaptcha system needs you to enable Javascript to continue.", false);
                 ?>
     			</noscript>
-                <form action='macro.php' method='post' id='recaptchaForm'>
-    				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableRecaptchaBtn'></div>
-                    <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-                    <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" id="recaptchabtn" disabled="disabled">
-                </form></center>
+                <div class='col-12 col-sm-10 col-md-7 col-xl-6 col-xxl-5 col-xxxl-3'>
+    			<div class='card'>
+    				<div class='card-header'>
+    					Necessary Evil. Please confirm check.
+					</div>
+					<div class='card-body'>
+						<form action='macro.php' method='post' id='recaptchaForm'>
+							<div class="h-captcha" data-callback='enableRecaptchaBtn' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
+                            <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
+                            <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary btn-block" id="recaptchabtn" disabled="disabled">
+                        </form>
+                        <i><small>If you cannot see the captcha, please enable Javascript</small></i>
+					</div>
+    			</div>
+    			</div>
                 <?php
                 die($h->endpage());
     		}
@@ -616,22 +625,17 @@ class headers
         <footer class='footer'>
             <div class='container'>
 				<div class='row'>
+					<div class='col-12'>
+						<?php
+            				echo "Time is now " . date('l, F j, Y g:i:s a') . "<br />
+            						 {$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
+            					include('forms/include_end.php');
+            				?>
+					</div>
 					<div class='col-lg'>
 						<iframe src="https://discordapp.com/widget?id=548288771871997952&theme=dark" width="350" height="350" allowtransparency="true" frameborder="0"></iframe>
 					</div>
-					<br />
-					<div class='col-lg'>
-						<a class="twitter-timeline" data-width="350" data-height="350" data-dnt="true" data-theme="dark" href="https://twitter.com/cidgame?ref_src=twsrc%5Etfw">Tweets by cidgame</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-					</div>
-					<br />
 				</div>
-				<span>
-                <?php
-				echo "Time is now " . date('l, F j, Y g:i:s a') . "<br />
-						 {$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
-					include('forms/include_end.php');
-				?>
-				</span>
             </div>
 			</center>
         </footer>

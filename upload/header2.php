@@ -251,10 +251,16 @@ class headers
 			//Set User to need verified.
 			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}");
 			echo "This is a needed evil. Please confirm you are not a bot."; ?>
-            <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-            <form action='macro.php' method='post'>
+            <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
+			<noscript>
+            <?php
+            //User doesn't have javascript turned on, so lets tell them.
+				alert('warning', "", "{$set['WebsiteName']}'s captcha system needs you to enable Javascript to continue.", false);
+            ?>
+			</noscript>
+        	<form action='macro.php' method='post'>
                 <center>
-                    <div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableBtn'></div>
+                    <div class="h-captcha" data-callback='enableRecaptchaBtn' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
                 </center>
                 <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
                 <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary" id="recaptchabtn" disabled="disabled">
@@ -611,11 +617,6 @@ class headers
 					<div class='col-lg'>
 						<iframe src="https://discordapp.com/widget?id=548288771871997952&theme=dark" width="350" height="350" allowtransparency="true" frameborder="0"></iframe>
 					</div>
-					<br />
-					<div class='col-lg'>
-						<a class="twitter-timeline" data-width="350" data-height="350" data-dnt="true" data-theme="dark" href="https://twitter.com/cidgame?ref_src=twsrc%5Etfw">Tweets by cidgame</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-					</div>
-					<br />
 				</div>
 				<span>
                 <?php

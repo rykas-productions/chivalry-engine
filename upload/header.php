@@ -387,11 +387,11 @@ class headers
     		{
     			//Set User to need verified.
     			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}"); ?>
-                <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+                <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
     			<noscript>
                 <?php
                 //User doesn't have javascript turned on, so lets tell them.
-    				alert('warning', "", "{$set['WebsiteName']}'s reCaptcha system needs you to enable Javascript to continue.", false);
+    				alert('warning', "", "{$set['WebsiteName']}'s captcha system needs you to enable Javascript to continue.", false);
                 ?>
     			</noscript>
     			<div class='col-12 col-sm-10 col-md-7 col-xl-6 col-xxl-5 col-xxxl-3'>
@@ -401,7 +401,7 @@ class headers
 					</div>
 					<div class='card-body'>
 						<form action='macro.php' method='post' id='recaptchaForm'>
-            				<div class='g-recaptcha' data-theme='light' data-sitekey='<?php echo $set['reCaptcha_public']; ?>' data-callback='enableRecaptchaBtn'></div>
+							<div class="h-captcha" data-callback='enableRecaptchaBtn' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
                             <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
                             <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary btn-block" id="recaptchabtn" disabled="disabled">
                         </form>
