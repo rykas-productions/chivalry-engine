@@ -18,19 +18,19 @@ function calcWaterCosts($gardenLevel, $estateWill)
 {
 	$gardenLevel++;
 	$gardenLevel*=0.1;
-	return ceil(($estateWill*0.025)*$gardenLevel)+$gardenLevel;
+	return ceil(($estateWill*0.0025)*$gardenLevel)+$gardenLevel;
 }
 function calcStoneCosts($gardenLevel, $estateWill)
 {
 	$gardenLevel++;
 	$gardenLevel*=0.1;
-	return ceil(($estateWill*0.042)*$gardenLevel)+$gardenLevel;
+	return ceil(($estateWill*0.0042)*$gardenLevel)+$gardenLevel;
 }
 function calcStickCosts($gardenLevel, $estateWill)
 {
 	$gardenLevel++;
 	$gardenLevel*=0.1;
-	return ceil(($estateWill*0.061)*$gardenLevel)+$gardenLevel;
+	return ceil(($estateWill*0.0061)*$gardenLevel)+$gardenLevel;
 }
 //
 function calcIronCosts($vaultLevel, $estateCost)
@@ -38,7 +38,7 @@ function calcIronCosts($vaultLevel, $estateCost)
 	$vaultLevel++;
 	$ogVault = $vaultLevel;
 	$vaultLevel*=0.001;
-	$value = ceil(($estateCost*0.00518692)*$vaultLevel)+$vaultLevel;
+	$value = ceil(($estateCost*0.000518692)*$vaultLevel)+$vaultLevel;
 	if ($value < 100)
 		$value = 100 * $ogVault;
 	return $value;
@@ -117,11 +117,11 @@ function calculateSellPrice($estate_id)
 	else
 	   $multi = 0.85;
 	if ($r['gardenUpgrade'] > 0)
-	    $multi = ($multi) + ($r['gardenUpgrade'] * 0.075);
+	    $multi = ($multi) + ($r['gardenUpgrade'] * 0.12);
     if ($r['vaultUpgrade'] > 0)
-        $multi = ($multi) + ($r['vaultUpgrade'] * 0.07);
-    if ($r['sleepUpgrade'] > 0)
-        $multi = ($multi) + ($r['sleepUpgrade'] * 0.065);
+        $multi = ($multi) + ($r['vaultUpgrade'] * 0.09);
+    /*if ($r['sleepUpgrade'] > 0)
+        $multi = ($multi) + ($r['sleepUpgrade'] * 0.065);*/
     return round($multi * $r2['house_price']);
 }
 
@@ -162,7 +162,7 @@ function getNameFromEstateID(int $id)
     return $r['house_name'];
 }
 
-function sleepTick()
+/*function sleepTick()
 {
     global $db, $api;
     $q = $db->query("SELECT `ue`.*, `u`.`estate`, `ue_id`, `uest`.`sleepUpgrade`, `e`.`house_will`
@@ -182,12 +182,12 @@ function sleepTick()
         $db->query("UPDATE `users` SET `will` = `will` + {$inc} WHERE `userid` = {$r['userid']}");
         $db->query("UPDATE `users` SET `energy` = `energy` + {$inc} WHERE `userid` = {$r['userid']}");
     }
-}
+}*/
 
 function countEstateTotalUpgrades($estate_id)
 {
     global $db;
     $q = $db->query("SELECT `vaultUpgrade`, `gardenUpgrade`, `sleepUpgrade` FROM `user_estates` WHERE `ue_id` = {$estate_id}");
     $r = $db->fetch_row($q);
-    return $r['vaultUpgrade'] + $r['gardenUpgrade'] + $r['sleepUpgrade'];
+    return $r['vaultUpgrade'] + $r['gardenUpgrade'];
 }

@@ -8,8 +8,10 @@
 
 function createProgressBar($barValue, $barMin = 0, $barMax = 100, $barType = 'primary', $hideBonus = false)
 {
+    if ($barMax == 0)
+        $barMax = 1;
     $percent = round($barValue / $barMax * 100);
-    $txt = ($hideBonus) ? "{$percent}%" : "{$percent}% (" . number_format($barValue) . " / " . number_format($barMax). ")";
+    $txt = ($hideBonus) ? "{$percent}%" : "{$percent}% (" . number_format($barValue) . "/" . number_format($barMax). ")";
     return "<div class='progress' style='height: 1rem;'>
 				<div class='progress-bar bg-{$barType} progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$barValue}' style='width:{$percent}%' aria-valuemin='0' aria-valuemax='{$barMax}'>
 					<span>
@@ -56,6 +58,8 @@ function darkProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = fal
 
 function scaledColorProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonus = false)
 {
+    if ($barMax == 0)
+        $barMax = 1;
     $percent = round($barValue / $barMax * 100);
     if ($percent <= 33)
         return dangerProgressBar($barValue, $barMin, $barMax, $hideBonus);
@@ -68,7 +72,7 @@ function scaledColorProgressBar($barValue, $barMin = 0, $barMax = 100, $hideBonu
 function loadGamblingAlert()
 {
     global $ir;
-    alert('info',"","You have won " . shortNumberParse($ir['winnings_this_hour']) . " / " . shortNumberParse(calculateUserMaxBetReset($ir['userid'])) . " Copper Coins today.", false);
+    alert('info',"","You have won " . shortNumberParse($ir['winnings_this_hour']) . "/" . shortNumberParse(calculateUserMaxBetReset($ir['userid'])) . " Copper Coins today.", false);
 }
 
 function createBadge($text, $theme = 'primary')
