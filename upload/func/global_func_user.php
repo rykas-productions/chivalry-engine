@@ -1671,3 +1671,51 @@ function getCourseTime($academyTime)
     $return = $academyTime / levelMultiplier(1, $ir['reset']);
     return $return;
 }
+
+function giveUserLoot($userid, $tableName) {
+    global $api;
+    $loot = getLoot($tableName);
+    $receivedLoot = [];
+    
+    foreach ($loot as $item) {
+        // Give the item to the user
+        if ($item['item'] > 0)
+        {
+            $api->UserGiveItem($userid, $item['item'], $item['quantity']);
+            // Store loot details for message formatting
+            $receivedLoot[] = shortNumberParse($item['quantity']) . " {$api->SystemItemIDtoName($item['item'])}(s)";
+        }
+        if ($item['item'] == -1)
+        {
+            $api->UserGiveCurrency($userid, 'primary', $item['quantity']);
+            // Store loot details for message formatting
+            $receivedLoot[] = shortNumberParse($item['quantity']) . " Copper Coin(s)";
+        }
+        
+        if ($item['item'] == -2)
+        {
+            $api->UserGiveCurrency($userid, 'secondary', $item['quantity']);
+            // Store loot details for message formatting
+            $receivedLoot[] = shortNumberParse($item['quantity']) . " Chivalry Token(s)";
+        }
+        if ($item['item'] == -3)
+        {
+            $api->UserStatusSet($userid, 'infirmary', $item['quantity'], "Loot?");
+            // Store loot details for message formatting
+            $receivedLoot[] = shortNumberParse($item['quantity']) . " minutes in the infirmary";
+        }
+        if ($item['item'] == -4)
+        {
+            $api->UserStatusSet($userid, 'dungeon', $item['quantity'], "Loot?");
+            // Store loot details for message formatting
+            $receivedLoot[] = shortNumberParse($item['quantity']) . " minutes in the dungeon";
+        }
+    }
+    
+    // Convert loot array to a friendly string
+    if (empty($receivedLoot)) {
+        return "You received nothing this time.";
+    }
+    
+    return "You received " . implode(", ", $receivedLoot) . ".";
+}
