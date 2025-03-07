@@ -295,15 +295,15 @@ echo"
     <div class='col-12 col-lg-6 col-xl-4 col-xxxl-2'>
 		<div class='card'>
 			<div class='card-header'>
-                Shortcuts
+                <b>Shortcuts</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>";
                 	$q = $db->query("/*qc=on*/SELECT * FROM `shortcut` WHERE `sc_userid` = {$userid}");
                 	while ($r = $db->fetch_row($q)) {
                 	      echo "
-                        <div class='col-12'>
-    						<a href='{$r['sc_link']}'>{$r['sc_name']}</a> [<a href='?delete={$r['sc_id']}'>&times;</a>]
+                        <div class='col-auto'>
+    						<a href='{$r['sc_link']}'>{$r['sc_name']}</a> <a class='btn btn-sm btn-danger' href='?delete={$r['sc_id']}'><i class='fas fa-trash-alt'></i></a>
     					</div>";
                 	}
                 	echo "<hr />

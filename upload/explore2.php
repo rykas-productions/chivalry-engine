@@ -109,7 +109,8 @@ if (empty($infirm_count)) {
 }
 echo "
 <h4>You begin exploring {$api->SystemTownIDtoName($ir['location'])}. You find a few things that could keep you occupied.</h4></div>
-<div class='col-md-4' align='left'>
+<div class='row'>
+<div class='col-12 col-xl-4 col-xxl-3 col-xxxl-2' align='left'>
 	<ul class='nav flex-column nav-pills'>
 		<li class='nav-item'>
 			<a class='nav-link' data-toggle='tab' href='#SHOPS'>
@@ -165,135 +166,297 @@ if ($ir['vip_days']) {
 echo "
 	</ul>
 </div>
-<div class='col-md-4'>
+<div class='col-12 col-xl-4 col-xxl-5 col-xxxl-6'>
 	<div class='tab-content'>
 		<div id='SHOPS' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='shops.php' class='{$txtClass}'>" . loadImageAsset("explore/shop.svg") . " Local Shops</a><br />
-					<a href='itemmarket.php'>" . loadImageAsset("explore/item_market.svg") . " Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a><br />
-					<a href='itemrequest.php'>" . loadImageAsset("explore/item_request.svg") . " Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a><br />
-					<a href='secmarket.php'>" . loadImageAsset("explore/token_market.svg") . " Chivalry Token Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a><br />
-                    <a href='votestore.php'>" . loadImageAsset("explore/vote_store.svg") . " Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a><br />
-					<a href='vipmarket.php'>" . loadImageAsset("explore/vip_store.svg") . " VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a><br />
-					<a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a><br />";
-                    if ($month == 10)
-                        echo "<a href='halloween.php?action=chuck'>Pumpkin Chuck</a><br />";
-                    if ($month == 11)
-                        echo "<a href='attack.php?user=21'>Participate in Turkey Hunt</a><br />";
-                    if ($month == 12)
-                    {
-                        echo "<a href='adventcalender.php'>CID Advent Calendar</a><br />
-                                <a href='xmastree.php'>CID Christmas Tree</a><br />
-                                <a href='xmastree.php?action=wish'>Christmas Wish</a><br />";
-                    }
+                    <div class='row'>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='shops.php' class='{$txtClass}'>" . loadImageAsset("explore/shop.svg") . " Local Shops</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='itemmarket.php'>" . loadImageAsset("explore/item_market.svg") . " Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='itemrequest.php'>" . loadImageAsset("explore/item_request.svg") . " Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='secmarket.php'>" . loadImageAsset("explore/token_market.svg") . " Token Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='votestore.php'>" . loadImageAsset("explore/vote_store.svg") . " Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='vipmarket.php'>" . loadImageAsset("explore/vip_store.svg") . " VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a>
+                        </div>";
+                        if ($month == 10)
+                        {
+                            echo"
+                            <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                                <a href='halloween.php?action=chuck'>Pumpkin Chuck</a>
+                            </div>";
+                        }
+                        if ($month == 11)
+                        {
+                            echo"
+                            <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                                <a href='attack.php?user=21'>Participate in Turkey Hunt</a>
+                            </div>";
+                        }
+                        if ($month == 12)
+                        {
+                            echo"
+                            <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                                <a href='adventcalender.php'>CID Advent Calendar</a>
+                            </div>
+                            <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                                <a href='xmastree.php'>CID Christmas Tree</a>
+                            </div>
+                            <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                                <a href='xmastree.php?action=wish'>Christmas Wish</a>
+                            </div>";
+                        }
                         echo"
+                    </div>
 				</div>
 			</div>
 		</div>
 		<div id='FD' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-				    <a href='job.php' class='{$txtClass}'>" . loadImageAsset("explore/work_center.svg") . " Work Center</a><br />
-					<a href='bank.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a><br />";
-if ($ir['level'] >= 75) {
-    echo "<a href='bigbank.php' class='{$txtClass}'>" . loadImageAsset("explore/fed_bank.svg") . " Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a><br />";
-}
-if ($ir['level'] >= 175) {
-    echo "<a href='vaultbank.php' class='{$txtClass}'>" . loadImageAsset("explore/vault_bank.svg") . " Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a><br />";
-}
-if ($ir['level'] >= 325) {
-    echo "<a href='bankstore.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a><br />";
-}
-echo "
-					<a href='tokenbank.php' class='{$txtClass}'>" . loadImageAsset("explore/token_bank.svg") . " Chivalry Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a><br />
-					<a href='estate_management.php' class='{$txtClass}'>" . loadImageAsset("explore/estate_manage.svg") . " Estate Agent</a><br />
-					<a href='travel.php' class='{$txtClass}'>" . loadImageAsset("explore/travel_agent.svg") . " Travel Agent</a><br />
-					<a href='temple.php' class='{$txtClass}'>" . loadImageAsset("explore/temple_fortune.svg") . " Temple of Fortune</a><br />
-                    <a href='investmarket.php' class='{$txtClass}'>Asset Investment</a><br />
+                    <div class='row'>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='job.php' class='{$txtClass}'>" . loadImageAsset("explore/work_center.svg") . " Work Center</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='bank.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a>
+                        </div>";
+                        if ($ir['level'] >= 75) {
+                            echo "
+                            <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                                <a href='bigbank.php' class='{$txtClass}'>" . loadImageAsset("explore/fed_bank.svg") . " Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a>
+                            </div>";
+                        }
+                        if ($ir['level'] >= 175) {
+                            echo "
+                            <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                                <a href='vaultbank.php' class='{$txtClass}'>" . loadImageAsset("explore/vault_bank.svg") . " Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a>
+                            </div>";
+                        }
+                        if ($ir['level'] >= 325) {
+                            echo "
+                            <div class='col-auto col-xxxl-4'>
+                                <a href='bankstore.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a>
+                            </div>";
+                        }
+                        echo "
+                        <div class='col-auto'>
+                            <a href='tokenbank.php' class='{$txtClass}'>" . loadImageAsset("explore/token_bank.svg") . " Chiv Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='estate_management.php' class='{$txtClass}'>" . loadImageAsset("explore/estate_manage.svg") . " Estate Agent</a></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='travel.php' class='{$txtClass}'>" . loadImageAsset("explore/travel_agent.svg") . " Travel Agent</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='temple.php' class='{$txtClass}'>" . loadImageAsset("explore/temple_fortune.svg") . " Temple of Fortune</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='investmarket.php' class='{$txtClass}'>Asset Investment</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
 		<div id='HL' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='mine.php' class='{$txtClass}'>" . loadImageAsset("explore/mine.svg") . " Dangerous Mines <span class='badge badge-pill badge-primary'>{$miningenergy}%</span></a><br />
-					<a href='smelt.php' class='{$txtClass}'>" . loadImageAsset("explore/blacksmith.svg") . " Blacksmith's Smeltery</a><br />
-					<a href='farm.php' class='{$txtClass}'>" . loadImageAsset("explore/farming.svg") . " Farming</a><br />
-					<a href='bottent.php' class='{$txtClass}'>" . loadImageAsset("explore/npc_list.svg") . " NPC Battle List <span class='badge badge-pill badge-primary'>{$npccount}</span></a><br />
-					<a href='gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym.svg") . " The Gym</a><br />
-					<a href='chivalry_gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym_chiv.svg") . " Chivalry Gym</a><br />
-					<a href='criminal.php' class='{$txtClass}'>" . loadImageAsset("explore/crime_center.svg") . " Criminal Center</a><br />
-					<a href='streetbum.php' class='{$txtClass}'>" . loadImageAsset("explore/street_beg.svg") . " Street Begging <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['searchtown']) . "</span></a><br />";
-					if ($ir['autobum'] > 0)
-						echo "<a href='autobum.php' class='{$txtClass}'>" . loadImageAsset("explore/auto_street_beg.svg") . " Auto Street Bum <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autobum']) . "</span></a><br />";
-					echo"
-					<a href='academy.php' class='{$txtClass}'>" . loadImageAsset("explore/academy.svg") . " Local Academy <span class='badge badge-pill badge-primary'>{$academy}</span></a><br />
-					<a href='achievements.php'>" . loadImageAsset("explore/achievements.svg") . " Achievements</a><br />
-                    <a href='bounty.php' class='{$txtClass}'>" . loadImageAsset("explore/bounty_hunter.svg") . " Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a><br />
-					<a href='missions.php' class='{$txtClass}'>" . loadImageAsset("explore/mission.svg") . " Missions</a><br />
-                    <a href='woodcut.php' class='{$txtClass}'>" . loadImageAsset("explore/woodcutter.svg") . "Wood Cutter</a><br />
+                    <div class='row'>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='mine.php' class='{$txtClass}'>" . loadImageAsset("explore/mine.svg") . " Dangerous Mines <span class='badge badge-pill badge-primary'>{$miningenergy}%</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='smelt.php' class='{$txtClass}'>" . loadImageAsset("explore/blacksmith.svg") . " Blacksmith's Smeltery</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='farm.php' class='{$txtClass}'>" . loadImageAsset("explore/farming.svg") . " Farming</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='bottent.php' class='{$txtClass}'>" . loadImageAsset("explore/npc_list.svg") . " NPC Battle List <span class='badge badge-pill badge-primary'>{$npccount}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym.svg") . "The Gym</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='chivalry_gym.php' class='{$txtClass}'>" . loadImageAsset("explore/gym_chiv.svg") . " Chivalry Gym</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='criminal.php' class='{$txtClass}'>" . loadImageAsset("explore/crime_center.svg") . " Criminal Center</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='streetbum.php' class='{$txtClass}'>" . loadImageAsset("explore/street_beg.svg") . " Street Begging <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['searchtown']) . "</span></a>
+                        </div>";
+                        if ($ir['autobum'] > 0)
+                        {
+                            echo "<div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='autobum.php' class='{$txtClass}'>" . loadImageAsset("explore/auto_street_beg.svg") . " Auto Street Bum <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autobum']) . "</span></a>
+                        </div>";
+                        }
+echo"               <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='academy.php' class='{$txtClass}'>" . loadImageAsset("explore/academy.svg") . " Local Academy <span class='badge badge-pill badge-primary'>{$academy}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='achievements.php'>" . loadImageAsset("explore/achievements.svg") . " Achievements</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='bounty.php' class='{$txtClass}'>" . loadImageAsset("explore/bounty_hunter.svg") . " Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='missions.php' class='{$txtClass}'>" . loadImageAsset("explore/mission.svg") . " Missions</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='woodcut.php' class='{$txtClass}'>" . loadImageAsset("explore/woodcutter.svg") . "Wood Cutter</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
 		<div id='ADMIN' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='users.php'><i class='fas fa-users'></i>  Players List <span class='badge badge-pill badge-primary'>{$users}</span></a><br />
-					<a href='usersonline.php'><i class='fas fa-toggle-on'></i> Players Online <span class='badge badge-pill badge-primary'>{$userson}</span></a><br />
-					<a href='userstown.php'><i class='game-icon game-icon-village'></i> Players In Town <span class='badge badge-pill badge-primary'>{$userstown}</span></a><br />
-					<a href='staff.php'><i class='game-icon game-icon-embrassed-energy'></i> CID Staff</a><br />
-					<a href='fedjail.php'><i class='game-icon game-icon-closed-doors'></i> Federal Dungeon</a><br />
-					<a href='stats.php'><i class='fas fa-chart-bar'></i> Game Statistics</a><br />
-					<a href='playerreport.php'><i class='far fa-flag'></i> Player Report</a><br />
-					<a href='announcements.php'><i class='fas fa-bullhorn'></i> Announcements <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['announcements']) . "</span></a><br />
-					<a href='itemappendix.php'><i class='fas fa-list'></i> Item Appendix</a><br />
-					<a href='milestones.php'>Milestones</a><br />
-                    <a href='promo.php'>Promo Codes</a><br />
+                    <div class='row'>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='users.php'>" . loadImageAsset("explore/user_list.svg") . "  Players List <span class='badge badge-pill badge-primary'>{$users}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='usersonline.php'>" . loadImageAsset("explore/players_online.svg") . " Players Online <span class='badge badge-pill badge-primary'>{$userson}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='userstown.php'>" . loadImageAsset("explore/town_list.svg") . " Players In Town <span class='badge badge-pill badge-primary'>{$userstown}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='staff.php'>" . loadImageAsset("explore/staff_list.svg") . " CID Staff</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='fedjail.php'>" . loadImageAsset("explore/fed_dungeon.svg") . " Federal Dungeon</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='stats.php'>" . loadImageAsset("explore/game_stats.svg") . " Game Statistics</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='playerreport.php'>" . loadImageAsset("explore/player_report.svg") . " Player Report</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='announcements.php'>" . loadImageAsset("explore/announcement.svg") . " Announcements <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['announcements']) . "</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='itemappendix.php'>" . loadImageAsset("explore/item_list.svg") . " Item Appendix</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='milestones.php'>" . loadImageAsset("explore/milestone.svg") . " Milestones</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='promo.php'>Promo Codes</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
 		<div id='GAMES' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-					<a href='russianroulette.php' class='{$txtClass}'><i class='game-icon game-icon-revolver'></i> Russian Roulette <span class='badge badge-pill badge-primary'>{$rr}</span></a><br />
-					<a href='roulette.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-table'></i> Roulette Table</a><br />
-					<a href='slots.php?tresde={$tresder}' class='{$txtClass}'><i class='game-icon game-icon-pokecog spinner'></i> Slot Machines</a><br />
-                    <a href='hexbags.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['hexbags']) . "</span></a><br />";
-if ($ir['autohex'] > 0)
-    echo "<a href='autohex.php' class='{$txtClass}'><i class='game-icon game-icon-open-treasure-chest'></i> Auto Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autohex']) . "</span></a><br />";
-echo "
-					<a href='raffle.php' class='{$txtClass}'><i class='fas fa-ticket-alt'></i> CID Raffle <span class='badge badge-pill badge-primary'>" . shortNumberParse($set['lotterycash']) . "</span></a>
-                    <a href='hilow.php?tresde={$tresder}'>High/Low</a>
+                    <div class='row'>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='russianroulette.php' class='{$txtClass}'>" . loadImageAsset("explore/russian_roulette.svg") . " Russian Roulette <span class='badge badge-pill badge-primary'>{$rr}</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='roulette.php?tresde={$tresder}' class='{$txtClass}'>" . loadImageAsset("explore/roulette.svg") . " Roulette Table</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='slots.php?tresde={$tresder}' class='{$txtClass}'>" . loadImageAsset("explore/slots.svg") . " Slot Machines</a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='hexbags.php' class='{$txtClass}'>" . loadImageAsset("explore/hexbags.svg") . " Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['hexbags']) . "</span></a>
+                        </div>";
+                        if ($ir['autohex'] > 0)
+                        {
+                            echo "<div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='autohex.php' class='{$txtClass}'>" . loadImageAsset("explore/auto_hexbag.svg") . " Auto Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autohex']) . "</span></a>
+                        </div>";
+                        }
+
+                    echo"
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='raffle.php' class='{$txtClass}'>" . loadImageAsset("explore/cid_raffle.svg") . " CID Raffle <span class='badge badge-pill badge-primary'>" . shortNumberParse($set['lotterycash']) . "</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='hilow.php?tresde={$tresder}'>High/Low</a>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
 		<div id='GUILDS' class='tab-pane'>
 			<div class='card' align='left'>
-				<div class='card-body'>";
-//User is in a guild.
-if ($ir['guild'] > 0) {
-    echo "<a href='viewguild.php'><i class='game-icon game-icon-minions'></i> Visit Your Guild</a><br />";
-}
-echo "
-					<a href='guilds.php'><i class='game-icon game-icon-dozen'></i> Guild Listing <span class='badge badge-pill badge-primary'>{$guildcount}</span></a><br />
-					<a href='guild_district.php'> Guild Districts</a><br />
-					<a href='guilds.php?action=wars'><i class='game-icon game-icon-mounted-knight'></i> Guild Wars</a> <span class='badge badge-pill badge-danger'>{$wars}</span><br />
+				<div class='card-body'>
+                    <div class='row'>";
+					if ($ir['guild'] > 0) {
+						echo "
+					    <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='viewguild.php'>" . loadImageAsset("explore/your_guild.svg") . " Visit Your Guild</a>
+					    </div>";
+					}
+					echo"
+					    <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='guilds.php'>" . loadImageAsset("explore/guild_list.svg") . " Guilds <span class='badge badge-pill badge-primary'>{$guildcount}</span></a>
+					    </div>
+					    <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='guild_district.php'>" . loadImageAsset("explore/guild_district.svg") . " Guild Districts</a>
+					    </div>
+					    <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='guilds.php?action=wars'>" . loadImageAsset("explore/guild_war.svg") . " Guild Wars</a> <span class='badge badge-pill badge-danger'>{$wars}</span>
+					    </div>
+                    </div>
 				</div>
 			</div>
 		</div>
 		<div id='PINTER' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-				    <a href='dungeon.php'><i class='game-icon game-icon-cage'></i> Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a><br />
-					<a href='infirmary.php'><i class='game-icon game-icon-hospital-cross'></i> Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a><br />
-					<a href='forums.php'><i class='far fa-comments'></i> CID Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a><br />
-					<a href='newspaper.php'><i class='game-icon game-icon-scroll-unfurled'></i> CID Newspaper <span class='badge badge-pill badge-primary'>{$paperads}</span></a><br />
-					<a href='polling.php'><i class='game-icon game-icon-vote'></i> Polling Center</a><br />
-					<a href='halloffame.php'><i class='game-icon game-icon-crown'></i> Hall of Fame</a><br />
-					<a href='marriage.php'><i class='game-icon game-icon-linked-rings'></i> Marriage Center</a><br />
-					<a href='tutorial.php'><i class='far fa-question-circle'></i> CID Tutorial</a><br />
-					<a href='referallist.php'><i class='game-icon game-icon-minions'></i> Your Referrals</a><br />
+                    <div class='row'>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='dungeon.php'>" . loadImageAsset("explore/dungeon.svg") . " Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='infirmary.php'>" . loadImageAsset("explore/infirmary.svg") . " Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='forums.php'>" . loadImageAsset("explore/forums.svg") . " CID Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a></a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='newspaper.php'>" . loadImageAsset("explore/cid_newspaper.svg") . " CID Newspaper <span class='badge badge-pill badge-primary'>{$paperads}</span></a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='polling.php'>" . loadImageAsset("explore/polling_center.svg") . " Polling Center</a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='halloffame.php'>" . loadImageAsset("explore/hof.svg") . " Hall of Fame</a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='marriage.php'>" . loadImageAsset("explore/marriage_center.svg") . " Marriage Center</a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='tutorial.php'>" . loadImageAsset("explore/tutorial.svg") . " CID Tutorial</a>
+					    </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+					       <a href='referallist.php'>" . loadImageAsset("explore/refferal.svg") . " Your Referrals</a>
+					    </div>
+                    </div>
 				</div>
 			</div>
 		</div>";
@@ -302,36 +465,68 @@ if ($ir['vip_days']) {
 			<div id='VIP' class='tab-pane'>
 			<div class='card' align='left'>
 				<div class='card-body'>
-				    <a href='friends.php'><i class='far fa-fw fa-smile'></i> Friends</a><br />
-					<a href='enemy.php'><i class='far fa-fw fa-frown'></i> Enemies</a><br />
-					<a href='userlogs.php'><i class='fas fa-book fa-fw'></i> VIP Logs</a><br />
+				    <div class='row'>
+    					<div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+    						<a href='friends.php'>" . loadImageAsset("explore/friendslist.svg") . " Friends</a>
+    					</div>
+    					<div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+    						<a href='enemy.php'>" . loadImageAsset("explore/enemylist.svg") . " Enemies</a>
+    					</div>
+    					<div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+    						<a href='userlogs.php'>" . loadImageAsset("explore/vip-logs.svg") . " VIP Logs</a>
+    					</div>
+    				</div>
 				</div>
 			</div>
 		</div>";
 }
 echo "</div>
-</div><div class='col-md-4'>
+</div>
+    <div class='col-12 col-xl-4'>
+            <div class='card'>
+                <div class='card-header'>
+                    Your Shortcuts [<a href='#' data-toggle='modal' data-target='#addShortcut'>Add Shortcut</a>]
+                </div>
+                <div class='card-body' align='left'><div class='row'>";
+    $q = $db->query("/*qc=on*/SELECT * FROM `shortcut` WHERE `sc_userid` = {$userid}");
+    while ($r = $db->fetch_row($q)) {
+        echo "  <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                    <a href='{$r['sc_link']}'>{$r['sc_name']}</a> 
+                    <a class='btn btn-sm btn-danger' href='?delete={$r['sc_id']}'><i class='fas fa-trash-alt'></i></a>
+                </div>";
+    }
+    echo "      </div>
+            </div>
+        </div>
+    </div>
+    <div class='col-12'>
         <div class='card'>
             <div class='card-header'>
-                Your Shortcuts [<a href='#' data-toggle='modal' data-target='#addShortcut'>Add Shortcut</a>]
+                Want free stuff in {$set['WebsiteName']}?
             </div>
-            <div class='card-body' align='left'>";
-$q = $db->query("/*qc=on*/SELECT * FROM `shortcut` WHERE `sc_userid` = {$userid}");
-while ($r = $db->fetch_row($q)) {
-    echo "<a href='{$r['sc_link']}'>{$r['sc_name']}</a> [<a href='?delete={$r['sc_id']}'>&times;</a>]<br />";
-}
-echo "</div>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-12'>
+                        Share your referral link to gain 10 CID Admin Gym Scrolls and 3 VIP Days every time a friend joins!
+                    </div>
+                    <div class='col-12'>
+                        <code><u>https://chivalryisdeadgame.com/register.php?REF={$userid}</u></code>
+                    </div>
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col-auto'>
+                                <div class='fb-like' data-href='https://www.facebook.com/officialcidgame' data-layout='button' data-action='like' data-size='large' data-show-faces='false' data-share='true'></div>
+                            </div>
+                            <div class='col-auto'>
+                                <a href='https://twitter.com/cidgame?ref_src=twsrc%5Etfw' class='twitter-follow-button' data-size='large' data-dnt='true' data-show-count='false'>Follow @cidgame</a>
+                                <script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>";
-//referral link.
-echo "	<div class='row'>
-			<div class='col-md-12'>
-				Share your referral link to gain 10 CID Admin Gym Scrolls and 3 VIP Days every time a friend joins!<br />
-				<code>chivalryisdeadgame.com/register.php?REF={$userid}</code><br />
-				<div class='fb-like' data-href='https://www.facebook.com/officialcidgame' data-layout='button' data-action='like' data-size='large' data-show-faces='false' data-share='true'></div><br />
-                <a href='https://twitter.com/cidgame?ref_src=twsrc%5Etfw' class='twitter-follow-button' data-size='large' data-dnt='true' data-show-count='false'>Follow @cidgame</a><script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script>
-			</div>
-		</div>";
 include('explore_shortcut.php');
 $h->endpage();
