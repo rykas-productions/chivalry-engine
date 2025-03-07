@@ -283,5 +283,5 @@ function returnVPSBandwidth()
 
 function returnCacheDir()
 {
-    return dirname(__DIR__) . "/data/cache/";
+    return returnDataDir() . "cache/";
 }
