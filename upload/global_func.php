@@ -1463,3 +1463,41 @@ function sendData($url='https://chivalryisdeadgame.com/chivalry-engine-analytics
     $result = curl_exec ($ch);
     curl_close($ch);
 }
+
+function getLoot(string $tableName): array {
+    // Load the loot table JSON
+    $json = file_get_contents("./data/loot/{$tableName}.json");
+    $lootTables = json_decode($json, true);
+    
+    if (!isset($lootTables[$tableName])) {
+        return [];
+    }
+    
+    $lootTable = $lootTables[$tableName];
+    $loot = [];
+    
+    // Process guaranteed drops
+    if (isset($lootTable['guaranteed'])) {
+        foreach ($lootTable['guaranteed'] as $entry) {
+            $quantity = random_int($entry['min'], $entry['max']);
+            $loot[] = [
+                'item' => $entry['item'],
+                'quantity' => $quantity
+            ];
+        }
+    }
+    
+    // Process chance-based drops
+    if (isset($lootTable['chance_based'])) {
+        foreach ($lootTable['chance_based'] as $entry) {
+            if (isset($entry['chance']) && random_int(1, 100) <= ($entry['chance'] * 100)) {
+                $quantity = random_int($entry['min'], $entry['max']);
+                $loot[] = [
+                    'item' => $entry['item'],
+                    'quantity' => $quantity
+                ];
+            }
+        }
+    } 
+    return $loot;
+}
