@@ -17,6 +17,7 @@ echo "<h3><i class='game-icon game-icon-anvil'></i> Blacksmith's Smeltery</h3><h
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
+$activeSmelt = $db->fetch_single($db->query("SELECT COUNT(`sip_id`) FROM `smelt_inprogress` WHERE `sip_user` = {$userid}"));
 switch ($_GET['action']) {
     case 'smelt':
         smelt();
@@ -27,10 +28,10 @@ switch ($_GET['action']) {
 }
 function home()
 {
-    global $db, $userid, $api;
-    $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` ORDER BY `smelt_output` ASC");
+    global $db, $userid, $api, $ir, $activeSmelt;
+    $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_required_mastery` <= {$ir['reset']} AND `smelt_level_required` <= {$ir['level']} ORDER BY `smelt_output` ASC");
     echo "
-    <a href='#' class='btn btn-primary' data-toggle='modal' data-target='#smithing_info'>In Progress</a>
+    <a href='#' class='btn btn-primary' data-toggle='modal' data-target='#smithing_info'>In Progress - {$activeSmelt}</a>
     <br />
     <div class='row'>
         <div class='col-12'>
@@ -49,6 +50,7 @@ function home()
         $smltTime = ($r['smelt_time'] == 0) ? "" : TimeUntil_Parse(time() + $r['smelt_time']);
         $n = 0;
 		$r['hasitem']=0;
+		$rankClass = ($ir['reset'] >= $r['smelt_required_mastery']) ? "text-success" : "text-danger";
 		foreach ($ex as $i) 
 		{
 			$do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i}");
@@ -66,7 +68,7 @@ function home()
                         {$rcon}
                     </div>
                     <div class='col-12 col-sm-8 col-lg-12 col-xxl-8'>
-                        " . number_format($r['smelt_qty_output']) . " x <a href='iteminfo.php?ID={$r['smelt_output']}'>{$output_item}</a>
+                        " . shortNumberParse($r['smelt_qty_output']) . " x <a href='iteminfo.php?ID={$r['smelt_output']}'>{$output_item}</a>
                     </div>
                 </div>
             </div>
@@ -91,10 +93,24 @@ function home()
 		    }
 		    unset($n);
 		    echo "{$items_needed}";
+		    if ($r['smelt_required_mastery'] > 0)
+		    {
+		        $can_craft = ($ir['reset'] >= $r['smelt_required_mastery']) ? TRUE : FALSE;
+		        echo"<div class='col-12 col-sm-6 col-lg-12 col-xxl-6 {$rankClass}'>
+                            <b>Mastery Rank:</b> " . shortNumberParse($r['smelt_required_mastery']) . "
+                            </div>";
+		    }
+		    if ($r['smelt_level_required'] > 0)
+		    {
+		        $can_craft = ($ir['level'] >= $r['smelt_level_required']) ? TRUE : FALSE;
+		        echo"<div class='col-12 col-sm-6 col-lg-12 col-xxl-6 {$rankClass}'>
+                            <b>Level:</b> " . shortNumberParse($r['smelt_level_required']) . "
+                            </div>";
+		    }
 		    if ($r['smelt_time'] > 0)
 		    {
 		        echo"<div class='col-12 col-sm-6 col-lg-12 col-xxl-6'>
-                            Time: {$smltTime}
+                            <b>Time:</b> {$smltTime}
                             </div>";
 		    }
 		    echo"
@@ -118,8 +134,9 @@ function home()
 
 function smelt()
 {
-    global $db, $userid, $api, $h;
+    global $db, $userid, $api, $h, $ir, $activeSmelt;
     $_GET['id'] = (isset($_GET['id']) && is_numeric($_GET['id'])) ? abs($_GET['id']) : 0;
+    $maxActive = ($ir['vip_days'] == 0) ? 8 : 16;
     $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_id` = {$_GET['id']}");
     if ($db->num_rows($q) == 0) {
         alert('danger', "Uh Oh!", "You are trying to smelt a non-existent recipe.", true, "smelt.php");
@@ -147,6 +164,27 @@ function smelt()
         alert('danger', "Uh Oh!", "You do not have the items required for this recipe. You need {$items_needed}.", true, "smelt.php");
         die($h->endpage());
     }
+    if ($r['smelt_required_mastery'] > 0)
+    {
+        if ($ir['reset'] >= $r['smelt_required_mastery'])
+        {
+            alert('danger',"Uh Oh!", "You are not the correct Mastery Rank to craft this. You are currently {$ir['reset']}, and you need to be Mastery Rank {$r['smelt_required_mastery']}.", true, "smelt.php");
+            $can_craft = FALSE;
+        }
+    }
+    if ($r['smelt_level_required'] > 0)
+    {
+        if ($ir['level'] >= $r['smelt_level_required'])
+        {
+            alert('danger',"Uh Oh!", "You are not the correct Level to craft this. You are currently Level " . shortNumberParse($ir['level']) . ", and you need to be Level " . shortNumberParse($r['smelt_level_required']) . ".", true, "smelt.php");
+            $can_craft = FALSE;
+        }
+    }
+    if ($activeSmelt >= $maxActive)
+    {
+        alert('danger',"Uh Oh!","You can only have a maximum of {$maxActive} crafts in progress at a time. You can increase this to 16 with VIP Days!", true, 'smelt.php');
+        $can_craft = FALSE;
+    } 
     unset($n);
     if ($can_craft) {
         if ($r['smelt_time'] > 0) 
