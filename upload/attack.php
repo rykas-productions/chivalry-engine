@@ -392,12 +392,12 @@ function attacking()
             $_SESSION['tresde'] = 0;
         }
         //If RNG is not the same number stored in session
-        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) 
+        /*if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) 
         {
             resetAttackStatus();
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
-        }
+        }*/
 		if (userHasEffect($userid, basic_protection))
 		{
 		    userRemoveEffect($userid, basic_protection);
@@ -1004,70 +1004,94 @@ function attacking()
         $vars2['hpperc'] = round($odata['hp'] / $odata['maxhp'] * 100);
         $vars2['hpopp'] = 100 - $vars2['hpperc'];
         $mw = $db->query("/*qc=on*/SELECT `itmid`,`itmname` FROM  `items`  WHERE `itmid` IN({$ir['equip_primary']}, {$ir['equip_secondary']}, {$ir['equip_potion']})");
-		echo "<h3>Choose an item to use in combat</h3><hr />
-		<div class='row'>";
-        //If user has weapons equipped, allow him to select one.
-		$prim = 0;
-        if ($db->num_rows($mw) > 0) {
-            while ($r = $db->fetch_row($mw)) {
-                if (!isset($_GET['nextstep']))
-                    $ns = 1;
-                else
-                    $ns = $_GET['nextstep'] + 2;
-				if ($r['itmid'] == $ir['equip_primary'])
-						$type = "Primary Weapon";
-                elseif ($r['itmid'] == $ir['equip_secondary']) 
-				{
-                    $type = "Secondary Weapon";
-                }
-                elseif ($r['itmid'] == $ir['equip_potion']) 
-				{
-                    $type = "Potion Item";
-                }
-				echo "<div class='col'>
-				<a href='?action=attacking&nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'><b>{$type}</b><br />
-					" . returnIcon($r['itmid'],5) . "</a>
-				</div>";
+		echo "<div class='card'>
+                <div class='card-header'>
+                    Combat Equipment
+                </div>
+                <div class='card-body'>
+    		      <div class='row'>";
+            //If user has weapons equipped, allow him to select one.
+    		$prim = 0;
+            if ($db->num_rows($mw) > 0) {
+                while ($r = $db->fetch_row($mw)) {
+                    if (!isset($_GET['nextstep']))
+                        $ns = 1;
+                    else
+                        $ns = $_GET['nextstep'] + 2;
+    				if ($r['itmid'] == $ir['equip_primary'])
+    						$type = "Primary Weapon";
+                    elseif ($r['itmid'] == $ir['equip_secondary']) 
+    				{
+                        $type = "Secondary Weapon";
+                    }
+                    elseif ($r['itmid'] == $ir['equip_potion']) 
+    				{
+                        $type = "Potion Item";
+                    }
+    				echo "
+                    <div class='col-12'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <small>{$type}</small>
+                            </div>
+                            <div class='col-12'>
+                                <a href='?action=attacking&nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'>
+    					           " . returnIcon($r['itmid'],5) . "
+                                </a>
+                            </div>
+                            <div class='col-12'>
+                                <a href='?action=attacking&nextstep={$ns}&user={$_GET['user']}&weapon={$r['itmid']}&tresde={$tresder}&ref={$ref}'>
+                                    {$api->SystemItemIDtoName($r['itmid'])}
+                                </a>
+                            </div>
+                        </div>
+    				</div>";
             }
+            echo "</div></div>";
         } //If no weapons equipped, tell him to get back!
         else {
             alert("warning", "Uh Oh!", "Sir, you don't have a weapon equipped. You might wanna go back.", true, "{$ref}.php");
         }
         $db->free_result($mw);
-        echo "</div><hr />";
 		
 		$yourpic = ($ir['display_pic']) ? "<img src='{$ir['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
 		$theirpic = ($odata['display_pic']) ? "<img src='{$odata['display_pic']}' class='img-thumbnail img-responsive' width='125'>" : "";
-        echo "<div class='row'>
-				<div class='col-3'>
-					{$yourpic}<br />
-					{$ir['username']}
-				</div>
-				<div class='col'>
-					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars['hpperc']}' style='width:{$vars['hpperc']}%' aria-valuemin='0' aria-valuemax='{$youdata['maxhp']}'>
-							<span>{$vars['hpperc']}% (" . shortNumberParse($youdata['hp']) . " / " .  shortNumberParse($youdata['maxhp']) . ")</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr />
-			<div class='row'>
-				<div class='col-3'>
-					{$theirpic}<br />
-					{$odata['username']}
-				</div>
-				<div class='col'>
-					<div class='progress' style='height: 1rem;'>
-						<div class='progress-bar bg-danger progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='{$vars2['hpperc']}' style='width:{$vars2['hpperc']}%' aria-valuemin='0' aria-valuemax='{$odata['maxhp']}'>
-							<span>
-								{$vars2['hpperc']}% (" . shortNumberParse($odata['hp']) . " / " . shortNumberParse($odata['maxhp']) . ")
-							</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		<hr />";
+		echo "
+            <div class='card'>
+                <div class='card-header'>
+                    Fighters
+                </div>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    {$yourpic}
+                                </div>
+                                <div class='col-12'>
+                                    " . scaledColorProgressBar($youdata['hp'], $vars['hpperc'], $youdata['maxhp']) . "
+                                </div>
+                                <div class='col-12'>
+                                    {$ir['username']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    {$theirpic}
+                                </div>
+                                <div class='col-12'>
+                                    " . scaledColorProgressBar($odata['hp'], $vars2['hpperc'], $odata['maxhp']) . "
+                                </div>
+                                <div class='col-12'>
+                                    {$odata['username']}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>";
     }
 }
 
