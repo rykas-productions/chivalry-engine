@@ -58,8 +58,8 @@ class headers
 				<meta name='msapplication-TileImage' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_144/v1520819749/logo.png'>
 
 				<!— Windows 8.1 + IE11 and above —>
-				<meta name='msapplication-config' content='assets/browserconfig.xml' />
-                <link rel='stylesheet' href='css/themes/sunset-21.2.1.css'>
+				<meta name='msapplication-config' content='https://cdn.chivalryisdeadgame.com/assets/browserconfig.xml' />
+                <link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/sunset-21.2.1.css'>
 				<meta name='theme-color' content='#dc3545'>
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>" . returnGameTitle() . " - Free to Play, Text Themed RPG Based in Medieval Europe</title>"; 
@@ -136,7 +136,7 @@ class headers
 
         </div>
         <!-- /.container -->
-        <link rel="stylesheet" href="css/game-20.4.1.css">
+        <link rel="stylesheet" href="https://cdn.chivalryisdeadgame.com/assets/css/game-20.4.1.css">
         <link rel="stylesheet" href="https://seiyria.com/gameicons-font/css/game-icons.css">
         <link rel="shortcut icon" href="https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png" type="image/x-icon"/>
 		
@@ -148,8 +148,8 @@ class headers
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
-        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
-		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
+        <script src="https://cdn.chivalryisdeadgame.com/assets/js/register.min.js" async defer></script>
+		<script src="https://cdn.chivalryisdeadgame.com/assets/js/clock.min.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
 		<script data-ad-client="ca-pub-2623548319222554" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		<script async src='https://www.googletagmanager.com/gtag/js?id=UA-69718211-1'></script>

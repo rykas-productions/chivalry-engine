@@ -69,7 +69,7 @@ function home()
                 </div>";
         }
         echo "</div></div><br />
-		<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819462/shop.jpg' class='img-thumbnail img-responsive'>";
+		<img src='https://cdn.chivalryisdeadgame.com/assets/img/menu/shop/shop.jpg' class='img-thumbnail img-responsive'>";
         $db->free_result($q);
     }
 }

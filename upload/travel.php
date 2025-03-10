@@ -111,7 +111,7 @@ if (empty($_GET['to'])) {
         <div class='card-body'>
             <div class='row'>
                 <div class='col-12'>
-                    <img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819397/horse-stable-travel.jpg' class='img-thumbnail img-responsive'>
+                    <img src='https://cdn.chivalryisdeadgame.com/assets/img/menu/travel/travel-horse.jpg' class='img-thumbnail img-responsive'>
                 </div>
             </div>
         </div>

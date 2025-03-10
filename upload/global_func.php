@@ -1219,8 +1219,7 @@ function getCurrentPage()
  */
 function loadImageAsset($img, $size = 1)
 {   
-    $rootAssetDir = "./assets/";
-    return "<img src='{$rootAssetDir}img/{$img}' style='width:{$size}rem;'></img>";
+    return "<img src='" . returnAssetDir() . "img/{$img}' style='width:{$size}rem;'></img>";
 }
 
 /**
@@ -1518,5 +1517,5 @@ function returnDataDir()
 
 function returnAssetDir()
 {
-    return __DIR__ . "/assets/";
+    return "http://cdn.chivalryisdeadgame.com/assets/";
 }
