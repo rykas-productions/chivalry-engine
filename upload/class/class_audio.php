@@ -9,8 +9,8 @@ class sound
 	    global $set;
 		cslog('log',"Loading CID Sound System.");
 		echo "
-		<script src='js/soundmanager2-nodebug-jsmin.js'></script>
-		<script src='js/game-sounds-{$set['game_audio_version']}.js'></script>
+		<script src='https://cdn.chivalryisdeadgame.com/assets/js/soundmanager2-nodebug-jsmin.js'></script>
+		<script src='https://cdn.chivalryisdeadgame.com/assets/js/game-sounds-{$set['game_audio_version']}.js'></script>
 		<script>
 			var soundManager = soundManager.setup({
 				url: '../assets/audio/',

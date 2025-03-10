@@ -471,21 +471,21 @@ class headers
 		if ($ir['mail'] > 0) 
 		{
 			echo "<div class='col-auto'>";
-				alert('info', "", "You have " . number_format($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
+				alert('info', "", "You have " . shortNumberParse($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
 			echo "</div>";
         }
         //Tell user they have unread notifcations when they do.
         if ($ir['notifications'] > 0) 
 		{
 			echo "<div class='col-auto'>";
-				alert('info', "", "You have " . number_format($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
+				alert('info', "", "You have " . shortNumberParse($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
 			echo "</div>";
         }
 		//Tell user they have unread game announcements when they do.
 		if ($ir['announcements'] > 0) 
 		{
 			echo "<div class='col-auto'>";
-				alert('info', "", "You have " . number_format($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
+				alert('info', "", "You have " . shortNumberParse($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
 			echo "</div>";
 		}
 		echo "</div>";

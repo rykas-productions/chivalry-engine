@@ -246,11 +246,11 @@ class headers
 	{
 		global $set;
 		cslog('log',"User Theme ID: {$themeID}.");
-		echo "<link rel='stylesheet' href='../css/sidebar-themes.css'>";
+		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/sidebar-themes.css'>";
 		if ($themeID == 1)
 		{
 		    echo "
-			<link rel='stylesheet' href='../css/themes/default-21.2.2.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/default-21.2.2.css'>
 			<meta name='theme-color' content='#333'>
 			<style>
 			.default-theme .sidebar-wrapper {
@@ -261,7 +261,7 @@ class headers
 		if ($themeID == 2)
 		{
 		    echo "
-			<link rel='stylesheet' href='../css/themes/darkly-21.2.2.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/darkly-21.2.2.css'>
 			<meta name='theme-color' content='#303030'>";
 		}
 		if ($themeID == 3)
@@ -278,13 +278,13 @@ class headers
 		if ($themeID == 4)
 		{
 		    echo "
-			<link rel='stylesheet' href='../css/themes/cyborg-21.2.2.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/cyborg-21.2.2.css'>
 			<meta name='theme-color' content='#060606'>";
 		}
 		if ($themeID == 5)
 		{
 		    echo "
-			<link rel='stylesheet' href='../css/themes/united-21.2.2.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/united-21.2.2.css'>
 			<meta name='theme-color' content='#772953'>";
 		}
 		if ($themeID == 6)
@@ -301,13 +301,13 @@ class headers
 		if ($themeID == 7)
 		{
 		    echo "
-			<link rel='stylesheet' href='../css/themes/castle-21.2.1.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/castle-21.2.1.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, 0.8)'>";
 		}
 		if ($themeID == 8)
 		{
 		    echo "
-			<link rel='stylesheet' href='../css/themes/sunset-21.2.1.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/sunset-21.2.1.css'>
 			<meta name='theme-color' content='rgba(64, 0, 0, 0.8)'>";
 		}
 	}
@@ -334,7 +334,7 @@ class headers
 	{
 		global $set;
 		cslog('log',"CSS is loading.");
-		echo "<link rel='stylesheet' href='../css/game-{$set['game_css_version']}.css'>
+		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/game-{$set['game_css_version']}.css'>
 				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>
 				<style>
 					body {
@@ -350,7 +350,7 @@ class headers
 		global $set;
 		cslog('log',"Essential JS scripts are loading.");
 		echo "<script src='https://ajax.googleapis.com/ajax/libs/jquery/{$set['jquery_version']}/jquery.min.js'></script>
-		<script src='../js/game-v{$set['game_js_version']}.js' async></script>";
+		<script src='https://cdn.chivalryisdeadgame.com/assets/js/game-v{$set['game_js_version']}.js' async></script>";
 	}
 	
 	function loadJS()
@@ -359,7 +359,7 @@ class headers
 		cslog('log',"JS is loading.");
 		echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
         <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
-		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
+		<script src='https://cdn.chivalryisdeadgame.com/assets/js/register.min.js' defer></script>
 		<script defer src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
         <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js' async defer></script>
 		<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -453,12 +453,12 @@ class headers
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
         <!-- Other JavaScript -->
-        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/game-v1.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js" async defer></script>
+        <script src="https://cdn.chivalryisdeadgame.com/assets/js/game-v1.1.min.js"></script>
+        <script src="https://cdn.chivalryisdeadgame.com/assets/js/register.min.js" async defer></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
         <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
-		<script src="https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/clock.min.js"></script>
+		<script src="https://cdn.chivalryisdeadgame.com/assets/js/clock.min.js"></script>
         <footer class='footer'>
             <div class='container'>
 				<span>
