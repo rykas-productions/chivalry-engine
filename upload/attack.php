@@ -392,12 +392,12 @@ function attacking()
             $_SESSION['tresde'] = 0;
         }
         //If RNG is not the same number stored in session
-        /*if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) 
+        if (($_SESSION['tresde'] == $_GET['tresde']) || $_GET['tresde'] < 100) 
         {
             resetAttackStatus();
             alert("danger", "Uh Oh!", "Please do not refresh while attacking. Thank you!", true, "attack.php?user={$_GET['user']}&ref={$ref}");
             die($h->endpage());
-        }*/
+        }
 		if (userHasEffect($userid, basic_protection))
 		{
 		    userRemoveEffect($userid, basic_protection);
@@ -560,6 +560,11 @@ function attacking()
         setAttackStatus();
         $_GET['nextstep'] = (isset($_GET['nextstep']) && is_numeric($_GET['nextstep'])) ? abs($_GET['nextstep']) : '';
         //Check if the current user is attacking with a weapon that they have equipped.
+        echo "<div class='card'>
+                <div class='card-header'>
+                    Combat Text
+                </div>
+                <div class='card-body'><div class='row'>";
         if ($_GET['weapon'] != $ir['equip_primary'] && $_GET['weapon'] != $ir['equip_secondary'] && $_GET['weapon'] != $ir['equip_potion']) 
         {
             alert("danger", "Security Issue!", "You cannot attack with a weapon you don't have equipped... You lost your
@@ -613,6 +618,7 @@ function attacking()
 					$slot='equip_secondary';
 				}
 				unequipUserSlot($userid, $slot);
+				
 				alert('danger',"Uh Oh!","You need at least one {$api->SystemItemIDtoName($r1['ammo'])} to use your {$api->SystemItemIDtoName($_GET['weapon'])}. It has been unequipped and moved to your inventory.",false);
 				$dodamage=false;
 			}
@@ -689,16 +695,38 @@ function attacking()
         {
             if ($missed == 1)
             {
-                alert('warning', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} You attempt to strike {$odata['username']} using your {$api->SystemItemIDtoName($_GET['weapon'])} but missed. Your
-                    opponent has " . shortNumberParse($odata['hp']) . " HP Remaining.", false, '', true);
+                echo "<div class='col-12 text-danger col-lg-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>#{$_GET['nextstep']}</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        You attempt to strike {$odata['username']} using your <b>{$api->SystemItemIDtoName($_GET['weapon'])}</b> but <b>missed</b>.
+                                    </div>
+                                    <div class='col-12'>
+                                        Your opponent has " . shortNumberParse($odata['hp']) . " HP Remaining.
+                                    </div>
+                            </div>
+                        </div>";
             }
             else
             {
                 //Reduce health.
                 $db->query("UPDATE `users` SET `hp` = `hp` - {$mydamage} WHERE `userid` = {$_GET['user']}");
                 $db->query("DELETE FROM `spy_advantage` WHERE `user` = {$userid} AND `spied` = {$_GET['user']}");
-                alert('success', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} Using your {$r1['itmname']} you manage to strike
-                {$odata['username']} dealing " . shortNumberParse($mydamage) . " damage. Your opponent has " . shortNumberParse($odata['hp']) . " HP remaining.", false, '', true);
+                echo "<div class='col-12 text-success col-lg-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>#{$_GET['nextstep']}</small>
+                                    </div>
+                                    <div class='col-12'>
+                                       {$ttu} Using your <b>{$r1['itmname']}</b> you manage to strike {$odata['username']} dealing <b>" . shortNumberParse($mydamage) . " damage</b>.
+                                    </div>
+                                    <div class='col-12'>
+                                        Your opponent has " . shortNumberParse($odata['hp']) . " HP Remaining.
+                                    </div>
+                            </div>
+                        </div>";
                 $_SESSION['attackdmg'] += $mydamage;
                 user_log($userid,'dmgdone',$mydamage);
 				//Check if the attacked user is, in fact, an active boss.
@@ -719,7 +747,19 @@ function attacking()
             if ($api->UserHasItem($userid,$_GET['weapon'],1))
             {
                 consumeItem($userid, $_GET['weapon']);
-                alert('success', "", "<b>Attempt {$_GET['nextstep']})</b> {$ttu} You consume your {$r1['itmname']}.", false, '', true);
+                echo "<div class='col-12 text-info col-lg-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>#{$_GET['nextstep']}</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        You consume your <b>{$r1['itmname']}</b>.
+                                    </div>
+                                    <div class='col-12'>
+                                        Your opponent has " . shortNumberParse($odata['hp']) . " HP Remaining.
+                                    </div>
+                            </div>
+                        </div>";
                 $api->UserTakeItem($userid,$_GET['weapon'],1);
             }
             else
@@ -733,7 +773,7 @@ function attacking()
             $odata['hp'] = 0;
             $_SESSION['attackwon'] = $_GET['user'];
             $api->UserInfoSet($_GET['user'], 'hp', 0);
-            echo "<br />";
+            echo "</div>";
             alert('info',"","You have struck down {$odata['username']}. What do you wish to do to them now?",false);
             if (!userHasEffect($_GET['user'], constant("sleep")))
             {
@@ -903,13 +943,34 @@ function attacking()
                 {
                     if ($miss == 1)
                     {
-                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you with their {$api->SystemItemIDtoName($enweps[$weptouse]['itmid'])} but missed. You have " . shortNumberParse($youdata['hp']) . " HP remaining.", false);
+                        echo "<div class='col-12 text-success col-lg-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>#{$ns}</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$odata['username']} attempted to strike you with their {$api->SystemItemIDtoName($enweps[$weptouse]['itmid'])} but <b>missed</b>.
+                                    </div>
+                                    <div class='col-12'>
+                                        You have <b>" . shortNumberParse($youdata['hp']) . " HP</b> remaining.
+                                    </div>
+                            </div>";
                     }
                     else
                     {
                         $db->query("UPDATE `users` SET `hp` = `hp` - {$dam} WHERE `userid` = {$userid}");
-                        alert('danger', "", "<b>Attempt {$ns})</b> Using their {$wep}, {$odata['username']} managed to strike you dealing
-                         " . shortNumberParse($dam) . " damage. You have " . shortNumberParse($youdata['hp']) . " HP remaining.", false, '', true);
+                        echo "<div class='col-12 text-danger col-lg-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>#{$ns}</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        Using their <b>{$wep}</b>, {$odata['username']} managed to strike you dealing <b>" . shortNumberParse($dam) . " damage</b>
+                                    </div>
+                                    <div class='col-12'>
+                                        You have <b>" . shortNumberParse($youdata['hp']) . " HP</b> remaining.
+                                    </div>
+                            </div>";
                          user_log($_GET['user'],'dmgdone',$dam);
                          if (doPoisonLogic($_GET['user'], $userid))
                          {
@@ -922,13 +983,35 @@ function attacking()
                     if ($api->UserHasItem($_GET['user'],$enweps[$weptouse]['itmid'],1))
                     {
                         consumeItem($_GET['user'], $enweps[$weptouse]['itmid']);
-                        alert('danger', "", "<b>Attempt {$ns})</b> {$odata['username']} consumes {$wep}!", false, '', true);
+                        echo "<div class='col-12 text-warn col-lg-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>#{$ns}</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$odata['username']} consumes {$wep}!
+                                    </div>
+                                    <div class='col-12'>
+                                        You have <b>" . shortNumberParse($youdata['hp']) . " HP</b> remaining.
+                                    </div>
+                            </div>";
                         $api->UserTakeItem($_GET['user'],$enweps[$weptouse]['itmid'],1);
                     }
                     else
                     {
                         $api->GameAddNotification($_GET['user'],"You ran out of {$wep} while in combat.", 'fas fa-exclamation-circle', 'red');
-                        alert('info', "", "<b>Attempt {$ns})</b> {$odata['username']} attempted to strike you, but missed. You have " . shortNumberParse($youdata['hp']) . " HP remaining.", false);
+                        echo "<div class='col-12 text-success col-lg-6'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small>#{$ns}</small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$odata['username']} consumes {$wep}!
+                                    </div>
+                                    <div class='col-12'>
+                                        You have <b>" . shortNumberParse($youdata['hp']) . " HP</b> remaining.
+                                    </div>
+                            </div>";
                         unequipUserSlot($_GET['user'], "equip_potion");
                     }
                 }
@@ -940,6 +1023,7 @@ function attacking()
                     echo "<form action='?action=lost&ID={$_GET['user']}&ref={$ref}' method='post'><input type='submit' class='btn btn-primary' value='Lose Fight' />";
                 }
             }
+            echo "</div></div></div>";
 	}	//Opponent has less than 5 HP, fight cannot start.
     else if ($odata['hp'] < 5) {
 		$_SESSION['attacking'] = 0;
@@ -1029,7 +1113,7 @@ function attacking()
                         $type = "Potion Item";
                     }
     				echo "
-                    <div class='col-12'>
+                    <div class='col-12 col-sm-6 col-lg'>
                         <div class='row'>
                             <div class='col-12'>
                                 <small>{$type}</small>
@@ -1063,12 +1147,12 @@ function attacking()
                 </div>
                 <div class='card-body'>
                     <div class='row'>
-                        <div class='col-12'>
+                        <div class='col-12 col-lg-6'>
                             <div class='row'>
-                                <div class='col-12'>
+                                <div class='col-12 col-sm-4 col-lg-12 col-xl-4'>
                                     {$yourpic}
                                 </div>
-                                <div class='col-12'>
+                                <div class='col-12 col-sm col-lg-12 col-xl'>
                                     " . scaledColorProgressBar($youdata['hp'], $vars['hpperc'], $youdata['maxhp']) . "
                                 </div>
                                 <div class='col-12'>
@@ -1076,12 +1160,12 @@ function attacking()
                                 </div>
                             </div>
                         </div>
-                        <div class='col-12'>
+                        <div class='col-12 col-lg-6'>
                             <div class='row'>
-                                <div class='col-12'>
+                                <div class='col-12 col-sm-4 col-lg-12 col-xl-4'>
                                     {$theirpic}
                                 </div>
-                                <div class='col-12'>
+                                <div class='col-12 col-sm col-lg-12 col-xl'>
                                     " . scaledColorProgressBar($odata['hp'], $vars2['hpperc'], $odata['maxhp']) . "
                                 </div>
                                 <div class='col-12'>
