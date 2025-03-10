@@ -156,7 +156,7 @@ elseif (isset($_GET['infirmary']))
 		}
 		$TR=TimeUntil_Parse($InfirmaryOut-$InfirmaryOut);
 		$api->UserTakeItem($userid, 98, 1);
-        $api->UserInfoSet($userid,'hp',100,true);
+        $api->UserInfoSet($userid,'hp',10,true);
 		$api->UserStatusSet($userid, 'infirmary', -1000000000, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Med-go-bye.");
 		alert('success', "Success!", "Med-go-bye was used successfully. You have {$TR} remaining.", true, 'index.php');
@@ -175,7 +175,7 @@ elseif (isset($_GET['infirmary']))
         $inc = round((($EndTime - $Time) / 100 * 50) / 60);
 		$TR=TimeUntil_Parse($InfirmaryOut-$inc);
 		$api->UserTakeItem($userid, 207, 1);
-		$api->UserStatusSet($userid, 'infirmary', -75, '');
+		$api->UserStatusSet($userid, 'infirmary', $inc * -1, '');
 		$api->SystemLogsAdd($userid, 'itemuse', "Used Priority Voucher");
 		alert('success', "Success!", "Priority Voucher was used successfully. You have {$TR} remaining.", true, 'index.php');
 		$h->endpage();
