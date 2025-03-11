@@ -1360,7 +1360,7 @@ function themechange()
 		<hr />
 		<div class='row'>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-				<img src='./assets/img/themes/default-24.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/default-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 				<form method='post'>
 					<input type='hidden' value='1' name='theme'>
@@ -1369,7 +1369,7 @@ function themechange()
                 <br />
 			</div>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-				<img src='./assets/img/themes/darkly-24.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/darkly-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 				<form method='post'>
 					<input type='hidden' value='2' name='theme'>
@@ -1378,7 +1378,7 @@ function themechange()
                 <br />
 			</div>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-				<img src='./assets/img/themes/cerulean-24.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/cerulean-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 					<form method='post'>
 						<input type='hidden' value='6' name='theme'>
@@ -1387,7 +1387,7 @@ function themechange()
                 <br />
 			</div>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-				<img src='./assets/img/themes/cyborg-24.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/cyborg-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 					<form method='post'>
 						<input type='hidden' value='4' name='theme'>
@@ -1396,7 +1396,7 @@ function themechange()
                 <br />
 			</div>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-				<img src='./assets/img/themes/united-24.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/united-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 					<form method='post'>
 						<input type='hidden' value='5' name='theme'>
@@ -1405,7 +1405,7 @@ function themechange()
                 <br />
 			</div>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-				<img src='./assets/img/themes/slate-24.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/slate-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 					<form method='post'>
 						<input type='hidden' value='3' name='theme'>
@@ -1414,7 +1414,7 @@ function themechange()
                 <br />
 			</div>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-				<img src='./assets/img/themes/castle-24.jpg' class='img-thumbnail img-responsive'>
+				<img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/castle-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 					<form method='post'>
 						<input type='hidden' value='7' name='theme'>
@@ -1423,7 +1423,7 @@ function themechange()
                 <br />
 			</div>
 			<div class='col-md-6 col-xxl-4 col-xxxl-3'>
-                <img src='./assets/img/themes/sunset-24.jpg' class='img-thumbnail img-responsive'>
+                <img src='https://cdn.chivalryisdeadgame.com/assets/img/themes/sunset-24.jpg' class='img-thumbnail img-responsive'>
                 <br />
 					<form method='post'>
 						<input type='hidden' value='8' name='theme'>
