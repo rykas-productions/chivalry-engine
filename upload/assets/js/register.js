@@ -8,7 +8,7 @@
 function CheckPasswords(password) {
     $.ajax({
         type: "POST",
-        url: "js/script/check.php",
+        url: "https://chivalryisdeadgame.com/js/script/check.php",
         data: "password=" + escape(password),
         success: function (resps) {
             $("#passwordresult").html(resps);
@@ -21,7 +21,7 @@ function goBack() {
 function CheckUsername(name) {
     $.ajax({
         type: "POST",
-        url: "js/script/checkun.php",
+        url: "https://chivalryisdeadgame.com/js/script/checkun.php",
         data: "username=" + escape(name),
         success: function (resps) {
             $("#usernameresult").html(resps);
@@ -32,7 +32,7 @@ function OutputTeam(team) {
     var value = team.value;
     $.ajax({
         type: "POST",
-        url: "js/script/outputteam.php",
+        url: "https://chivalryisdeadgame.com/js/script/outputteam.php",
         data: "team=" + escape(value),
         success: function (resps) {
             $("#teamresult").html(resps);
@@ -43,7 +43,7 @@ function OutputTeam(team) {
 function CheckEmail(email) {
     $.ajax({
         type: "POST",
-        url: "js/script/checkem.php",
+        url: "https://chivalryisdeadgame.com/js/script/checkem.php",
         data: "email=" + escape(email),
         success: function (resps) {
             $("#emailresult").html(resps);

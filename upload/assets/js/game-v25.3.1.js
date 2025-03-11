@@ -8,7 +8,7 @@
 $(document).ready(function () {
     $('#sendcash').click(function()
 	{
-		$.post("js/script/sendcash.php", $("#cashpopupForm").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/sendcash.php", $("#cashpopupForm").serialize(),  function(response) 
 		{   
 			 $('#successcash').html(response);
 		});
@@ -16,7 +16,7 @@ $(document).ready(function () {
 	});
     $('#sendmessage').click(function()
 	{
-		$.post("js/script/sendmail.php", $("#mailpopupForm").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/sendmail.php", $("#mailpopupForm").serialize(),  function(response) 
 		{   
 			 $('#success').html(response);
 		});
@@ -24,7 +24,7 @@ $(document).ready(function () {
 	});
 	$('#cityDeposit').click(function()
 	{
-		$.post("js/script/city_bank.php", $("#cityBankDeposit").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/city_bank.php", $("#cityBankDeposit").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -32,7 +32,7 @@ $(document).ready(function () {
 	});
 	$('#cityWithdraw').click(function()
 	{
-		$.post("js/script/city_bank.php", $("#cityBankWithdraw").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/city_bank.php", $("#cityBankWithdraw").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -40,7 +40,7 @@ $(document).ready(function () {
 	});
 	$('#tokenDeposit').click(function()
 	{
-		$.post("js/script/token_bank.php", $("#tokenBankDeposit").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/token_bank.php", $("#tokenBankDeposit").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -48,7 +48,7 @@ $(document).ready(function () {
 	});
 	$('#tokenWithdraw').click(function()
 	{
-		$.post("js/script/token_bank.php", $("#tokenBankWithdraw").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/token_bank.php", $("#tokenBankWithdraw").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -56,7 +56,7 @@ $(document).ready(function () {
 	});
 	$('#fedDeposit').click(function()
 	{
-		$.post("js/script/big_bank.php", $("#fedBankDeposit").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/big_bank.php", $("#fedBankDeposit").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -64,7 +64,7 @@ $(document).ready(function () {
 	});
 	$('#fedWithdraw').click(function()
 	{
-		$.post("js/script/big_bank.php", $("#fedBankWithdraw").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/big_bank.php", $("#fedBankWithdraw").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -72,7 +72,7 @@ $(document).ready(function () {
 	});
 	$('#vaultDeposit').click(function()
 	{
-		$.post("js/script/vault_bank.php", $("#vaultBankDeposit").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/vault_bank.php", $("#vaultBankDeposit").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -80,7 +80,7 @@ $(document).ready(function () {
 	});
 	$('#vaultWithdraw').click(function()
 	{
-		$.post("js/script/vault_bank.php", $("#vaultBankWithdraw").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/vault_bank.php", $("#vaultBankWithdraw").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -88,7 +88,7 @@ $(document).ready(function () {
 	});
 	$('#estateDeposit').click(function()
 	{
-		$.post("js/script/estate_bank.php", $("#estateBankDeposit").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/estate_bank.php", $("#estateBankDeposit").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -96,7 +96,7 @@ $(document).ready(function () {
 	});
 	$('#estateWithdraw').click(function()
 	{
-		$.post("js/script/estate_bank.php", $("#estateBankWithdraw").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/estate_bank.php", $("#estateBankWithdraw").serialize(),  function(response) 
 		{   
 			 $('#banksuccess').html(response);
 		});
@@ -104,7 +104,7 @@ $(document).ready(function () {
 	});
 	$('#trainNorm').click(function()
 	{
-		$.post("js/script/gym_train.php", $("#gymTrainNorm").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/gym_train.php", $("#gymTrainNorm").serialize(),  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -112,7 +112,7 @@ $(document).ready(function () {
 	});
 	$('#trainChiv').click(function()
 	{
-		$.post("js/script/chiv_gym_train.php", $("#gymTrainChiv").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/chiv_gym_train.php", $("#gymTrainChiv").serialize(),  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -120,7 +120,7 @@ $(document).ready(function () {
 	});
 	$('#trainCA').click(function()
 	{
-		$.post("js/script/ca_gym_train.php", $("#gymTrainCA").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/ca_gym_train.php", $("#gymTrainCA").serialize(),  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -128,7 +128,7 @@ $(document).ready(function () {
 	});
 	$('#trainGuild').click(function()
 	{
-		$.post("js/script/guild_gym_train.php", $("#gymTrainGuild").serialize(),  function(response) 
+		$.post("https://chivalryisdeadgame.com/js/script/guild_gym_train.php", $("#gymTrainGuild").serialize(),  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -136,7 +136,7 @@ $(document).ready(function () {
 	});
 	$('#gymRefillEnergy').click(function()
 	{
-		$.get("js/script/temple_quick.php?action=energy",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/temple_quick.php?action=energy",  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -144,7 +144,7 @@ $(document).ready(function () {
 	});
 	$('#gymRefillWill').click(function()
 	{
-		$.get("js/script/temple_quick.php?action=will",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/temple_quick.php?action=will",  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -152,7 +152,7 @@ $(document).ready(function () {
 	});
 	$('#gymFillWill').click(function()
 	{
-		$.get("js/script/temple_quick.php?action=willall",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/temple_quick.php?action=willall",  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -160,7 +160,7 @@ $(document).ready(function () {
 	});
 	$('#gymRefillBrave').click(function()
 	{
-		$.get("js/script/temple_quick.php?action=brave",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/temple_quick.php?action=brave",  function(response) 
 		{   
 			 $('#gymsuccess').html(response);
 		});
@@ -168,7 +168,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillSingle').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket1",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket1",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -176,7 +176,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillFive').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket5",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket5",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -184,7 +184,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillTen').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket10",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket10",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -192,7 +192,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillTwentyFive').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket25",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket25",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -200,7 +200,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillFifty').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket50",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket50",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -208,7 +208,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillHundred').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket100",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket100",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -216,7 +216,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillSeventyFive').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket75",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket75",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -224,7 +224,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillOneFifty').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket150",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket150",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -232,7 +232,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillTwoHundred').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket200",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket200",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -240,7 +240,7 @@ $(document).ready(function () {
 	});
 	$('#farmWellFillFiveHundred').click(function()
 	{
-		$.get("js/script/farm_quick.php?action=bucket500",  function(response) 
+		$.get("https://chivalryisdeadgame.com/js/script/farm_quick.php?action=bucket500",  function(response) 
 		{   
 			 $('#wellSuccess').html(response);
 		});
@@ -248,7 +248,7 @@ $(document).ready(function () {
 	});
 	$('#quickTravelBtn').click(function()
 	{
-		$.post("js/script/travel_quick.php", $("#hiddenQuickTravelForm").serialize(),  function(response)  
+		$.post("https://chivalryisdeadgame.com/js/script/travel_quick.php", $("#hiddenQuickTravelForm").serialize(),  function(response)  
 		{   
 			 $('#quickTravelResult').html(response);
 		});
@@ -272,21 +272,21 @@ $(document).ready(function () {
     });
     $("#close-sidebar").click(function() {
         $(".page-wrapper").removeClass("toggled");
-			$.post('js/script/menu.php', { value: 1}, 
+			$.post('https://chivalryisdeadgame.com/js/script/menu.php', { value: 1}, 
 				function(returnedData){
 					 console.log("Disabled sidebar.");
 			});
 		});
 		$("#overlay").click(function() {
         $(".page-wrapper").removeClass("toggled");
-			$.post('js/script/menu.php', { value: 1}, 
+			$.post('https://chivalryisdeadgame.com/js/script/menu.php', { value: 1}, 
 				function(returnedData){
 					 console.log("Disabled sidebar via overlay.");
 			});
 		});
       $("#show-sidebar").click(function() {
         $(".page-wrapper").addClass("toggled");
-		  $.post('js/script/menu.php', { value: 0}, 
+		  $.post('https://chivalryisdeadgame.com/js/script/menu.php', { value: 0}, 
 				function(returnedData){
 					 console.log("Enabled sidebar.");
 			});
@@ -309,7 +309,7 @@ $(document).ready(function () {
 	    clearTimeout(hoverTimeout); // Clear the previous timeout if mouseover happens again
 	    hoverTimeout = setTimeout(function() {
 	        // This will run after 500ms of mouseover
-	        $.post("js/script/hover_update.php", "", function(response) {   
+	        $.post("https://chivalryisdeadgame.com/js/script/hover_update.php", "", function(response) {   
 	            $('#socialRow2').html(response);
 	        });
 	    }, 500); // 500ms delay
