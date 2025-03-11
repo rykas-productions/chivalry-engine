@@ -624,9 +624,9 @@ class headers
 	
 	function loadJS()
 	{
-		global $ir, $set;
-		cslog('log',"JS is loading.");
-		echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
+	    global $ir, $set;
+	    cslog('log',"JS is loading.");
+	    echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
         <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
 		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
 		<script src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
@@ -637,10 +637,10 @@ class headers
 		  window.dataLayer = window.dataLayer || [];
 		  function gtag(){dataLayer.push(arguments);}
 		  gtag('js', new Date());
-
+		  
 		  gtag('config', 'UA-69718211-1');
 		</script>";
-		?>
+	    ?>
 		<script src="https://cdn.chivalryisdeadgame.com/assets/js/sidemenu.js" async></script>
 		<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js" defer></script>
 		<script type="text/javascript">
@@ -799,7 +799,7 @@ class headers
                   var_dump($db->queries)
                   ?>
               </pre>
-    <?php
+    	<?php
     }
     ?>
         </div>
