@@ -491,41 +491,42 @@ class headers
 	
 	function returnMetadata()
 	{
-		global $set;
-		cslog('log',"Setting website metadata.");
-		echo "<meta charset='utf-8'>
+	    global $set;
+	    cslog('log',"Setting website metadata.");
+	    echo "<meta charset='utf-8'>
                 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
                 <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
 				<meta name='author' content='{$set['WebsiteOwner']}'>
                 <meta name='description' content='{$set['Website_Description']}'>
-                <meta property='og:title' content='{$set['WebsiteName']}'/>
+                <meta name='keywords' content='medieval europe, mmorpg, text rpg, rpg, multiplayer, game, video game, no download, mobile, free, chivalry is dead, cid'>
+                <meta property='og:title' content='" . returnGameTitle() . "'/>
                 <meta property='og:description' content='{$set['Website_Description']}'/>
-                <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_512/v1520819749/logo.png'/>
+                <meta property='og:image' content='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo512.png'/>
                 <meta http-equiv='x-dns-prefetch-control' content='off'>
-                <link rel='shortcut icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' type='image/x-icon'/>
+                <link rel='shortcut icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo192.png' type='image/x-icon'/>
 				<!-- generics -->
-				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_32/v1520819749/logo.png' sizes='32x32'>
-				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_57/v1520819749/logo.png' sizes='57x57'>
-				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_76/v1520819749/logo.png' sizes='76x76'>
-				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_96/v1520819749/logo.png' sizes='96x96'>
-				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png' sizes='128x128'>
-				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' sizes='192x192'>
-				<link rel='icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_228/v1520819749/logo.png' sizes='228x228'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo32.png' sizes='32x32'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo57.png' sizes='57x57'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo76.png' sizes='76x76'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo96.png' sizes='96x96'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo128.png' sizes='128x128'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo192.png' sizes='192x192'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo228.png' sizes='228x228'>
 				
 				<!-- Android -->
-				<link rel='shortcut icon' sizes='196x196' href=“https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_196/v1520819749/logo.png'>
-
+				<link rel='shortcut icon' sizes='196x196' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo196.png'>
+				
 				<!-- iOS -->
-				<link rel='apple-touch-icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_120/v1520819749/logo.png' sizes='120x120'>
-				<link rel='apple-touch-icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_152/v1520819749/logo.png' sizes='152x152'>
-				<link rel='apple-touch-icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_180/v1520819749/logo.png' sizes='180x180'>
-
+				<link rel='apple-touch-icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo120.png' sizes='120x120'>
+				<link rel='apple-touch-icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo152.png' sizes='152x152'>
+				<link rel='apple-touch-icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo180.png' sizes='180x180'>
+				
 				<!-- Windows 8 IE 10-->
 				<meta name='msapplication-TileColor' content='#FFFFFF'>
-				<meta name='msapplication-TileImage' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_144/v1520819749/logo.png'>
-
+				<meta name='msapplication-TileImage' content='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo144.png'>
+				
 				<!— Windows 8.1 + IE11 and above —>
-				<meta name='msapplication-config' content='assets/browserconfig.xml' />";
+				<meta name='msapplication-config' content='https://cdn.chivalryisdeadgame.com/assets/browserconfig.xml' />";
 	}
 	
 	function loadNewsScroller()
