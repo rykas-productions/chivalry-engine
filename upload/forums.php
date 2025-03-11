@@ -27,8 +27,6 @@ function csrf_error()
         immediately, as another person may have access to your account!");
     die($h->endpage());
 }
-
-echo "<h3><i class='far fa-comment-alt'></i> {$set['WebsiteName']} Forums</h3><hr />";
 $fb = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `forum_bans` WHERE `fb_user` = {$userid}"));
 if ($fb['fb_time'] > $time) {
     alert('danger', "Uh Oh!", "You are currently forum banned for the next " . TimeUntil_Parse($fb['fb_time']) . ". You
@@ -112,7 +110,7 @@ switch ($_GET['act']) {
 }
 function idx()
 {
-    global $ir, $db, $api, $userid;
+    global $ir, $db, $api, $userid, $set;
     $q =
         $db->query(
             "/*qc=on*/SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
@@ -121,6 +119,11 @@ function idx()
                      FROM `forum_forums`
                      WHERE `ff_auth` = 'public'
                      ORDER BY `ff_id` ASC");
+    echo "<div class='card'>
+            <div class='card-header'>
+                {$set['WebsiteName']} Forums
+            </div>
+            <div class='card-body'>";
     while ($r = $db->fetch_row($q)) {
         $t = DateTime_Parse($r['ff_lp_time'], true, true);
         $username = parseUsername($r['ff_lp_poster_id']);
@@ -137,41 +140,86 @@ function idx()
             $topicname = substr($topicname,0,32);
             $topicname = "{$topicname}...";
         }
-        echo "<div class='row'>
-					<div class='col-12'>
-						<div class='card'>
-							<div class='card-body'>
-								<div class='col-12'>
-									<div class='row'>
-										<div class='col-12 col-md-6 col-xl-7'>
-											<div class='row'>
-												<div class='col-12'>
-													<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
-												</div>
-												<div class='col-12'>
-													<small><i>{$r['ff_desc']}</i></small>
-												</div>
-											</div>
-										</div>
-										<div class='col-4 col-sm-5 col-md-3 col-lg-2'>
-											Posts: {$posts}<br />
-											Topics: {$topics}
-										</div>
-										<div class='col-8 col-sm-7 col-md-3 col-lg-4 col-xl-3'>
-											Last Post: {$t}<br />
-											In: <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
-											By: <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>";
+        echo "  <div class='row'>
+                    <div class='col-12 col-md-6 col-xl-5 col-xxl-5 col-xxxl-7'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
+                            </div>
+                            <div class='col-12'>
+                                <small><i>{$r['ff_desc']}</i></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-5 col-md-3 col-lg-2 col-xl col-xxl-3 col-xxxl-2'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto col-xl-12 col-xxl-5'>
+                                        Posts
+                                    </div>
+                                    <div class='col-auto col-xl-12 col-xxl-7'>
+                                        " . shortNumberParse($posts) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto col-xl-12 col-xxl-5'>
+                                        Topics
+                                    </div>
+                                    <div class='col-auto col-xl-12 col-xxl-7'>
+                                        " . shortNumberParse($topics) ."
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-8 col-sm-7 col-md-3 col-lg-4 col-xl-5 col-xxl col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto'>
+                                        Last Post
+                                    </div>
+                                    <div class='col-auto'>
+                                        {$t}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto'>
+                                        Topic
+                                    </div>
+                                    <div class='col-auto'>
+                                        <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto'>
+                                        Poster
+                                    </div>
+                                    <div class='col-auto'>
+                                        <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />";
     }
+    echo "</div></div>";
     $db->free_result($q);
     if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
-        echo "<hr /><h3>Staff Only Forums</h3><hr />";
+        echo "<div class='card'>
+            <div class='card-header'>
+                {$set['WebsiteName']} Staff Forums
+            </div>
+            <div class='card-body'>";
         $q =
             $db->query(
                 "/*qc=on*/SELECT `ff_lp_time`, `ff_id`, `ff_name`, `ff_desc`,
@@ -192,38 +240,79 @@ function idx()
             $topics = $db->fetch_single($topicsq);
 
             $topicname = $db->fetch_single($db->query("/*qc=on*/SELECT `ft_name` FROM `forum_topics` WHERE `ft_forum_id` = {$r['ff_id']} ORDER BY `ft_last_time` DESC"));
-             echo "<div class='row'>
-					<div class='col-12'>
-						<div class='card'>
-							<div class='card-body'>
-								<div class='col-12'>
-									<div class='row'>
-										<div class='col-12 col-md-6 col-xl-7'>
-											<div class='row'>
-												<div class='col-12'>
-													<a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
-												</div>
-												<div class='col-12'>
-													<small><i>{$r['ff_desc']}</i></small>
-												</div>
-											</div>
-										</div>
-										<div class='col-4 col-sm-5 col-md-3 col-lg-2'>
-											Posts: {$posts}<br />
-											Topics: {$topics}
-										</div>
-										<div class='col-8 col-sm-7 col-md-3 col-lg-4 col-xl-3'>
-											Last Post: {$t}<br />
-											In: <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a><br />
-											By: <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>";
+            echo "  <div class='row'>
+                    <div class='col-12 col-md-6 col-xl-5 col-xxl-5 col-xxxl-7'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <a href='?viewforum={$r['ff_id']}'>{$r['ff_name']}</a>
+                            </div>
+                            <div class='col-12'>
+                                <small><i>{$r['ff_desc']}</i></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-12 col-sm-5 col-md-3 col-lg-2 col-xl col-xxl-3 col-xxxl-2'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto col-xl-12 col-xxl-5'>
+                                        Posts
+                                    </div>
+                                    <div class='col-auto col-xl-12 col-xxl-7'>
+                                        " . shortNumberParse($posts) . "
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto col-xl-12 col-xxl-5'>
+                                        Topics
+                                    </div>
+                                    <div class='col-auto col-xl-12 col-xxl-7'>
+                                        " . shortNumberParse($topics) ."
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-8 col-sm-7 col-md-3 col-lg-4 col-xl-5 col-xxl col-xxxl-3'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto'>
+                                        Last Post
+                                    </div>
+                                    <div class='col-auto'>
+                                        {$t}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto'>
+                                        Topic
+                                    </div>
+                                    <div class='col-auto'>
+                                        <a href='?viewtopic={$r['ff_lp_t_id']}&lastpost=1'>{$topicname}</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-auto'>
+                                        Poster
+                                    </div>
+                                    <div class='col-auto'>
+                                        <a href='profile.php?user={$r['ff_lp_poster_id']}'>{$username}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />";
         }
+        echo "</div></div>";
         $db->free_result($q);
     }
 }
