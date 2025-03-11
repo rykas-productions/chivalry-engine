@@ -18,13 +18,13 @@ if (isset($_POST['itemUse']))
     }
 }
 $tresder = (Random(100, 999));
-$primWeap = ($ir['equip_primary'] > 0) ? $api->SystemItemIDtoName($ir['equip_primary']) : "<i>Unarmed</i>";
+$primWeap = ($ir['equip_primary'] > 0) ? $api->SystemItemIDtoName($ir['equip_primary']) : "<i>No primary</i>";
 $primWeapDam = 0;
 $secWeapDam = 0;
 $armorRating = 0;
 if ($ir['equip_primary'] > 0)
     $primWeapDam = calcWeaponEffectiveness($ir['equip_primary'], $userid);
-$secWeap = ($ir['equip_secondary'] > 0) ? $api->SystemItemIDtoName($ir['equip_secondary']) : "<i>Unarmed</i>";
+$secWeap = ($ir['equip_secondary'] > 0) ? $api->SystemItemIDtoName($ir['equip_secondary']) : "<i>No secondary</i>";
 if ($ir['equip_secondary'] > 0)
     $secWeapDam = calcWeaponEffectiveness($ir['equip_secondary'], $userid);
 $armor = ($ir['equip_armor'] > 0) ? $api->SystemItemIDtoName($ir['equip_armor']) : "<i>No armor</i>";
@@ -32,229 +32,122 @@ if ($ir['equip_armor'] > 0)
     $armorRating = calcArmorEffectiveness($ir['equip_armor'], $userid);
 $potion = ($ir['equip_potion'] > 0) ? $api->SystemItemIDtoName($ir['equip_potion']) : "<i>No potion</i>";
 $badge = ($ir['equip_badge'] > 0) ? $api->SystemItemIDtoName($ir['equip_badge']) : "<i>No badge</i>";
-echo "
-<div class='row'>
-    <div class='col-12'>
-        <div class='card'>
-            <div class='card-header'>
-                Your Equipment
-            </div>
-            <div class='card-body'>
-                <div class='row'>
-                    <div class='col-12 col-md-7 col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Primary Weapon</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <div class='row'>
-                                    <div class='col-auto'>
-                                        <a href='iteminfo.php?ID={$ir['equip_primary']}'>" . returnIcon($ir['equip_primary'], 2) . "
-                                    </div>
-                                    <div class='col'>
-                                        {$primWeap}</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-auto col-md'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Weapon Rating</b></small>
-                            </div>
-                            <div class='col-12'>
-                                " . shortNumberParse($primWeapDam) . "
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-auto col-md'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Links</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <a href='unequip.php?type=equip_primary' class='btn btn-primary btn-block'>Unequip</a>
-                            </div>
-                        </div>
-                    </div>
+echo "<div class='row'>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    Your Equipment
                 </div>
-
-                <div class='row'>
-                    <div class='col-12 col-md-7 col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Secondary Weapon</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <div class='row'>
-                                    <div class='col-auto'>
-                                        <a href='iteminfo.php?ID={$ir['equip_secondary']}'>" . returnIcon($ir['equip_secondary'], 2) . "
-                                    </div>
-                                    <div class='col-auto'>
-                                        {$secWeap}</a>
-                                    </div>
+                <div class='card-body text-center'>
+                    <div class='row'>
+                        <div class='col-xxxl col-sm-6 col-md-4 col-xxl-3'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Primary Weapon (" . shortNumberParse($primWeapDam) . ")</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='iteminfo.php?ID={$ir['equip_primary']}'>" . returnIcon($ir['equip_primary'], 4) . "
+                                </div>
+                                <div class='col-12'>
+                                    {$primWeap}</a>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='unequip.php?type=equip_primary' class='btn btn-primary btn-block'>Unequip</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class='col-auto col-md'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Weapon Rating</b></small>
-                            </div>
-                            <div class='col-12'>
-                                " . shortNumberParse($secWeapDam) . "
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-auto col-md'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Links</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <a href='unequip.php?type=equip_secondary' class='btn btn-primary btn-block'>Unequip</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class='row'>
-                    <div class='col-12 col-md-7 col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Armor</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <div class='row'>
-                                    <div class='col-auto'>
-                                        <a href='iteminfo.php?ID={$ir['equip_armor']}'>" . returnIcon($ir['equip_armor'], 2) . "
-                                    </div>
-                                    <div class='col-auto'>
-                                        {$armor}</a>
-                                    </div>
+                        <div class='col-xxxl col-sm-6 col-md-4 col-xxl-3'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Secondary Weapon (" . shortNumberParse($secWeapDam) . ")</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='iteminfo.php?ID={$ir['equip_secondary']}'>" . returnIcon($ir['equip_secondary'], 4) . "
+                                </div>
+                                <div class='col-12'>
+                                    {$secWeap}</a>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='unequip.php?type=equip_secondary' class='btn btn-primary btn-block'>Unequip</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class='col-auto col-md col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Armor Rating</b></small>
-                            </div>
-                            <div class='col-12'>
-                                " . shortNumberParse($armorRating) . "
-                            </div>
-                        </div>
-                    </div>
-                    <div class='col-auto col-md col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Links</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <a href='unequip.php?type=equip_armor' class='btn btn-primary btn-block'>Unequip</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class='row'>
-                    <div class='col-12 col-md-7 col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Combat Potion</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <div class='row'>
-                                    <div class='col-auto'>
-                                        <a href='iteminfo.php?ID={$ir['equip_potion']}'>" . returnIcon($ir['equip_potion'], 2) . "
-                                    </div>
-                                    <div class='col-auto'>
-                                        {$potion}</a>
-                                    </div>
+                        <div class='col-xxxl col-sm-6 col-md-4 col-xxl-3'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Armor (" . shortNumberParse($armorRating) . ")</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='iteminfo.php?ID={$ir['equip_armor']}'>" . returnIcon($ir['equip_armor'], 4) . "
+                                </div>
+                                <div class='col-12'>
+                                    {$armor}</a>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='unequip.php?type=equip_armor' class='btn btn-primary btn-block'>Unequip</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class='col-auto'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Links</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <a href='unequip.php?type=equip_potion' class='btn btn-primary btn-block'>Unequip</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class='row'>
-                    <div class='col-12 col-md-7 col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Profile Badge</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <div class='row'>
-                                    <div class='col-auto'>
-                                        <a href='iteminfo.php?ID={$ir['equip_badge']}'>" . returnIcon($ir['equip_badge'], 2) . "
-                                    </div>
-                                    <div class='col-auto'>
-                                        {$badge}</a>
-                                    </div>
+                        <div class='col-xxxl col-sm-6 col-md-4 col-xxl-3'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Potion</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='iteminfo.php?ID={$ir['equip_potion']}'>" . returnIcon($ir['equip_potion'], 4) . "
+                                </div>
+                                <div class='col-12'>
+                                    {$potion}</a>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='unequip.php?type=equip_potion' class='btn btn-primary btn-block'>Unequip</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class='col-auto'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Links</b></small>
+                        <div class='col-xxxl col-sm-6 col-md-4 col-xxl-3'>
+                            <div class='row'>
+                                <div class='col-12'>
+                                    <small><b>Badge</b></small>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='iteminfo.php?ID={$ir['equip_badge']}'>" . returnIcon($ir['equip_badge'], 4) . "
+                                </div>
+                                <div class='col-12'>
+                                    {$badge}</a>
+                                </div>
+                                <div class='col-12'>
+                                    <a href='unequip.php?type=equip_badge' class='btn btn-primary btn-block'>Unequip</a>
+                                </div>
                             </div>
-                            <div class='col-12'>
-                                <a href='unequip.php?type=equip_badge' class='btn btn-primary btn-block'>Unequip</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>";
-                $trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `itemid` > 0");
-                while ($r=$db->fetch_row($trinkq))
-                {
-                    echo"<div class='row'>
-                    <div class='col-12 col-md-8 col-xl'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>" . equipSlotParser($r['equip_slot']) . "</b></small>
-                            </div>
-                            <div class='col-12 col-md'>
+                        </div>";
+                        $trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `itemid` > 0");
+                        while ($r=$db->fetch_row($trinkq))
+                        {
+                            echo "
+                            <div class='col-xxxl col-sm-6 col-md-4 col-xxl-3'>
                                 <div class='row'>
-                                    <div class='col-auto'>
-                                        <a href='iteminfo.php?ID={$ir['equip_badge']}'>" . returnIcon($r['itemid'], 2) . "
+                                    <div class='col-12'>
+                                        <small><b>" . equipSlotParser($r['equip_slot']) . "</b></small>
                                     </div>
-                                    <div class='col-auto'>
+                                    <div class='col-12'>
+                                        <a href='iteminfo.php?ID={$r['itemid']}'>" . returnIcon($r['itemid'], 4) . "
+                                    </div>
+                                    <div class='col-12'>
                                         {$api->SystemItemIDtoName($r['itemid'])}</a>
                                     </div>
+                                    <div class='col-12'>
+                                        <a href='unequip.php?type={$r['equip_slot']}' class='btn btn-primary btn-block'>Unequip</a>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div>";
+                        }
+                                    
+                    echo"
                     </div>
-                    <div class='col-auto'>
-                        <div class='row'>
-                            <div class='col-12'>
-                                <small><b>Links</b></small>
-                            </div>
-                            <div class='col-12'>
-                                <a href='unequip.php?type={$r['equip_slot']}' class='btn btn-primary btn-block'>Unequip</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>";
-                }
-                                
-            echo"
+                </div>
             </div>
         </div>
-    </div>
-</div><br />";
+    </div>";
             alert('secondary', "", "<h4><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h4>", false);
 $inv =
     $db->query(
