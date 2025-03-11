@@ -12,7 +12,7 @@ class headers
 {
     function startheaders()
     {
-        global $ir, $set, $h, $db, $menuhide, $userid, $api, $time, $sound;
+        global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time, $sound;
 		cslog('log',"Loading headers for {$set['WebsiteName']}");
         //Load the meta headers.
         ?>
@@ -40,90 +40,679 @@ class headers
 				?>
 				</head>
         <?php
+        if ($ir['sidemenu'] == 0)
+            $toggle='toggled';
+        else
+            $toggle='';
         if (empty($menuhide)) {
             $ir['mail'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
             $ir['notifications'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
             
-			?>
+			echo"
             <body>
-            <!-- Navigation -->
-            <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
-                <a class="navbar-brand" href="index.php">
-					<?php 
-						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/v1520819511/logo-optimized.png' width='30' height='30' alt=''>
-						{$set['WebsiteName']}"; 
-					?>
-				</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
-                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="CENGINENav">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="../index.php"><?php echo "Back to Game"; ?></a>
-                        </li>
-                    </ul>
-                    <div class="my-2 my-lg-0">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="../inbox.php"><?php echo "<i
-                                        class='fa fa-fw fa-inbox'></i> Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                   href="../notifications.php"><?php echo "<i
-                                        class='fas fa-fw fa-bell'></i> Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="../inventory.php"><?php echo "<i
-                                        class='fas fa-fw fa-briefcase'></i> Inventory"; ?></a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <?php
-                                    //User has a display picture, lets show it!
-                                    if ($ir['display_pic']) {
-                                        echo "<img src='{$ir['display_pic']}' width='30' height='30'>";
-                                    }
-                                    echo " Hello, {$ir['username']}!";
-                                    ?>
-                                </a>
+				<div class='page-wrapper default-theme sidebar-bg {$toggle}'>
+				<div id='show-sidebar' class='btn btn-md btn-dark'>
+					<i class='fas fa-bars'></i>
+				</div>
+				<nav id='sidebar' class='sidebar-wrapper'>
+					<div class='sidebar-content'>
+						<!-- sidebar-brand  -->
+						<div class='sidebar-item sidebar-brand'>
+							<a href='index.php' class='updateHoverBtn'>{$set['WebsiteName']}</a>
+							<div id='close-sidebar'>
+								<i class='fas fa-times'></i>
+							</div>
+						</div>
+						<!-- sidebar-menu  -->
+                        <div class=' sidebar-item sidebar-menu'>
+                            <ul>
+    								<li>
+    									<a href='../index.php' class='updateHoverBtn'>
+    										<span class='menu-text'>Back to Game</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='index.php' class='updateHoverBtn'>
+    										<span class='menu-text'>Staff Index</span>
+    									</a>
+    								</li>
+								</ul>";
+			             if ($api->UserMemberLevelGet($userid, "admin"))
+			             {
+			                 echo"
+    							<ul>
+    								<li class='header-menu'>
+    									<span>Admin Actions</span>
+    								</li>
+    								<li>
+    									<a href='staff_settings.php?action=basicset' class='updateHoverBtn'>
+    										<span class='menu-text'>Game Settings</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_settings.php?action=announce' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Announcement</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_settings.php?action=diagnostics' class='updateHoverBtn'>
+    										<span class='menu-text'>Server Diagnostics</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Game Rules</span>
+    								</li>
+    								<li>
+    									<a href='staff_rules.php?action=addrule' class='updateHoverBtn'>
+    										<span class='menu-text'>Add Rule</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_rules.php?action=editrule' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Rule</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_rules.php?action=delrule' class='updateHoverBtn'>
+    										<span class='menu-text'>Delete Rule</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>VIP Packs</span>
+    								</li>
+    								<li>
+    									<a href='staff_donate.php?action=addpack' class='updateHoverBtn'>
+    										<span class='menu-text'>Create VIP Pack</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_donate.php?action=editpack' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit VIP Pack</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_donate.php?action=delpack' class='updateHoverBtn'>
+    										<span class='menu-text'>Delete VIP Pack</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Promotional Codes</span>
+    								</li>
+    								<li>
+    									<a href='staff_promo.php?action=addpromo' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Promo Code</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_promo.php?action=viewpromo' class='updateHoverBtn'>
+    										<span class='menu-text'>View Active Codes</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Criminal</span>
+    								</li>
+    								<li>
+    									<a href='staff_criminal.php??action=newcrimegroup' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Crime Group</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_criminal.php?action=newcrime' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Crime</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_criminal.php?action=editcrime' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Crime</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_criminal.php?action=delcrime' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Crime</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_criminal.php?action=editcrimegroup' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Crime Group</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_criminal.php?action=delcrimegroup' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Crime Group</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Item Shops</span>
+    								</li>
+    								<li>
+    									<a href='staff_shops.php?action=newshop' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Item Shop</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_shops.php?action=newitem' class='updateHoverBtn'>
+    										<span class='menu-text'>Add Item Shop Stock</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_shops.php?action=delshop' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Shop</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>NPC Control</span>
+    								</li>
+    								<li>
+    									<a href='staff_bots.php?action=addbot' class='updateHoverBtn'>
+    										<span class='menu-text'>Add NPC to Battle List</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_bots.php?action=delbot' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove NPC from Battle List</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_boss.php?action=addboss' class='updateHoverBtn'>
+    										<span class='menu-text'>Spawn NPC Boss</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_boss.php?action=delboss' class='updateHoverBtn'>
+    										<span class='menu-text'>Despawn NPC Boss</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Towns</span>
+    								</li>
+    								<li>
+    									<a href='staff_towns.php?action=addtown' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Town</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_towns.php?action=edittown' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Town</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_towns.php?action=deltown' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Town</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Academy</span>
+    								</li>
+    								<li>
+    									<a href='staff_academy.php?action=add' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Course</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_academy.php?action=edit' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Course</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_academy.php?action=del' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Course</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Jobs</span>
+    								</li>
+    								<li>
+    									<a href='staff_jobs.php?action=newjob' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Employer</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_jobs.php?action=newjobrank' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Job Rank</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_jobs.php?action=editjob' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Employer</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_jobs.php?action=jobdele' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Employer</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_jobs.php?action=jobrankedit' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Job Rank</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_jobs.php?action=jobrankdele' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Job Rank</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Estates</span>
+    								</li>
+    								<li>
+    									<a href='staff_estates.php?action=addestate' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Estate</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_estates.php?action=editestate' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Estate</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_estates.php?action=delestate' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Estate</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Mining</span>
+    								</li>
+    								<li>
+    									<a href='staff_mine.php?action=addmine' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Mine</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_mine.php?action=editmine' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Mine</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_mine.php?action=delmine' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Mine</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Blacksmith</span>
+    								</li>
+    								<li>
+    									<a href='staff_smelt.php?action=add' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Recipe</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_smelt.php?action=del' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Recipe</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Farming</span>
+    								</li>
+    								<li>
+    									<a href='../farm.php?action=createseed' class='updateHoverBtn'>
+    										<span class='menu-text'>Create New Crop</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='../farm.php?action=editseed' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Crop</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='../farm.php?action=delseed' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Crop</span>
+    									</a>
+    								</li>
+								</ul>
+    						";
+			             }
+			             if ($api->UserMemberLevelGet($userid, "assistant"))
+			             {
+			                 echo"
+    							<ul>
+    								<li class='header-menu'>
+    									<span>Game Polls</span>
+    								</li>
+                                    <li>
+    									<a href='staff_polling.php?action=addpoll' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Poll</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_polling.php?action=closepoll' class='updateHoverBtn'>
+    										<span class='menu-text'>End Poll</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Items</span>
+    								</li>";
+        			                 if ($api->UserMemberLevelGet($userid, "admin"))
+        			                 {
+            			                     echo"
+        								<li>
+        									<a href='staff_items.php?action=createitmgroup' class='updateHoverBtn'>
+        										<span class='menu-text'>Create Item Group</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_items.php?action=create' class='updateHoverBtn'>
+        										<span class='menu-text'>Create Item</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_items.php?action=edit' class='updateHoverBtn'>
+        										<span class='menu-text'>Edit Item</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_items.php?action=delete' class='updateHoverBtn'>
+        										<span class='menu-text'>Delete Item</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_items.php?action=edititmgroup' class='updateHoverBtn'>
+        										<span class='menu-text'>Edit Item Group</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_items.php?action=delitmgroup' class='updateHoverBtn'>
+        										<span class='menu-text'>Delete Item Group</span>
+        									</a>
+        								</li>";
+        			                 }
+        			                 echo"
+                                    <li>
+    									<a href='staff_items.php?action=giveitem' class='updateHoverBtn'>
+    										<span class='menu-text'>Gift Item</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Players</span>
+    								</li>";
+        			                 if ($api->UserMemberLevelGet($userid, "admin"))
+        			                 {
+            			                     echo"
+        								<li>
+        									<a href='staff_users.php?action=createuser' class='updateHoverBtn'>
+        										<span class='menu-text'>Create Player</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_users.php?action=edituser' class='updateHoverBtn'>
+        										<span class='menu-text'>Edit Player</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_users.php?action=deleteuser' class='updateHoverBtn'>
+        										<span class='menu-text'>Delete Player</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_users.php?action=changepw' class='updateHoverBtn'>
+        										<span class='menu-text'>Change Player Password</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_settings.php?action=staff' class='updateHoverBtn'>
+        										<span class='menu-text'>Change Member Level</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_users.php?action=forcelogin' class='updateHoverBtn'>
+        										<span class='menu-text'>Control Player</span>
+        									</a>
+        								</li>
+                                        <li>
+        									<a href='staff_estates.php?action=giftestate' class='updateHoverBtn'>
+        										<span class='menu-text'>Gift Player Estate</span>
+        									</a>
+        								</li>";
+        			                 }
+        			                 echo"
+                                    <li>
+    									<a href='staff_settings.php?action=restore' class='updateHoverBtn'>
+    										<span class='menu-text'>Restore Player Stats</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_users.php?action=masspayment' class='updateHoverBtn'>
+    										<span class='menu-text'>Player Mass Payment</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_users.php?action=reports' class='updateHoverBtn'>
+    										<span class='menu-text'>View Player Reports</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=directemail' class='updateHoverBtn'>
+    										<span class='menu-text'>Direct Email Player</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_users.php?action=logout' class='updateHoverBtn'>
+    										<span class='menu-text'>Force Logout Player</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Player Permissions</span>
+    								</li>
+                                    <li>
+    									<a href='staff_perms.php?action=viewperm' class='updateHoverBtn'>
+    										<span class='menu-text'>View Permissions</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_perms.php?action=editperm' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Permissions</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_perms.php?action=resetperm' class='updateHoverBtn'>
+    										<span class='menu-text'>Reset Permissions</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Guilds</span>
+    								</li>
+                                    <li>
+    									<a href='staff_guilds.php?action=viewguild' class='updateHoverBtn'>
+    										<span class='menu-text'>View Guild</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_guilds.php?action=creditguild' class='updateHoverBtn'>
+    										<span class='menu-text'>Credit Guild</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_guilds.php?action=viewwars' class='updateHoverBtn'>
+    										<span class='menu-text'>View Guild Wars</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_guilds.php?action=editguild' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Guild</span>
+    									</a>
+    								</li>
+								</ul>
+    						";
+			             }
+			             if ($api->UserMemberLevelGet($userid, "Forum Moderator"))
+			             {
+			                 echo"
+    							<ul>
+    								<li class='header-menu'>
+    									<span>Forums</span>
+    								</li>
+                                    <li>
+    									<a href='staff_forums.php?action=addforum' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Category</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_forums.php?action=editforum' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Category</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_forums.php?action=delforum' class='updateHoverBtn'>
+    										<span class='menu-text'>Delete Category</span>
+    									</a>
+    								</li>
+								</ul>
+                                <ul>
+    								<li class='header-menu'>
+    									<span>Punishments</span>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=fedjail' class='updateHoverBtn'>
+    										<span class='menu-text'>Create Fed Dungeon Sentence</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=forumwarn' class='updateHoverBtn'>
+    										<span class='menu-text'>Give Forum Warning</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=forumban' class='updateHoverBtn'>
+    										<span class='menu-text'>Give Forum Ban</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=spamhammer' class='updateHoverBtn'>
+    										<span class='menu-text'>Spam Cleanup</span>
+    									</a>
+    								</li>";
+    			                 if ($api->UserMemberLevelGet($userid, "assistant"))
+    			                 {
+    			                     echo "<li>
+    									<a href='staff_fedjail.php?action=viewappeal' class='updateHoverBtn'>
+    										<span class='menu-text'>Fed Dungeon Appeals</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=editfedjail' class='updateHoverBtn'>
+    										<span class='menu-text'>Edit Fed Dungeon Sentence</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=mailban' class='updateHoverBtn'>
+    										<span class='menu-text'>Give Mail Ban</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=unfedjail' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Fed Dungeon Sentence</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=unforumban' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Forum Ban</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=unmailban' class='updateHoverBtn'>
+    										<span class='menu-text'>Remove Mail Ban</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=ipsearch' class='updateHoverBtn'>
+    										<span class='menu-text'>IP Address Search</span>
+    									</a>
+    								</li>";
+    			                 }
+    			                 if ($api->UserMemberLevelGet($userid, "admin"))
+    			                 {
+    			                     echo"<li>
+    									<a href='staff_punish.php?action=massemail' class='updateHoverBtn'>
+    										<span class='menu-text'>Send Mass Email</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=banip' class='updateHoverBtn'>
+    										<span class='menu-text'>Ban IP Address</span>
+    									</a>
+    								</li>
+                                    <li>
+    									<a href='staff_punish.php?action=unbanip' class='updateHoverBtn'>
+    										<span class='menu-text'>Pardon IP Address</span>
+    									</a>
+    								</li>";
+    			                 }
+    			                 echo"
+								</ul>";
+			             }
+                            ?><ul><li class="header-menu">
+									<span id='ui_time'><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
+								</li></ul></div>
+						<!-- sidebar-menu  -->
+					</div><!-- sidebar-footer  -->
+					<div class="sidebar-footer">
+						<div class="dropdown">
+							<a href="../notifications.php" class="updateHoverBtn">
+								<i class="fa fa-bell"></i>
+								<span class="badge badge-pill badge-success notification" id="ui_notif"><?php echo shortNumberParse($ir['notifications']); ?></span>
+							</a>
+						</div>
+						<div class="dropdown">
+							<a href="../inbox.php" class="updateHoverBtn">
+								<i class="fa fa-envelope"></i>
+								<span class="badge badge-pill badge-success notification" id="ui_mail"><?php echo shortNumberParse($ir['mail']); ?></span>
+							</a>
+						</div>
+						<div class="dropdown">
+							<a href="../preferences.php" class="updateHoverBtn">
+								<i class="fa fa-cog"></i>
+							</a>
+						</div>
+						<div>
+							<a href="../logout.php" class="updateHoverBtn">
+								<i class="fa fa-power-off"></i>
+							</a>
+						</div>
+						<div class="pinned-footer">
+							<a href="#">
+								<i class="fas fa-ellipsis-h"></i>
+							</a>
+						</div>
+					</div>
+				</nav>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item"
-                                       href="../profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
-                                            class="fa fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
-                                    <a class="dropdown-item" href="../preferences.php?action=menu"><i
-                                            class="fas fa-spin fa-fw fa-cog"></i><?php echo "Preferences"; ?></a>
-                                    <?php
-                                    //User is a staff member, so lets show the panel's link.
-                                    if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
-                                        ?>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="index.php"><i
-                                                class="fa fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
-                                    <?php
-                                    }
-                                    ?>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="../gamerules.php"><i
-                                            class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
-                                    <a class="dropdown-item" href="../logout.php"><i
-                                            class="fas fa-sign-out-alt"></i> <?php echo "Log Out"; ?></a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <!-- Page Content -->
-            <div class="container">
-            <div class="row">
-            <div class="col-sm-12 text-center">
+				<!-- Page Content -->
+				<main class="page-content pt-2">
+					<div id="overlay" class="overlay"></div>
+						<div class="container-fluid p-5">
             <noscript>
                 <?php alert('info', "Information!", "Please enable Javascript.", false); ?>
             </noscript>
@@ -244,12 +833,12 @@ class headers
 	
 	function loadUserTheme($themeID)
 	{
-		global $set;
-		cslog('log',"User Theme ID: {$themeID}.");
-		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/sidebar-themes.css'>";
-		if ($themeID == 1)
-		{
-		    echo "
+	    global $set;
+	    cslog('log',"User Theme ID: {$themeID}.");
+	    echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/sidebar-themes.css'>";
+	    if ($themeID == 1)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/default-21.2.2.css'>
 			<meta name='theme-color' content='#333'>
 			<style>
@@ -257,16 +846,16 @@ class headers
 				background-color: #333;
 			}
 			</style>";
-		}
-		if ($themeID == 2)
-		{
-		    echo "
+	    }
+	    if ($themeID == 2)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/darkly-21.2.2.css'>
 			<meta name='theme-color' content='#303030'>";
-		}
-		if ($themeID == 3)
-		{
-		    echo "
+	    }
+	    if ($themeID == 3)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/slate/bootstrap.min.css'>
 			<meta name='theme-color' content='#272B30'>
 			<style>
@@ -274,22 +863,22 @@ class headers
 				background-color: #272B30;
 			}
 			</style>";
-		}
-		if ($themeID == 4)
-		{
-		    echo "
+	    }
+	    if ($themeID == 4)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/cyborg-21.2.2.css'>
 			<meta name='theme-color' content='#060606'>";
-		}
-		if ($themeID == 5)
-		{
-		    echo "
+	    }
+	    if ($themeID == 5)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/united-21.2.2.css'>
 			<meta name='theme-color' content='#772953'>";
-		}
-		if ($themeID == 6)
-		{
-		    echo "
+	    }
+	    if ($themeID == 6)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cerulean/bootstrap.min.css'>
 			<meta name='theme-color' content='#04519b'>
 			<style>
@@ -297,27 +886,27 @@ class headers
 				background-color: #04519b;
 			}
 			</style>";
-		}
-		if ($themeID == 7)
-		{
-		    echo "
+	    }
+	    if ($themeID == 7)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/castle-21.2.1.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, 0.8)'>";
-		}
-		if ($themeID == 8)
-		{
-		    echo "
+	    }
+	    if ($themeID == 8)
+	    {
+	        echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/sunset-21.2.1.css'>
 			<meta name='theme-color' content='rgba(64, 0, 0, 0.8)'>";
-		}
+	    }
 	}
 	
 	function getThemeNavbarColor($themeID)
 	{
-		if ($themeID == 2)
-			return 'navbar-light bg-light';
-		else
-			return 'navbar-dark bg-dark';
+	    if ($themeID == 2)
+	        return 'navbar-light bg-light';
+	        else
+        return 'navbar-dark bg-dark';
 	}
 	
 	function loadEssentialAssets()
@@ -332,17 +921,12 @@ class headers
 	
 	function loadCSS()
 	{
-		global $set;
-		cslog('log',"CSS is loading.");
-		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/game-{$set['game_css_version']}.css'>
-				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>
-				<style>
-					body {
-					  min-height: 75rem;
-					  padding-top: 4.5rem;
-					}									
-				</style>";
-		
+	    global $set;
+	    cslog('log',"CSS is loading.");
+	    echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/game-{$set['game_css_version']}.css' async>
+				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css' async>
+				<link rel='stylesheet' href='//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css' defer>";
+	    
 	}
 	
 	function loadEarlyJS()
@@ -355,41 +939,92 @@ class headers
 	
 	function loadJS()
 	{
-		global $ir, $set;
-		cslog('log',"JS is loading.");
-		echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
+	    global $ir, $set;
+	    cslog('log',"JS is loading.");
+	    echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
         <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
-		<script src='https://cdn.chivalryisdeadgame.com/assets/js/register.min.js' defer></script>
-		<script defer src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
-        <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js' async defer></script>
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src='https://www.googletagmanager.com/gtag/js?id=UA-69718211-1'></script>
+		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
+		<script src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
+		<script src='https://cdn.chivalryisdeadgame.com/assets/js/underscore-min.js' defer></script>
+        <script src='https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v{$set['bshover_tabs_version']}/bootstrap-hover-tabs.js' defer></script>
+		<script async src='https://www.googletagmanager.com/gtag/js?id=UA-69718211-1' defer></script>
 		<script>
 		  window.dataLayer = window.dataLayer || [];
 		  function gtag(){dataLayer.push(arguments);}
 		  gtag('js', new Date());
-
+		  
 		  gtag('config', 'UA-69718211-1');
-		</script>
-		";
+		</script>";
+	    ?>
+		<script src="https://cdn.chivalryisdeadgame.com/assets/js/sidemenu.js" async></script>
+		<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js" defer></script>
+		<script type="text/javascript">
+            jQuery(function ($) {
+            $("#close-sidebar").click(function() {
+              $(".page-wrapper").removeClass("toggled");
+				$.post('js/script/menu.php', { value: 1}, 
+					function(returnedData){
+						 console.log("Disabled sidebar.");
+				});
+			});
+			$("#overlay").click(function() {
+              $(".page-wrapper").removeClass("toggled");
+				$.post('js/script/menu.php', { value: 1}, 
+					function(returnedData){
+						 console.log("Disabled sidebar via overlay.");
+				});
+			});
+            $("#show-sidebar").click(function() {
+              $(".page-wrapper").addClass("toggled");
+			  $.post('js/script/menu.php', { value: 0}, 
+					function(returnedData){
+						 console.log("Enabled sidebar.");
+				});
+            });
+        });	
+        </script>
+        <script src='https://cdn.chivalryisdeadgame.com/assets/js/jquery.canvasjs.min.js' defer></script>
+		<?php
 	}
 	
 	function returnMetadata()
 	{
-		global $set;
-		cslog('log',"Setting website metadata.");
-		echo "<meta charset='utf-8'>
+	    global $set;
+	    cslog('log',"Setting website metadata.");
+	    echo "<meta charset='utf-8'>
                 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
                 <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
 				<meta name='author' content='{$set['WebsiteOwner']}'>
                 <meta name='description' content='{$set['Website_Description']}'>
-                <meta property='og:title' content='{$set['WebsiteName']}'/>
+                <meta name='keywords' content='medieval europe, mmorpg, text rpg, rpg, multiplayer, game, video game, no download, mobile, free, chivalry is dead, cid'>
+                <meta property='og:title' content='" . returnGameTitle() . "'/>
                 <meta property='og:description' content='{$set['Website_Description']}'/>
-                <meta property='og:image' content='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png'/>
+                <meta property='og:image' content='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo512.png'/>
                 <meta http-equiv='x-dns-prefetch-control' content='off'>
-                <link rel='shortcut icon' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png' type='image/x-icon'/>
-				<link rel='icon' sizes='192x192' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_192/v1520819749/logo.png'>
-				<link rel='icon' sizes='128x128' href='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_128/v1520819749/logo.png'>";
+                <link rel='shortcut icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo192.png' type='image/x-icon'/>
+				<!-- generics -->
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo32.png' sizes='32x32'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo57.png' sizes='57x57'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo76.png' sizes='76x76'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo96.png' sizes='96x96'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo128.png' sizes='128x128'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo192.png' sizes='192x192'>
+				<link rel='icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo228.png' sizes='228x228'>
+				
+				<!-- Android -->
+				<link rel='shortcut icon' sizes='196x196' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo196.png'>
+				
+				<!-- iOS -->
+				<link rel='apple-touch-icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo120.png' sizes='120x120'>
+				<link rel='apple-touch-icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo152.png' sizes='152x152'>
+				<link rel='apple-touch-icon' href='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo180.png' sizes='180x180'>
+				
+				<!-- Windows 8 IE 10-->
+				<meta name='msapplication-TileColor' content='#FFFFFF'>
+				<meta name='msapplication-TileImage' content='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo144.png'>
+				
+				<!— Windows 8.1 + IE11 and above —>
+				<meta name='msapplication-config' content='https://cdn.chivalryisdeadgame.com/assets/browserconfig.xml' />";
 	}
 
     function userdata($ir, $dosessh = 1)
@@ -431,53 +1066,29 @@ class headers
 
     function endpage()
     {
-        global $db, $ir, $set, $userid, $start;
+        global $db, $ir, $set, $userid, $api, $start;
         $query_extra = '';
-		if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
-		{
-			?>
-			<pre class='pre-scrollable'> <?php var_dump($db->queries) ?> </pre> <?php
-		}
+        if (isset($_GET['benchmark']))
+            include('forms/include_end.php');   //benchmark data
+            $this->loadJS();
+            cslog('warn',"Main script has finished executing. Wrapping up now.");
+            //Set mysqldebug in the URL to get query debugging as an admin.
+            if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
+            {
+                ?>
+        <pre class='pre-scrollable'>
+                  <?php
+                  var_dump($db->queries)
+                  ?>
+              </pre>
+    	<?php
+    }
     ?>
         </div>
         </div>
-        <!-- /.row -->
-
         </div>
         <!-- /.container -->
-        <!-- jQuery Version 3.3.1 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-        <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-
-        <!-- Other JavaScript -->
-        <script src="https://cdn.chivalryisdeadgame.com/assets/js/game-v1.1.min.js"></script>
-        <script src="https://cdn.chivalryisdeadgame.com/assets/js/register.min.js" async defer></script>
-		<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
-        <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-        <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
-		<script src="https://cdn.chivalryisdeadgame.com/assets/js/clock.min.js"></script>
-        <footer class='footer'>
-            <div class='container'>
-				<span>
-                <?php
-                //Print copyright info, Chivalry Engine info, and current time.
-                echo "<hr />
-					Time is now " . date('l, F j, Y g:i:s a') . "<br />
-					{$set['WebsiteName']} &copy; " . date("Y") . " {$set['WebsiteOwner']}. Game source viewable on <a href='https://github.com/MasterGeneral156/chivalry-engine/tree/chivalry-is-dead-game'>Github</a>.<br />";
-                if ($ir['user_level'] == 'Admin' || $ir['user_level'] == 'Web Developer')
-                    echo "{$db->num_queries} Queries Executed.{$query_extra}<br />";
-				if ($ir['vip_days'] == 0)
-				{
-					include('../ads/ad_header.php');
-				}
-				include('../forms/include_end.php');
-                ?>
-				</span>
-            </div>
-        </footer>
+        <br />
 		</body>
         </html>
     <?php
