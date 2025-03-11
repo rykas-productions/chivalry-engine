@@ -56,7 +56,7 @@ class headers
         <nav class="navbar navbar-expand-lg fixed-top <?php echo $hdr; ?>">
             <a class="navbar-brand updateHoverBtn" href="#" data-toggle="modal" data-target="#userInfo">
 					<?php 
-						echo "<img src='https://res.cloudinary.com/dydidizue/image/upload/c_scale,h_32/v1520819749/logo.png' alt=''>
+						echo "<img src='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo32.png' alt=''>
 						{$set['WebsiteName']}"; 
 					?>
 				</a>
@@ -381,31 +381,31 @@ class headers
 		if ($themeID == 1)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/css/bootstrap.min.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/default-21.2.2.css'>
 			<meta name='theme-color' content='#333'>";
 		}
 		if ($themeID == 2)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/darkly/bootstrap.min.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/darkly-21.2.2.css'>
 			<meta name='theme-color' content='#303030'>";
 		}
 		if ($themeID == 3)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/slate/bootstrap.min.css'>
+			<link rel='stylesheet' href=''https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/slate/bootstrap.min.css'>
 			<meta name='theme-color' content='#272B30'>";
 		}
 		if ($themeID == 4)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cyborg/bootstrap.min.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/cyborg-21.2.2.css'>
 			<meta name='theme-color' content='#060606'>";
 		}
 		if ($themeID == 5)
 		{
 			echo "
-			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/united/bootstrap.min.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/united-21.2.2.css'>
 			<meta name='theme-color' content='#772953'>";
 		}
 		if ($themeID == 6)
@@ -417,13 +417,13 @@ class headers
 		if ($themeID == 7)
 		{
 			echo "
-			<link rel='stylesheet' href='css/castle-v{$set['bootstrap_version']}.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/castle-21.2.1.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
 		}
 		if ($themeID == 8)
 		{
 			echo "
-			<link rel='stylesheet' href='css/sunset-v{$set['bootstrap_version']}.css'>
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/sunset-21.2.1.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, .8)'>";
 		}
 	}
@@ -450,7 +450,7 @@ class headers
 	{
 		global $set;
 		cslog('log',"CSS is loading.");
-		echo "<link rel='stylesheet' href='css/game-{$set['game_css_version']}.css'>
+		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/game-{$set['game_css_version']}.css'>
 				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css'>
 				<style>
 					body {
@@ -466,7 +466,7 @@ class headers
 		global $set;
 		cslog('log',"Essential JS scripts are loading.");
 		echo "<script src='https://ajax.googleapis.com/ajax/libs/jquery/{$set['jquery_version']}/jquery.min.js'></script>
-		<script src='js/game-v{$set['game_js_version']}.js' async></script>";
+		<script src='https://cdn.chivalryisdeadgame.com/assets/js/game-v{$set['game_js_version']}.js' async></script>";
 	}
 	
 	function loadJS()
