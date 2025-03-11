@@ -38,7 +38,7 @@ switch ($_GET['action']) {
 
 function landingpage()
 {
-    global $db, $userid, $ir, $h, $api, $set, $atkpage, $votecount;
+    global $db, $userid, $ir, $h, $api, $set, $atkpage, $votecount, $sound;
     $menuhide = 1;      //Hide the menu so players cannot load other pages,
                         //and lessens the chance of a misclick and losing XP.
     $tresder = Random(100, 999);    //RNG to prevent refreshing while attacking, thus
@@ -368,6 +368,9 @@ function landingpage()
                 </div>
             </div>
     </div>";
+    if ($ir['vip_days'] > 0)
+        if (getCurrentUserPref('enableMusic', 'true'))
+            $sound->playBGM('bittersweet');
 }
 function attacking()
 {
