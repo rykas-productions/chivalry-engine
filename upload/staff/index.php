@@ -135,10 +135,10 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                                         <div class='col-12'>
                                             <div class='row'>
                                                 <div class='col-12'>
-                                                    " . scaledColorProgressBar(returnVPSBandwidth(), 0, 1024*1024*1024*1024*3, true) . "
+                                                    " . scaledColorProgressBar(returnVPSBandwidth($_CONFIG['vpsAuth']), 0, 1024*1024*1024*1024*3, true) . "
                                                 </div>
                                                 <div class='col-12'>
-                                                    <small><i>" . numberToByteParse(returnVPSBandwidth()) . " / " . numberToByteParse(1024*1024*1024*1024*3) . "</i></small>
+                                                    <small><i>" . numberToByteParse(returnVPSBandwidth($_CONFIG['vpsAuth'])) . " / " . numberToByteParse(1024*1024*1024*1024*3) . "</i></small>
                                                 </div>
                                             </div>
                                         </div>
