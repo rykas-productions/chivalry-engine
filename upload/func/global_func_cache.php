@@ -226,9 +226,10 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
 }
 
-function getVPSData()
+function getVPSData($key)
 {
     global $_CONFIG;
+    $key = (empty($key)) ? $_CONFIG['vpsAuth'] : $key;
     $cacheFile = returnCacheDir() . "serv/vps.json";
     if (file_exists($cacheFile))
     {
@@ -242,7 +243,7 @@ function getVPSData()
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => "https://api.vps.net/ssd_virtual_machines/318307.api10json",
-                CURLOPT_USERPWD => $_CONFIG['vpsAuth'],
+                CURLOPT_USERPWD => $key,
                 CURLOPT_SSL_VERIFYPEER => false,
                 CURLOPT_HTTPHEADER => array("Accept: application/json"),
                 CURLOPT_RETURNTRANSFER => true));
@@ -269,15 +270,17 @@ function getVPSData()
     return $return;
 }
 
-function returnVPSInfo()
+function returnVPSInfo($key)
 {
-    $vpsJson = json_decode(getVPSData(), true);
+    $key = (empty($key)) ? $_CONFIG['vpsAuth'] : $key;
+    $vpsJson = json_decode(getVPSData($key), true);
     return $vpsJson['virtual_machine'];
 }
 
-function returnVPSBandwidth()
+function returnVPSBandwidth($key)
 {
-    $vpsJson = json_decode(getVPSData(), true);
+    $key = (empty($key)) ? $_CONFIG['vpsAuth'] : $key;
+    $vpsJson = json_decode(getVPSData($key), true);
     return $vpsJson['virtual_machine']['bandwidth_used'] * 1024;
 }
 
