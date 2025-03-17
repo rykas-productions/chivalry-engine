@@ -21,10 +21,12 @@ function checkServerStatus($host, $port, $timeout = 2) {
 
 // Define servers to check
 $servers = [
+    ["name" => "CID Game", "ip" => "206.130.120.126", "port" => 80],
     ["name" => "Routed CDN", "ip" => "cdn.chivalryisdeadgame.com", "port" => 443],
     ["name" => "CDN #1", "ip" => "66.23.199.88", "port" => 80], // Website Example
     ["name" => "CDN #2", "ip" => "157.173.212.46", "port" => 80], // API Server Example
-    ["name" => "CDN #3", "ip" => "193.23.249.20", "port" => 80],
+    ["name" => "CDN #3", "ip" => "216.181.107.206", "port" => 80],
+    ["name" => "CDN #4", "ip" => "31.24.227.65", "port" => 80],
 ];
 
 ?>
