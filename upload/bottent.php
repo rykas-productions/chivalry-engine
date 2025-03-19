@@ -23,8 +23,10 @@ echo "<div class='card'>
         This is a list of all known {$set['WebsiteName']} Challenge NPCs. Each bot drops an item to help you travels. There is 
         a cooldown for item drops, which is also displayed on this list. The item drop is only received when you mug the NPC.<hr />";
 //List all the bots.
+$zindex = -10;
 while ($result = $db->fetch_row($query)) 
 {
+    $zindex--;
     //Grab the last time the user attacked this bot.
     $timequery = $db->query("/*qc=on*/SELECT `lasthit` FROM `botlist_hits` WHERE `userid` = {$userid} && `botid` = {$result['botuser']}");
     $r2 = $db->fetch_single($timequery);
@@ -49,10 +51,13 @@ while ($result = $db->fetch_row($query))
     }
 	echo "
 	<div class='row'>
-		<div class='col-12 col-sm col-xl-3'>
-			<a href='profile.php?user={$result['botuser']}'>{$botname}</a> [{$result['botuser']}]<br />
-            <small>Level: " . $api->UserInfoGet($result['botuser'], 'level') . "</small>
-        </div>
+		<div class='col-12 col-sm col-xl-3 col-xxl-2'>
+			<a href='profile.php?user={$result['botuser']}'>{$botname}</a> " . createPrimaryBadge($result['botuser']) . "<br />
+            <small>Level: " . shortNumberParse($api->UserInfoGet($result['botuser'], 'level')) . "</small>
+        </div>";
+	   if (empty($result['botloottable']))
+	   {
+	       echo "
 		<div class='col-12 col-sm'>
             <div class='row'>
                 <div class='col-12 col-xxxl'>
@@ -62,12 +67,33 @@ while ($result = $db->fetch_row($query))
 	               Drop: " . $api->SystemItemIDtoName($result['botitem']) . "   
                 </div>
             </div>
-		</div>
+		</div>";
+	   }
+		echo"
 		<div class='col-12 col-lg-4 col-xl-4'>
 			{$attack}
+            <button type='button' data-toggle='modal' class='btn btn-primary' data-target='#botModal{$result['botuser']}'>Possible Loot</button>
 		</div>
 	</div>
-	<hr />";
+	<hr />
+    <div class='modal fade' id='botModal{$result['botuser']}' tabindex='-{$result['botuser']}' role='dialog' aria-hidden='true'>
+          <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+              <div class='modal-header'>
+                <h5 class='modal-title' id='botModal{$result['botuser']}Label'>{$botname}'s Possible Loot</h5>
+                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
+                </button>
+              </div>
+              <div class='modal-body'>
+                " . parseLootTableOdds("users/{$result['botuser']}") . "
+              </div>
+              <div class='modal-footer'>
+                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>";
 }
 echo "</div></div>";
 $h->endpage();

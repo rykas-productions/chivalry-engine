@@ -1,0 +1,27 @@
+{
+    "_comment": {
+		"Copper Coin Constant": -1,
+		"Chiv Token Constant": -2,
+		"Infirmary Constant": -3,
+		"Dungeon Constant": -4,
+		"item": "In game item ID",
+		"chance": "Chance out of 100, normalized",
+		"version": 1
+	},
+    "users/10": {
+        "guaranteed": [
+            { "item": -1, "min": 900, "max": 2100 }
+        ],
+        "chance_based": [
+            { "item": 298, "min": 2, "max": 5, "chance": 0.5 },
+			{ "item": 307, "min": 2, "max": 5, "chance": 0.45 },
+            { "item": 297, "min": 2, "max": 5, "chance": 0.4 },
+			{ "item": 412, "min": 2, "max": 5, "chance": 0.35 },
+			{ "item": 426, "min": 2, "max": 5, "chance": 0.3 },
+			{ "item": 308, "min": 2, "max": 5, "chance": 0.05 },
+			{ "item": 515, "min": 1, "max": 2, "chance": 0.0025 },
+			{ "item": 516, "min": 1, "max": 2, "chance": 0.0025 },
+			{ "item": 517, "min": 1, "max": 2, "chance": 0.005 }
+        ]
+    }
+}
