@@ -35,7 +35,7 @@ function cidticket()
 	}
 	if (isset($_GET['scratch']))
 	{
-	    $loot = giveUserLoot(1, $lootJSON);
+	    $loot = giveUserLoot($userid, $lootJSON);
 	    alert("success","Success!","You begin to scratch this spot off on a {$api->SystemItemIDtoName(210)}. {$loot} Congratulations!",true,'inventory.php');
 		setCurrentUserPref("cidScratchTime", time());
 		$api->UserTakeItem($userid,210,1);
