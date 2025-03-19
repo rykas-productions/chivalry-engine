@@ -1,5 +1,6 @@
 <?php
 require('globals.php');
+$lootJSON = "items/scratch/vip_ticket";
 if (!$api->UserHasItem($userid,89,1))
 {
 	alert('danger',"Uh Oh!","You need a VIP Scratch ticket to use one.",true,'inventory.php');

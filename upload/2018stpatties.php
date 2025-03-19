@@ -52,75 +52,53 @@ function doexchange($needed,$payout)
 }
 function ticket()
 {
-	global $h,$db,$api,$userid;
-	if (!$api->UserHasItem($userid,137,1))
-	{
-		alert('danger',"Uh Oh!","You need a 2018 St. Patties Day Scratch Ticket to be here.",true,'inventory.php');
-		die($h->endpage());
-	}
-	if (isset($_GET['scratch']))
-	{
-		$rng=Random(1,6);
-		if ($rng == 1)
-		{
-			$cash=Random(50000,1000000);
-			alert("success","Success!","You scratch this spot off and you win {$cash} Copper Coins. Congratulations!",true,'inventory.php');
-			$api->UserGiveCurrency($userid,'primary',$cash);
-		}
-		elseif ($rng == 2)
-		{
-			$cash=Random(500,5000);
-			alert("success","Success!","You scratch this spot off and you win {$cash} Chivalry Tokens. Congratulations!",true,'inventory.php');
-			$api->UserGiveCurrency($userid,'secondary',$cash);
-		}
-		elseif ($rng == 3)
-		{
-			alert("success","Success!","You scratch this spot off and you win 3 Invisibility Potions. Congratulations!",true,'inventory.php');
-			$api->UserGiveItem($userid,68,3);
-		}
-		elseif ($rng == 4)
-		{
-			$cash=Random(15,45);
-			alert("success","Success!","You scratch this spot off and you win {$cash} Chivalry Gym Scrolls. Congratulations!",true,'inventory.php');
-			$api->UserGiveItem($userid,18,$cash);
-		}
-		elseif ($rng == 5)
-		{
-			$cash=Random(5,10);
-			alert("success","Success!","You scratch this spot off and you win {$cash} Medium Explosives. Congratulations!",true,'inventory.php');
-			$api->UserGiveItem($userid,61,$cash);
-		}
-		else
-		{
-			$cash=Random(1,3);
-			alert("success","Success!","You scratch this spot off and you win {$cash} VIP Days. Congratulations!",true,'inventory.php');
-			$db->query("UPDATE `users` SET `vip_days` = `vip_days` + {$cash} WHERE `userid` = {$userid}");
-		}
-		$api->UserTakeItem($userid,137,1);
-	}
-	else
-	{
-		echo "/*qc=on*/SELECT the spot you wish to scratch off. You shall receive rewards.<br />
-		<div class='row'>
-			<div class='col-sm'>
-				<a href='?action=ticket&scratch=1'><img src='https://res.cloudinary.com/dydidizue/image/upload/v1521221237/green-shamrock-hi.png' class='img-fluid'></a>
-			</div>
-			<div class='col-sm'>
-				<a href='?action=ticket&scratch=1'><img src='https://res.cloudinary.com/dydidizue/image/upload/v1521221237/green-shamrock-hi.png' class='img-fluid'></a>
-			</div>
-			<div class='col-sm'>
-				<a href='?action=ticket&scratch=1'><img src='https://res.cloudinary.com/dydidizue/image/upload/v1521221237/green-shamrock-hi.png' class='img-fluid'></a>
-			</div>
-			<div class='col-sm'>
-				<a href='?action=ticket&scratch=1'><img src='https://res.cloudinary.com/dydidizue/image/upload/v1521221237/green-shamrock-hi.png' class='img-fluid'></a>
-			</div>
-			<div class='col-sm'>
-				<a href='?action=ticket&scratch=1'><img src='https://res.cloudinary.com/dydidizue/image/upload/v1521221237/green-shamrock-hi.png' class='img-fluid'></a>
-			</div>
-			<div class='col-sm'>
-				<a href='?action=ticket&scratch=1'><img src='https://res.cloudinary.com/dydidizue/image/upload/v1521221237/green-shamrock-hi.png' class='img-fluid'></a>
-			</div>
-		</div>";
-	}
+    global $h,$db,$api,$userid;
+    $needItem = 137;
+    $lootJSON = "items/scratch/18_stpatties_scratch";
+    if (!$api->UserHasItem($userid,$needItem,1))
+    {
+        alert('danger',"Uh Oh!","You need a {$api->SystemItemIDtoName($needItem)} to be here.",true,'inventory.php');
+        die($h->endpage());
+    }
+    if (isset($_GET['scratch']))
+    {
+        $loot = giveUserLoot($userid, $lootJSON);
+        alert("success","Success!","You begin to scratch this spot off on a {$api->SystemItemIDtoName($needItem)}. {$loot} Congratulations!",true,'inventory.php');
+        $api->UserTakeItem($userid,$needItem,1);
+    }
+    else
+    {
+        echo "
+        <div class='card'>
+            <div class='card-header'>
+                Scratching off a {$api->SystemItemIDtoName($needItem)}...
+            </div>
+            <div class='card-body'>
+        		<div class='row'>
+        			<div class='col-sm'>
+        				<a href='?action=ticket&scratch=1'><img src='". returnAssetDir() ."img/green-shamrock.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-sm'>
+        				<a href='?action=ticket&scratch=1'><img src='". returnAssetDir() ."img/green-shamrock.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-sm'>
+        				<a href='?action=ticket&scratch=1'><img src='". returnAssetDir() ."img/green-shamrock.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-sm'>
+        				<a href='?action=ticket&scratch=1'><img src='". returnAssetDir() ."img/green-shamrock.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-sm'>
+        				<a href='?action=ticket&scratch=1'><img src='". returnAssetDir() ."img/green-shamrock.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-sm'>
+        				<a href='?action=ticket&scratch=1'><img src='". returnAssetDir() ."img/green-shamrock.png' class='img-fluid'></a>
+        			</div>
+        		</div>
+                <div class='row'>
+                    " . parseLootTableOdds($lootJSON) . "
+                </div>
+            </div>
+        </div>";
+    }
 }
 $h->endpage();

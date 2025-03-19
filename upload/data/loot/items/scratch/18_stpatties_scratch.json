@@ -1,0 +1,20 @@
+{
+    "_comment": {
+		"Copper Coin Constant": -1,
+		"Chiv Token Constant": -2,
+		"Infirmary Constant": -3,
+		"Dungeon Constant": -4,
+		"item": "In game item ID",
+		"chance": "Chance out of 100, normalized",
+		"version": 1
+	},
+    "items/scratch/18_stpatties_scratch": {
+        "chance_based": [
+            { "item": -1, "min": 50000, "max": 1000000, "chance": 0.5 },
+            { "item": -2, "min": 500, "max": 5000, "chance": 0.35 },
+			{ "item": 68, "min": 2, "max": 4, "chance": 0.55 },
+			{ "item": 18, "min": 15, "max": 45, "chance": 0.45 },
+			{ "item": 61, "min": 5, "max": 10, "chance": 0.4 }
+        ]
+    }
+}

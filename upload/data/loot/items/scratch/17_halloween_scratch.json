@@ -1,0 +1,20 @@
+{
+    "_comment": {
+		"Copper Coin Constant": -1,
+		"Chiv Token Constant": -2,
+		"Infirmary Constant": -3,
+		"Dungeon Constant": -4,
+		"item": "In game item ID",
+		"chance": "Chance out of 100, normalized",
+		"version": 1
+	},
+    "items/scratch/17_halloween_scratch": {
+        "chance_based": [
+            { "item": -1, "min": 500, "max": 10000, "chance": 0.5 },
+            { "item": -2, "min": 50, "max": 500, "chance": 0.35 },
+			{ "item": 66, "min": 10, "max": 25, "chance": 0.75 },
+			{ "item": 18, "min": 5, "max": 10, "chance": 0.45 },
+			{ "item": 28, "min": 3, "max": 6, "chance": 0.02 }
+        ]
+    }
+}

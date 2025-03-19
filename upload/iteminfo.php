@@ -200,7 +200,7 @@ if (!$itmid) {
                 </div>
             </div>";
         echo "</div>";
-        $chanceDropItems = array(33,210,89);
+        $chanceDropItems = array(210,89,63,69,203,189,195,137);
         if (in_array($itmid, $chanceDropItems))
         {
             
@@ -226,6 +226,12 @@ function getLootByID($itemId): string {
     switch ($itemId) {
         case 210: return "items/scratch/cid_ticket";
         case 89: return "items/scratch/vip_ticket";
+        case 63: return "items/scratch/17_halloween_scratch";
+        case 69: return "items/scratch/17_thanksgiving_scratch";
+        case 137: return "items/scratch/18_stpatties_scratch";
+        case 189: return "items/scratch/18_halloween_scratch";
+        case 195: return "items/scratch/18_thanksgiving_scratch";
+        case 203: return "items/scratch/18_christmas_scratch";
         default: return "items/scratch/cid_ticket";
     }
 }
