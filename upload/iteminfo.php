@@ -200,7 +200,7 @@ if (!$itmid) {
                 </div>
             </div>";
         echo "</div>";
-        $chanceDropItems = array(33,210);
+        $chanceDropItems = array(33,210,89);
         if (in_array($itmid, $chanceDropItems))
         {
             
@@ -225,6 +225,7 @@ if (!$itmid) {
 function getLootByID($itemId): string {    
     switch ($itemId) {
         case 210: return "items/scratch/cid_ticket";
+        case 89: return "items/scratch/vip_ticket";
         default: return "items/scratch/cid_ticket";
     }
 }
