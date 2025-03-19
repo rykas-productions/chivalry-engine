@@ -203,230 +203,29 @@ if (!$itmid) {
         $chanceDropItems = array(33,210);
         if (in_array($itmid, $chanceDropItems))
         {
+            
             echo "<div class='col-12'>
                         <div class='card'>
                             <div class='card-header'>
                                 Chance Drops
                             </div>
                             <div class='card-body'>
-                                <div class='row'>";
-                                if ($itmid == 33)
-                                {
-                                    echo "<div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>37.9%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Copper Coins
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>12.6%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Chivalry Tokens
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>5.74%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Infirmary Visit
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>5.74%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Bread
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>5.74%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Venison
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>5.74%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Small Health Potion
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>5.74%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Linen Wraps
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>5.74%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Dungeon Keys
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>3.44%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Small Explosive
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>2.29%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Chivalry Gym Scroll
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>2.29%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Distant Attack Scroll
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>2.29%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Mysterious Potion
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>2.29%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Acupuncture Needle
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>1.37%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Nothing
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>1.14%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Herb of Enlightened Miner
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>1.03%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Rickity Bomb
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>1.03%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        1-3 Hexbags
-                                                    </div>
-                                                </div>
-                                            </div>";
-                                }
-                                if ($itmid == 210)
-                                {
-                                    echo "
-                                        <div class='col-12'>
-                                            " . alert('warning',"","Drops temporarily tweaked",false) . "
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>33%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        CID Admin Gym Access Scroll
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>33%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Chivalry Gym Scroll
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class='col-12 col-sm-6 col-md-4 col-xxl-3 col-xxxl-2'>
-                                            <div class='row'>
-                                                    <div class='col-12'>
-                                                        <small><b>33%</b></small>
-                                                    </div>
-                                                    <div class='col-12'>
-                                                        Invisibility Potion
-                                                    </div>
-                                                </div>
-                                        </div>";
-                                }
-                                    
-                            echo "</div></div>
+                                <div class='row'>
+                                    " . parseLootTableOdds(getLootByID($itmid)) . "
+                                </div>
+                            </div>
                         </div>
                     </div>";
         }
         echo "</div>";
         $db->free_result($q);
+    }
+}
+
+function getLootByID($itemId): string {    
+    switch ($itemId) {
+        case 210: return "items/scratch/cid_ticket";
+        default: return "items/scratch/cid_ticket";
     }
 }
 $h->endpage();

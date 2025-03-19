@@ -1,0 +1,20 @@
+{
+    "_comment": {
+		"Copper Coin Constant": -1,
+		"Chiv Token Constant": -2,
+		"Infirmary Constant": -3,
+		"Dungeon Constant": -4,
+		"item": "In game item ID",
+		"chance": "Chance out of 100, normalized",
+		"version": 1
+	},
+    "items/scratch/cid_ticket": {
+        "chance_based": [
+            { "item": 205, "min": 3, "max": 20, "chance": 0.2 },
+            { "item": 18, "min": 12, "max": 50, "chance": 0.5 },
+			{ "item": 68, "min": 1, "max": 3, "chance": 0.1 },
+			{ "item": 198, "min": 1, "max": 2, "chance": 0.002 },
+			{ "item": 148, "min": 1, "max": 2, "chance": 0.02 }
+        ]
+    }
+}

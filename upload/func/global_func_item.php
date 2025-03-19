@@ -390,3 +390,68 @@ function getRandomOtherEquipment()
     global $db;
     return $db->fetch_single($db->query("SELECT `itmid` FROM `items` WHERE (`itmtype` >= 15 AND `itmtype` <= 18) ORDER BY RAND() LIMIT 1"));
 }
+
+function getItemElementalInfo($db, $item_id) {
+    $item_id = intval($item_id);
+    $result = $db->query("SELECT elemental_info FROM equipment WHERE id = $item_id");
+    
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return ensureDefaultItemElements(json_decode($row['elemental_info'], true));
+    }
+    return null;
+}
+
+function updateElementalInfo($db, $item_id, $newData) {
+    if (!is_array($newData)) {
+        throw new Exception("Invalid data format. Must be an associative array.");
+    }
+    
+    $item_id = intval($item_id);
+    $newData = ensureDefaultItemElements($newData); // Ensure all elements exist
+    $jsonData = $db->real_escape_string(json_encode($newData));
+    
+    return $db->query("UPDATE equipment SET elemental_info = '$jsonData' WHERE id = $item_id");
+}
+
+// Get elemental damage modifier for weapons
+function getElementalItemDamageModifier($db, $item_id, $element) {
+    $elementalData = getElementalInfo($db, $item_id);
+    return isset($elementalData[$element]) ? $elementalData[$element] : 1.0;
+}
+
+// Calculate final damage taken by armor (after resistances)
+function calculateDamageTaken($db, $armor_id, $element, $base_damage) {
+    $resistanceData = getElementalInfo($db, $armor_id);
+    
+    if (!isset($resistanceData[$element])) {
+        return $base_damage; // Default to full damage if element is not found
+    }
+    
+    $resistanceMultiplier = $resistanceData[$element]; // Example: 0.8 means 80% damage taken (20% resistance)
+    return $base_damage * $resistanceMultiplier;
+}
+
+function ensureDefaultItemElements($data) {
+    $defaultElements = [
+        "fire" => 1.0,
+        "water" => 1.0,
+        "earth" => 1.0,
+        "wind" => 1.0,
+        "light" => 1.0,
+        "dark" => 1.0
+    ];
+    return array_merge($defaultElements, $data);
+}
+
+function getItemName($itemId): string {
+    global $api;
+    
+    switch ($itemId) {
+        case -1: return "Copper Coin(s)";
+        case -2: return "Chivalry Token(s)";
+        case -3: return "Minutes in the Infirmary";
+        case -4: return "Minutes in the Dungeon";
+        default: return $api->SystemItemIDtoName($itemId);
+    }
+}

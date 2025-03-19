@@ -1488,31 +1488,112 @@ function getLoot(string $tableName): array {
             }
         }
         
-        // Process chance-based drops
+        // Process chance-based drops, ensuring at least one item is obtained
+        $foundItem = !empty($loot);
         if (isset($lootTable['chance_based'])) {
+            $potentialLoot = [];
             foreach ($lootTable['chance_based'] as $entry) {
                 if (isset($entry['chance']) && random_int(1, 100) <= ($entry['chance'] * 100)) {
                     $quantity = random_int($entry['min'], $entry['max']);
-                    $loot[] = [
+                    $potentialLoot[] = [
                         'item' => $entry['item'],
                         'quantity' => $quantity
                     ];
                 }
             }
-        } 
+            
+            if (!empty($potentialLoot)) {
+                $loot = array_merge($loot, $potentialLoot);
+                $foundItem = true;
+            }
+        }
+        
+        // If no loot was found, force a guaranteed item from chance-based loot
+        if (!$foundItem && isset($lootTable['chance_based']) && !empty($lootTable['chance_based'])) {
+            $entry = $lootTable['chance_based'][array_rand($lootTable['chance_based'])];
+            $quantity = random_int($entry['min'], $entry['max']);
+            $loot[] = [
+                'item' => $entry['item'],
+                'quantity' => $quantity
+            ];
+        }
+        
         return $loot;
     }
-    else
-        return $loot[] = [ 
+    else {
+        return [[
             'code' => -1,
             'error' => 'Could not find loot table.',
             'expected file' => "{$tableName}.json"
-        ];
+            ]];
+    }
 }
+
 
 function returnDataDir()
 {
     return __DIR__ . "/data/";
+}
+
+function parseLootTableOdds(string $tableName): string {
+    if (!file_exists(returnDataDir() . "loot/{$tableName}.json")) {
+        return "Error: Loot table not found.";
+    }
+    
+    $json = file_get_contents(returnDataDir() . "loot/{$tableName}.json");
+    $lootTables = json_decode($json, true);
+    
+    if (!isset($lootTables[$tableName])) {
+        return "Error: Invalid loot table format.";
+    }
+    
+    $lootTable = $lootTables[$tableName];
+    $lootSummary = [];
+    
+    // Guaranteed Drops
+    if (isset($lootTable['guaranteed'])) {
+        foreach ($lootTable['guaranteed'] as $entry) {
+            $min = $entry['min'];
+            $max = $entry['max'];
+            $itemName = getItemName($entry['item']);
+            $lootSummary[] = "<div class='col-12 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>{$chance}% Chance</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$min}-{$max} x {$itemName}(s)
+                                    </div>
+                                </div>
+                            </div>";
+        }
+    }
+    
+    // Chance-Based Drops
+    if (isset($lootTable['chance_based'])) {
+        foreach ($lootTable['chance_based'] as $entry) {
+            $chance = round($entry['chance'] * 100, 2); // Convert fraction to percentage
+            $min = $entry['min'];
+            $max = $entry['max'];
+            $itemName = getItemName($entry['item']);
+            $lootSummary[] = "<div class='col-12 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>{$chance}% Chance</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$min}-{$max} x {$itemName}(s)
+                                    </div>
+                                </div>
+                            </div>";
+        }
+    }
+    
+    if (empty($lootSummary)) {
+        return "This loot table has no available drops.";
+    }
+    
+    return implode("\n", $lootSummary);
 }
 
 function returnAssetDir()
