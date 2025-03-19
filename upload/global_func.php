@@ -1559,7 +1559,7 @@ function parseLootTableOdds(string $tableName): string {
             $lootSummary[] = "<div class='col-12 col-xxxl'>
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <small><b>{$chance}% Chance</b></small>
+                                        <small><b>100% Chance</b></small>
                                     </div>
                                     <div class='col-12'>
                                         {$min}-{$max} x {$itemName}(s)
