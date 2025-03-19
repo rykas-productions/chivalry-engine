@@ -448,8 +448,8 @@ function getItemName($itemId): string {
     global $api;
     
     switch ($itemId) {
-        case -1: return "Copper Coin(s)";
-        case -2: return "Chivalry Token(s)";
+        case -1: return "Copper Coin";
+        case -2: return "Chivalry Token";
         case -3: return "Minutes in the Infirmary";
         case -4: return "Minutes in the Dungeon";
         default: return $api->SystemItemIDtoName($itemId);

@@ -1553,8 +1553,8 @@ function parseLootTableOdds(string $tableName): string {
     // Guaranteed Drops
     if (isset($lootTable['guaranteed'])) {
         foreach ($lootTable['guaranteed'] as $entry) {
-            $min = $entry['min'];
-            $max = $entry['max'];
+            $min = shortNumberParse($entry['min']);
+            $max = shortNumberParse($entry['max']);
             $itemName = getItemName($entry['item']);
             $lootSummary[] = "<div class='col-12 col-xxxl'>
                                 <div class='row'>
@@ -1573,8 +1573,8 @@ function parseLootTableOdds(string $tableName): string {
     if (isset($lootTable['chance_based'])) {
         foreach ($lootTable['chance_based'] as $entry) {
             $chance = round($entry['chance'] * 100, 2); // Convert fraction to percentage
-            $min = $entry['min'];
-            $max = $entry['max'];
+            $min = shortNumberParse($entry['min']);
+            $max = shortNumberParse($entry['max']);
             $itemName = getItemName($entry['item']);
             $lootSummary[] = "<div class='col-12 col-xxxl'>
                                 <div class='row'>
