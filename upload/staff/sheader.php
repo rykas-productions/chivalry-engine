@@ -118,10 +118,16 @@ class headers
                 alert('danger', "Uh Oh!", "You have been IP Banned. Please contact support.", false);
                 die($h->endpage());
             }
-            $fed = $db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
-            if ($fed['fed_out'] < $time) {
-                $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
-                $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
+            $fed = $db->query("/*qc=on*/SELECT * FROM `fedjail`");
+            //User's federal jail sentence is completed. Let them play again.
+            if ($db->num_rows($fed) > 0)
+            {
+                $fd = $db->fetch_row($fed);
+                if ($fd['fed_out'] < $time) 
+                {
+                    $db->query("UPDATE `users` SET `fedjail` = 0");
+                    $db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
+                }
             }
             if ($ir['fedjail'] > 0) {
                 alert('info', "Federal Dungeon!", "You have been placed in the Federal Dungeon for

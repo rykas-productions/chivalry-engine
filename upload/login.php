@@ -29,7 +29,10 @@ echo "<div class='jumbotron'>
         </div>
     </div>";
 $AnnouncementQuery = $db->query("SELECT `ann_text`,`ann_time` FROM `announcements` ORDER BY `ann_time` desc LIMIT 1");
-$ANN = $db->fetch_row($AnnouncementQuery);
+if ($db->num_rows($AnnouncementQuery) > 0)
+	$ANN = $db->fetch_row($AnnouncementQuery);
+else
+	$ANN['ann_text'] = "N/A";
 echo "
 <div class='row'>
     <div class='col-sm-4'>

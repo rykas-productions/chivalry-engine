@@ -125,13 +125,18 @@ class headers
         alert('danger', "Uh Oh!", "You have been IP banned.", false);
         die($h->endpage());
     }
-    $fed = $db->fetch_row($db->query("SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
     echo "<b><a href='donator.php' class='text-danger'>Donate to {$set['WebsiteName']} and you'll receive many cool perks!</a></b><br />";
-    //User's federal jail sentence is completed. Let them play again.
-    if ($fed['fed_out'] < $time) {
-        $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
-        $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
-    }
+    $fed = $db->query("/*qc=on*/SELECT * FROM `fedjail`");
+	//User's federal jail sentence is completed. Let them play again.
+	if ($db->num_rows($fed) > 0)
+	{
+		$fd = $db->fetch_row($fed);
+		if ($fd['fed_out'] < $time) 
+		{
+			$db->query("UPDATE `users` SET `fedjail` = 0");
+			$db->query("DELETE FROM `fedjail` WHERE `fed_out` < {$time}");
+		}
+	}
     //User is in federal jail. Stop their access.
     if ($ir['fedjail'] > 0) {
         alert('info', "Federal Dungeon!", "You are locked away in Federal Dungeon for the next
