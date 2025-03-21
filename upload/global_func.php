@@ -509,25 +509,15 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
  *
  * @return string The URL of the game.
  */
-function determine_game_urlbase()
-{
+function determine_game_urlbase() {
+    // Get the domain (HTTP_HOST) and scheme (HTTP_SCHEME)
+    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
     $domain = (!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : "";
-    $turi =(!empty($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : "";
-    $turiq = '';
-    for ($t = strlen($turi) - 1; $t >= 0; $t--) {
-        if ($turi[$t] != '/') {
-            $turiq = $turi[$t] . $turiq;
-        } else {
-            break;
-        }
-    }
-    $turiq = '/' . $turiq;
-    if ($turiq == '/') {
-        $domain .= substr($turi, 0, -1);
-    } else {
-        $domain .= str_replace($turiq, '', $turi);
-    }
-    return $domain;
+    
+    // Combine scheme and domain to get the base URL
+    $urlbase = $scheme . '://' . $domain;
+    
+    return $urlbase;
 }
 
 /**
@@ -1445,14 +1435,14 @@ function currentHour()
 /**
  * Sends a keep alive to TheMasterGeneral.
  */
-function sendData($url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php')
+function sendData($url='https://www.chivalryisdeadgame.com/chivalry-engine-analytics.php')
 {
     global $set, $_CONFIG;
-    $postdata = "update=1&domain=" . determine_game_urlbase() . "&install=" . time() ."&gamename={$set['WebsiteName']}&dbtype={$_CONFIG['driver']}&version={$set['Version']}";
+    $postdata = "update=1&domain=" . determine_game_urlbase() . "&gamename={$set['WebsiteName']}&dbtype={$_CONFIG['driver']}&version={$set['Version_Number']}";
     $ch = curl_init();
     curl_setopt ($ch, CURLOPT_URL, $url);
     curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 Chivarly Engine Keep-Alive v{$set['Version']}");
+    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 Chivarly Engine Keep-Alive v{$set['Version_Number']}");
     curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
     curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1460,6 +1450,10 @@ function sendData($url='https://chivalryisdeadgame.com/chivalry-engine-analytics
     curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
     curl_setopt ($ch, CURLOPT_POST, 1);
     $result = curl_exec ($ch);
+    if ($result === false) {
+        echo "cURL Error: " . curl_error($ch);
+        echo " (Error Code: " . curl_errno($ch) . ")";
+    }
     curl_close($ch);
 }
 

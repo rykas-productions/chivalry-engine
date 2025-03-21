@@ -17,7 +17,7 @@ while ($r = $db->fetch_row($q))
                             {$r['gamename']}
                         </div>
                         <div class='col-12'>
-                            <small><a href='http://{$r['url']}'>{$r['url']}</a></small>
+                            <small><a href='{$r['url']}'>{$r['url']}</a></small>
                         </div>
                     </div>
                 </div>

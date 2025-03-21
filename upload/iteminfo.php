@@ -217,6 +217,24 @@ if (!$itmid) {
                         </div>
                     </div>";
         }
+        $artItems = array(521,522,523,524,525,526,527,528,529,530,531,532,533,
+                            534,535,536,537,538,539,540,541,542,543,544,545,546,547);
+        if (in_array($itmid, $artItems))
+        {
+            
+            echo "<div class='col-auto'>
+                        <div class='card'>
+                            <div class='card-header'>
+                                Art
+                            </div>
+                            <div class='card-body'>
+                                <div class='row'>
+                                    " . returnIcon($itmid, 24) . "
+                                </div>
+                            </div>
+                        </div>
+                    </div>";
+        }
         echo "</div>";
         $db->free_result($q);
     }

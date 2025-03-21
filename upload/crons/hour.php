@@ -41,6 +41,7 @@ if ((currentHour() == 6) || (currentHour() == 12) || (currentHour() == 18) || (c
 }
 backupDatabase();
 giveNPCsMoney();
+sendData();
 if (currentMonth() == 10)
 {
     $db->query("DELETE FROM `user_pref` WHERE `preference` = '" . currentYear() . "halloweenDailyThrow'");
