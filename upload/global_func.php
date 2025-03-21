@@ -509,25 +509,15 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
  *
  * @return string The URL of the game.
  */
-function determine_game_urlbase()
-{
+function determine_game_urlbase() {
+    // Get the domain (HTTP_HOST) and scheme (HTTP_SCHEME)
+    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
     $domain = (!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : "";
-    $turi =(!empty($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : "";
-    $turiq = '';
-    for ($t = strlen($turi) - 1; $t >= 0; $t--) {
-        if ($turi[$t] != '/') {
-            $turiq = $turi[$t] . $turiq;
-        } else {
-            break;
-        }
-    }
-    $turiq = '/' . $turiq;
-    if ($turiq == '/') {
-        $domain .= substr($turi, 0, -1);
-    } else {
-        $domain .= str_replace($turiq, '', $turi);
-    }
-    return $domain;
+    
+    // Combine scheme and domain to get the base URL
+    $urlbase = $scheme . '://' . $domain;
+    
+    return $urlbase;
 }
 
 /**
