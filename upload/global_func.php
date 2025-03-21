@@ -1445,14 +1445,14 @@ function currentHour()
 /**
  * Sends a keep alive to TheMasterGeneral.
  */
-function sendData($url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php')
+function sendData($url='https://www.chivalryisdeadgame.com/chivalry-engine-analytics.php')
 {
     global $set, $_CONFIG;
-    $postdata = "update=1&domain=" . determine_game_urlbase() . "&install=" . time() ."&gamename={$set['WebsiteName']}&dbtype={$_CONFIG['driver']}&version={$set['Version']}";
+    $postdata = "update=1&domain=" . determine_game_urlbase() . "&gamename={$set['WebsiteName']}&dbtype={$_CONFIG['driver']}&version={$set['Version_Number']}";
     $ch = curl_init();
     curl_setopt ($ch, CURLOPT_URL, $url);
     curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 Chivarly Engine Keep-Alive v{$set['Version']}");
+    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 Chivarly Engine Keep-Alive v{$set['Version_Number']}");
     curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
     curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1460,6 +1460,10 @@ function sendData($url='https://chivalryisdeadgame.com/chivalry-engine-analytics
     curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
     curl_setopt ($ch, CURLOPT_POST, 1);
     $result = curl_exec ($ch);
+    if ($result === false) {
+        echo "cURL Error: " . curl_error($ch);
+        echo " (Error Code: " . curl_errno($ch) . ")";
+    }
     curl_close($ch);
 }
 
