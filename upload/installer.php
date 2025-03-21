@@ -605,6 +605,7 @@ EOF;
 	$db->query("INSERT INTO `settings` VALUES(NULL, 'BuildNumber', '{$Build}')");
 	$db->query("INSERT INTO `settings` VALUES(NULL, 'reCaptcha_public', '{$recappub}')");
 	$db->query("INSERT INTO `settings` VALUES(NULL, 'reCaptcha_private', '{$recappriv}')");
+	$db->query("INSERT INTO `settings` VALUE (NULL, 'keepAlivePing', '{$_POST['analytics']}')");
 	$db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 	$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
     if ($_POST['analytics'] == 'true')
@@ -725,7 +726,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
 /*
  * Function to send analytical data to TheMasterGeneral, if the installer chooses to.
  */
-function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php')
+function sendData($gamename, $dbtype, $url='https://www.chivalryisdeadgame.com/chivalry-engine-analytics.php')
 {
     global $Version;
     $postdata = "domain=" . getGameURL() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
@@ -744,21 +745,12 @@ function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chiva
 }
 function getGameURL()
 {
-    $domain = $_SERVER['HTTP_HOST'];
-    $turi = $_SERVER['REQUEST_URI'];
-    $turiq = '';
-    for ($t = strlen($turi) - 1; $t >= 0; $t--) {
-        if ($turi[$t] != '/') {
-            $turiq = $turi[$t] . $turiq;
-        } else {
-            break;
-        }
-    }
-    $turiq = '/' . $turiq;
-    if ($turiq == '/') {
-        $domain .= substr($turi, 0, -1);
-    } else {
-        $domain .= str_replace($turiq, '', $turi);
-    }
-    return $domain;
+    // Get the domain (HTTP_HOST) and scheme (HTTP_SCHEME)
+    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+    $domain = (!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : "";
+    
+    // Combine scheme and domain to get the base URL
+    $urlbase = $scheme . '://' . $domain;
+    
+    return $urlbase;
 }

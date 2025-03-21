@@ -252,6 +252,17 @@ function basicsettings()
 					</select>
 				</td>
 			</tr>
+			<tr>
+				<th>
+					Keep Alive Ping
+				</th>
+				<td>
+					<select name='keepalive' class='form-control' type='dropdown'>
+						<option value='TRUE'>On</option>
+						<option value='FALSE'>Off</option>
+					</select>
+				</td>
+			</tr>
 		</table>
 		</div>";
 
@@ -289,7 +300,8 @@ function basicsettings()
         $refillbrave = (isset($_POST['refillbrave']) && is_numeric($_POST['refillbrave'])) ? abs(intval($_POST['refillbrave'])) : 10;
         $refillwill = (isset($_POST['refillwill']) && is_numeric($_POST['refillwill'])) ? abs(intval($_POST['refillwill'])) : 5;
         $iqpersec = (isset($_POST['iqpersec']) && is_numeric($_POST['iqpersec'])) ? abs(intval($_POST['iqpersec'])) : 5;
-        if (empty($GameName)) {
+        $_POST['keepalive'] = (isset($_POST['keepalive']) && preg_match("/^[a-z0-9_]+([\\s]{1}[a-z0-9_]|[a-z0-9_])+$/i", $_POST['keepalive'])) ? $db->escape(strip_tags(stripslashes($_POST['keepalive']))) : 'TRUE';
+		if (empty($GameName)) {
             alert('danger', "Uh Oh!", "Please specify a game name.");
             die($h->endpage());
         } elseif (empty($Paypal)) {
@@ -350,6 +362,7 @@ function basicsettings()
             $db->query("UPDATE `settings` SET `setting_value` = '{$refillwill}' WHERE `setting_name` = 'will_refill_cost'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$iqpersec}' WHERE `setting_name` = 'iq_per_sec'");
             $db->query("UPDATE `settings` SET `setting_value` = '{$sendemail}' WHERE `setting_name` = 'sending_email'");
+			$db->query("UPDATE `settings` SET `setting_value` = '{$_POST['keepalive']}' WHERE `setting_name` = 'keepAlivePing'");
             alert('success', "Success!", "You have successfully updated the game settings.", true, 'index.php');
             $api->SystemLogsAdd($userid, 'staff', "Updated game settings.");
         }

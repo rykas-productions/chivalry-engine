@@ -25,5 +25,6 @@ if ($db->num_rows($ready_to_run)) {
 
     //Update queries!
     $db->query("UPDATE `crons` SET `nextUpdate`=`nextUpdate`+{$time} WHERE `file`='{$file}'");
+	sendData();
 }
 ?>
