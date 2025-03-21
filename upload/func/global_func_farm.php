@@ -32,22 +32,25 @@ function checkPlotInfo()
 	while ($r = $db->fetch_row($q))
 	{
 		$sq=$db->query("/*qc=on*/SELECT * FROM `farm_produce` WHERE `seed_item` = {$r['farm_seed']}");
-		$sr=$db->fetch_row($sq);
-		$wiltTime=$r['farm_time']+$sr['seed_safe_time'];
-		if ($r['farm_wellness'] < $sr['seed_wellness_bad'])
+		if ($db->num_rows($sq) > 0)
 		{
-			$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_seed` = 0 WHERE `farm_id` = {$r['farm_id']}");
-			$api->GameAddNotification($r['farm_owner'],"The wellness on one of your farm plots dropped and the {$api->SystemItemIDtoName($r['farm_seed'])} planted there rotted away.");
-		}
-		if ((time() > $wiltTime) && ($r['farm_stage'] > 0))
-		{
-			$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_seed` = 0 WHERE `farm_id` = {$r['farm_id']}");
-			$api->GameAddNotification($r['farm_owner'],"You took too long to interact with one of your farm plots and the {$api->SystemItemIDtoName($r['farm_seed'])} planted there wilted away.");
-		}
-		if ($r['farm_wellness'] == 0)
-		{
-			$db->query("DELETE FROM `farm_data` WHERE `farm_id` = {$r['farm_id']}");
-			$api->GameAddNotification($r['farm_owner'], "One of your fields reached 0% wellness and is no longer usable. You must purchase new land.");
+    		$sr=$db->fetch_row($sq);
+    		$wiltTime=$r['farm_time']+$sr['seed_safe_time'];
+    		if ($r['farm_wellness'] < $sr['seed_wellness_bad'])
+    		{
+    			$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_seed` = 0 WHERE `farm_id` = {$r['farm_id']}");
+    			$api->GameAddNotification($r['farm_owner'],"The wellness on one of your farm plots dropped and the {$api->SystemItemIDtoName($r['farm_seed'])} planted there rotted away.");
+    		}
+    		if ((time() > $wiltTime) && ($r['farm_stage'] > 0))
+    		{
+    			$db->query("UPDATE `farm_data` SET `farm_time` = 0, `farm_stage` = 0, `farm_seed` = 0 WHERE `farm_id` = {$r['farm_id']}");
+    			$api->GameAddNotification($r['farm_owner'],"You took too long to interact with one of your farm plots and the {$api->SystemItemIDtoName($r['farm_seed'])} planted there wilted away.");
+    		}
+    		if ($r['farm_wellness'] == 0)
+    		{
+    			$db->query("DELETE FROM `farm_data` WHERE `farm_id` = {$r['farm_id']}");
+    			$api->GameAddNotification($r['farm_owner'], "One of your fields reached 0% wellness and is no longer usable. You must purchase new land.");
+    		}
 		}
 	}
 }
@@ -307,15 +310,19 @@ function returnTotalStages($plotID)
 function returnCurrentStage($plotID)
 {
 	global $db;
-	$r=$db->fetch_row($db->query("/*qc=on*/SELECT `farm_seed`, `farm_stage` FROM `farm_data` WHERE `farm_id` = {$plotID}"));
-	if ($r['farm_stage'] >= 10)
-		return $r['farm_stage'] - 8;
-	if ($r['farm_stage'] == 2)
-		return returnTotalStages($plotID);
-	if ($r['farm_stage'] == 0)
-		return 0;
-	else
-		return $r['farm_stage'];
+	$q = $db->query("/*qc=on*/SELECT `farm_seed`, `farm_stage` FROM `farm_data` WHERE `farm_id` = {$plotID}");
+	if ($db->num_rows($q) > 0)
+	{
+	    $r=$db->fetch_row($q);
+    	if ($r['farm_stage'] >= 10)
+    		return $r['farm_stage'] - 8;
+    	if ($r['farm_stage'] == 2)
+    		return returnTotalStages($plotID);
+    	if ($r['farm_stage'] == 0)
+    		return 0;
+    	else
+    	    return $r['farm_stage'];
+	}
 		
 }
 
