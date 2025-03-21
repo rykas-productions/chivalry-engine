@@ -11,8 +11,9 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('1.0.3b');
-$Build=('103b');
+$Version=('1.0.3c');
+$Build=('103c');	//todo: at 1.1, count the actual builds and start there. at 1.0.3c, we'd
+					//actually be at 107
 define('MONO_ON', 1);
 session_name('CENGINE');
 session_start();
