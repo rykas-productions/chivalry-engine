@@ -721,7 +721,7 @@ function announce()
                 die($h->endpage());
             }
             $time = time();
-            $_POST['announcement'] = $db->escape(str_replace("\n", "<br />", strip_tags(stripslashes($_POST['announcement']))));
+            $_POST['announcement'] = $db->escape(str_replace("\n", "<br />", htmlspecialchars($_POST['announcement'], ENT_QUOTES, 'UTF-8')));
             $db->query("INSERT INTO `announcements` (`ann_id`, `ann_text`, `ann_time`, `ann_poster`)
 			VALUES (NULL, '{$_POST['announcement']}', '{$time}', '{$userid}');");
             $db->query("UPDATE `users` SET `announcements` = `announcements` + 1");

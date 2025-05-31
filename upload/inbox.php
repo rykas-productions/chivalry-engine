@@ -268,8 +268,8 @@ function send()
 {
     global $db, $userid, $h, $api;
     //Clean and sanitize the POST.
-    $subj = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['subject'])))));
-    $msg = $db->escape(str_replace("\n", "<br />", strip_tags(htmlentities(stripslashes($_POST['msg'])))));
+    $subj = $db->escape(str_replace("\n", "<br />", htmlspecialchars($_POST['subject'], ENT_QUOTES, 'UTF-8')));
+    $msg = $db->escape(str_replace("\n", "<br />", htmlspecialchars($_POST['msg'], ENT_QUOTES, 'UTF-8')));
 	$sendto = $db->escape(strip_tags(htmlentities(stripslashes($_POST['sendto']))));
     //Player failed the CSRF check... warn them to be quicker next time... or to change their password.
     if (!isset($_POST['verf']) || !verify_csrf_code('inbox_send', stripslashes($_POST['verf']))) {
