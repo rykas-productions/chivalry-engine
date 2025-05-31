@@ -5,7 +5,7 @@ function returnIcon($item, $size = 1)
     $q = "/*qc=on*/SELECT `icon`, `color` FROM `items` WHERE `itmid` = {$item}";
     
     // Check cache first
-    $cache = fetchCachedItemIcon($q);
+    /*$cache = fetchCachedItemIcon($q);
     
     if (!empty($cache)) {
         $r = $cache; // Use cached result if available
@@ -13,8 +13,8 @@ function returnIcon($item, $size = 1)
         // Query database only if no cache found
         $r = $db->fetch_row($db->query($q));
         cacheItemIcon($q, $r); // Cache the result for future use
-    }
-    
+    }*/
+    $r = $db->fetch_row($db->query($q));
     // Default icon if no result
     if (empty($r['icon'])) {
         return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
