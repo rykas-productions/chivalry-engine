@@ -13,7 +13,6 @@ if ($api->UserStatus($userid,'dungeon') || $api->UserStatus($userid,'infirmary')
 	alert('danger',"Uh Oh!","You cannot use the smeltery while in the infirmary or dungeon.",true,'index.php');
 	die($h->endpage());
 }
-echo "<h3><i class='game-icon game-icon-anvil'></i> Blacksmith's Smeltery</h3><hr />";
 if (!isset($_GET['action'])) {
     $_GET['action'] = '';
 }
@@ -29,15 +28,58 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid, $api, $ir, $activeSmelt;
-    $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_required_mastery` <= {$ir['reset']} AND `smelt_level_required` <= {$ir['level']} ORDER BY `smelt_output` ASC");
+    $StatArray = array('blacksmith', 'brewing', 'processing', 'cooking',
+                        'runecrafting','gemcrafting', 'other'
+    );
+    //Stat is not chosen, set to level.
+    if (!isset($_GET['type'])) {
+        $_GET['type'] = 'blacksmith';
+    }
+    //Stat chosen is not a valid stat.
+    if (!in_array($_GET['type'], $StatArray)) {
+        $_GET['type'] = 'blacksmith';
+    }
+    //Sanitize and escape the GET.
+    $_GET['type'] = $db->escape(strip_tags(stripslashes($_GET['type'])));
+    $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_required_mastery` <= {$ir['reset']} AND `smelt_level_required` <= {$ir['level']} AND `smelt_type` = '{$_GET['type']}' ORDER BY `smelt_output` ASC");
+    //$q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_type` = '{$_GET['type']}' ORDER BY `smelt_output` ASC");
     echo "
-    <a href='#' class='btn btn-primary' data-toggle='modal' data-target='#smithing_info'>In Progress - {$activeSmelt}</a>
+    <div class='card'>
+        <div class='card-body'>
+            <div class='row'>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='#' class='btn btn-primary btn-block' data-toggle='modal' data-target='#smithing_info'>In Progress - {$activeSmelt} item(s)</a>
+                </div>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='?type=blacksmith' class='btn btn-primary btn-block'>Blacksmith Recipes</a>
+                </div>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='?type=cooking' class='btn btn-primary btn-block'>Cooking Recipes</a>
+                </div>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='?type=brewing' class='btn btn-primary btn-block'>Brewing Recipes</a>
+                </div>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='?type=processing' class='btn btn-primary btn-block'>Processing Recipes</a>
+                </div>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='?type=runecrafting' class='btn btn-primary btn-block'>Runecrafting Recipes</a>
+                </div>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='?type=gemcrafting' class='btn btn-primary btn-block'>Gemcrafting Recipes</a>
+                </div>
+                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
+                    <a href='?type=other' class='btn btn-primary btn-block'>Other Recipes</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <br />
     <div class='row'>
         <div class='col-12'>
             <div class='card'>
                 <div class='card-header'>
-                    Craftable Recipes
+                    " . ucfirst($_GET['type']) . " Recipes
                 </div>
                 <div class='card-body'>";
     while ($r = $db->fetch_row($q)) 

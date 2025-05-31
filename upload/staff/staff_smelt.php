@@ -40,6 +40,20 @@ function add()
             alert('danger', "Uh Oh!", "Please fill out the previous form completely before submitting.");
             die($h->endpage());
         }
+        
+        $StatArray = array('blacksmith', 'brewing', 'processing', 'cooking',
+            'runecrafting','gemcrafting', 'other'
+        );
+        //Stat is not chosen, set to level.
+        if (!isset($_POST['smelt_type'])) {
+            $_POST['smelt_type'] = 'blacksmith';
+        }
+        //Stat chosen is not a valid stat.
+        if (!in_array($_POST['smelt_type'], $StatArray)) {
+            $_POST['smelt_type'] = 'blacksmith';
+        }
+        //Sanitize and escape the GET.
+        $_POST['smelt_type'] = $db->escape(strip_tags(stripslashes($_POST['smelt_type'])));
         $items = $_POST['required_item'];
         $qty = $_POST['required_item_qty'];
         for ($i = 1; $i <= 5; $i++) {
@@ -55,9 +69,9 @@ function add()
             }
         }
         $db->query("INSERT INTO `smelt_recipes`
-		(`smelt_time`, `smelt_items`, `smelt_quantity`, `smelt_output`, `smelt_qty_output`) 
+		(`smelt_time`, `smelt_items`, `smelt_quantity`, `smelt_output`, `smelt_qty_output`, `smelt_type`) 
 		VALUES 
-		('{$_POST['timetocomplete']}', '{$items}', '{$qty}', '{$_POST['smelted_item']}', '{$_POST['smelted_item_qty']}')");
+		('{$_POST['timetocomplete']}', '{$items}', '{$qty}', '{$_POST['smelted_item']}', '{$_POST['smelted_item_qty']}', '{$_POST['smelt_type']}')");
         $api->SystemLogsAdd($userid, 'staff', "Created smelting recipe for " . $api->SystemItemIDtoName($_POST['smelted_item']));
         alert('success', "Success!", "You have successfully created a blacksmith recipe for " . $api->SystemItemIDtoName($_POST['smelted_item']), true, 'index.php');
     } else {
@@ -74,6 +88,22 @@ function add()
 					</th>
 					<td>
 						" . item_dropdown("smelted_item") . "
+					</td>
+				</tr>
+                <tr>
+					<th>
+						Recipe Type
+					</th>
+					<td>
+						<select name='smelt_type' class='form-control' type='dropdown'>
+        					<option value='blacksmith'>Blacksmith</option>
+        					<option value='cooking'>Cooking</option>
+                            <option value='brewing'>Brewing</option>
+                            <option value='processing'>Processing</option>
+                            <option value='runecrafting'>Runecrafting</option>
+                            <option value='gemcrafting'>Gemcrafting</option>
+        					<option value='other'>Other</option>
+        				</select>
 					</td>
 				</tr>
 				<tr>
