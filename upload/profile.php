@@ -760,25 +760,25 @@ function formatMasteryRank($rank)
 	if ($rank == 0)
 		return "N/A";
 	elseif ($rank == 1)
-		return "I";
+		return "⭐";
 	elseif ($rank == 2)
-		return "II";
+		return "⭐⭐";
 	elseif ($rank == 3)
-		return "III";
+		return "⭐⭐⭐";
 	elseif ($rank == 4)
-		return "IV";
+		return "⭐⭐⭐⭐";
 	elseif ($rank == 5)
-		return "V";
+		return "⭐⭐⭐⭐⭐";
 	elseif ($rank == 6)
-		return "VI";
+		return "🌟⭐⭐⭐⭐";
 	elseif ($rank == 7)
-		return "VII";
+		return "🌟🌟⭐⭐⭐";
 	elseif ($rank == 8)
-		return "VIII";
+		return "🌟🌟🌟⭐⭐";
 	elseif ($rank == 9)
-		return "XI";
+		return "🌟🌟🌟🌟⭐";
 	elseif ($rank == 10)
-		return "X";
+		return "🌟🌟🌟🌟🌟";
 	else
 		return "> X";
 }

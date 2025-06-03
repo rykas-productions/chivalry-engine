@@ -133,7 +133,7 @@ function returnStageActions($stage,$fieldid,$stageTime,$seed)
 	if ($stage == 0)
 	{
 	    //see below
-	    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=plant&id={$fieldid}' class='btn btn-success btn-block'>Plant</a><br /></div>";
+	    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=plant&id={$fieldid}' class='btn btn-success btn-block'>🌱</a><br /></div>";
 	}
 	if ($stage == 1)
 	{
@@ -154,7 +154,7 @@ function returnStageActions($stage,$fieldid,$stageTime,$seed)
             </div>";
 		}
 		else
-		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=tend&id={$fieldid}' class='btn btn-success btn-block'>Tend</a><br /></div>";
+		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=tend&id={$fieldid}' class='btn btn-success btn-block'>👨‍🌾</a><br /></div>";
 	}
 	if ($stage == 2)
 	{
@@ -176,8 +176,8 @@ function returnStageActions($stage,$fieldid,$stageTime,$seed)
 		}
 		else
 		{
-		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=harvest&id={$fieldid}' class='btn btn-success btn-block'>Harvest</a><br /></div>
-			<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=collect&id={$fieldid}' class='btn btn-success btn-block'>Seed Collection</a><br /></div>";
+		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=harvest&id={$fieldid}' class='btn btn-success btn-block'>🍎</a><br /></div>
+			<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=collect&id={$fieldid}' class='btn btn-success btn-block'>🌱</a><br /></div>";
 		}
 	}
 	if ($stage >= 10)
@@ -199,19 +199,19 @@ function returnStageActions($stage,$fieldid,$stageTime,$seed)
             </div>";
 		}
 		else
-		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=tend&id={$fieldid}' class='btn btn-success btn-block'>Tend</a><br /></div>";
+		    $hotlink .=  "<div class='col-12 col-sm-6 col-lg-4 col-xxl-3'><a href='?action=tend&id={$fieldid}' class='btn btn-success btn-block'>👨‍🌾</a><br /></div>";
 	}
 	$links .= "
             <div class='row'>
                 {$hotlink}
                 <div class='col-12 col-sm-6 col-lg-4 col-xxl-3'>
-                    <a href='?action=water&id={$fieldid}' class='btn btn-primary btn-block'>Water</a><br />
+                    <a href='?action=water&id={$fieldid}' class='btn btn-primary btn-block'>💦</a><br />
                 </div>
                 <div class='col-12 col-sm-6 col-lg-4 col-xxl-3'>
-			         <a href='?action=fertilize&id={$fieldid}' class='btn btn-info btn-block'>Fertilize</a><br />
+			         <a href='?action=fertilize&id={$fieldid}' class='btn btn-info btn-block'>❤️</a><br />
                 </div>
                 <div class='col-12 col-sm-6 col-lg-4 col-xxl-3'>
-                    <a href='?action=torchland&id={$fieldid}' class='btn btn-danger btn-block'>Torch Land</a><br />
+                    <a href='?action=torchland&id={$fieldid}' class='btn btn-danger btn-block'>🔥</a><br />
                 </div>
             </div>";
 	return $links;

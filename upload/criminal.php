@@ -140,13 +140,16 @@ function crime()
     if ($_GET['c'] <= 0) {
         alert('danger', "Invalid Crime!", "You have chosen to commit and invalid crime.", true, 'criminal.php');
     } else {
-        $q = $db->query("/*qc=on*/SELECT * FROM `crimes` WHERE `crimeID` = {$_GET['c']} LIMIT 1");
+        $q = $db->query("/*qc=on*/SELECT * FROM `crimes` WHERE `crimeID` = '{$_GET['c']}' LIMIT 1");
         if ($db->num_rows($q) == 0) {
             alert('danger', "Invalid Crime!", "You are trying to commit a non-existent crime.", true, 'criminal.php');
             die($h->endpage());
         }
         $r = $db->fetch_row($q);
         $db->free_result($q);
+        $r['crimeSTEXT'] = $db->escape(str_replace("\n", "<br />", htmlspecialchars($r['crimeSTEXT'], ENT_QUOTES, 'UTF-8')));
+        $r['crimeITEXT'] = $db->escape(str_replace("\n", "<br />", htmlspecialchars($r['crimeITEXT'], ENT_QUOTES, 'UTF-8')));
+        $r['crimeFTEXT'] = $db->escape(str_replace("\n", "<br />", htmlspecialchars($r['crimeFTEXT'], ENT_QUOTES, 'UTF-8')));
         if ($ir['brave'] < $r['crimeBRAVE']) {
             alert('danger', "Uh Oh!", "You do not have enough Bravery to commit this crime. You only have {$ir['brave']} Brave.", true, 'criminal.php');
             die($h->endpage());

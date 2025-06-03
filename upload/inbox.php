@@ -22,27 +22,27 @@ if ($db->num_rows($q2) != 0) {
 echo "
 <div class='row'>
     <div class='col-auto'>
-        <a href='inbox.php' class='updateHoverBtn btn btn-primary btn-block'><i class='fas fa-fw fa-inbox'></i> Inbox</a>
+        <a href='inbox.php' class='updateHoverBtn btn btn-primary btn-block'>📥 Inbox</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=outbox' class='updateHoverBtn btn btn-warning btn-block'><i class='fas fa-fw fa-envelope'></i> Outbox</a>
+        <a href='inbox.php?action=outbox' class='updateHoverBtn btn btn-warning btn-block'>📤 Outbox</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=compose' class='updateHoverBtn btn btn-success btn-block'><i class='fas fa-fw fa-file'></i> Compose</a>
+        <a href='inbox.php?action=compose' class='updateHoverBtn btn btn-success btn-block'>✉️ Compose</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='blocklist.php' class='updateHoverBtn btn btn-secondary btn-block'><i class='fas fa-fw fa-ban'></i> Blocklist</a>
+        <a href='blocklist.php' class='updateHoverBtn btn btn-secondary btn-block'>🚫 Blocklist</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=delall' class='updateHoverBtn btn btn-danger btn-block'><i class='fas fa-fw fa-trash-alt'></i> Delete All</a>
+        <a href='inbox.php?action=delall' class='updateHoverBtn btn btn-danger btn-block'>🗑️ Delete All</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
+        <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'>📜 Contacts</a>
         <br />
     </div>
 </div>";
@@ -127,13 +127,13 @@ function home()
 					<div class='col-auto col-xl'>
 						<div class='row'>
 							<div class='col hidden-sm-down'>
-								<a class='btn btn-primary btn-sm updateHoverBtn' href='?action=read&msg={$r['mail_id']}'><i class='far fa-envelope-open'></i></a>
+								<a class='btn btn-primary btn-sm updateHoverBtn' href='?action=read&msg={$r['mail_id']}'>📖</a>
 							</div>
 							<div class='col'>
-								<a class='btn btn-warning btn-sm updateHoverBtn' href='playerreport.php?userid={$r['mail_from']}'><i class='fas fa-flag'></i></a>
+								<a class='btn btn-warning btn-sm updateHoverBtn' href='playerreport.php?userid={$r['mail_from']}'>🚩</a>
 							</div>
 							<div class='col'>
-								<a class='btn btn-danger btn-sm updateHoverBtn' href='?action=delete&msg={$r['mail_id']}'><i class='fas fa-trash-alt'></i></a>
+								<a class='btn btn-danger btn-sm updateHoverBtn' href='?action=delete&msg={$r['mail_id']}'>🗑️</a>
 							</div>
 						</div>
 					</div>
@@ -252,7 +252,7 @@ function read()
                                         <small><b>Action</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        <button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Reply to {$un1['username']}</button>
+                                        <button class='btn btn-primary btn-block' type='submit'>✅ Reply to {$un1['username']}</button>
                                     </div>
                                 </div>
                             </div>
@@ -474,7 +474,7 @@ function compose()
                                         <small><b>Action</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        <button class='btn btn-primary btn-block' type='submit'><i class='fas fa-reply'></i> Send Message</button>
+                                        <button class='btn btn-primary btn-block' type='submit'>✅ Send Message</button>
                                     </div>
                                 </div>
                             </div>

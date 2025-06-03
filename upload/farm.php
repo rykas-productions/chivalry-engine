@@ -78,7 +78,7 @@ echo "<div class='card'>
         <div class='col-md-4' align='left'>
 			Well Capacity - <span id='wellPercent'>{$frmeen}%</span><br />
 			<small>
-				<a href='?action=fill' class='btn btn-primary btn-sm'>Fill Bucket</a>
+				<a href='?action=fill' class='btn btn-primary btn-sm'>💦🪣</a>
 			</small>
 		</div>
 		<div class='col-md'>

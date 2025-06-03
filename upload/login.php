@@ -36,7 +36,7 @@ echo "
                     {$csrf}
                     <input type='email' name='email' class='form-control' required='true' placeholder='Your email address'><br />
                     <input type='password' name='password' class='form-control' required='true' placeholder='Your password'><br />
-                    <input type='submit' class='btn btn-primary btn-block' value='Sign In'><br />
+                    <input type='submit' class='btn btn-primary btn-block' value='✅ Sign In'><br />
                     New here? <a href='register.php'>Sign up</a> for an account!
                 </form>";
 				//loginbutton("rectangle");
@@ -47,7 +47,7 @@ echo "
     <div class='col-md-6 col-lg-7 col-xl-7 col-xxl-4'>
         <div class='card'>
             <div class='card-header'>
-            Warrior with no empathy
+            😡 Warrior with no empathy
             </div>
             <div class='card-body'>
                 {$set['Website_Description']}
@@ -58,7 +58,7 @@ echo "
     <div class='col-md-6 col-lg-5 col-xxl-5'>
         <div class='card'>
             <div class='card-header'>
-                Highest Ranked Players
+                Highest Ranked Players 🎗️
             </div>
             <div class='card-body'>";
                 $Rank = 0;
@@ -94,7 +94,7 @@ echo "
 	<div class='col-md-6 col-lg-7 col-xl-7 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
-            Gameplay
+            ℹ️ Gameplay
             </div>
             <div class='card-body'>
                 Players must get stronger in order to defeat those who oppose them. How they get there is entirely up to them!
@@ -108,7 +108,7 @@ echo "
     <div class='col-md-6 col-lg-5 col-xl-5 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
-                No Installation Required!
+                ✅ No Installation Required!
             </div>
             <div class='card-body'>
                 <div class='row'>
@@ -124,7 +124,7 @@ echo "
 	<div class='col-md-6 col-lg-7 col-xl-7 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
-                Latest Announcement
+                📣 Latest Announcement
             </div>
             <div class='card-body'>
                 <div class='row'>
@@ -140,7 +140,7 @@ echo"
     <div class='col-md-6 col-lg-5 col-xl-4 col-xxl-3'>
         <div class='card'>
             <div class='card-header'>
-                Player of the Week
+                👑 Player of the Week
             </div>
             <div class='card-body'>
                 <div class='row'>

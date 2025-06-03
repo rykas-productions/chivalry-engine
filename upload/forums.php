@@ -390,9 +390,9 @@ function viewforum()
         $t2 = DateTime_Parse($r2['ft_last_time'], true, true);
         $votes = $db->fetch_single($db->query("/*qc=on*/SELECT SUM(`rating`) FROM `forum_tops_rating` WHERE `topic_id` = {$r2['ft_id']}"));
 		$votes = number_format($votes);
-        $pt = ($r2['ft_pinned']) ? " <i class='fa fa-thumbtack' aria-hidden='true'></i>" : "" ;
+        $pt = ($r2['ft_pinned']) ? " 📌" : "" ;
         $pc = ($r2['ft_pinned']) ? "font-italic" : "" ;
-        $lt = ($r2['ft_locked']) ? " <i class='fa fa-lock' aria-hidden='true'></i>" : "" ;
+        $lt = ($r2['ft_locked']) ? " 🔒" : "" ;
         $lc = ($r2['ft_locked']) ? "text-muted" : "" ;
         $pn1['username'] = parseUsername($r2['ft_owner_id']);
         $pn2['username'] = parseUsername($r2['ft_last_id']);
@@ -430,11 +430,11 @@ function viewforum()
 											{
 												echo "{$r2['ft_desc']}<br />";
 											}
-											echo"Rating: <a href='?viewforum={$_GET['viewforum']}&rate=up&topic={$r2['ft_id']}'>+</a> 
+											echo"Rating: <a href='?viewforum={$_GET['viewforum']}&rate=up&topic={$r2['ft_id']}'>➕</a> 
 												<span class='badge badge-pill badge-{$type}'>
 													<a href='?viewforum={$_GET['viewforum']}&rate=none&topic={$r2['ft_id']}' class='text-white'>{$votes}</a>
 												</span> 
-											<a href='?viewforum={$_GET['viewforum']}&rate=down&topic={$r2['ft_id']}'>-</a></small>
+											<a href='?viewforum={$_GET['viewforum']}&rate=down&topic={$r2['ft_id']}'>➖</a></small>
 										</div>
 									</div>
 									<div class='col-1'>

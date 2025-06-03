@@ -10,27 +10,27 @@ require('globals.php');
 echo "
 <div class='row'>
     <div class='col-auto'>
-        <a href='inbox.php' class='updateHoverBtn btn btn-primary btn-block'><i class='fas fa-fw fa-inbox'></i> Inbox</a>
+        <a href='inbox.php' class='updateHoverBtn btn btn-primary btn-block'>📥 Inbox</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=outbox' class='updateHoverBtn btn btn-warning btn-block'><i class='fas fa-fw fa-envelope'></i> Outbox</a>
+        <a href='inbox.php?action=outbox' class='updateHoverBtn btn btn-warning btn-block'>📤 Outbox</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=compose' class='updateHoverBtn btn btn-success btn-block'><i class='fas fa-fw fa-file'></i> Compose</a>
+        <a href='inbox.php?action=compose' class='updateHoverBtn btn btn-success btn-block'>✉️ Compose</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='blocklist.php' class='updateHoverBtn btn btn-secondary btn-block'><i class='fas fa-fw fa-ban'></i> Blocklist</a>
+        <a href='blocklist.php' class='updateHoverBtn btn btn-secondary btn-block'>🚫 Blocklist</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='inbox.php?action=delall' class='updateHoverBtn btn btn-danger btn-block'><i class='fas fa-fw fa-trash-alt'></i> Delete All</a>
+        <a href='inbox.php?action=delall' class='updateHoverBtn btn btn-danger btn-block'>🗑️ Delete All</a>
         <br />
     </div>
     <div class='col-auto'>
-        <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'><i class='fas fa-fw fa-address-book'></i> Contacts</a>
+        <a href='contacts.php' class='updateHoverBtn btn btn-info btn-block'>📜 Contacts</a>
         <br />
     </div>
 </div>";

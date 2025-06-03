@@ -93,10 +93,10 @@ function home()
                         <input type='number' name='logs' value='{$userLogs}' min='1' max='{$userLogs}' required='1' class='form-control'><br />
                     </div>
                     <div class='col-12'>
-                        <input type='submit' value='Cut Logs' class='btn btn-primary btn-block'><br />
+                        <input type='submit' value='🪓 Cut Logs' class='btn btn-primary btn-block'><br />
                     </div>
                     <div class='col-12'>
-                        <a href='?action=upgrade' class='btn btn-block btn-success'>Upgrade Cutter</a>
+                        <a href='?action=upgrade' class='btn btn-block btn-success'>🛠️ Upgrade Cutter</a>
                     </div>
                 </div>
             </form>

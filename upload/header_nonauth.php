@@ -86,16 +86,13 @@ class headers
                 <div class="collapse navbar-collapse" id="CENGINENav">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="register.php"><i
-                                    class="fa fa-fw fa-user"></i> <?php echo "Register"; ?></a>
+                            <a class="nav-link" href="register.php">⚔️ <?php echo "Register"; ?></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="gamerules2.php"><i
-                                    class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
+                            <a class="nav-link" href="gamerules2.php">📜 <?php echo "Game Rules"; ?></a>
                         </li>
 						<li class="nav-item">
-                            <a class="nav-link" href="privacy.php"><i
-                                    class="fa fa-fw fa-user-secret"></i> <?php echo "Privacy Policy"; ?></a>
+                            <a class="nav-link" href="privacy.php">👀 <?php echo "Privacy Policy"; ?></a>
                         </li>
                     </ul>
                 </div>

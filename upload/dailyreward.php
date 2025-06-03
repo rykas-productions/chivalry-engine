@@ -146,5 +146,5 @@ if ($ir['rewarded'] == 0)
         }
     }
     $api->GameAddNotification($userid, $notifText);
-    $db->query("UPDATE `users` SET `rewarded` = 1, `daysloggedin` = `daysloggedin` + 1 WHERE `userid` = {$userid}");
+    $db->query("UPDATE `users` SET `rewarded` = 1, `dayslogged` = `dayslogged` + 1 WHERE `userid` = {$userid}");
 }

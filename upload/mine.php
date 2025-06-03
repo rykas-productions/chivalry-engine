@@ -209,7 +209,7 @@ function home()
 							</div>
 						</div>
 						<div class='col-auto col-sm'>
-							<a href='?action=mine&spot={$mines['mine_id']}' class='btn btn-primary btn-block'>Mine</a>
+							<a href='?action=mine&spot={$mines['mine_id']}' class='btn btn-primary btn-block'>⛏️</a>
 						</div>
 					</div>
 				</div>

@@ -102,12 +102,12 @@ class headers
 								</li>
 								<li>
 									<a href='inventory.php' class='updateHoverBtn'>
-										<span class='menu-text'>" . loadImageAsset("menu/inventory.svg") . " Inventory</span>
+										<span class='menu-text'>🎒 Inventory</span>
 									</a>
 								</li>
 								<li>
 									<a href='explore.php' class='updateHoverBtn'>
-										<span class='menu-text'>" . loadImageAsset("explore/explore.svg") . " Explore</span>
+										<span class='menu-text'>📜 Explore</span>
 									</a>
 								</li>
 								<li class='header-menu'>
@@ -115,27 +115,27 @@ class headers
 								</li>
 								<li>
 									<a href='gym.php' class='updateHoverBtn'>
-										<span class='menu-text'>" . loadImageAsset("explore/gym.svg") . " Gym</span>
+										<span class='menu-text'>💪 Gym</span>
 									</a>
 								</li>
 								<li>
 									<a href='criminal.php' class='updateHoverBtn'>
-										<span class='menu-text'>" . loadImageAsset("explore/crime_center.svg") . " Crimes</span>
+										<span class='menu-text'>😈 Crimes</span>
 									</a>
 								</li>
 								<li>
 									<a href='academy.php' class='updateHoverBtn'>
-										<span class='menu-text'>" . loadImageAsset("explore/academy.svg") . " Academy</span>
+										<span class='menu-text'>🏫 Academy</span>
 									</a>
 								</li>
 								<li>
 									<a href='dungeon.php' class='updateHoverBtn {$extras['dung_class']}'>
-										<span class='menu-text'>" . loadImageAsset("explore/dungeon.svg") . " Dungeon <span class='badge badge-pill badge-primary'>" . number_format($extras['dung_count']) . "</span></span>
+										<span class='menu-text'>🏛️ Dungeon <span class='badge badge-pill badge-primary'>" . number_format($extras['dung_count']) . "</span></span>
 									</a>
 								</li>
 								<li>
 									<a href='infirmary.php' class='updateHoverBtn {$extras['infirm_class']}'>
-										<span class='menu-text'>" . loadImageAsset("explore/infirmary.svg") . " Infirmary <span class='badge badge-pill badge-primary'>" . number_format($extras['infirm_count']) . "</span></span>
+										<span class='menu-text'>🏥 Infirmary <span class='badge badge-pill badge-primary'>" . number_format($extras['infirm_count']) . "</span></span>
 									</a>
 								</li>
 								<li class='header-menu'>
@@ -143,12 +143,12 @@ class headers
 								</li>
 								<li>
 									<a href='forums.php' class='updateHoverBtn {$extras['forum_class']}'>
-										<span class='menu-text'>" . loadImageAsset("explore/forums.svg") . " Forums <span class='badge badge-pill badge-primary'>" . number_format($extras['forum_count']) . "</span></span>
+										<span class='menu-text'>💬 Forums <span class='badge badge-pill badge-primary'>" . number_format($extras['forum_count']) . "</span></span>
 									</a>
 								</li>
 								<li>
 									<a href='newspaper.php' class='updateHoverBtn {$extras['news_class']}'>
-										<span class='menu-text'>" . loadImageAsset("explore/cid_newspaper.svg") . " Newspaper <span class='badge badge-pill badge-primary'>" . number_format($extras['newspaper_count']) . "</span></span>
+										<span class='menu-text'>📰 Newspaper <span class='badge badge-pill badge-primary'>" . number_format($extras['newspaper_count']) . "</span></span>
 									</a>
 								</li>
 								<li>
@@ -158,7 +158,7 @@ class headers
 								</li>
 								<li>
 									<a href='announcements.php' class='updateHoverBtn {$extras['announce_class']}'>
-										<span class='menu-text'>" . loadImageAsset("explore/announcement.svg") . " Announcements <span class='badge badge-pill badge-primary' id='ui_announce'>" . number_format($ir['announcements']) . "</span></span>
+										<span class='menu-text'>📣 Announcements <span class='badge badge-pill badge-primary' id='ui_announce'>" . number_format($ir['announcements']) . "</span></span>
 									</a>
 								</li>";
 								if ($ir['guild'] > 0) 
@@ -166,7 +166,7 @@ class headers
 									echo "
 									<li>
 										<a href='viewguild.php' class='updateHoverBtn'>
-											<span class='menu-text'>" . loadImageAsset("explore/your_guild.svg") . " Your Guild</span></span>
+											<span class='menu-text'>🔍 Your Guild</span></span>
 										</a>
 									</li>";
 								}
@@ -321,9 +321,12 @@ class headers
 
 	
 	//User's federal jail sentence is completed. Let them play again.
-    if ($fed['fed_out'] < $time) {
-        $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
-        $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
+    if (isset($fed['fed_out']))
+    {
+        if ($fed['fed_out'] < $time) {
+            $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
+            $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
+        }
     }
     //User is in federal jail. Stop their access.
     if ($ir['fedjail'] > 0) {

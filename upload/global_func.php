@@ -459,20 +459,20 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
 {
     //This function is a horrible mess dude..
 	if ($type == 'danger') {
-		$icon = "exclamation-triangle";
+		$title = '❌';
 		$js='error';
 	}
 	elseif ($type == 'success') {
-		$icon = "check-circle";
-		$js='log';
+		$title = '✅';
+		$js='success';
 	}
 	elseif ($type == 'info') {
-		$icon = 'info-circle';
+		$title = 'ℹ️';
 		$js='info';
 	}
 	else
 	{
-		$icon = 'exclamation-circle';
+		$title = '⚠️';
 		$js='log';
 	}
 	if ((empty($title)) && ($doredirect))
@@ -489,17 +489,16 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
 	{
         $redirect = ($redirect == 'back') ? $_SERVER['REQUEST_URI'] : $redirect;
         echo "<div class='alert alert-{$type}' role='alert'>
-				<h5 class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
-					{$title}</h5> 
+				 
+					{$title} 
 						{$text} > <a href='{$redirect}' class='alert-link updateHoverBtn'>{$redirecttext}</a>
 				</div>";
     }
 	else 
 	{
         echo "<div class='alert alert-{$type}' role='alert'>
-                    <h5 class='alert-heading'><i class='fa fa-{$icon}' aria-hidden='true'></i>
-					{$title}</h5> 
-					        {$text}
+					{$title}
+                         {$text}
                 </div>";
     }
 	cslog($js,$text);
