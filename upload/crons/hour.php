@@ -32,6 +32,11 @@ else
     $db->query("UPDATE `user_settings` SET `searchtown` = 100 WHERE `searchtown` > 100");
 }
 
+$month = currentMonth();
+$day = currentDay();
+$hour = currentHour();
+$year = currentYear();
+
 
 runMarketTick(3);   //med risk market
 if ((currentHour() == 6) || (currentHour() == 12) || (currentHour() == 18) || (currentHour() == 0))
@@ -46,5 +51,20 @@ if (currentMonth() == 10)
 {
     $db->query("DELETE FROM `user_pref` WHERE `preference` = '" . currentYear() . "halloweenDailyThrow'");
     $db->query("TRUNCATE TABLE `2018_halloween_tot`");
+}
+if (($day == 1) && ($hour == 12))
+{
+    $q=$db->query("SELECT * FROM `vote_raffle` WHERE `userid` != 1 ORDER BY RAND() LIMIT 1");
+    if ($db->num_rows($q) > 0)
+    {
+        $r=$db->fetch_row($q);
+        $r['username'] = parseUsername($r['userid']);
+        $announcement = "<a href='profile.php?user={$r['userid']}'>{$r['username']}</a> [{$r['userid']}] has won this month's voting raffle and received a $3 VIP Pack. Thanks for voting! The raffle has been reset, and everyone now has an equal shot to win this month's raffle!!";
+        $api->GameAddAnnouncement($announcement, 1);
+        $api->UserGiveItem($r['userid'],13,1);
+        $api->GameAddNotification($r['userid'],"You were selected as the Monthly Vote Raffle winner! You've received a $3 VIP Pack to your inventory!");
+        $db->query("TRUNCATE TABLE `vote_raffle`");
+    }
+    $db->query("UPDATE `settings` SET `setting_value` = '0.00' WHERE `setting_name` = 'MonthlyDonationGoal'");
 }
 ?>
