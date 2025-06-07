@@ -70,7 +70,8 @@ $rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `ru
 $bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
 $bigbank = ($ir['bigbank'] > -1) ? shortNumberParse($ir['bigbank']) : "N/A";
 $vaultbank = ($ir['vaultbank'] > -1) ? shortNumberParse($ir['vaultbank']) : "N/A";
-$storebank = (getCurrentUserPref("storageAcc{$ir['location']}", -1) > -1) ? shortNumberParse(getCurrentUserPref("storageAcc{$ir['location']}", -1)) : "N/A";
+$storedbank = getCurrentUserPref("storageAcc{$ir['location']}", -1);
+$storebank = ($storedbank > -1) ? shortNumberParse($storedbank) : "N/A";
 $tbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "N/A";
 $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
@@ -78,6 +79,7 @@ $estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `es
 $miningenergy = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
 $towndesc = $db->fetch_single($db->query("SELECT `town_desc` FROM `town` WHERE `town_id` = {$ir['location']}"));
 $npccount = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`botid`) FROM `botlist`")));
+$loginPoints = getUserPref($userid, 'loginPoints', 1.1);
 if ($ir['course'] > 0)
 {
     
@@ -192,6 +194,9 @@ echo "
                         </div>
                         <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
                             <a href='estate_management.php?action=estateMarket'>" . loadImageAsset("explore/estate_market.svg") . " Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a>
+                        </div>
+                        <div class='col-auto col-md-4 col-xl-auto col-xxl-6 col-xxxl-4'>
+                            <a href='dailyrewardstore.php'>❤ Login Point Store <span class='badge badge-pill badge-primary'>{$loginPoints}</a></a>
                         </div>";
                         if ($month == 10)
                         {
@@ -247,7 +252,8 @@ echo "
                                 <a href='vaultbank.php' class='{$txtClass}'>" . loadImageAsset("explore/vault_bank.svg") . " Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a>
                             </div>";
                         }
-                        if ($ir['level'] >= 325) {
+                        if (($ir['level'] >= 325) && ($storedbank > 0))
+                        {
                             echo "
                             <div class='col-auto col-xxxl-4'>
                                 <a href='bankstore.php' class='{$txtClass}'>" . loadImageAsset("explore/city_bank.svg") . " {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a>

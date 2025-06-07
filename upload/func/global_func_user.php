@@ -434,7 +434,7 @@ function returnMaxInterest($user)
 {
 	global $db;
 	$level=$db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `userid` = {$user}"));
-	return round(20000000 * levelMultiplier($level, getUserResetCount($user)));
+	return round(50000000 * levelMultiplier($level, getUserResetCount($user)));
 }
 
 /**

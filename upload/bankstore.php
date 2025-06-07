@@ -105,27 +105,6 @@ function index()
 					<div class='col-lg'>
 						<div class='card'>
 							<div class='card-header'>
-								Deposit (" . number_format($ir['primary_currency']) . " Copper Coins)
-							</div>
-							<div class='card-body'>
-								<form method='post'>
-									<div class='row'>
-										<div class='col-12 col-sm-6 col-md-8'>
-											<input type='number' min='1' max='{$ir['primary_currency']}' class='form-control' id='form_bank_wallet' required='1' name='deposit' value='{$ir['primary_currency']}'>
-										    <br />
-                                        </div>
-										<div class='col-12 col-sm-6 col-md-4'>
-											<input type='submit' value='Deposit' class='btn btn-primary btn-block'>
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-						<br />
-					</div>
-					<div class='col-lg'>
-						<div class='card'>
-							<div class='card-header'>
 								Withdraw (" . number_format($bankAccount) . " Copper Coins)
 							</div>
 							<div class='card-body'>

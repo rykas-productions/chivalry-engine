@@ -68,7 +68,8 @@ $rr = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`challenger`) FROM `ru
 $bank = ($ir['bank'] > -1) ? shortNumberParse($ir['bank']) : "N/A";
 $bigbank = ($ir['bigbank'] > -1) ? shortNumberParse($ir['bigbank']) : "N/A";
 $vaultbank = ($ir['vaultbank'] > -1) ? shortNumberParse($ir['vaultbank']) : "N/A";
-$storebank = (getCurrentUserPref("storageAcc{$ir['location']}", -1) > -1) ? shortNumberParse(getCurrentUserPref("storageAcc{$ir['location']}", -1)) : "N/A";
+$storedbank = getCurrentUserPref("storageAcc{$ir['location']}", -1);
+$storebank = ($storedbank > -1) ? shortNumberParse($storedbank) : "N/A";
 $tbank = ($ir['tokenbank'] > -1) ? shortNumberParse($ir['tokenbank']) : "N/A";
 $guildcount = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`guild_id`) FROM `guild`"));
 $MUS = ($db->fetch_row($db->query("/*qc=on*/SELECT * FROM `mining` WHERE `userid` = {$userid} LIMIT 1")));
@@ -76,6 +77,8 @@ $estates = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`em_id`) FROM `es
 $miningenergy = min(round($MUS['miningpower'] / $MUS['max_miningpower'] * 100), 100);
 $towndesc = $db->fetch_single($db->query("SELECT `town_desc` FROM `town` WHERE `town_id` = {$ir['location']}"));
 $npccount = shortNumberParse($db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`botid`) FROM `botlist`")));
+$loginPoints = getUserPref($userid, 'loginPoints', 1.1);
+
 if ($ir['course'] > 0)
 {
     
@@ -109,58 +112,60 @@ if (!empty($towndesc))
     alert('secondary',"","<b>" . $towndesc . "</b>",false);
 echo"
 <div class='row'>
-	<div class='col-12 col-lg-6 col-xl-4 col-xxxl-2'>
+	<div class='col-12 col-lg-5 col-xl-4 col-xxxl-2'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>Shopping District</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='shops.php' class='{$txtClass}'>🛍️ Local Shops</a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='itemmarket.php'>⤵️ Item Market <span class='badge badge-pill badge-primary'>{$market}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='itemrequest.php'>⤴️ Item Request <span class='badge badge-pill badge-primary'>{$rmarket}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='secmarket.php'>🪙 Token Market <span class='badge badge-pill badge-primary'>{$secmarket}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='votestore.php'>🗳️ Vote Point Store <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['vote_points']) . "</span></a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='vipmarket.php'>🏅 VIP Days Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($vipMarket) . "</span></a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='estate_management.php?action=estateMarket'>🏠 Estate Market <span class='badge badge-pill badge-primary'>" . shortNumberParse($estates) . "</span></a>
-					</div>";
+					</div>
+                    <div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
+						<a href='dailyrewardstore.php'>❤ Login Store <span class='badge badge-pill badge-primary'>{$loginPoints}</a></div>";
                     if ($month == 10)
                     {
                         echo "
-                            <div class='col-auto col-xxxl-12'>
+                            <div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
         						<a href='halloween.php?action=chuck'>🎃 Pumpkin Chuck</a>
         					</div>";
                     }
                     if ($month == 11)
                     {
                         echo "
-                        <div class='col-auto col-xxxl-12'>
+                        <div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
     						<a href='attack.php?user=21'>🦃 Participate in Turkey Hunt</a>
     					</div>";
                     }
                     if ($month == 12)
                     {
                         echo "
-                        <div class='col-auto col-xxxl-12'>
+                        <div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
     						<a href='adventcalender.php'>🗓️ CID Advent Calendar</a>
     					</div>
-                        <div class='col-auto col-xxxl-12'>
+                        <div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
     						<a href='xmastree.php'>🎄 CID Christmas Tree</a>
     					</div>
-                        <div class='col-auto col-xxxl-12'>
+                        <div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
     						<a href='xmastree.php?action=wish'>🕯️ Christmas Wish</a>
     					</div>";
                     }
@@ -174,7 +179,7 @@ echo"
 						{
 							$br=$db->fetch_row($bossq);
 							echo "
-							<div class='col-auto col-xxxl-12'>
+							<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 								<b><a href='attack.php?user={$br['boss_user']}' class='text-danger'>💢 Slay Boss!</a></b>
 							</div>";
 						}
@@ -184,54 +189,54 @@ echo"
 		</div>
         <br />
 	</div>
-	<div class='col-12 col-lg-6 col-xl-4'>
+	<div class='col-12 col-lg-7 col-xl-4'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>Financial District</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-6 col-xl-12 col-xxxl-6'>
 						<a href='job.php' class='{$txtClass}'>👩‍💼 Work Center</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='bank.php' class='{$txtClass}'>🏦 City Bank <span class='badge badge-pill badge-primary'>{$bank}</span></a>
 					</div>";
 					if ($ir['level'] >= 75) 
 					{
 						echo "
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='bigbank.php' class='{$txtClass}'>🏦 Federal Bank <span class='badge badge-pill badge-primary'>{$bigbank}</span></a>
 					</div>";
 					}
 					if ($ir['level'] >= 175) 
 					{
 						echo "
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='vaultbank.php' class='{$txtClass}'>🏦 Vault Bank <span class='badge badge-pill badge-primary'>{$vaultbank}</span></a>
 					</div>";
 					}
-					if ($ir['level'] >= 325)
+					if (($ir['level'] >= 325) && ($storedbank > 0))
 					{
 					    echo "
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='bankstore.php' class='{$txtClass}'>🏦 {$api->SystemTownIDtoName($ir['location'])} Storage <span class='badge badge-pill badge-primary'>{$storebank}</span></a>
 					</div>";
 					}
 					echo "
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='tokenbank.php' class='{$txtClass}'>🪙 Token Bank <span class='badge badge-pill badge-primary'>{$tbank}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-xl-12 col-xxxl-6'>
 						<a href='estate_management.php' class='{$txtClass}'>🏠 Estate Agent</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-xl-12 col-xxxl-6'>
 						<a href='travel.php' class='{$txtClass}'>🐴 Travel Agent</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='temple.php' class='{$txtClass}'>🛕 Temple of Fortune</a>
 					</div>
-                    <div class='col-auto col-xxxl-6'>
+                    <div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='investmarket.php' class='{$txtClass}'>💹 Asset Investment</a>
 					</div>
 				</div>
@@ -239,52 +244,52 @@ echo"
 		</div>
         <br />
 	</div>
-	<div class='col-12 col-lg-6 col-xl-4'>
+	<div class='col-12 col-lg-5 col-xl-4'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>Working District</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-auto col-xxxl-6'>
-						<a href='mine.php' class='{$txtClass}'>⛏️ Dangerous Mines <span class='badge badge-pill badge-primary'>{$miningenergy}%</span></a>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
+						<a href='mine.php' class='{$txtClass}'>⛏️ The Mines <span class='badge badge-pill badge-primary'>{$miningenergy}%</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
-						<a href='smelt.php' class='{$txtClass}'>⚒️ Blacksmith's Smeltery</a>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
+						<a href='smelt.php' class='{$txtClass}'>⚒️ Blacksmith</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='farm.php' class='{$txtClass}'>👨‍🌾 Farming</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='gym.php' class='{$txtClass}'>💪 The Gym</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='bottent.php' class='{$txtClass}'>🤼‍♀️ NPC Battle List <span class='badge badge-pill badge-primary'>{$npccount}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='chivalry_gym.php' class='{$txtClass}'>4️⃣ Chivalry Gym</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='criminal.php' class='{$txtClass}'>😈 Criminal Center</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='streetbum.php' class='{$txtClass}'>🙇‍♂️ Street Begging <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['searchtown']) . "</span></a>
 					</div>";
 						if ($ir['autobum'] > 0)
 						{
 							echo "
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='autobum.php' class='{$txtClass}'>🙇‍♂ Auto Street Beg <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autobum']) . "</span></a>
 					</div>";
 						}
 					echo"
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='academy.php' class='{$txtClass}'>🏫 Local Academy <span class='badge badge-pill badge-primary'>{$academy}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='achievements.php'>🎖️  Achievements</a>
 					</div>
-                    <div class='col-auto col-xxxl-6'>
+                    <div class='col-auto col-sm-6  col-lg-12 col-xxxl-6'>
 						<a href='woodcut.php' class='{$txtClass}'>🪓 Wood Cutter</a>
 					</div>
 				</div>
@@ -292,7 +297,7 @@ echo"
 		</div>
         <br />
 	</div>
-    <div class='col-12 col-lg-6 col-xl-4 col-xxxl-2'>
+    <div class='col-12 col-lg-7 col-xl-4 col-xxxl-2'>
 		<div class='card'>
 			<div class='card-header'>
                 <b>Shortcuts</b>
@@ -302,7 +307,7 @@ echo"
                 	$q = $db->query("/*qc=on*/SELECT * FROM `shortcut` WHERE `sc_userid` = {$userid}");
                 	while ($r = $db->fetch_row($q)) {
                 	      echo "
-                        <div class='col-auto'>
+                        <div class='col-auto col-sm-6 col-xl-12'>
     						<a href='{$r['sc_link']}'>{$r['sc_name']}</a> <a href='?delete={$r['sc_id']}'>❌</a>
     					</div>";
                 	}
@@ -314,37 +319,37 @@ echo"
 			</div>
 		</div>
 	</div>
-    <div class='col-12 col-lg-6 col-xl-4 col-xxxl-2'>
+    <div class='col-12 col-lg-5 col-xl-4 col-xxxl-2'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>Gambling District</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='russianroulette.php' class='{$txtClass}'>🔫 Russian Roulette <span class='badge badge-pill badge-primary'>{$rr}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='roulette.php?tresde={$tresder}' class='{$txtClass}'>♦️ Roulette</a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='slots.php?tresde={$tresder}' class='{$txtClass}'>🎰 Slots</a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='hexbags.php' class='{$txtClass}'>🧳 Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['hexbags']) . "</span></a>
 					</div>";
 					if ($ir['autohex'] > 0)
 					{
 						echo"
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<b><a href='autohex.php' class='{$txtClass}'>🧳 Auto Hexbags <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['autohex']) . "</span></a></b>
 					</div>";
 					}
 					echo"
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='raffle.php' class='{$txtClass}'>🎟️ CID Raffle <span class='badge badge-pill badge-primary'>" . shortNumberParse($set['lotterycash']) . "</span></a>
 					</div>
-                    <div class='col-auto col-xxxl-12'>
+                    <div class='col-auto col-sm-6  col-lg-12 col-xxxl-12'>
 						<a href='hilow.php?tresde={$tresder}' class='{$txtClass}'>↕️ High/Low</span></a>
 					</div>
 				</div>
@@ -352,89 +357,89 @@ echo"
 		</div>
 		<br />
 	</div>
-	<div class='col-12 col-lg-6 col-xl-4'>
+	<div class='col-12 col-lg-7 col-xl-4'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>Federal District</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='users.php'>👫  Players List <span class='badge badge-pill badge-primary'>{$users}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='usersonline.php'>📶 Players Online <span class='badge badge-pill badge-primary'>{$userson}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='userstown.php'>🏙️ Players In Town <span class='badge badge-pill badge-primary'>{$userstown}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='staff.php'>🦸 CID Staff</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='fedjail.php'>🚨 Federal Dungeon</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-xl-12 col-xxxl-6'>
 						<a href='stats.php'>ℹ️ Game Statistics</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-xl-12 col-xxxl-6'>
 						<a href='playerreport.php'>⚠️ Player Report</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='announcements.php'>📣 Announcements <span class='badge badge-pill badge-primary'>" . shortNumberParse($ir['announcements']) . "</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-6 col-xl-12 col-xxxl-6'>
 						<a href='itemappendix.php'>📋 Item Appendix</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6  col-lg-6 col-xl-12 col-xxxl-6'>
 						<a href='milestones.php'>🎉 Milestones</a>
 					</div>
-                    <div class='col-auto col-xxxl-6'>
+                    <div class='col-auto col-sm-6 col-lg-6 col-xl-12 col-xxxl-6'>
 						<a href='promo.php'>🔤 Promo Codes</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class='col-12 col-lg-6 col-xl-4'>
+	<div class='col-12 col-lg-5 col-xl-4'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>Social District</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='dungeon.php'>🏛️ Dungeon <span class='badge badge-pill badge-primary'>{$dung_count}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='infirmary.php'>🏥 Infirmary <span class='badge badge-pill badge-primary'>{$infirm_count}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='forums.php'>💬 Forums <span class='badge badge-pill badge-primary'>{$forumposts}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='newspaper.php'>📰 Newspaper <span class='badge badge-pill badge-primary'>{$paperads}</span></a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='polling.php'>🗳️ Polling Center</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='halloffame.php'>🏆 Hall of Fame</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='marriage.php'>💒 Marriage Center</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='tutorial.php'>🆘 CID Tutorial</a>
 					</div>
-					<div class='col-auto col-xxxl-6'>
+					<div class='col-auto col-sm-6 col-lg-12 col-xxxl-6'>
 						<a href='referallist.php'>🍻 Your Referrals</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-    <div class='col-12 col-lg-6 col-xl-4 col-xxxl-2'>
+    <div class='col-12 col-lg-7 col-xl-4 col-xxxl-2'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>Danger District</b>
@@ -443,24 +448,24 @@ echo"
 				<div class='row'>";
 					if ($ir['guild'] > 0) {
 						echo "
-					<div class='col-auto'>
-						<a href='viewguild.php'>🔍 Visit Your Guild</a>
+					<div class='col-auto col-sm-6  col-xxxl-12'>
+						<a href='viewguild.php'>🔍 Your Guild</a>
 					</div>";
 					}
 					echo"
-					<div class='col-auto'>
+					<div class='col-auto col-sm-6 col-xl-12'>
 						<a href='guilds.php'>📋 Guilds <span class='badge badge-pill badge-primary'>{$guildcount}</span></a>
 					</div>
-					<div class='col-auto'>
+					<div class='col-auto col-sm-6 col-xl-12'>
 						<a href='guild_district.php'>💼 Guild Districts</a>
 					</div>
-					<div class='col-auto'>
+					<div class='col-auto col-sm-6 col-xl-12'>
 						<a href='guilds.php?action=wars'>☠️ Guild Wars</a> <span class='badge badge-pill badge-danger'>{$wars}</span>
 					</div>
-					<div class='col-auto'>
+					<div class='col-auto col-sm-6 col-lg-12'>
 						<a href='bounty.php' class='{$txtClass}'>⚰️ Bounty Hunter <span class='badge badge-pill badge-primary'>{$bounty_count}</span></a>
 					</div>
-					<div class='col-auto'>
+					<div class='col-auto col-sm-6 col-xl-12'>
 						<a href='missions.php' class='{$txtClass}'>🤐 Missions</a>
 					</div>
 				</div>
@@ -470,20 +475,20 @@ echo"
 	if ($ir['vip_days'] > 0)
 	{
 		echo "
-	<div class='col-12 col-lg-6 col-xl-4 col-xxxl-2'>
+	<div class='col-12 col-lg-5 col-xl-4 col-xxxl-2'>
 		<div class='card'>
 			<div class='card-header'>
 				<b>VIP District</b>
 			</div>
 			<div class='card-body'>
 				<div class='row'>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-4 col-lg-6 col-xxxl-12'>
 						<a href='friends.php'>👍 Friends</a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-4col-lg-6 col-xxxl-12'>
 						<a href='enemy.php'>👎 Enemies</a>
 					</div>
-					<div class='col-auto col-xxxl-12'>
+					<div class='col-auto col-sm-4col-lg-6 col-xxxl-12'>
 						<a href='userlogs.php'>📜 VIP Logs</a>
 					</div>
 				</div>
@@ -492,7 +497,7 @@ echo"
 	</div>";
 	}
 	echo"
-    <div class='col-12 col-lg-6 col-xl-4'>
+    <div class='col-12 col-lg'>
 		<div class='card'>
             <div class='card-header'>
                 <b>{$set['WebsiteName']} Referral Link</b>
