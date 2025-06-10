@@ -176,386 +176,155 @@ $inv =
 $lt = "";
 echo "
 <div class='accordion' id='inventoryAccordian'>";
-while ($i = $db->fetch_row($inv))
-{
-	if ($lt != $i['itmtypename']) {
+while ($i = $db->fetch_row($inv)) {
+    if ($lt != $i['itmtypename']) {
         $lt = $i['itmtypename'];
-        echo "<div class='card'>
-				<div class='card-body' id='heading{$i['itmid']}'>
-					<h4 class='mb-0'>
-						{$lt}
-					</h4>
-				</div>
-			</div>";
+        echo "<div class='card'><div class='card-body'><h4 class='mb-0'>{$lt}</h4></div></div>";
     }
-	$i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
-	$icon = ($ir['icons'] == 1) ? returnIcon($i['itmid'],2) : "";
-	$i['inv_qty_value']=$i['inv_qty']*$i['itmsellprice'];
-	$total=returnTotalItemCount($i['itmid']);
-	$itemUse = array();
-	echo "
-	<div class='card'>
-		<div class='card-header bg-transparent' id='heading{$i['itmid']}'>
-			<h2 class='mb-0'>
-				<button class='btn btn-block btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$i['itmid']}' aria-expanded='true' aria-controls='collapse{$i['itmid']}'>
-					<div class='row'>
-						<div class='col-2 col-md-1'>
-							{$icon}
-						</div>
-						<div class='col-10 col-md-5'>
-							{$i['itmname']}";
-							if ($i['inv_qty'] > 1) 
-							    echo "<b> x " . shortNumberParse($i['inv_qty']) . "</b>";
-							echo "
-						</div>
-						<div class='col'>
-							<div class='row'>
-								<div class='col-12 col-sm-8 col-md-7 col-xl-8'>
-                                    <form method='post'>";
-								//Item has a normal use button
-									if (($i['effect1_on'] == 'true' || $i['effect2_on'] == 'true' ||  $i['effect3_on'] == 'true') 
-										&& ($i['armor'] == 0 && $i['weapon'] == 0 && $i['itmtypename'] != 'Rings' && $i['itmtypename'] != 'Necklaces' 
-										    && $i['itmtypename'] != 'Pendants' && $i['itmtypename'] != 'Badges')) 
-									{
-										array_push($itemUse, array("itemuse.php?item={$i['inv_id']}", "Use {$i['itmname']}"));
-									}
-									//Box of Random
-									if ($i['itmid'] == 33)
-									{
-										array_push($itemUse, array("bor.php?tresde={$tresder}", "Open {$i['itmname']}"));
-										if ($ir['autobor'] > 0)
-										{
-										    array_push($itemUse, array("autobor.php", "Auto Open {$i['itmname']}"));
-										}
-									}
-									//Bomb
-									if ($i['itmid'] == 28)
-									{
-										array_push($itemUse, array("bomb.php?action=small", "Set Charge"));
-									}
-									//Medium Bomb
-									if ($i['itmid'] == 61)
-									{
-										array_push($itemUse, array("bomb.php?action=medium", "Set Charge"));
-									}
-									//Large  bomb
-									if ($i['itmid'] == 62)
-									{
-										array_push($itemUse, array("bomb.php?action=large", "Set Charge"));
-									}
-									//2017 Halloween Scratch Ticket
-									if ($i['itmid'] == 63)
-									{
-										array_push($itemUse, array("2017halloween.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//Pumpkin
-									if ($i['itmid'] == 64)
-									{
-										array_push($itemUse, array("bomb.php?action=pumpkin", "Chuck {$i['itmname']}"));
-									}
-									//Invis Potion
-									if ($i['itmid'] == 68)
-									{
-										array_push($itemUse, array("invispotion.php", "Drink {$i['itmname']}"));
-									}
-									//2017 Halloween Scratch Ticket
-									if ($i['itmid'] == 69)
-									{
-										array_push($itemUse, array("2017thanksgiving.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//VIP Scratch Ticket
-									if ($i['itmid'] == 89)
-									{
-										array_push($itemUse, array("vipticket.php", "Scratch {$i['itmname']}"));
-									}
-									//Auto Hexbag Opener
-									if ($i['itmid'] == 91)
-									{
-										array_push($itemUse, array("vipitem.php?item=autohex", "Redeem {$i['itmname']}"));
-									}
-									//Auto BOR Opener
-									if ($i['itmid'] == 92)
-									{
-										array_push($itemUse, array("vipitem.php?item=autobor", "Redeem {$i['itmname']}"));
-									}
-									//Mysterious Potion
-									if ($i['itmid'] == 123)
-									{
-										array_push($itemUse, array("mysteriouspotion.php", "Consume {$i['itmname']}"));
-									}
-									//VIP Color Changer
-									if ($i['itmid'] == 128)
-									{
-										array_push($itemUse, array("vipitem.php?item=vipcolor", "Change VIP Color"));
-									}
-									//2018 St Patties Scratch Ticket
-									if ($i['itmid'] == 137)
-									{
-										array_push($itemUse, array("2018stpatties.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//Rick roll
-									if ($i['itmid'] == 149)
-									{
-										array_push($itemUse, array("bomb.php?action=rickroll", "Use Rickroll"));
-									}
-									//Mining Herb
-									if ($i['itmid'] == 177)
-									{
-										array_push($itemUse, array("mine.php?action=herb", "Consume {$i['itmname']}"));
-									}
-									//2018 Halloween Scratch Ticket
-									if ($i['itmid'] == 189)
-									{
-										array_push($itemUse, array("2018halloween.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//2018 Thanks Giving Scratch Ticket
-									if ($i['itmid'] == 195)
-									{
-										array_push($itemUse, array("2018thanksgiving.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//Snowball
-									if ($i['itmid'] == 202)
-									{
-										array_push($itemUse, array("bomb.php?action=snowball", "Toss {$i['itmname']}"));
-									}
-									//2018 Christmas Scratch Ticket
-									if ($i['itmid'] == 203)
-									{
-										array_push($itemUse, array("2018christmas.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//CID Gym Access Scroll
-									if ($i['itmid'] == 205)
-									{
-										array_push($itemUse, array("gym_ca.php", "Train with {$i['itmname']}"));
-									}
-									//CID Scratch Ticket
-									if ($i['itmid'] == 210)
-									{
-										array_push($itemUse, array("scratchticket.php?action=cidticket", "Scratch {$i['itmname']}"));
-									}
-									//Assassination Note
-									if ($i['itmid'] == 222)
-									{
-										array_push($itemUse, array("bomb.php?action=assassin", "File {$i['itmname']}"));
-									}
-									//Mining Energy Potion
-									if ($i['itmid'] == 227)
-									{
-										array_push($itemUse, array("mine.php?action=potion", "Drink {$i['itmname']}"));
-									}
-									//2019 Easter Scratch Ticket
-									if ($i['itmid'] == 230)
-									{
-										array_push($itemUse, array("2019easter.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//Sepll Tome Key
-									if ($i['itmid'] == 250)
-									{
-										array_push($itemUse, array("spellbook.php", "Unlock Tome"));
-									}
-									//Poison Potion
-									if ($i['itmid'] == 258)
-									{
-									    array_push($itemUse, array("potion.php?potion=poison", "Poison Weaponry"));
-									}
-									//Will Stimulant
-									if ($i['itmid'] == 263)
-									{
-										array_push($itemUse, array("vipitem.php?item=willstim", "Convert {$i['itmname']}"));
-									}
-									//2019 Halloween Scratch Ticket
-									if ($i['itmid'] == 264)
-									{
-										array_push($itemUse, array("2019halloween.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//2nd Year Ann Scratch Ticket
-									if ($i['itmid'] == 268)
-									{
-										array_push($itemUse, array("scratchticket.php?action=2ndyearann", "Scratch {$i['itmname']}"));
-									}
-									//Scroll of the Adminly
-									if ($i['itmid'] == 320)
-									{
-										array_push($itemUse, array("goditem.php", "Eat Potato"));
-									}
-									//2020 Big Bang Scratch Ticket
-									if ($i['itmid'] == 352)
-									{
-										array_push($itemUse, array("scratchticket.php?action=2020bang", "Scratch {$i['itmname']}"));
-									}
-									//Auto Street Begger VIP
-									if ($i['itmid'] == 364)
-									{
-										array_push($itemUse, array("vipitem.php?item=autobum", "Redeem {$i['itmname']}"));
-									}
-									//2020 Halloween Scratch Ticket
-									if ($i['itmid'] == 376)
-									{
-										array_push($itemUse, array("2020halloween.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//2020 Thanksgiving Scratch Ticket
-									if ($i['itmid'] == 391)
-									{
-										array_push($itemUse, array("2020thanksgiving.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//CID Admin Contact Prayer to God
-									if ($i['itmid'] == 407)
-									{
-									    array_push($itemUse, array("vipitem.php?item=contact", "Pray to CID Admin"));
-									}
-									//Powered Miner
-									if ($i['itmid'] == 424)
-									{
-									    array_push($itemUse, array("vipitem.php?item=autominer", "Setup {$i['itmname']}"));
-									}
-									//2022 Halloween ticket
-									if ($i['itmid'] == 449)
-									{
-									    array_push($itemUse, array("2022halloween.php?action=ticket", "Scratch {$i['itmname']}"));
-									}
-									//Weapons
-									if ($i['weapon'] > 0)
-									{
-										array_push($itemUse, array("equip.php?slot=weapon&ID={$i['inv_id']}", "Equip {$i['itmname']} as Weapon"));
-									}
-									//Armor
-									if ($i['armor'] > 0)
-									{
-										array_push($itemUse, array("equip.php?slot=armor&ID={$i['inv_id']}", "Equip {$i['itmname']} as Armor"));
-									}
-									//Badges
-									if ($i['itmtypename'] == 'Badges')
-									{
-										array_push($itemUse, array("equip.php?slot=badge&ID={$i['inv_id']}", "Equip {$i['itmname']} as Badge"));
-									}
-									//Rings
-									if ($i['itmtypename'] == 'Rings')
-									{
-										array_push($itemUse, array("equip.php?slot=ring&ID={$i['inv_id']}", "Equip {$i['itmname']} as Ring"));
-									}
-									//Necklaces
-									if ($i['itmtypename'] == 'Necklaces')
-									{
-										array_push($itemUse, array("equip.php?slot=necklace&ID={$i['inv_id']}", "Equip {$i['itmname']} as Necklace"));
-									}
-									//Pendants
-									if ($i['itmtypename'] == 'Pendants')
-									{
-										array_push($itemUse, array("equip.php?slot=pendant&ID={$i['inv_id']}", "Equip {$i['itmname']} as Pendant"));
-									}
-									//Potion equipping.
-									if ((($i['itmtypename'] == 'Potions') || ($i['itmtypename'] == 'Food')) && (!in_array($i['itmid'],$potionexclusion)))
-									{
-									    array_push($itemUse, array("equip.php?slot=potion&ID={$i['inv_id']}", "Equip {$i['itmname']} as Potion"));
-									}
-									array_push($itemUse, array("itemsend.php?ID={$i['inv_id']}", "Send {$i['itmname']}"));
-									array_push($itemUse, array("itemmarket.php?action=add&ID={$i['itmid']}", "List {$i['itmname']} on Market"));
-									array_push($itemUse, array("itemsell.php?ID={$i['inv_id']}", "Sell {$i['itmname']}"));
-									$options = "";
-									foreach ($itemUse as $k => $v)
-									{
-									    $options .= "<option value='{$v[0]}'>{$v[1]}</option>";
-									}
-									echo
-									"  <select name='itemUse' class='form-control' type='dropdown'>
-							                 $options
-                                       </select>
-								</div>
-								<div class='col-12 col-sm-4 col-md-5 col-xl-4'>
-									<input type='submit' class='btn btn-primary btn-block' value='Confirm'>
-								</div>
-                                </form>
-							</div>
-						</div>
-					</div>
-				</button>
-			</h2>
-		</div>
-		<div id='collapse{$i['itmid']}' class='collapse' aria-labelledby='heading{$i['itmid']}' data-parent='#inventoryAccordian'>
-			<div class='card-body'>
-				<div class='row'>
-					<div class='col-2 col-lg-1'>
-						" . returnIcon($i['itmid'],3.5) . "
-					</div>
-					<div class='col text-left'>
-						<b><a href='iteminfo.php?ID={$i['itmid']}'>{$i['itmname']}</a></b> is a {$lt} item.<br />
-						<i>{$i['itmdesc']}</i>";
-						$start=0;
-						for ($enum = 1; $enum <= 3; $enum++) 
-						{
-							if ($i["effect{$enum}_on"] == 'true') 
-							{
-								if ($start == 0)
-								{
-									echo "<br /><b>Effect</b> ";
-									$start = 1;
-								}
-								$einfo = unserialize($i["effect{$enum}"]);
-								$einfo['inc_type'] = ($einfo['inc_type'] == 'percent') ? '%' : '';
-								$einfo['dir'] = ($einfo['dir'] == 'pos') ? '+' : '-';
-								$statformatted = statParser($einfo['stat']);
-								echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} {$statformatted}.";
-							}
-						}
-					echo "</div>
-				</div>
-				<hr />
-				<div class='row'>
-					<div class='col-6 col-md'>
-						<b>Buy</b><br />
-						<small>" . shortNumberParse($i['itmbuyprice']) . " Copper Coins</small>
-					</div>
-					<div class='col-6 col-md'>
-						<b>Sell</b><br />
-						<small>" . shortNumberParse($i['itmsellprice']) . " Copper Coins</small>
-					</div>
-					<div class='col-6 col-md'>
-						<b>Total Value</b><br />
-						<small>" . shortNumberParse($i['inv_qty_value']) . " Copper Coins</small>
-					</div>
-					<div class='col-6 col-md'>
-						<b>Circulating</b><br />
-						<small>" . shortNumberParse($total) . "</small>
-					</div>
-				</div>";
-					if (($i['weapon'] > 0) || ($i['ammo'] > 0) || ($i['armor'] > 0))
-			    {
-				    echo"
-				    <hr />
-				    <div class='row'>";
-					if ($i['weapon'] > 0)
-					{
-						echo "
-						<div class='col'>
-							<b>Weapon</b><br />
-							<small>" . shortNumberParse($i['weapon']) . "</small>
-						</div>";
-					}
-					if ($i['ammo'] > 0)
-					{
-						echo "
-						<div class='col'>
-							<b>Projectile</b><br />
-							<small>{$api->SystemItemIDtoName($i['ammo'])}</small>
-						</div>";
-					}
-					if ($i['armor'] > 0)
-					{
-						echo "
-						<div class='col'>
-							<b>Armor</b><br />
-							<small>" . shortNumberParse($i['armor']) . "</small>
-						</div>";
-					}
-					echo "
-				</div>";
-			    }
-					echo"
-			</div>
-		</div>
-	</div>";
+    
+    $i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
+    $icon = ($ir['icons'] == 1) ? returnIcon($i['itmid'], 2) : "";
+    $i['inv_qty_value'] = $i['inv_qty'] * $i['itmsellprice'];
+    $total = returnTotalItemCount($i['itmid']);
+    $itemUse = getItemUses($i, $tresder, $ir, $potionexclusion);
+    
+    $options = "";
+    foreach ($itemUse as $v) {
+        $options .= "<option value='{$v[0]}'>{$v[1]}</option>";
+    }
+    
+    // Echo the block here (using HEREDOC or output buffer for maintainability)
+    echo "
+    <div class='card'>
+        <div class='card-header bg-transparent' id='heading{$i['itmid']}'>
+            <h2 class='mb-0'>
+                <button class='btn btn-block text-left' type='button' data-toggle='collapse' data-target='#collapse{$i['itmid']}'>
+                    <div class='row'>
+                        <div class='col-2 col-md-1'>{$icon}</div>
+                        <div class='col-10 col-md-5'>{$i['itmname']}" . ($i['inv_qty'] > 1 ? "<b> x " . shortNumberParse($i['inv_qty']) . "</b>" : "") . "</div>
+                        <div class='col'>
+                            <form method='post'>
+                                <div class='row'>
+                                    <div class='col-12 col-sm-8 col-md-7 col-xl-8'>
+                                        <select name='itemUse' class='form-control'>$options</select>
+                                    </div>
+                                    <div class='col-12 col-sm-4 col-md-5 col-xl-4'>
+                                        <input type='submit' class='btn btn-primary btn-block' value='Confirm'>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+        </div>
+        <div id='collapse{$i['itmid']}' class='collapse' data-parent='#inventoryAccordian'>
+            <div class='card-body'>
+                <div class='row'>
+                    <div class='col-2 col-lg-1'>" . returnIcon($i['itmid'], 3.5) . "</div>
+                    <div class='col text-left'>
+                        <b><a href='iteminfo.php?ID={$i['itmid']}'>{$i['itmname']}</a></b> is a {$lt} item.<br />
+                        <i>{$i['itmdesc']}</i>";
+    
+    // Effects
+    $start = 0;
+    for ($enum = 1; $enum <= 3; $enum++) {
+        if ($i["effect{$enum}_on"] === 'true') {
+            if ($start == 0) {
+                echo "<br /><b>Effect</b> ";
+                $start = 1;
+            }
+            $einfo = unserialize($i["effect{$enum}"]);
+            $einfo['inc_type'] = ($einfo['inc_type'] === 'percent') ? '%' : '';
+            $einfo['dir'] = ($einfo['dir'] === 'pos') ? '+' : '-';
+            echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} " . statParser($einfo['stat']) . ". ";
+        }
+    }
+    
+    echo "
+                    </div>
+                </div>
+                <hr />
+                <div class='row'>
+                    <div class='col-6 col-md'><b>Buy</b><br /><small>{$i['itmbuyprice']} Copper Coins</small></div>
+                    <div class='col-6 col-md'><b>Sell</b><br /><small>{$i['itmsellprice']} Copper Coins</small></div>
+                    <div class='col-6 col-md'><b>Total Value</b><br /><small>{$i['inv_qty_value']} Copper Coins</small></div>
+                    <div class='col-6 col-md'><b>Circulating</b><br /><small>{$total}</small></div>
+                </div>";
+    
+    // Equip stats
+    if ($i['weapon'] || $i['ammo'] || $i['armor']) {
+        echo "<hr /><div class='row'>";
+        if ($i['weapon']) echo "<div class='col'><b>Weapon</b><br /><small>" . shortNumberParse($i['weapon']) . "</small></div>";
+        if ($i['ammo']) echo "<div class='col'><b>Projectile</b><br /><small>{$api->SystemItemIDtoName($i['ammo'])}</small></div>";
+        if ($i['armor']) echo "<div class='col'><b>Armor</b><br /><small>" . shortNumberParse($i['armor']) . "</small></div>";
+        echo "</div>";
+    }
+    
+    echo "</div></div></div>";
 }
 echo "</div><br />
 <a href='inventdump.php' class='btn btn-block btn-danger'>Dump Inventory</a><br />";
 $db->free_result($inv);
 $h->endpage();
+
+$itemActions = [
+    33 => [["bor.php?tresde={$tresder}", "Open"]],
+    63 => [["2017halloween.php?action=ticket", "Scratch"]],
+    64 => [["bomb.php?action=pumpkin", "Chuck"]],
+    89 => [["vipticket.php", "Scratch"]],
+    91 => [["vipitem.php?item=autohex", "Redeem"]],
+    128 => [["vipitem.php?item=vipcolor", "Change VIP Color"]],
+    320 => [["goditem.php", "Eat Potato"]],
+    // ... Add more here
+    ];
+
+function getItemUses($i, $tresder, $ir, $potionexclusion) {
+    global $itemActions;
+    
+    $uses = [];
+    
+    // Default effect use
+    if (($i['effect1_on'] === 'true' || $i['effect2_on'] === 'true' || $i['effect3_on'] === 'true')
+        && $i['armor'] == 0 && $i['weapon'] == 0
+        && !in_array($i['itmtypename'], ['Rings', 'Necklaces', 'Pendants', 'Badges'])) {
+            $uses[] = ["itemuse.php?item={$i['inv_id']}", "Use {$i['itmname']}"];
+        }
+        
+        // Static mappings
+        if (isset($itemActions[$i['itmid']])) {
+            foreach ($itemActions[$i['itmid']] as $action) {
+                $uses[] = [$action[0], "{$action[1]} {$i['itmname']}"];
+            }
+        }
+        
+        // Equip logic
+        if ($i['weapon'] > 0) {
+            $uses[] = ["equip.php?slot=weapon&ID={$i['inv_id']}", "Equip as Weapon"];
+        }
+        if ($i['armor'] > 0) {
+            $uses[] = ["equip.php?slot=armor&ID={$i['inv_id']}", "Equip as Armor"];
+        }
+        if ($i['itmtypename'] === 'Badges') {
+            $uses[] = ["equip.php?slot=badge&ID={$i['inv_id']}", "Equip as Badge"];
+        }
+        if ($i['itmtypename'] === 'Rings') {
+            $uses[] = ["equip.php?slot=ring&ID={$i['inv_id']}", "Equip as Ring"];
+        }
+        if ($i['itmtypename'] === 'Necklaces') {
+            $uses[] = ["equip.php?slot=necklace&ID={$i['inv_id']}", "Equip as Necklace"];
+        }
+        if ($i['itmtypename'] === 'Pendants') {
+            $uses[] = ["equip.php?slot=pendant&ID={$i['inv_id']}", "Equip as Pendant"];
+        }
+        if (in_array($i['itmtypename'], ['Potions', 'Food']) && !in_array($i['itmid'], $potionexclusion)) {
+            $uses[] = ["equip.php?slot=potion&ID={$i['inv_id']}", "Equip as Potion"];
+        }
+        
+        // Always available actions
+        $uses[] = ["itemsend.php?ID={$i['inv_id']}", "Send"];
+        $uses[] = ["itemmarket.php?action=add&ID={$i['itmid']}", "List on Market"];
+        $uses[] = ["itemsell.php?ID={$i['inv_id']}", "Sell"];
+        
+        return $uses;
+}

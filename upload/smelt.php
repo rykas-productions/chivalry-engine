@@ -28,53 +28,44 @@ switch ($_GET['action']) {
 function home()
 {
     global $db, $userid, $api, $ir, $activeSmelt;
-    $StatArray = array('blacksmith', 'brewing', 'processing', 'cooking',
-                        'runecrafting','gemcrafting', 'other'
-    );
-    //Stat is not chosen, set to level.
-    if (!isset($_GET['type'])) {
-        $_GET['type'] = 'blacksmith';
-    }
-    //Stat chosen is not a valid stat.
-    if (!in_array($_GET['type'], $StatArray)) {
-        $_GET['type'] = 'blacksmith';
-    }
-    //Sanitize and escape the GET.
-    $_GET['type'] = $db->escape(strip_tags(stripslashes($_GET['type'])));
+    
+    $StatArray = array('blacksmith', 'brewing', 'processing', 'cooking', 'runecrafting', 'gemcrafting', 'other');
+    $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], $StatArray) ?
+    $db->escape(strip_tags(stripslashes($_GET['type']))) : 'blacksmith';
+    
     $q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_required_mastery` <= {$ir['reset']} AND `smelt_level_required` <= {$ir['level']} AND `smelt_type` = '{$_GET['type']}' ORDER BY `smelt_output` ASC");
-    //$q = $db->query("/*qc=on*/SELECT * FROM `smelt_recipes` WHERE `smelt_type` = '{$_GET['type']}' ORDER BY `smelt_output` ASC");
+    
+    // Preload inventory quantities for this user
+    $inv_q = $db->query("SELECT `inv_itemid`, `inv_qty` FROM `inventory` WHERE `inv_userid` = {$userid}");
+    $user_inventory = [];
+    while ($inv = $db->fetch_row($inv_q)) {
+        $user_inventory[$inv['inv_itemid']] = $inv['inv_qty'];
+    }
+    
+    // Cache item names
+    $item_names_cache = [];
+    
     echo "
     <div class='card'>
         <div class='card-body'>
-            <div class='row'>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='#' class='btn btn-primary btn-block' data-toggle='modal' data-target='#smithing_info'>In Progress - {$activeSmelt} item(s)</a>
-                </div>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='?type=blacksmith' class='btn btn-primary btn-block'>Blacksmith Recipes</a>
-                </div>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='?type=cooking' class='btn btn-primary btn-block'>Cooking Recipes</a>
-                </div>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='?type=brewing' class='btn btn-primary btn-block'>Brewing Recipes</a>
-                </div>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='?type=processing' class='btn btn-primary btn-block'>Processing Recipes</a>
-                </div>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='?type=runecrafting' class='btn btn-primary btn-block'>Runecrafting Recipes</a>
-                </div>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='?type=gemcrafting' class='btn btn-primary btn-block'>Gemcrafting Recipes</a>
-                </div>
-                <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>    
-                    <a href='?type=other' class='btn btn-primary btn-block'>Other Recipes</a>
-                </div>
+            <div class='row'>";
+    
+    foreach ($StatArray as $stat) {
+        $label = ucfirst($stat);
+        $active = $_GET['type'] == $stat ? 'active' : '';
+        echo "
+            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
+                <a href='?type={$stat}' class='btn btn-primary btn-block {$active}'>{$label} Recipes</a>
+            </div>";
+    }
+    
+    echo "
+            <div class='col-12 col-sm-6 col-md-4 col-lg-6 col-xl-4 col-xxl-3 col-xxxl-auto'>
+                <a href='#' class='btn btn-primary btn-block' data-toggle='modal' data-target='#smithing_info'>In Progress - {$activeSmelt} item(s)</a>
+            </div>
             </div>
         </div>
-    </div>
-    <br />
+    </div><br />
     <div class='row'>
         <div class='col-12'>
             <div class='card'>
@@ -82,27 +73,27 @@ function home()
                     " . ucfirst($_GET['type']) . " Recipes
                 </div>
                 <div class='card-body'>";
-    while ($r = $db->fetch_row($q)) 
+    
+    while ($r = $db->fetch_row($q))
     {
         $output_item = $api->SystemItemIDtoName($r['smelt_output']);
         $items_needed = '';
-        $can_craft = TRUE;
+        $can_craft = true;
         $ex = explode(",", $r['smelt_items']);
         $qty = explode(",", $r['smelt_quantity']);
         $smltTime = ($r['smelt_time'] == 0) ? "" : TimeUntil_Parse(time() + $r['smelt_time']);
-        $n = 0;
-		$r['hasitem']=0;
-		$rankClass = ($ir['reset'] >= $r['smelt_required_mastery']) ? "text-success" : "text-danger";
-		foreach ($ex as $i) 
-		{
-			$do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i}");
-            if ($db->num_rows($do_they_have) > 0) 
-            {
-				$r['hasitem']=$r['hasitem']+1;
-			}
-		}
-	    $rcon = returnIcon($r['smelt_output'], 4);
-	    echo "
+        $rankClass = ($ir['reset'] >= $r['smelt_required_mastery']) ? "text-success" : "text-danger";
+        $r['hasitem'] = 0;
+        
+        foreach ($ex as $i) {
+            if (isset($user_inventory[$i])) {
+                $r['hasitem']++;
+            }
+        }
+        
+        $rcon = returnIcon($r['smelt_output'], 4);
+        
+        echo "
         <div class='row'>
             <div class='col-12 col-lg-4'>
                 <div class='row'>
@@ -116,63 +107,64 @@ function home()
             </div>
             <div class='col-12 col-lg-5'>
                 <div class='row'>
-                    <div class='col-12'>
-                        <b>Requirements</b>
-                    </div>";
-		    $n = 0;
-		    foreach ($ex as $i) {
-		        $get_items_needed = $db->query("/*qc=on*/SELECT `itmname` FROM `items` WHERE `itmid`={$i}");
-		        $t = $db->fetch_row($get_items_needed);
-		        
-		        $do_they_have = $db->query("/*qc=on*/SELECT `inv_itemid` FROM `inventory` WHERE `inv_userid`={$userid} AND `inv_itemid`={$i} AND `inv_qty`>={$qty[$n]}");
-		        if ($db->num_rows($do_they_have) == 0) 
-		        {
-		            $t['itmname'] = "<span class='text-danger'>" . $t['itmname'] . "</span>";
-		            $can_craft = FALSE;
-		        }
-		        $items_needed .= "<div class='col-12 col-sm-6 col-lg-12 col-xxl-6'>" . shortNumberParse($qty[$n]) . " x <a href='iteminfo.php?ID={$i}'>" .$t['itmname'] . "</a></span></div>";
-		        $n++;
-		    }
-		    unset($n);
-		    echo "{$items_needed}";
-		    if ($r['smelt_required_mastery'] > 0)
-		    {
-		        $can_craft = ($ir['reset'] >= $r['smelt_required_mastery']) ? TRUE : FALSE;
-		        echo"<div class='col-12 col-sm-6 col-lg-12 col-xxl-6 {$rankClass}'>
-                            <b>Mastery Rank:</b> " . shortNumberParse($r['smelt_required_mastery']) . "
-                            </div>";
-		    }
-		    if ($r['smelt_level_required'] > 0)
-		    {
-		        $can_craft = ($ir['level'] >= $r['smelt_level_required']) ? TRUE : FALSE;
-		        echo"<div class='col-12 col-sm-6 col-lg-12 col-xxl-6 {$rankClass}'>
-                            <b>Level:</b> " . shortNumberParse($r['smelt_level_required']) . "
-                            </div>";
-		    }
-		    if ($r['smelt_time'] > 0)
-		    {
-		        echo"<div class='col-12 col-sm-6 col-lg-12 col-xxl-6'>
-                            <b>Time:</b> {$smltTime}
-                            </div>";
-		    }
-		    echo"
-                </div>
-            </div>
+                    <div class='col-12'><b>Requirements</b></div>";
+                        
+                        foreach ($ex as $n => $i) {
+                            // Cache item name
+                            if (!isset($item_names_cache[$i])) {
+                                $item_q = $db->query("SELECT `itmname` FROM `items` WHERE `itmid` = {$i} LIMIT 1");
+                                $item_row = $db->fetch_row($item_q);
+                                $item_names_cache[$i] = $item_row['itmname'];
+                            }
+                            $item_name = $item_names_cache[$i];
+                            
+                            $required_qty = (int)$qty[$n];
+                            $user_qty = isset($user_inventory[$i]) ? (int)$user_inventory[$i] : 0;
+                            $has_enough = $user_qty >= $required_qty;
+                            
+                            if (!$has_enough) {
+                                $can_craft = false;
+                                $item_name = "<span class='text-danger'>{$item_name}</span>";
+                            }
+                            
+                            $items_needed .= "<div class='col-12 col-sm-6 col-lg-12 col-xxl-6'>" . shortNumberParse($required_qty) . " x <a href='iteminfo.php?ID={$i}'>{$item_name}</a></div>";
+                        }
+                        
+                        echo "{$items_needed}";
+                        
+                        if ($r['smelt_required_mastery'] > 0) {
+                            if ($ir['reset'] < $r['smelt_required_mastery']) {
+                                $can_craft = false;
+                            }
+                            echo "<div class='col-12 col-sm-6 col-lg-12 col-xxl-6 {$rankClass}'><b>Mastery Rank:</b> " . shortNumberParse($r['smelt_required_mastery']) . "</div>";
+                        }
+                        
+                        if ($r['smelt_level_required'] > 0) {
+                            if ($ir['level'] < $r['smelt_level_required']) {
+                                $can_craft = false;
+                            }
+                            echo "<div class='col-12 col-sm-6 col-lg-12 col-xxl-6 {$rankClass}'><b>Level:</b> " . shortNumberParse($r['smelt_level_required']) . "</div>";
+                        }
+                        
+                        if ($r['smelt_time'] > 0) {
+                            echo "<div class='col-12 col-sm-6 col-lg-12 col-xxl-6'><b>Time:</b> {$smltTime}</div>";
+                        }
+                        
+                        echo "</div></div>
             <div class='col-12 col-lg-3'>";
-    		    if ($can_craft == TRUE)
-    		    {
-    		        echo "<a href='?action=smelt&id={$r['smelt_id']}' class='btn btn-block btn-primary'>Craft Item</a>";
-    		    }
-    		    else
-    		    {
-    		        echo "<a href='#' class='disabled btn btn-block btn-danger'>Cannot Craft</a>";
-    		    }
-    		    echo"
-                <hr />
-            </div>
-        </div>";
+                        
+                        if ($can_craft) {
+                            echo "<a href='?action=smelt&id={$r['smelt_id']}' class='btn btn-block btn-primary'>Craft Item</a>";
+                        } else {
+                            echo "<a href='#' class='disabled btn btn-block btn-danger'>Cannot Craft</a>";
+                        }
+                        
+                        echo "<hr /></div></div>";
     }
+    
+    echo "</div></div></div></div>";
 }
+
 
 function smelt()
 {

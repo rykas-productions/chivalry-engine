@@ -1,34 +1,33 @@
 <?php
 function returnIcon($item, $size = 1)
 {
+    static $iconCache = [];
     global $db;
-    $q = "/*qc=on*/SELECT `icon`, `color` FROM `items` WHERE `itmid` = {$item}";
     
-    // Check cache first
-    /*$cache = fetchCachedItemIcon($q);
-    
-    if (!empty($cache)) {
-        $r = $cache; // Use cached result if available
+    // Return cached icon if already retrieved
+    if (isset($iconCache[$item])) {
+        $r = $iconCache[$item];
     } else {
-        // Query database only if no cache found
-        $r = $db->fetch_row($db->query($q));
-        cacheItemIcon($q, $r); // Cache the result for future use
-    }*/
-    $r = $db->fetch_row($db->query($q));
-    // Default icon if no result
+        // Fetch from DB and cache it
+        $r = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`, `color` FROM `items` WHERE `itmid` = {$item}"));
+        $iconCache[$item] = $r;
+    }
+    
+    // Return fallback if no icon found
     if (empty($r['icon'])) {
         return "<i class='fas fa-question' style='font-size:{$size}rem;'></i>";
     }
     
-    // If the icon is an image
-    if ($r['color'] == 'img') {
+    // If icon is an image
+    if ($r['color'] === 'img') {
         return "<img src='{$r['icon']}' style='width:{$size}rem;' loading='lazy'>";
     }
     
-    // Handle icon with or without color
+    // Font icon with optional color
     $colorStyle = !empty($r['color']) ? "color: {$r['color']};" : "";
     return "<i class='{$r['icon']}' style='font-size:{$size}rem; {$colorStyle}'></i>";
 }
+
 
 function parseDungeonItemName($dungItem)
 {
