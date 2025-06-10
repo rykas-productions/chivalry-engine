@@ -21,7 +21,7 @@ function sendRegistrationEmail($email)
 }
 function sendLoginFailEmail($userid)
 {
-	global $api, $db;
+	global $api, $db, $set;
 	$IP = $db->escape($_SERVER['REMOTE_ADDR']);
 	$parseTime = date('g:i:s a') . " " .  date('F j, Y');
 	$email = userIDtoEmail($userid);
@@ -31,7 +31,7 @@ function sendLoginFailEmail($userid)
 	IP Address <b>{$IP}</b>.<br />
 	If this was you, you do not have to do anything. However, if it was not, we recommend you log in immediately 
 	and change your password.";
-	return $api->SystemSendEmail($email,$body);
+	return insertEmailIntoQueue($userid, "{$set['WebsiteName']} Security Alert", $body);
 }
 function sendDonateStartEmail($userid, $donated)
 {
@@ -44,7 +44,7 @@ function sendDonateStartEmail($userid, $donated)
 	hours for them to be given out. If all else fails, please contact CID Admin [1] in-game as soon as possible.<br />
 	Your donation will be used to fund the game costs, which typically include hosting, domain costs, 
 	and advertising campaigns.";
-	return $api->SystemSendEmail($email,$body);
+	return insertEmailIntoQueue($userid, "", $body);
 }
 
 function sendDonateGoodEmail($userid, $donated)
@@ -54,7 +54,7 @@ function sendDonateGoodEmail($userid, $donated)
 	$username = emailToUsername($email);
 	$body = "Greetings {$username}<br />
 	Your recent donation of \${$donated} has been proccessed and approved. Your pack should have been given to the recipient party. If not, please contact CID Admin [1] in-game as soon as possible.";
-	return $api->SystemSendEmail($email,$body);
+	return insertEmailIntoQueue($userid, "", $body);
 }
 
 function sendDonateGiftEmail($for, $payer)
@@ -65,7 +65,7 @@ function sendDonateGiftEmail($for, $payer)
 	$username2 = $api->SystemUserIDtoName($payer);
 	$body = "Greetings {$username}<br />
 		{$username2} has gifted you a VIP Pack! Log in now to use it! Make sure you say thanks!";
-	return $api->SystemSendEmail($email,$body);
+	return insertEmailIntoQueue($for, "", $body);
 }
 
 function sendRefferalEmail($sendToUserID, $newUserID, $newUserName)
@@ -73,14 +73,23 @@ function sendRefferalEmail($sendToUserID, $newUserID, $newUserName)
     global $db, $api, $set;
     $st = $db->fetch_row($db->query("SELECT `username`, `email` FROM `users` WHERE `userid` = {$sendToUserID}"));
     $WelcomeMSGEmail = "Hey {$st['username']}!<br />We just wanted to thank you for referring your friend, {$newUserName} [{$newUserID}], to Chivalry is Dead. Make sure you log in and give them a warm welcome.";
-    $api->SystemSendEmail($st['email'],$WelcomeMSGEmail,$set['WebsiteName'] . " Referral", $set['sending_email']);
+    insertEmailIntoQueue($sendToUserID, "{$set['WebsiteName']} Referral", $WelcomeMSGEmail);
+    
+}
+
+function insertEmailIntoQueue($userid, $subj, $txt)
+{
+    global $db;
+    $time = time();
+    return $db->query("INSERT INTO `mass_email_queue`
+                (`userid`, `subject`, `message`, `queued_at`)
+                VALUES ({$userid}, '{$subj}', '', '{$db->escape($txt)}', '{$time}')");
 }
 
 function sendEmergencyEmail($userid, $txt)
 {
     global $api, $set;
     $subj = $set['WebsiteName'] . " Emergency Message from User ID {$userid}";
-    $api->SystemSendEmail("ryan.roach.1997@hotmail.com",$txt ,$subj, $set['sending_email']);
 }
 
 function sendGuildDebtEmail($userid)
@@ -91,7 +100,7 @@ function sendGuildDebtEmail($userid)
     $body = "Greetings {$username}<br />
 	Your guild has gone into debt. You have 7 days to pay off the debt, or your guild will dissolve. Make sure to log in, 
     and donate copper coins to your guild vault to pay it off.";
-    return $api->SystemSendEmail($email,$body);
+    return insertEmailIntoQueue($sendToUserID, "{$set['WebsiteName']} Guild Notification", $body);
 }
 
 //Helper functions
