@@ -428,20 +428,21 @@ function verify_csrf_code($formid, $code, $expiry = 300)
  * @return string    The resulting encoded password.
  */
 function encode_password($password,$lvl='Member')
-{
+{    
     global $set;
-    $pw = PASSWORD_ARGON2ID;
-    //Set the password cost via settings.
-    if ($pw == PASSWORD_BCRYPT)
-    {
-	   if ($lvl == 'Member')
-		  $options = ['cost' => $set['Password_Effort'],];
-	   else
-		  $options = ['cost' => $set['Password_Effort']+1,];
-	   return password_hash(base64_encode(hash('sha256', $password, true)), $pw, $options);
-    }
-    else
-        return password_hash(base64_encode(hash('sha256', $password, true)), $pw);
+    
+    $pwAlgo = PASSWORD_ARGON2ID;
+    $memMulti = 4;
+    $timeMulti = 1.0;
+    $threads = 4;
+        
+    $options = [
+        'memory_cost'   => 32768 * $memMulti,
+        'time_cost'     => 4,
+        'threads'       => $threads
+    ];
+    
+    return password_hash($password, $pwAlgo, $options);
     //Return the generated password.
 }
 
@@ -797,16 +798,16 @@ function cslog($type,$txt)
  * @param int $receiver USER of the message receiver.
  * @return string Encrypted message to be stored in database.
  */
-function encrypt_message($msg,$sender,$receiver)
+function encrypt_message($msg, $sender, $receiver)
 {
     global $db;
-    $senderkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
-    $receiverkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
-    $key = hash("sha512","{$senderkey}.{$receiverkey}");
-	if (openssl_encrypt($msg,"AES-256-ECB",$key))
-		return openssl_encrypt($msg,"AES-256-ECB",$key);
-	else
-		return "<span class='text-danger'>Failed to encrypt message.</span>";
+    $senderkey = $db->fetch_single($db->query("SELECT `security_key` FROM `user_settings` WHERE `userid` = {$sender}"));
+    $receiverkey = $db->fetch_single($db->query("SELECT `security_key` FROM `user_settings` WHERE `userid` = {$receiver}"));
+    $key = hash("sha256", "{$senderkey}.{$receiverkey}", true); // 256-bit key
+    $iv = openssl_random_pseudo_bytes(16);
+    $ciphertext = openssl_encrypt($msg, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    $hmac = hash_hmac('sha256', $iv . $ciphertext, $key, true);
+    return base64_encode($iv . $ciphertext . $hmac);
 }
 
 /**
@@ -816,16 +817,25 @@ function encrypt_message($msg,$sender,$receiver)
  * @param int $receiver USER of the message receiver.
  * @return string Decrypted message, good for displaying to client.
  */
-function decrypt_message($msg,$sender,$receiver)
+function decrypt_message($msg, $sender, $receiver)
 {
     global $db;
-    $senderkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$sender}"));
-    $receiverkey=$db->fetch_single($db->query("/*qc=on*/SELECT `security_key` from `user_settings` WHERE `userid` = {$receiver}"));
-    $key = hash("sha512","{$senderkey}.{$receiverkey}");
-	if (openssl_decrypt($msg,"AES-256-ECB",$key))
-		return stripslashes(str_replace(array("\\n\\r", "\\n", "\\r"), "", openssl_decrypt($msg,"AES-256-ECB",$key)));
-	else
-		return "<span class='text-danger'>Failed to decrypt message. This is likely due to either the sender or recipient changing their password.</span>";
+    $senderkey = $db->fetch_single($db->query("SELECT `security_key` FROM `user_settings` WHERE `userid` = {$sender}"));
+    $receiverkey = $db->fetch_single($db->query("SELECT `security_key` FROM `user_settings` WHERE `userid` = {$receiver}"));
+    $key = hash("sha256", "{$senderkey}.{$receiverkey}", true);
+    
+    $data = base64_decode($msg);
+    $iv = substr($data, 0, 16);
+    $ciphertext = substr($data, 16, -32);
+    $hmac = substr($data, -32);
+    
+    $calculated = hash_hmac('sha256', $iv . $ciphertext, $key, true);
+    if (!hash_equals($hmac, $calculated)) {
+        return "<span class='text-danger'>Message integrity check failed.</span>";
+    }
+    
+    $decrypted = openssl_decrypt($ciphertext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+    return htmlspecialchars($decrypted);
 }
 
 /**
@@ -1237,7 +1247,7 @@ function returnGameTitle()
     if (in_array($url, $devDomains))
         $prefix = "[DEV]";
     elseif ($url != "chivalryisdeadgame.com")
-        $prefix = "[UNSUPPORTED]";
+        $prefix = "";
     return $prefix . " " . $set['WebsiteName'];
     
 }

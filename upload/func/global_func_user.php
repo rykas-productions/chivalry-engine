@@ -1223,11 +1223,32 @@ function returnMarriageHappiness($userid)
  * @return boolean    true for equal, false for not (login failed etc)
  * @internal
  */
-function verify_user_password($input, $pass)
+function verify_user_password($input, $storedHash, $userID)
 {
-    //Check that the password matches or not.
-    $return = (password_verify(base64_encode(hash('sha256', $input, true)), $pass)) ? true : false;
-    return $return;
+    global $db;
+    
+    // Fetch version from DB
+    $version = $db->fetch_single($db->query("SELECT `password_version` FROM `users` WHERE `userid` = {$userID}"));
+    
+    if ($version == 1) {
+        // Old hash format: SHA256 + base64 + BCRYPT
+        $hashedInput = base64_encode(hash('sha256', $input, true));
+    } else {
+        // New format: plain + ARGON2ID
+        $hashedInput = $input;
+    }
+    
+    if (password_verify($hashedInput, $storedHash)) {
+        // Optional: Upgrade hash to new version
+        if ($version == 1) {
+            $newHash = $db->escape(encode_password($input)); // Use version 2 logic
+            $db->query("UPDATE `users` SET `password` = '{$newHash}', `password_version` = 2 WHERE `userid` = {$userID}");
+        }
+        
+        return true;
+    }
+    
+    return false;
 }
 
 /**
