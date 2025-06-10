@@ -13,6 +13,9 @@ switch ($_GET['action']) {
 	case "2020bang":
         bang2020();
         break;
+	case "24halloween":
+	    halloween24();
+	    break;
     default:
         alert('danger',"Uh Oh!","Please specify an action.",true,'index.php');
 		$h->endpage();
@@ -263,6 +266,104 @@ function secondyearann()
 	}
 	$h->endpage();
 }
+function halloween24()
+{
+    global $h,$db,$api,$userid,$ir;
+    $itemToHave = 514;
+    if (!$api->UserHasItem($userid,$itemToHave,1))
+    {
+        alert('danger',"Uh Oh!","You need a {$api->SystemItemIDtoName($itemToHave)} to be here.",true,'inventory.php');
+        die($h->endpage());
+    }
+    //free pumpkins baby!
+    $pumpkins = round(Random(15,55) * levelMultiplier($ir['level']));
+    $api->UserGiveItem($userid, 64, $pumpkins);
+    if (isset($_GET['scratch']))
+    {
+        $rng=Random(1,6);
+        //copper award
+        if ($rng == 1)
+        {
+            $cash = round(Random(500000,1000000) * levelMultiplier($ir['level']));
+            alert("success","Success!","You scratch this spot off and you win " . shortNumberParse($cash) . "
+                    Copper Coins along with " . shortNumberParse($pumpkins) . " compliementary Pumpkins!
+                    Happy Halloween!",true,'inventory.php');
+            $api->UserGiveCurrency($userid,'primary',$cash);
+        }
+        //token awward
+        elseif ($rng == 2)
+        {
+            $cash=round(Random(8500,17500) * levelMultiplier($ir['level']));
+            alert("success","Success!","You scratch this spot off and you win " . shortNumberParse($cash) . "
+                    Chivalry Tokens along with " . shortNumberParse($pumpkins) . " compliementary Pumpkins!
+                    Happy Halloween!",true,'inventory.php');
+            $api->UserGiveCurrency($userid,'secondary',$cash);
+        }
+        //cid admin gym scroll award
+        elseif ($rng == 4)
+        {
+            $cash=round(Random(15,50) * levelMultiplier($ir['level']));
+            alert("success","Success!","You scratch this spot off and you win {$cash} CID Admin Gym
+                    Access Scrolls along with " . shortNumberParse($pumpkins) . " compliementary
+                    Pumpkins! Happy Halloween!",true,'inventory.php');
+            $api->UserGiveItem($userid,205,$cash);
+        }
+        //lrg boom
+        elseif ($rng == 5)
+        {
+            $cash=round(Random(7,15) * levelMultiplier($ir['level']));
+            alert("success","Success!","You scratch this spot off and you win {$cash} Large Explosives
+                    along with " . shortNumberParse($pumpkins) . " compliementary Pumpkins! Happy
+                    Halloween!",true,'inventory.php');
+            $api->UserGiveItem($userid,62,$cash);
+        }
+        //vip pack
+        else
+        {
+            alert("success","Success!","You scratch this spot off and you win a free $3 VIP Pack
+                    along with " . shortNumberParse($pumpkins) . " compliementary Pumpkins! Happy
+                    Halloween!",true,'inventory.php');
+            $api->UserGiveItem($userid,421,1);
+        }
+        $api->UserTakeItem($userid, $itemToHave, 1);
+        
+    }
+    else
+    {
+        echo "
+        <div class='card'>
+            <div class='card-header'>
+                Hope you have a wonderful 2024 Halloween season! Scratch this off for prizes!
+            </div>
+            <div class='card-body'>
+        		<div class='row'>
+        			<div class='col-12 col-sm-4 col-xl'>
+        				<a href='?action=24halloween&scratch=1'><img src='https://cdn.chivalryisdeadgame.com//assets/img/pumpkin-halloween.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-12 col-sm-4 col-xl'>
+        				<a href='?action=24halloween&scratch=1'><img src='https://cdn.chivalryisdeadgame.com//assets/img/pumpkin-halloween.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-12 col-sm-4 col-xl'>
+        				<a href='?action=24halloween&scratch=1'><img src='https://cdn.chivalryisdeadgame.com//assets/img/pumpkin-halloween.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-12 col-sm-4 col-xl'>
+        				<a href='?action=24halloween&scratch=1'><img src='https://cdn.chivalryisdeadgame.com//assets/img/pumpkin-halloween.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-12 col-sm-4 col-xl'>
+        				<a href='?action=24halloween&scratch=1'><img src='https://cdn.chivalryisdeadgame.com//assets/img/pumpkin-halloween.png' class='img-fluid'></a>
+        			</div>
+        			<div class='col-12 col-sm-4 col-xl'>
+        				<a href='?action=24halloween&scratch=1'><img src='https://cdn.chivalryisdeadgame.com//assets/img/pumpkin-halloween.png' class='img-fluid'></a>
+        			</div>
+        		</div>
+            </div>";
+    }
+    die($h->endpage());
+}
+
+
+
+
 //Donate bombs
 function doDonate($type,$count)
 {

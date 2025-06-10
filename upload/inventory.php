@@ -47,7 +47,8 @@ $itemActions = [
     391 => [["2020thanksgiving.php?action=ticket", "Scratch"]],
     407 => [["vipitem.php?item=contact", "Contact CID Admin"]],
     424 => [["vipitem.php?item=autominer", "Configure"]],
-    449 => [["2022halloween.php?action=ticket", "Scratch"]]
+    449 => [["2022halloween.php?action=ticket", "Scratch"]],
+    514 => [["scratchticket.php?action=24halloween", "Scratch"]]
     // ... Add more here
     ];
 
