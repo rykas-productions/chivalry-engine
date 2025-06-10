@@ -17,6 +17,11 @@ if (!isset($disablespeed))
 	@ini_set('zlib.output_compression', 1);
 	ob_implicit_flush(true);
 }
+if (DEBUG)
+{
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+}
 //Set user's timezone.
 date_default_timezone_set("America/New_York");
 //If file is loaded directly.
