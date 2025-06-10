@@ -41,7 +41,7 @@ foreach ($categories as $key => $label) {
 echo "</div></div></div><br />";
 
 // Determine selected view
-$view = $_GET['view'] ?? 'weapon';
+$view = $_GET['view'] ?? 'weapons';
 $allowed_views = array_keys($categories);
 $extra_conditions = '';
 $order_by = 'itmname ASC';
