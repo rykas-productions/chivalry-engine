@@ -8,6 +8,49 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+$itemActions = [
+    28 => [["bomb.php?action=small", "Set Bomb"]],
+    33 => [["bor.php?tresde={$tresder}", "Open"]],
+    33 => [["autobor.php", "Auto Open"]],
+    61 => [["bomb.php?action=medium", "Set Bomb"]],
+    62 => [["bomb.php?action=large", "Set Bomb"]],
+    63 => [["2017halloween.php?action=ticket", "Scratch"]],
+    64 => [["bomb.php?action=pumpkin", "Chuck"]],
+    68 => [["invispotion.php", "Drink"]],
+    69 => [["2017thanksgiving.php?action=ticket", "Scratch"]],
+    89 => [["vipticket.php", "Scratch"]],
+    91 => [["vipitem.php?item=autohex", "Redeem"]],
+    92 => [["vipitem.php?item=autobor", "Redeem"]],
+    123 => [["mysteriouspotion.php", "Drink"]],
+    128 => [["vipitem.php?item=vipcolor", "Change VIP Color"]],
+    137 => [["2018stpatties.php?action=ticket", "Scratch"]],
+    149 => [["bomb.php?action=rickroll", "Set Rick Roll"]],
+    177 => [["mine.php?action=herb", "Eat"]],
+    189 => [["2018halloween.php?action=ticket", "Scratch"]],
+    195 => [["2018thanksgiving.php?action=ticket", "Scratch"]],
+    202 => [["bomb.php?action=snowball", "Throw"]],
+    203 => [["2018christmas.php?action=ticket", "Scratch"]],
+    205 => [["gym_ca.php", "Train"]],
+    210 => [["scratchticket.php?action=cidticket", "Scratch"]],
+    222 => [["bomb.php?action=assassin", "Place Hit"]],
+    227 => [["mine.php?action=potion", "Drink"]],
+    230 => [["2019easter.php?action=ticket", "Scratch"]],
+    250 => [["spellbook.php", "Unlock Tome"]],
+    258 => [["potion.php?potion=poison", "Poison Weapon"]],
+    263 => [["vipitem.php?item=willstim", "Convert"]],
+    264 => [["2019halloween.php?action=ticket", "Scratch"]],
+    268 => [["scratchticket.php?action=2ndyearann", "Scratch"]],
+    320 => [["goditem.php", "Eat Potato"]],
+    352 => [["scratchticket.php?action=2020bang", "Scratch"]],
+    364 => [["vipitem.php?item=autobum", "Redeem"]],
+    376 => [["2020halloween.php?action=ticket", "Scratch"]],
+    391 => [["2020thanksgiving.php?action=ticket", "Scratch"]],
+    407 => [["vipitem.php?item=contact", "Contact CID Admin"]],
+    424 => [["vipitem.php?item=autominer", "Configure"]],
+    449 => [["2022halloween.php?action=ticket", "Scratch"]]
+    // ... Add more here
+    ];
+
 $potionexclusion=array(17,123,68,138,95,96,148,177,227,286,285,258,287);
 if (isset($_POST['itemUse']))
 {
@@ -267,17 +310,6 @@ echo "</div><br />
 <a href='inventdump.php' class='btn btn-block btn-danger'>Dump Inventory</a><br />";
 $db->free_result($inv);
 $h->endpage();
-
-$itemActions = [
-    33 => [["bor.php?tresde={$tresder}", "Open"]],
-    63 => [["2017halloween.php?action=ticket", "Scratch"]],
-    64 => [["bomb.php?action=pumpkin", "Chuck"]],
-    89 => [["vipticket.php", "Scratch"]],
-    91 => [["vipitem.php?item=autohex", "Redeem"]],
-    128 => [["vipitem.php?item=vipcolor", "Change VIP Color"]],
-    320 => [["goditem.php", "Eat Potato"]],
-    // ... Add more here
-    ];
 
 function getItemUses($i, $tresder, $ir, $potionexclusion) {
     global $itemActions;
