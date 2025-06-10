@@ -6,7 +6,7 @@ function addTokenMarketListing()
     $totalcost      = $db->fetch_single($db->query("SELECT SUM(`token_total`) FROM `token_market_avg`"));
     $totaltokens    = $db->fetch_single($db->query("SELECT SUM(`token_sold`) FROM `token_market_avg`"));
     $avgprice       = $totalcost / $totaltokens;
-    $listprice      = $avgprice * (Random(80,105) / 100);   //Randomize the price of this listing between 80-105% of market price
+    $listprice      = $avgprice * (Random(80,115) / 100);   //Randomize the price of this listing between 80-105% of market price
     $tokens = Random(round(75000/(Random(2,4))), round(75000*(Random(2,4))));
     $db->query("DELETE FROM `sec_market` WHERE `sec_user` = 0");
     $db->query("INSERT INTO `sec_market` (`sec_user`, `sec_cost`, `sec_total`, `sec_deposit`) VALUES ('0', '{$listprice}', '{$tokens}', 'false')");
