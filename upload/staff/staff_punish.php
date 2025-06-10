@@ -969,76 +969,73 @@ function massnotif()
 function massemail()
 {
     global $db, $userid, $h, $api, $set;
-    $from = $set['sending_email'];
     echo "<h3>Mass Emailer</h3><hr>";
+    
     if (isset($_POST['msg'])) {
         $msg = $_POST['msg'];
         $subject = $_POST['subject'];
+        
         if (!isset($_POST['verf']) || !verify_csrf_code('staff_massemail', stripslashes($_POST['verf']))) {
-            alert('danger', "Action Blocked!", "We have blocked this action for your security. Please fill out the form quicker next time.");
+            alert('danger', "Action Blocked!", "Security check failed. Try again quicker.");
             die($h->endpage());
         }
+        
         if (empty($msg)) {
-            alert('danger', "Uh Oh!", "Please specify a message to send.");
+            alert('danger', "Uh Oh!", "Please enter a message.");
             die($h->endpage());
         }
+        
         if (strlen($msg) > 65655) {
-            alert('danger', "Uh Oh!", "At maximum, messages can only be 65,655 characters in length.");
+            alert('danger', "Too Long", "Message exceeds 65,655 characters.");
             die($h->endpage());
         }
-        $q = $db->query("/*qc=on*/SELECT `u`.`userid`,`user_level`,`email`,`username`,`level` 
-						FROM `users` AS `u` 
-						INNER JOIN `user_settings` AS `uas`
-						ON `u`.`userid`=`uas`.`userid`
-						WHERE `uas`.`email_optin` = 1 AND `u`.`user_level` != 'NPC'");
-        $sent = 0;
+        
+        $q = $db->query("SELECT u.userid, u.username, u.level, u.email
+                         FROM users u
+                         INNER JOIN user_settings uas ON u.userid = uas.userid
+                         WHERE uas.email_optin = 1 AND u.user_level != 'NPC'");
+        
+        $queued = 0;
+        $time = time();
         while ($r = $db->fetch_row($q)) {
-            $nmsg=str_ireplace(array("{USERNAME}", "{LEVEL}", "{USERID}"), array($r['username'], $r['level'], $r['userid']), $msg);
-            echo "Sending Email to {$api->SystemUserIDtoName($r['userid'])} ...";
-            if ($api->SystemSendEmail($r['email'], $nmsg, $subject, $from)) {
-                echo "... Success.";
-                $sent = $sent + 1;
-            } else {
-                echo "... Failed.";
-            }
-            echo "<br />";
+            $nmsg = str_ireplace(
+                ["{USERNAME}", "{LEVEL}", "{USERID}"],
+                [$r['username'], $r['level'], $r['userid']],
+                $msg
+                );
+            
+            $db->query("INSERT INTO `mass_email_queue`
+                        (`userid`, `subject`, `message`, `queued_at`)
+                        VALUES ({$r['userid']}, '{$db->escape($subject)}', '{$db->escape($nmsg)}', '{$time}')");
+            $queued++;
         }
-        alert('success', "Success!", "You successfully sent a mass email to {$sent} players", true, 'index.php');
-        $api->SystemLogsAdd($userid, 'staff', "Sent a mass email.");
+        
+        alert('success', "Queued", "Queued {$queued} emails for sending.", true, 'index.php');
+        $api->SystemLogsAdd($userid, 'staff', "Queued {$queued} mass emails.");
     } else {
         $csrf = request_csrf_html('staff_massemail');
-        echo "<table class='table table-bordered'>
-		<form method='post'>
-		<tr>
-			<th colspan='2'>
-				Send an email to the players who are have chosen to opt-in. Do not spam, or you may find your domain
-				blocked on email providers. You can use HTML.
-			</th>
-		</tr>
-		<tr>
-			<th>
-				Subject
-			</th>
-			<td>
-				<input type='text' name='subject' class='form-control' placeholder='Can be blank'>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				Message
-			</th>
-			<td>
-				<textarea class='form-control' name='msg' required='1'></textarea>
-			</td>
-		</tr>
-		<tr>
-			<td colspan='2'>
-				<input type='submit' class='btn btn-primary' value='Send Mass Email'>
-			</td>
-		</tr>
-		{$csrf}
-		</form>
-		</table>";
+        echo "
+        <form method='post'>
+        <table class='table table-bordered'>
+            <tr>
+                <th colspan='2'>Send a mass email to opted-in users. HTML is allowed. Avoid spamming.</th>
+            </tr>
+            <tr>
+                <th>Subject</th>
+                <td><input type='text' name='subject' class='form-control' placeholder='Can be blank'></td>
+            </tr>
+            <tr>
+                <th>Message</th>
+                <td><textarea class='form-control' name='msg' required></textarea></td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <input type='submit' class='btn btn-primary' value='Queue Mass Email'>
+                </td>
+            </tr>
+            {$csrf}
+        </table>
+        </form>";
     }
 }
 

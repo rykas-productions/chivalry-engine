@@ -19,4 +19,5 @@ doAutoMiner();
 runMarketTick(5);   //high risk stock
 doEffectTick();
 //sendData();
+send_mass_email_batch(Random(15,40));
 ?>

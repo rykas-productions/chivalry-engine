@@ -35,3 +35,37 @@ function giveNPCsMoney()
         $db->query("UPDATE `users` SET `primary_currency` = {$monies} WHERE `userid` = {$r['userid']}");
     }
 }
+
+function send_mass_email_batch($batchSize = 50)
+{
+    global $db, $api, $set;
+    
+    $q = $db->query("SELECT * FROM `mass_email_queue`
+                     WHERE `status` = 'pending'
+                     ORDER BY `queued_at` ASC
+                     LIMIT {$batchSize}");
+    
+    $sent = 0;
+    
+    while ($email = $db->fetch_row($q)) {
+        $r = $db->fetch_single($db->query("SELECT `email` FROM `users` WHERE `userid` = {$email['userid']}"));
+        $success = $api->SystemSendEmail(
+            $r,
+            $email['message'],
+            $email['subject'],
+            $set['sending_email']
+            );
+        
+        $status = $success ? 'sent' : 'failed';
+        $sentAt = $success ? time() : 0;
+        
+        $db->query("UPDATE `mass_email_queue`
+                    SET `status` = '{$status}', `sent_at` = {$sentAt}
+                    WHERE `id` = {$email['id']}");
+        
+        $sent++;
+    }
+    
+    if ($sent > 0)
+        $api->GameAddNotification(1, "{$sent} emails sent successfully.");
+}
