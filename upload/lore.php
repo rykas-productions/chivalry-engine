@@ -39,10 +39,10 @@ function index()
         $parser->parse($r['lore_info']);
         echo "<div class='row'>
                 <div class='col-12'>
-                    <small><b>{$r['lore_title']} ({$AnnouncementTime})</b></small>
+                    <b>{$r['lore_title']} ({$AnnouncementTime})</b>
                 </div>
                 <div class='col-12'>
-                    " . $parser->getAsHtml() . "
+                    <small><i>" . $parser->getAsHtml() . "</i></small>
                 </div>
                 <div class='col-12'>
                     <hr />
