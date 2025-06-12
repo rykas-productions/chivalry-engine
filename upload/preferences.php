@@ -71,9 +71,6 @@ switch ($_GET['action']) {
 	case 'reset':
         resetacc();
         break;
-	case 'loginlogs':
-        loginlogs();
-        break;
 	case 'newui':
 		newui();
         break;
@@ -114,9 +111,6 @@ function prefs_home()
                             </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-primary btn-block' href='?action=classreset'>Class Reset</a><br />
-                            </div>
-                            <div class='col-12 col-sm-6 col-lg-12'>
-                                <a class='btn btn-info btn-block' href='?action=loginlogs'>Login Logs</a><br />
                             </div>
                         </div>
                     </div>
