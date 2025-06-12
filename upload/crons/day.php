@@ -22,7 +22,7 @@ $db->query("UPDATE `users` SET `hexbags` = 100, `bor` = 1000");
 $db->query("UPDATE `user_settings` SET `att_dg` = 0");
 
 $db->query("UPDATE `users` SET `dayslogged` = 0 WHERE `laston` < {$last24}");
-$db->query("UPDATE `users` SET `dayslogged` = `dayslogged` + 1 WHERE `laston` > {$last24}");
+
 $db->query("UPDATE `users` SET `rewarded` = 0");
 $db->query("UPDATE `userstats` SET `luck` = 100");
 
