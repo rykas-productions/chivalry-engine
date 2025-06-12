@@ -1,0 +1,134 @@
+/* === WINDOWS 10 THEME FOR BOOTSTRAP 4.5.0 === */
+body {
+    background-color: #e6e6e6;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #1f1f1f;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.btn-primary {
+    background-color: #0078D7;
+    border-color: #0078D7;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #005a9e;
+    border-color: #005a9e;
+}
+
+.btn-danger {
+    background-color: #e81123;
+    border-color: #e81123;
+}
+
+.btn-danger:hover {
+    background-color: #b50d1e;
+    border-color: #b50d1e;
+}
+
+.btn-success {
+    background-color: #107c10;
+    border-color: #107c10;
+}
+
+.btn-success:hover {
+    background-color: #0b5f0b;
+    border-color: #0b5f0b;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2d2d2d;
+    border-bottom: 3px solid #0078D7;
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #d6ebff !important;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 0;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff;
+}
+
+.card-header {
+    background-color: #f3f3f3;
+    font-weight: bold;
+    color: #2a2a2a;
+}
+
+/* Modals */
+.modal-content {
+    border-radius: 0;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+/* Alerts */
+.alert-primary {
+    background-color: #d0e7ff;
+    color: #004578;
+    border-color: #b8d6f8;
+}
+
+.alert-success {
+    background-color: #d6f0d6;
+    color: #0b4c0b;
+    border-color: #c0e2c0;
+}
+
+/* Forms */
+.form-control {
+    border-radius: 0;
+    border: 1px solid #a6a6a6;
+}
+
+.form-control:focus {
+    border-color: #0078d7;
+    box-shadow: 0 0 5px rgba(0,120,215,0.5);
+}
+
+/* Table */
+.table thead th {
+    background-color: #f1f1f1;
+    border-bottom: 2px solid #cfcfcf;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.table tbody tr:hover {
+    background-color: #e6f2ff;
+}
+
+/* Custom "Tile" Style Panels */
+.tile {
+    background: linear-gradient(to bottom right, #f8f8f8, #e2e2e2);
+    border: 1px solid #d4d4d4;
+    padding: 1rem;
+    box-shadow: inset 0 0 0.5rem rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+}
+
+/* Utility Tweaks */
+.rounded {
+    border-radius: 0 !important;
+}
+
+.shadow {
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1) !important;
+}

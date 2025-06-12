@@ -523,6 +523,7 @@ class headers
 	function loadUserTheme($themeID)
 	{
 		global $set;
+		$maxThemes = 8;
 		cslog('log',"User Theme ID: {$themeID}.");
 		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/sidebar-themes.css'>";
 		if ($themeID == 1)
@@ -587,6 +588,12 @@ class headers
 			echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/sunset-21.2.1.css'>
 			<meta name='theme-color' content='rgba(64, 0, 0, 0.8)'>";
+		}
+		if (($themeID > 100) && ($themeID <= $maxThemes+100))
+		{
+		    echo "
+			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/default-21.2.2.css'>
+            <link rel='stylesheet' href='./assets/css/themes/halloween.css'>";
 		}
 	}
 	
