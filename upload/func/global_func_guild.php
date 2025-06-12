@@ -362,23 +362,16 @@ function calculateGuildGymBonus($guild_id)
 {
     global $db;
     $multi = 1.0;   //additional
+    $base = 1.0;
     $gd = $db->fetch_row($db->query("SELECT * FROM `guild` WHERE `guild_id` = {$guild_id}"));
+    $base += ($gd['guild_level'] * 0.0864);
+    if ($base > 3)
+        $base = 3;
+    
     if ($gd['guild_bonus_time'] > time())
-    {
-        $multiplier = (2.08+(($gd['guild_level']/100)*6.3)*$multi);
-    }
-    else
-    {
-        $multiplier = (1.42+(($gd['guild_level']/100)*6.25)*$multi);
-    }
-    if ($multiplier > (2.75*$multi))
-    {
-        if ($gd['guild_bonus_time'] > time())
-            $multiplier = (3.25*$multi);
-        else
-            $multiplier = (2.75*$multi);
-    }
-    return $multiplier;
+        $base *= 2;
+    
+    return $base;
 }
 
 function createGuild($guildName, $guildDesc, $owner, $level = 1)
