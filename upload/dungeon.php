@@ -156,7 +156,7 @@ function bail()
         }
         //Person specified is bailed out. Take user's currency, log the action, and tell the person what happened.
         $api->UserTakeCurrency($userid, 'primary', $cost);
-		if (($api->UserStatus($userid, 'dungeon')) && ($_GET['user'] != $userid))
+		if ($_GET['user'] != $userid)
 		{
 			$api->GameAddNotification($_GET['user'], "<a href='profile.php?user={$userid}'>{$ir['username']}</a> has paid off your dungeon bail of " . shortNumberParse($cost) . " Copper Coins.");
 		}
@@ -225,7 +225,7 @@ function bust()
 			die($h->endpage());
         } //User failed. Tell person and throw user in dungeon.
         else {
-            $time = min($mult, Random(100,$lvl+100));
+            $time = Random(15,60) * levelMultiplier($ir['level'], $ir['reset']);
             $reason = $db->escape("Caught trying to bust out {$api->SystemUserIDtoName($_GET['user'])}");
 			if ($_GET['user'] != $userid)
 			{
