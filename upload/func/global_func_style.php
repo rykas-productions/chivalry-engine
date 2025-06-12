@@ -141,3 +141,63 @@ function tokenParse($int)
 {
     return shortNumberParse($int) . " " . loadImageAsset("menu/coin-chivalry.svg");
 }
+
+function createAndLoadBook($jsonPath) {
+    $data = json_decode(file_get_contents("./data/books/" . $jsonPath . ".json"), true);
+    if (!$data || !isset($data['pages']) || !is_array($data['pages'])) {
+        return '<div class="alert alert-danger">Invalid book file.</div>';
+    }
+    $id = 'book_' . md5($jsonPath);
+    $title = htmlspecialchars($data['title'] . ' by ' . $data['author']);
+    
+    ob_start();
+    ?>
+    <!-- Trigger Button -->
+    <button class="btn btn-primary" data-toggle="modal" data-target="#<?= $id ?>">Read “<?= htmlspecialchars($data['title']) ?>”</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="<?= $id ?>" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><?= $title ?></h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div id="<?= $id ?>_content"></div>
+          </div>
+          <div class="modal-footer">
+            <button id="<?= $id ?>_prev" class="btn btn-secondary">Previous</button>
+            <span id="<?= $id ?>_indicator" class="mx-3"></span>
+            <button id="<?= $id ?>_next" class="btn btn-secondary">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    (function(){
+      const pages = <?= json_encode($data['pages'], JSON_HEX_TAG) ?>;
+      let idx = 0;
+      const modal = $('#<?= $id ?>');
+      const content = $('#<?= $id ?>_content');
+      const prevBtn = $('#<?= $id ?>_prev');
+      const nextBtn = $('#<?= $id ?>_next');
+      const indicator = $('#<?= $id ?>_indicator');
+
+      function render() {
+        content.html(pages[idx]);
+        indicator.text(`Page ${idx+1} of ${pages.length}`);
+        prevBtn.prop('disabled', idx === 0);
+        nextBtn.prop('disabled', idx >= pages.length - 1);
+      }
+
+      modal.on('shown.bs.modal', () => { idx = 0; render(); });
+      prevBtn.click(() => { if (idx > 0) { idx--; render(); } });
+      nextBtn.click(() => { if (idx < pages.length - 1) { idx++; render(); } });
+    })();
+    </script>
+    <?php
+
+    return ob_get_clean();
+}
