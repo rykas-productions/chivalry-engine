@@ -18,7 +18,7 @@ if (currentMonth() == 2)
 }
 $estate=$db->fetch_row($db->query("SELECT * FROM `user_estates` WHERE `ue_id` = {$ir['estate']}"));
 $edb=$db->fetch_row($db->query("SELECT * FROM `estates` WHERE `house_id` = {$estate['estate']}"));
-$edb['upgradeLevel'] = round($edb['upgradeLevel'] + ($edb['upgradeLevel'] * levelMultiplier($ir['level'])));
+//$edb['upgradeLevel'] = round($edb['upgradeLevel'] + ($edb['upgradeLevel'] * levelMultiplier($ir['level'])));
 $estate['boostWill'] = calcExtraWill($estate['gardenUpgrade'], $edb['house_will']) + $estate['bonusWill'];
 $estate['maxBoostedWill'] = $edb['house_will'] + $estate['boostWill'];
 echo "<h4>Estate Management</h3><hr/>";
@@ -1017,7 +1017,7 @@ function game_properties()
 	while ($r = $db->fetch_row($hq))
 	{
 	    $r['house_price'] = $r['house_price'] * $propCost;
-	    $r['upgradeLevel'] = round($r['upgradeLevel'] + ($r['upgradeLevel'] * levelMultiplier($ir['level'])));
+	    //$r['upgradeLevel'] = round($r['upgradeLevel'] + ($r['upgradeLevel'] * levelMultiplier($ir['level'])));
 		$class = ($ir['primary_currency'] >= $r['house_price']) ? "" : "text-danger";
 		$lvl = ($ir['level'] >= $r['house_level']) ? "" : "text-danger";
 		$will = ($estate['maxBoostedWill'] < $r['house_will']) ? "text-success" : "text-danger";
