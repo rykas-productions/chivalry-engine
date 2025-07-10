@@ -835,7 +835,10 @@ function decrypt_message($msg, $sender, $receiver)
     }
     
     $decrypted = openssl_decrypt($ciphertext, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
-    return htmlspecialchars($decrypted);
+    if ($decrypted === false) return "<span class='text-danger'>Decryption failed.</span>";
+    
+    $decrypted = str_replace(["\\r\\n", "\\r"], "", $decrypted); // normalize line breaks
+    return nl2br($decrypted);
 }
 
 /**
