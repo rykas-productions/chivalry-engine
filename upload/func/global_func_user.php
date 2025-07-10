@@ -316,6 +316,8 @@ function get_rank($stat, $mykey)
 function parseUsername($id)
 {
     global $db;
+    if ($id == 0)
+        return "SYSTEM";
     $q = $db->query("/*qc=on*/SELECT 	`username`, `vip_days`, `vipcolor`, 
 										`equip_badge`, `fedjail`,`user_level`
 										FROM `users` 
@@ -335,7 +337,7 @@ function parseUsername($id)
 	else
 		$username = $r['username'];
 	//Now for dungeon and infirmary icons
-	if (getUserMasteryRank($id) == 1)
+	/*if (getUserMasteryRank($id) == 1)
 	    $username .= "1️⭐";
     if (getUserMasteryRank($id) == 2)
         $username .= "2️⃣⭐";
@@ -344,7 +346,7 @@ function parseUsername($id)
     if (getUserMasteryRank($id) == 4)
         $username .= "4️⃣⭐";
     if (getUserMasteryRank($id) == 5)
-        $username .= "5️⃣⭐";
+        $username .= "5️⃣⭐";*/
 	if (isUserDungeon($id))
 		$username .= " <i class='fas fa-unlock-alt text-danger' data-toggle='tooltip' data-placement='top' title='{$r['username']} is currently in the dungeon.'></i>";
 	if (isUserInfirmary($id))
