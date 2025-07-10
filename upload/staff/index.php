@@ -186,15 +186,14 @@ if ($api->UserMemberLevelGet($userid, 'admin'))
                 <div class='card-body'>";
                     $q =
                     $db->query(
-                        "/*qc=on*/SELECT `log_user`, `log_text`, `log_time`, `log_ip`, `username`
+                        "/*qc=on*/SELECT `log_user`, `log_text`, `log_time`, `log_ip`
 							 FROM `logs` AS `s`
-							 INNER JOIN `users` AS `u`
-							 ON `s`.`log_user` = `u`.`userid`
 							 WHERE `log_type` = 'staff'
 							 ORDER BY `s`.`log_time` DESC
 							 LIMIT 15");
                     while ($r = $db->fetch_row($q))
                     {
+                        $r['username'] = parseUsername($r['log_user']);
                         echo "<div class='row'>
                         <div class='col-12 col-md col-xxxl-2'>
                             <div class='row'>
