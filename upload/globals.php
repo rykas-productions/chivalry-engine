@@ -12,13 +12,11 @@ include('forms/include_top.php');
 require "lib/basic_error_handler.php";
 set_error_handler('error_php');
 set_exception_handler("exception_handler");
-if (!isset($disablespeed))
-{
-	@ini_set('zlib.output_compression', 1);
-	ob_implicit_flush(true);
+if (!isset($disablespeed)) {
+    @ini_set('zlib.output_compression', 1);
+    ob_implicit_flush(true);
 }
-if (DEBUG)
-{
+if (DEBUG) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 }
@@ -60,8 +58,8 @@ require "global_func.php";
 $domain = determine_game_urlbase();
 //If user is not logged in, redirect to login page.
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] == 0) {
-	$login_url = "login.php";
-	setcookie('loginRedirect', getCurrentPage(), time() + 3600);
+    $login_url = "login.php";
+    setcookie('loginRedirect', getCurrentPage(), time() + 3600);
     header("Location: {$login_url}");
     exit;
 }
@@ -77,6 +75,7 @@ include "config.php";
 define("MONO_ON", 1);
 //Require the database wrapper and connect to database.
 require "class/class_db_{$_CONFIG['driver']}.php";
+include("class/class_api.php");
 $db = new database;
 $db->configure($_CONFIG['hostname'], $_CONFIG['username'], $_CONFIG['password'], $_CONFIG['database'], $_CONFIG['persistent']);
 $db->connect();
@@ -104,7 +103,8 @@ if (isset($jobquery) && $jobquery) {
 					 INNER JOIN `user_settings` AS `uas`
                      ON `u`.`userid`=`uas`.`userid`
                      WHERE `u`.`userid` = {$userid}
-                     LIMIT 1");
+                     LIMIT 1"
+        );
 } else if (isset($housequery) && $housequery) {
     $is =
         $db->query(
@@ -119,7 +119,8 @@ if (isset($jobquery) && $jobquery) {
 					 LEFT JOIN `user_skills` AS `sk` 
 					 ON `sk`.`userid` = `u`.`userid`
                      WHERE `u`.`userid` = {$userid}
-                     LIMIT 1");
+                     LIMIT 1"
+        );
 } else if (isset($voterquery) && $voterquery) {
     $UIDB = $db->query("/*qc=on*/SELECT * FROM `uservotes` WHERE `userid` = {$userid}");
     if (!($db->num_rows($UIDB))) {
@@ -138,7 +139,8 @@ if (isset($jobquery) && $jobquery) {
 					 LEFT JOIN `user_skills` AS `sk` 
 					 ON `sk`.`userid` = `u`.`userid`
                      WHERE `u`.`userid` = {$userid}
-                     LIMIT 1");
+                     LIMIT 1"
+        );
 } else {
     $is =
         $db->query(
@@ -151,15 +153,16 @@ if (isset($jobquery) && $jobquery) {
 					 LEFT JOIN `user_skills` AS `sk` 
 					 ON `sk`.`userid` = `u`.`userid`
                      WHERE `u`.`userid` = {$userid}
-                     LIMIT 1");
+                     LIMIT 1"
+        );
 }
 //Put user's data into friendly variable.
 $ir = $db->fetch_row($is);
-$userUI=getCurrentUserPref('oldUI',0);
+$userUI = getCurrentUserPref('oldUI', 0);
 if ($userUI == 1)
-	require "header_old.php";
+    require "header_old.php";
 elseif ($userUI == 0)
-	require "header.php";
+    require "header.php";
 //Put user's current theme to cookie.
 if (!isset($_COOKIE['theme'])) {
     setcookie('theme', $ir['theme'], time() + 86400);
@@ -183,22 +186,19 @@ if (($ir['last_login'] > $_SESSION['last_login']) && !($ir['last_login'] == $_SE
 }
 //Basic chceks around the game.
 check_level();
-if (isset($_SERVER['HTTP_DNT']) && ($_SERVER['HTTP_DNT'] == 1)) 
-{
+if (isset($_SERVER['HTTP_DNT']) && ($_SERVER['HTTP_DNT'] == 1)) {
     $os = getOS("Unknown Browser");
     $browser = getBrowser("Unknown OS");
-}
-else
-{
+} else {
     $os = getOS($_SERVER['HTTP_USER_AGENT']);
     $browser = getBrowser($_SERVER['HTTP_USER_AGENT']);
 }
 $ir['os'] = $os;
 $ir['browser'] = $browser;
-$h = new headers;
 //Include API file.
-include("class/class_api.php");
 $api = new api;
+$ir['town_name'] = $api->SystemTownIDtoName($ir['location']);
+$h = new headers;
 //Load game sound system
 include('class/class_audio.php');
 $sound = new sound;
@@ -206,24 +206,20 @@ $sound = new sound;
 include("class/class_form.php");
 $form = new form;
 //If requested file doesn't want the header hidden.
-if (isset($nohdr) == false || !$nohdr) 
-{
+if (isset($nohdr) == false || !$nohdr) {
     $h->startheaders();
     $fm = number_format($ir['primary_currency']);
     $cm = number_format($ir['secondary_currency']);
     $lv = date('F j, Y, g:i a', $ir['laston']);
     global $atkpage;
-    if ($atkpage) 
-    {
+    if ($atkpage) {
         $h->userdata($ir, 0);
-    } 
-    else 
-    {
+    } else {
         $h->userdata($ir);
     }
     global $menuhide;
 }
-cslog('log',"You are using {$browser} on {$os}.");
+cslog('log', "You are using {$browser} on {$os}.");
 //Run the crons if possible.
 /*foreach (glob("crons/*.php") as $filename) {
     include $filename;
@@ -240,36 +236,28 @@ check_data();
 updateMostUsersCount();
 
 //For chat, maybe?
-$_SESSION['userName']=$ir['username'];
+$_SESSION['userName'] = $ir['username'];
 
-if (isset($moduleID) && !empty($moduleID))
-{
+if (isset($moduleID) && !empty($moduleID)) {
     $moduleConfig = attemptLoadModule($moduleID);
-    if ((isset($_GET['config']) && ($ir['user_level'] == 'Admin')))
-    {
+    if ((isset($_GET['config']) && ($ir['user_level'] == 'Admin'))) {
         echo "<h3>Config for {$moduleID}</h3><hr />";
-        if (isset($_POST['formSubmitValue']))
-        {
+        if (isset($_POST['formSubmitValue'])) {
             $configArray = [];
-            foreach ($_POST as $k => $v)
-            {
-                if (!($k == 'formSubmitValue'))
-                {
+            foreach ($_POST as $k => $v) {
+                if (!($k == 'formSubmitValue')) {
                     $configArray[$k] = $db->escape(htmlentities($v, ENT_QUOTES, 'ISO-8859-1'));
                 }
             }
             writeConfigToDB($moduleID, formatConfig($configArray));
             echo "Updated module config.";
-        }
-        else
-        {
-            $config=getConfigForPHP($moduleID);
-            $formArray=array();
-            foreach ($config as $k => $v)
-            {
-                array_push($formArray,array('text',$k,$k,$v));
+        } else {
+            $config = getConfigForPHP($moduleID);
+            $formArray = array();
+            foreach ($config as $k => $v) {
+                array_push($formArray, array('text', $k, $k, $v));
             }
-            createPostForm('?config',$formArray, 'Update Module Config');
+            createPostForm('?config', $formArray, 'Update Module Config');
         }
         die($h->endpage());
     }
