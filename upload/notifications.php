@@ -35,19 +35,22 @@ if ($_GET['deleteall'] > 0) {
                  WHERE `notif_user` = {$userid}");
     alert('success', "Success!", "You have successfully deleted all your notifications.", false);
 }
-echo "
-<b>Last {$viewCount} notifications</b>";
 $query = $db->query("/*qc=on*/SELECT *
                 FROM `notifications`
                 WHERE `notif_user` = $userid
         		ORDER BY `notif_time` DESC
         		LIMIT {$viewCount}");
+echo "<div class='card'>
+        <div class='card-header'>
+            Last {$viewCount} notifications
+        </div>
+        <div class='card-body'>";
 while ($notif = $db->fetch_row($query)) {
     $NotificationTime = DateTime_Parse($notif['notif_time']);
     if ($notif['notif_status'] == 'unread') {
-        $Status = "<span class='badge badge-pill badge-danger'><i class='fas fa-times'></i></span>";
+        $Status = "❌";
     } else {
-        $Status = "<span class='badge badge-pill badge-success'><i class='fas fa-check'></i></span>";
+        $Status = "✔";
     }
 	if (empty($notif['notif_icon']))
 	{
@@ -66,33 +69,28 @@ while ($notif = $db->fetch_row($query)) {
 		
 	}
     echo "
-	<div class='card'>
-		<div class='card-header bg-transparent'>
 			<div class='row'>
 				<div class='col-12'>
-					" . stripslashes($notif['notif_text']) . "<br />
-					<small class='text-muted'>
-						<div class='row'>
-							<div class='col-1'>
-								{$Status}
-							</div>
-							<div class='col-9'>
-								{$NotificationTime}
-							</div>
-							<div class='col-1'>
-								<a class='btn btn-primary btn-sm' href='?delete={$notif['notif_id']}'><i class='fas fa-trash-alt'></i></a>
-							</div>
-						</div>
-					</small>
-				</div>
-			</div>
-		</div>
-	</div>";
+					" . stripslashes($notif['notif_text']) . "
+                </div>
+                <div class='col-12 col-sm-1'>
+                    {$Status}
+                </div>
+                <div class='col-12 col-sm'>
+                    <i>{$NotificationTime}</i>
+                </div>
+                <div class='col-12 col-sm-2'>
+                    <a class='btn btn-danger btn-sm' href='?delete={$notif['notif_id']}'>🗑️</a>
+                </div>
+                <div class='col-12'>
+					&nbsp;
+                </div>
+			</div>";
 }
 $db->query(
     "UPDATE `notifications`
     		 SET `notif_status` = 'read'
     		 WHERE `notif_user` = {$userid}");
-echo "<br />
-<a class='btn btn-primary btn-block' href='?deleteall=1'>Delete All Notifications</a>";
+echo "
+<a class='btn btn-primary btn-block' href='?deleteall=1'>Delete All Notifications</a></div>";
 $h->endpage();
