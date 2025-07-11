@@ -28,42 +28,42 @@ class headers
 		cslog('log', "Your level multiplier is " . levelMultiplier($ir['level'], $ir['reset']));
 		return $extras;
 	}
-	
-    function startheaders()
-    {
-        global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time, $sound;
-		cslog('log',"Loading headers for {$set['WebsiteName']}");
+
+	function startheaders()
+	{
+		global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time, $sound;
+		cslog('log', "Loading headers for {$set['WebsiteName']}");
 		date_default_timezone_set($set['game_time']);
 		$extras = $this->extraData();
-        //Load the meta headers.
-        ?>
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-                <?php
-                //Select count of user's unread messages.
-                $ir['mail'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
-                //Select count of user's unread notifications.
-                $ir['notifications'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
-                $title = returnGameTitle() . " - {$ir['username']}";
-                echo "<title>{$title}</title>";
-				if ($ir['disable_alerts'] == 0)
-					$notificon = "fas fa-bell";
-				else
-					$notificon = "fas fa-bell-slash";
-				$this->loadEssentialAssets();
-				$this->loadUserTheme($ir['theme']);
-				$this->returnMetadata();
-				$hdr=$this->getThemeNavbarColor($ir['theme']);
-				$sound->loadSystem();
-				cslog('warn',"Main assets have loaded successfully. Log entries after this point were created by the game or related modules, not the base engine.");
-				include('ads/ad_all.php');
-				?>
-				</head>
-    <?php
-    //If the called script wants the menu hidden.
-    if (empty($menuhide))
-    {
+		//Load the meta headers.
+?>
+		<!DOCTYPE html>
+		<html lang="en">
+
+		<head>
+			<?php
+			//Select count of user's unread messages.
+			$ir['mail'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`mail_id`) FROM `mail` WHERE `mail_to` = {$ir['userid']} AND `mail_status` = 'unread'"));
+			//Select count of user's unread notifications.
+			$ir['notifications'] = $db->fetch_single($db->query("/*qc=on*/SELECT COUNT(`notif_id`) FROM `notifications` WHERE `notif_user` = {$ir['userid']} AND `notif_status` = 'unread'"));
+			$title = returnGameTitle() . " - {$ir['username']}";
+			echo "<title>{$title}</title>";
+			if ($ir['disable_alerts'] == 0)
+				$notificon = "fas fa-bell";
+			else
+				$notificon = "fas fa-bell-slash";
+			$this->loadEssentialAssets();
+			$this->loadUserTheme($ir['theme']);
+			$this->returnMetadata();
+			$hdr = $this->getThemeNavbarColor($ir['theme']);
+			$sound->loadSystem();
+			cslog('warn', "Main assets have loaded successfully. Log entries after this point were created by the game or related modules, not the base engine.");
+			include('ads/ad_all.php');
+			?>
+		</head>
+		<?php
+		//If the called script wants the menu hidden.
+		if (empty($menuhide)) {
 			$energy = $api->UserInfoGet($userid, 'energy', true);
 			$brave = $api->UserInfoGet($userid, 'brave', true);
 			$will = $api->UserInfoGet($userid, 'will', true);
@@ -71,10 +71,10 @@ class headers
 			$hp = $api->UserInfoGet($userid, 'hp', true);
 			$urPic = "<img src='" . parseDisplayPic($userid) . "' height='18.4' alt='Your profile picture.' title='Your profile picture.'>";
 			if ($ir['sidemenu'] == 0)
-				$toggle='toggled';
+				$toggle = 'toggled';
 			else
-				$toggle='';
-		echo "
+				$toggle = '';
+			echo "
         <body>
 				<div class='page-wrapper default-theme sidebar-bg {$toggle}'>
 				<div id='show-sidebar' class='btn btn-md btn-dark'>
@@ -107,7 +107,7 @@ class headers
 								</li>
 								<li>
 									<a href='explore.php' class='updateHoverBtn'>
-										<span class='menu-text'>📜 Explore</span>
+										<span class='menu-text'>📜 Explore {$ir['town_name']}</span>
 									</a>
 								</li>
 								<li class='header-menu'>
@@ -115,7 +115,7 @@ class headers
 								</li>
 								<li>
 									<a href='gym.php' class='updateHoverBtn'>
-										<span class='menu-text'>💪 Gym</span>
+										<span class='menu-text'>🎽 {$ir['town_name']} Gym</span>
 									</a>
 								</li>
 								<li>
@@ -161,18 +161,16 @@ class headers
 										<span class='menu-text'>📣 Announcements <span class='badge badge-pill badge-primary' id='ui_announce'>" . number_format($ir['announcements']) . "</span></span>
 									</a>
 								</li>";
-								if ($ir['guild'] > 0) 
-								{
-									echo "
+			if ($ir['guild'] > 0) {
+				echo "
 									<li>
 										<a href='viewguild.php' class='updateHoverBtn'>
 											<span class='menu-text'>🔍 Your Guild</span></span>
 										</a>
 									</li>";
-								}
-								if ($api->UserMemberLevelGet($userid, 'forum moderator'))
-								{
-								    echo "
+			}
+			if ($api->UserMemberLevelGet($userid, 'forum moderator')) {
+				echo "
                                     <li class='header-menu'>
 									   <span>Staff</span>
 								    </li>
@@ -184,175 +182,159 @@ class headers
                                     <li class='header-menu'>
 									   <span>Staff Online</span>
 								    </li>";
-								    $online_cutoff = time() - 900;
-								    $q =
-								    $db->query(
-								        "SELECT `userid`, `username`, `laston`
+				$online_cutoff = time() - 900;
+				$q =
+					$db->query(
+						"SELECT `userid`, `username`, `laston`
                                          FROM `users`
                                          WHERE `laston` > ({$online_cutoff})
                                          AND `user_level` != 'NPC'
                                          AND `user_level` != 'Member'
-                                         ORDER BY `userid` ASC");
-								    while ($r = $db->fetch_row($q))
-								    {
-								        echo "<li>
+                                         ORDER BY `userid` ASC"
+					);
+				while ($r = $db->fetch_row($q)) {
+					echo "<li>
     									<a href='profile.php?user={$r['userid']}' class='updateHoverBtn'>
     										  <span class='menu-text'>
                                                     " . parseUsername($r['userid'])  . " " . parseUserID($r['userid']) . "
                                                 </span>
         									</a>
         								</li>";
-								    }
-								} 
-								?>
-								<li class="header-menu">
-									<span id='ui_time'><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
-								</li>
-							</ul>
-						</div>
-						<!-- sidebar-menu  -->
-					</div>
-					<!-- sidebar-footer  -->
-					<div class="sidebar-footer">
-						<div class="dropdown">
-							<a href="notifications.php" class="updateHoverBtn">
-								<i class="fa fa-bell"></i>
-								<span class="badge badge-pill badge-success notification" id="ui_notif"><?php echo shortNumberParse($ir['notifications']); ?></span>
-							</a>
-						</div>
-						<div class="dropdown">
-							<a href="inbox.php" class="updateHoverBtn">
-								<i class="fa fa-envelope"></i>
-								<span class="badge badge-pill badge-success notification" id="ui_mail"><?php echo shortNumberParse($ir['mail']); ?></span>
-							</a>
-						</div>
-						<div class="dropdown">
-							<a href="preferences.php" class="updateHoverBtn">
-								<i class="fa fa-cog"></i>
-							</a>
-						</div>
-						<div>
-							<a href="logout.php" class="updateHoverBtn">
-								<i class="fa fa-power-off"></i>
-							</a>
-						</div>
-						<div class="pinned-footer">
-							<a href="#">
-								<i class="fas fa-ellipsis-h"></i>
-							</a>
-						</div>
-					</div>
-				</nav>
+				}
+			}
+		?>
+			<li class="header-menu">
+				<span id='ui_time'><?php echo date('F j, Y') . " " . date('g:i:s a'); ?></span>
+			</li>
+			</ul>
+			</div>
+			<!-- sidebar-menu  -->
+			</div>
+			<!-- sidebar-footer  -->
+			<div class="sidebar-footer">
+				<div class="dropdown">
+					<a href="notifications.php" class="updateHoverBtn">
+						<i class="fa fa-bell"></i>
+						<span class="badge badge-pill badge-success notification" id="ui_notif"><?php echo shortNumberParse($ir['notifications']); ?></span>
+					</a>
+				</div>
+				<div class="dropdown">
+					<a href="inbox.php" class="updateHoverBtn">
+						<i class="fa fa-envelope"></i>
+						<span class="badge badge-pill badge-success notification" id="ui_mail"><?php echo shortNumberParse($ir['mail']); ?></span>
+					</a>
+				</div>
+				<div class="dropdown">
+					<a href="preferences.php" class="updateHoverBtn">
+						<i class="fa fa-cog"></i>
+					</a>
+				</div>
+				<div>
+					<a href="logout.php" class="updateHoverBtn">
+						<i class="fa fa-power-off"></i>
+					</a>
+				</div>
+				<div class="pinned-footer">
+					<a href="#">
+						<i class="fas fa-ellipsis-h"></i>
+					</a>
+				</div>
+			</div>
+			</nav>
 
-				<!-- Page Content -->
-				<main class="page-content pt-2">
-					<div id="overlay" class="overlay"></div>
-					<div class="container-fluid p-5">
-        <noscript>
-            <?php
-            //User doesn't have javascript turned on, so lets tell them.
-            alert('warning', "", "We highly recommend you enable Javascript! Many of the game's functions will not work without it.", false);
-            ?>
-        </noscript>
-    <?php
-    date_default_timezone_set($set['game_time']);
-    $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-    $ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
-    //User's IP is banned, so lets stop access.
-    if ($db->num_rows($ipq) > 0) {
-        alert('danger', "Uh Oh!", "You have been IP banned. There is no way around this.", false);
-        die($h->endpage());
-    }
-    $fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
-    $votecount=$db->fetch_single($db->query("SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
-	//$votecount = 0;
-    echo "<div class='row'>";
-        if ($votecount < 5)
-        {
-            echo"
+			<!-- Page Content -->
+			<main class="page-content pt-2">
+				<div id="overlay" class="overlay"></div>
+				<div class="container-fluid p-5">
+					<noscript>
+						<?php
+						//User doesn't have javascript turned on, so lets tell them.
+						alert('warning', "", "We highly recommend you enable Javascript! Many of the game's functions will not work without it.", false);
+						?>
+					</noscript>
+					<?php
+					date_default_timezone_set($set['game_time']);
+					$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+					$ipq = $db->query("/*qc=on*/SELECT `ip_id` FROM `ipban` WHERE `ip_ip` = '{$IP}'");
+					//User's IP is banned, so lets stop access.
+					if ($db->num_rows($ipq) > 0) {
+						alert('danger', "Uh Oh!", "You have been IP banned. There is no way around this.", false);
+						die($h->endpage());
+					}
+					$fed = $db->fetch_row($db->query("/*qc=on*/SELECT * FROM `fedjail` WHERE `fed_userid` = {$userid}"));
+					$votecount = $db->fetch_single($db->query("SELECT COUNT(`voted`) FROM `votes` WHERE `userid` = {$userid}"));
+					//$votecount = 0;
+					echo "<div class='row'>";
+					if ($votecount < 5) {
+						echo "
             <div class='col-12 col-sm col-lg-12 col-xxl'>
                 <b><a href='vote.php' class='text-success updateHoverBtn'>[Vote for {$set['WebsiteName']}<span class='hidden-md-down'> at various Voting Websites and be rewarded</span>.]</a></b>
             </div>";
-        }
-        echo"
+					}
+					echo "
         <div class='col-12 col-sm col-lg-12 col-xxl'>
             <b><a href='donator.php' class='text-danger updateHoverBtn'>[Donate to {$set['WebsiteName']}.<span class='hidden-md-down'> Packs start at $1 and you receive tons of benefits.</span>]</a></b>
         </div>
     </div>";
-    $this->loadNewsScroller();
-    if (userHasEffect($userid, constant("sleep")))
-    {
-        $protDone = returnEffectDone($userid, constant("sleep"));
-        if (isset($_GET['wakeup']))
-        {
-            userRemoveEffect($userid, constant("sleep"));
-            alert("success","Rise and Shine!", "You've successfully woken up. Nothing like the smell of the blood of your fallen prey in the morning.", true, 'index.php');
-        }
-        else
-        {
-            alert("info","Nighty night!", "You're currently sleeping and will wake up in " . TimeUntil_Parse($protDone) . ". Your stats will replenish each minute you sleep.", true, '?wakeup', "Wake Up");
-            die($h->endpage());
-        }
-    }
-    if (userHasEffect($userid, constant("basic_protection")))
-	{
-	    $protDone = returnEffectDone($userid, constant("basic_protection"));
-		echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($protDone) . ".</span></b><br />";
-	}
-	if (userHasEffect($userid, constant("invisibility")))
-	{
-	    $effctDone = returnEffectDone($userid, constant("invisibility"));
-	    echo "<b><span class='text-info'>You have invisibility active for the next " . TimeUntil_Parse($effctDone) . ".</span></b><br />";
-	}
-	if ($ir['will_overcharge'] > time())
-	{
-		echo "<b><span class='text-info'>You have Will Overcharge active for the next " . TimeUntil_Parse($ir['will_overcharge']) . ".</span></b><br />";
-	}
-	if (getCurrentUserPref('tutorialToggle', 'true') == 'true')
-    {
-        $page = $db->escape(strip_tags(stripslashes(basename($_SERVER['PHP_SELF']))));
-        $tq=$db->query("/*qc=on*/SELECT * FROM `tutorial` WHERE `page` = '{$page}'");
-        if ($db->num_rows($tq) > 0)
-        {
-            $tr=$db->fetch_row($tq);
-            alert('info',"",$tr['tutorial'],true,'preferences.php?action=tuttoggle',"Disable Tutorial");
-        }
-    }
+					$this->loadNewsScroller();
+					if (userHasEffect($userid, constant("sleep"))) {
+						$protDone = returnEffectDone($userid, constant("sleep"));
+						if (isset($_GET['wakeup'])) {
+							userRemoveEffect($userid, constant("sleep"));
+							alert("success", "Rise and Shine!", "You've successfully woken up. Nothing like the smell of the blood of your fallen prey in the morning.", true, 'index.php');
+						} else {
+							alert("info", "Nighty night!", "You're currently sleeping and will wake up in " . TimeUntil_Parse($protDone) . ". Your stats will replenish each minute you sleep.", true, '?wakeup', "Wake Up");
+							die($h->endpage());
+						}
+					}
+					if (userHasEffect($userid, constant("basic_protection"))) {
+						$protDone = returnEffectDone($userid, constant("basic_protection"));
+						echo "<b><span class='text-info'>You have protection active for the next " . TimeUntil_Parse($protDone) . ".</span></b><br />";
+					}
+					if (userHasEffect($userid, constant("invisibility"))) {
+						$effctDone = returnEffectDone($userid, constant("invisibility"));
+						echo "<b><span class='text-info'>You have invisibility active for the next " . TimeUntil_Parse($effctDone) . ".</span></b><br />";
+					}
+					if ($ir['will_overcharge'] > time()) {
+						echo "<b><span class='text-info'>You have Will Overcharge active for the next " . TimeUntil_Parse($ir['will_overcharge']) . ".</span></b><br />";
+					}
+					if (getCurrentUserPref('tutorialToggle', 'true') == 'true') {
+						$page = $db->escape(strip_tags(stripslashes(basename($_SERVER['PHP_SELF']))));
+						$tq = $db->query("/*qc=on*/SELECT * FROM `tutorial` WHERE `page` = '{$page}'");
+						if ($db->num_rows($tq) > 0) {
+							$tr = $db->fetch_row($tq);
+							alert('info', "", $tr['tutorial'], true, 'preferences.php?action=tuttoggle', "Disable Tutorial");
+						}
+					}
 
-	
-	//User's federal jail sentence is completed. Let them play again.
-    if (isset($fed['fed_out']))
-    {
-        if ($fed['fed_out'] < $time) {
-            $db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
-            $db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
-        }
-    }
-    //User is in federal jail. Stop their access.
-    if ($ir['fedjail'] > 0) {
-		$lasthour=time()-3600;
-		$fq2=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} AND `fja_time` >= {$lasthour} LIMIT 1");
-		if (isset($_POST['fedappeal']))
-		{
-			$msg = $db->escape(stripslashes($_POST['fedappeal']));
-			$time=time();
-			if ($db->num_rows($fq2) != 0)
-			{
-				echo "<b>You can only submit an appeal once per hour...</b>";
-			}
-			else
-			{
-				echo "<b>Response posted. Come back later for a response.</b>";
-				$db->query("INSERT INTO `fedjail_appeals` (`fja_user`, `fja_responder`, `fja_text`, `fja_time`) VALUES ('{$userid}', '{$userid}', '{$msg}', '{$time}')");
-			}
-		}
-        alert('info', "Federal Dungeon!", "You are locked away in Federal Dungeon for the next
+
+					//User's federal jail sentence is completed. Let them play again.
+					if (isset($fed['fed_out'])) {
+						if ($fed['fed_out'] < $time) {
+							$db->query("UPDATE `users` SET `fedjail` = 0 WHERE `userid` = {$userid}");
+							$db->query("DELETE FROM `fedjail` WHERE `fed_userid` = {$userid}");
+						}
+					}
+					//User is in federal jail. Stop their access.
+					if ($ir['fedjail'] > 0) {
+						$lasthour = time() - 3600;
+						$fq2 = $db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} AND `fja_time` >= {$lasthour} LIMIT 1");
+						if (isset($_POST['fedappeal'])) {
+							$msg = $db->escape(stripslashes($_POST['fedappeal']));
+							$time = time();
+							if ($db->num_rows($fq2) != 0) {
+								echo "<b>You can only submit an appeal once per hour...</b>";
+							} else {
+								echo "<b>Response posted. Come back later for a response.</b>";
+								$db->query("INSERT INTO `fedjail_appeals` (`fja_user`, `fja_responder`, `fja_text`, `fja_time`) VALUES ('{$userid}', '{$userid}', '{$msg}', '{$time}')");
+							}
+						}
+						alert('info', "Federal Dungeon!", "You are locked away in Federal Dungeon for the next
 					    " . TimeUntil_Parse($fed['fed_out']) . ". You were placed in here for <b>{$fed['fed_reason']}</b>.", false);
-		$fq=$db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} ORDER BY `fja_time` ASC");
-		echo "<table class='table table-bordered'>";
-		while ($fr = $db->fetch_row($fq))
-		{
-			echo "<tr>
+						$fq = $db->query("/*qc=on*/SELECT * FROM `fedjail_appeals` WHERE `fja_user` = {$userid} ORDER BY `fja_time` ASC");
+						echo "<table class='table table-bordered'>";
+						while ($fr = $db->fetch_row($fq)) {
+							echo "<tr>
 			<th width='33%'>
 				{$api->SystemUserIDtoName($fr['fja_responder'])} [{$fr['fja_responder']}]<br />
 				" . DateTime_Parse($fr['fja_time']) . "
@@ -361,8 +343,8 @@ class headers
 				{$fr['fja_text']}
 			</td>
 			</tr>";
-		}
-		echo "
+						}
+						echo "
 		<tr>
 			<td colspan='2'>
 				<form method='post'>
@@ -373,162 +355,148 @@ class headers
 			</td>
 		</tr>
 		</table>";
-        die($h->endpage());
-    }
-	$this->showSocialAlerts();
-	$this->showStatusAlerts();
-	$this->doArtifactRNG();
-	$this->doLuckRNG();
-    //User needs to reverify with reCaptcha
-	$noCaptcha = PHP_INT_MAX;  //bypass for local dev
-	if ($set['Revalidate_Time'] != $noCaptcha)
-	{
-        if (($ir['last_verified'] < ($time - $set['Revalidate_Time'])) || ($ir['need_verify'] == 1))
-        {
-    		//Script calls for reCaptcha to be loaded.
-    		if (isset($macropage))
-    		{
-    			//Set User to need verified.
-    			$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}"); ?>
-                <script src='https://www.hCaptcha.com/1/api.js' async defer></script>
-    			<noscript>
-                <?php
-                //User doesn't have javascript turned on, so lets tell them.
-    				alert('warning', "", "{$set['WebsiteName']}'s captcha system needs you to enable Javascript to continue.", false);
-                ?>
-    			</noscript>
-    			<div class='col-12 col-sm-10 col-md-7 col-xl-6 col-xxl-5 col-xxxl-3'>
-    			<div class='card'>
-    				<div class='card-header'>
-    					Necessary Evil. Please confirm check.
-					</div>
-					<div class='card-body'>
-						<form action='macro.php' method='post' id='recaptchaForm'>
-							<div class="h-captcha" data-callback='enableRecaptchaBtn' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
-                            <input type='hidden' value='<?php echo $macropage; ?>' name='page'>
-                            <input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary btn-block" id="recaptchabtn" disabled="disabled">
-                        </form>
-                        <i><small>If you cannot see the captcha, please enable Javascript</small></i>
-					</div>
-    			</div>
-    			</div>
-                <?php
-                die($h->endpage());
-    		}
-        }
-	}
-	include('rickroll.php');
-    }
-    }
-	
-	function doLuckRNG()
-	{
-		global $db, $ir, $api, $userid, $set;
-		$luckrng=Random(1,200);
-		//$luckrng=69;
-		if (!isset($_SESSION['lucked_out']))
-			$_SESSION['lucked_out']=0;
-		//if (isset($_SESSION['lucked_out']))
-		if ($_SESSION['lucked_out'] < time())
-		{
-			if ($luckrng == 160)
-			{
-				$thisrng=0;
-				if (($ir['luck'] > 50) && ($ir['luck'] < 150))
-				{
-					$minimumluck=1;
-					//Lucky Day
-					if (getUserSkill($userid, 24) > 0)
-					    $minimumluck += getUserSkill($userid, 24) * getSkillBonus(24);
-					while ($thisrng == 0)
-					    $thisrng=Random($minimumluck,7+$minimumluck);
-					$_SESSION['lucked_out']=time()+300;
-					//alert('info','Lucked Out!',"While walking around the kingdom, your luck has changed by {$thisrng}%.",false);
-					toast("Lucky Day!","While walking around {$set['WebsiteName']}, your luck has increased by {$thisrng}%.");
-					$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
+						die($h->endpage());
+					}
+					$this->showSocialAlerts();
+					$this->showStatusAlerts();
+					$this->doArtifactRNG();
+					$this->doLuckRNG();
+					//User needs to reverify with reCaptcha
+					$noCaptcha = PHP_INT_MAX;  //bypass for local dev
+					if ($set['Revalidate_Time'] != $noCaptcha) {
+						if (($ir['last_verified'] < ($time - $set['Revalidate_Time'])) || ($ir['need_verify'] == 1)) {
+							//Script calls for reCaptcha to be loaded.
+							if (isset($macropage)) {
+								//Set User to need verified.
+								$db->query("UPDATE `users` SET `need_verify` = 1 WHERE `userid` = {$userid}"); ?>
+								<script src='https://www.hCaptcha.com/1/api.js' async defer></script>
+								<noscript>
+									<?php
+									//User doesn't have javascript turned on, so lets tell them.
+									alert('warning', "", "{$set['WebsiteName']}'s captcha system needs you to enable Javascript to continue.", false);
+									?>
+								</noscript>
+								<div class='col-12 col-sm-10 col-md-7 col-xl-6 col-xxl-5 col-xxxl-3'>
+									<div class='card'>
+										<div class='card-header'>
+											Necessary Evil. Please confirm check.
+										</div>
+										<div class='card-body'>
+											<form action='macro.php' method='post' id='recaptchaForm'>
+												<div class="h-captcha" data-callback='enableRecaptchaBtn' data-sitekey='<?php echo $set['reCaptcha_public']; ?>'></div>
+												<input type='hidden' value='<?php echo $macropage; ?>' name='page'>
+												<input type='submit' value="<?php echo "Confirm"; ?>" class="btn btn-primary btn-block" id="recaptchabtn" disabled="disabled">
+											</form>
+											<i><small>If you cannot see the captcha, please enable Javascript</small></i>
+										</div>
+									</div>
+								</div>
+				<?php
+								die($h->endpage());
+							}
+						}
+					}
+					include('rickroll.php');
 				}
 			}
-		}
-	}
-	
-	function doArtifactRNG()
-	{
-		global $db, $ir, $api, $userid;
-		//RNG for experience token? O.o
-		$xprng=Random(1,100);
-		if ($xprng == 56 && $ir['artifacts'] != 4)
-		{
-			if (($ir['artifact_time']) < time() - Random(270,360))
+
+			function doLuckRNG()
 			{
-				alert("info","","While wondering around, you find a small artifact laying on the ground. Maybe you should take it to the Blacksmith Smeltery to find out what you can do with it?",false);
-				$api->UserGiveItem($userid,94,1);
-				$db->query("UPDATE `user_settings` SET `artifacts` = `artifacts` + 1, `artifact_time` = " . time() . " WHERE `userid` = {$userid}");
+				global $db, $ir, $api, $userid, $set;
+				$luckrng = Random(1, 200);
+				//$luckrng=69;
+				if (!isset($_SESSION['lucked_out']))
+					$_SESSION['lucked_out'] = 0;
+				//if (isset($_SESSION['lucked_out']))
+				if ($_SESSION['lucked_out'] < time()) {
+					if ($luckrng == 160) {
+						$thisrng = 0;
+						if (($ir['luck'] > 50) && ($ir['luck'] < 150)) {
+							$minimumluck = 1;
+							//Lucky Day
+							if (getUserSkill($userid, 24) > 0)
+								$minimumluck += getUserSkill($userid, 24) * getSkillBonus(24);
+							while ($thisrng == 0)
+								$thisrng = Random($minimumluck, 7 + $minimumluck);
+							$_SESSION['lucked_out'] = time() + 300;
+							//alert('info','Lucked Out!',"While walking around the kingdom, your luck has changed by {$thisrng}%.",false);
+							toast("Lucky Day!", "While walking around {$set['WebsiteName']}, your luck has increased by {$thisrng}%.");
+							$db->query("UPDATE `userstats` SET `luck` = `luck` + ({$thisrng}) WHERE `userid` = {$userid}");
+						}
+					}
+				}
 			}
-		}
-	}
-	
-	function showSocialAlerts()
-	{
-		global $ir;
-		echo "<div class='row' id='socialRow'>";
-		if ($ir['mail'] > 0) 
-		{
-			echo "<div class='col-auto'>";
-				alert('info', "", "You have " . shortNumberParse($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
-			echo "</div>";
-        }
-        //Tell user they have unread notifcations when they do.
-        if ($ir['notifications'] > 0) 
-		{
-			echo "<div class='col-auto'>";
-				alert('info', "", "You have " . shortNumberParse($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
-			echo "</div>";
-        }
-		//Tell user they have unread game announcements when they do.
-		if ($ir['announcements'] > 0) 
-		{
-			echo "<div class='col-auto'>";
-				alert('info', "", "You have " . shortNumberParse($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
-			echo "</div>";
-		}
-		echo "</div>";
-		echo "
+
+			function doArtifactRNG()
+			{
+				global $db, $ir, $api, $userid;
+				//RNG for experience token? O.o
+				$xprng = Random(1, 100);
+				if ($xprng == 56 && $ir['artifacts'] != 4) {
+					if (($ir['artifact_time']) < time() - Random(270, 360)) {
+						alert("info", "", "While wondering around, you find a small artifact laying on the ground. Maybe you should take it to the Blacksmith Smeltery to find out what you can do with it?", false);
+						$api->UserGiveItem($userid, 94, 1);
+						$db->query("UPDATE `user_settings` SET `artifacts` = `artifacts` + 1, `artifact_time` = " . time() . " WHERE `userid` = {$userid}");
+					}
+				}
+			}
+
+			function showSocialAlerts()
+			{
+				global $ir;
+				echo "<div class='row' id='socialRow'>";
+				if ($ir['mail'] > 0) {
+					echo "<div class='col-auto'>";
+					alert('info', "", "You have " . shortNumberParse($ir['mail']) . " unread messages.", true, 'inbox.php', "View");
+					echo "</div>";
+				}
+				//Tell user they have unread notifcations when they do.
+				if ($ir['notifications'] > 0) {
+					echo "<div class='col-auto'>";
+					alert('info', "", "You have " . shortNumberParse($ir['notifications']) . " unread notifications.", true, 'notifications.php', "View");
+					echo "</div>";
+				}
+				//Tell user they have unread game announcements when they do.
+				if ($ir['announcements'] > 0) {
+					echo "<div class='col-auto'>";
+					alert('info', "", "You have " . shortNumberParse($ir['announcements']) . " unread announcements.", true, 'announcements.php', "View");
+					echo "</div>";
+				}
+				echo "</div>";
+				echo "
 		<div class='row' id='socialRow2'>
 		</div>";
-	}
-	function showStatusAlerts()
-	{
-		global $ir, $api, $db;
-		echo "<div class='row'>";
-		if ($api->UserStatus($ir['userid'], 'infirmary')) 
-		{
-			$InfirmaryOut = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
-			$InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
-			echo "<div class='col-md'>";
-				alert('info', "", "You are in the Infirmary for {$InfirmaryRemain}.", true, "quickuse.php?infirmary", "Use " . parseInfirmaryItemName($ir['iitem']));
-			echo "</div>";
-		}
-		//User is in the dungeon, tell them how long.
-		if ($api->UserStatus($ir['userid'], 'dungeon')) 
-		{
-			$DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
-			$DungeonRemain = TimeUntil_Parse($DungeonOut);
-			echo "<div class='col-md'>";
-				alert('info', "", "You are in the dungeon for {$DungeonRemain}.", true, "quickuse.php?dungeon", "Use " . parseDungeonItemName($ir['ditem']));
-			echo "</div>";
-		}
-		echo "</div>";
-	}
-	
-	function loadUserTheme($themeID)
-	{
-		global $set;
-		$maxThemes = 8;
-		cslog('log',"User Theme ID: {$themeID}.");
-		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/sidebar-themes.css'>";
-		if ($themeID == 1)
-		{
-			echo "
+			}
+			function showStatusAlerts()
+			{
+				global $ir, $api, $db;
+				echo "<div class='row'>";
+				if ($api->UserStatus($ir['userid'], 'infirmary')) {
+					$InfirmaryOut = $db->fetch_single($db->query("/*qc=on*/SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$ir['userid']}"));
+					$InfirmaryRemain = TimeUntil_Parse($InfirmaryOut);
+					echo "<div class='col-md'>";
+					alert('info', "", "You are in the Infirmary for {$InfirmaryRemain}.", true, "quickuse.php?infirmary", "Use " . parseInfirmaryItemName($ir['iitem']));
+					echo "</div>";
+				}
+				//User is in the dungeon, tell them how long.
+				if ($api->UserStatus($ir['userid'], 'dungeon')) {
+					$DungeonOut = $db->fetch_single($db->query("/*qc=on*/SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$ir['userid']}"));
+					$DungeonRemain = TimeUntil_Parse($DungeonOut);
+					echo "<div class='col-md'>";
+					alert('info', "", "You are in the dungeon for {$DungeonRemain}.", true, "quickuse.php?dungeon", "Use " . parseDungeonItemName($ir['ditem']));
+					echo "</div>";
+				}
+				echo "</div>";
+			}
+
+			function loadUserTheme($themeID)
+			{
+				global $set;
+				$maxThemes = 8;
+				cslog('log', "User Theme ID: {$themeID}.");
+				echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/sidebar-themes.css'>";
+				if ($themeID == 1) {
+					echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/default-21.2.2.css'>
 			<meta name='theme-color' content='#333'>
 			<style>
@@ -536,16 +504,14 @@ class headers
 				background-color: #333; 
 			}
 			</style>";
-		}
-		if ($themeID == 2)
-		{
-			echo "
+				}
+				if ($themeID == 2) {
+					echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/darkly-21.2.2.css'>
 			<meta name='theme-color' content='#303030'>";
-		}
-		if ($themeID == 3)
-		{
-			echo "
+				}
+				if ($themeID == 3) {
+					echo "
 			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/slate/bootstrap.min.css'>
 			<meta name='theme-color' content='#272B30'>
 			<style>
@@ -553,22 +519,19 @@ class headers
 				background-color: #272B30; 
 			}
 			</style>";
-		}
-		if ($themeID == 4)
-		{
-			echo "
+				}
+				if ($themeID == 4) {
+					echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/cyborg-21.2.2.css'>
 			<meta name='theme-color' content='#060606'>";
-		}
-		if ($themeID == 5)
-		{
-			echo "
+				}
+				if ($themeID == 5) {
+					echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/united-21.2.2.css'>
 			<meta name='theme-color' content='#772953'>";
-		}
-		if ($themeID == 6)
-		{
-			echo "
+				}
+				if ($themeID == 6) {
+					echo "
 			<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootswatch/{$set['bootstrap_version']}/cerulean/bootstrap.min.css'>
 			<meta name='theme-color' content='#04519b'>
 			<style>
@@ -576,67 +539,62 @@ class headers
 				background-color: #04519b; 
 			}
 			</style>";
-		}
-		if ($themeID == 7)
-		{
-			echo "
+				}
+				if ($themeID == 7) {
+					echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/castle-21.2.1.css'>
 			<meta name='theme-color' content='rgba(0, 0, 0, 0.8)'>";
-		}
-		if ($themeID == 8)
-		{
-			echo "
+				}
+				if ($themeID == 8) {
+					echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/sunset-21.2.1.css'>
 			<meta name='theme-color' content='rgba(64, 0, 0, 0.8)'>";
-		}
-		if (($themeID > 100) && ($themeID <= $maxThemes+100))
-		{
-		    echo "
+				}
+				if (($themeID > 100) && ($themeID <= $maxThemes + 100)) {
+					echo "
 			<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/themes/default-21.2.2.css'>
             <link rel='stylesheet' href='./assets/css/themes/halloween.css'>";
-		}
-	}
-	
-	function getThemeNavbarColor($themeID)
-	{
-		if ($themeID == 2)
-			return 'navbar-light bg-light';
-		else
-			return 'navbar-dark bg-dark';
-	}
-	
-	function loadEssentialAssets()
-	{
-		cslog('log',"Essential assets loading now.");
-		$this->loadCSS();
-		$this->loadEarlyJS();
-		cslog('log',"Essential assets loaded successfully.");
-		
-	}
-	
-	function loadCSS()
-	{
-		global $set;
-		cslog('log',"CSS is loading.");
-		echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/game-{$set['game_css_version']}.css' async>
+				}
+			}
+
+			function getThemeNavbarColor($themeID)
+			{
+				if ($themeID == 2)
+					return 'navbar-light bg-light';
+				else
+					return 'navbar-dark bg-dark';
+			}
+
+			function loadEssentialAssets()
+			{
+				cslog('log', "Essential assets loading now.");
+				$this->loadCSS();
+				$this->loadEarlyJS();
+				cslog('log', "Essential assets loaded successfully.");
+			}
+
+			function loadCSS()
+			{
+				global $set;
+				cslog('log', "CSS is loading.");
+				echo "<link rel='stylesheet' href='https://cdn.chivalryisdeadgame.com/assets/css/game-{$set['game_css_version']}.css' async>
 				<link rel='stylesheet' href='https://seiyria.com/gameicons-font/css/game-icons.css' async>
 				<link rel='stylesheet' href='//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css' defer>";
-		
-	}
-	
-	function loadEarlyJS()
-	{
-		global $set;
-		cslog('log',"Essential JS scripts are loading.");
-		echo "<script src='https://ajax.googleapis.com/ajax/libs/jquery/{$set['jquery_version']}/jquery.min.js'></script>
+			}
+
+			function loadEarlyJS()
+			{
+				global $set;
+				cslog('log', "Essential JS scripts are loading.");
+				echo "<script src='https://ajax.googleapis.com/ajax/libs/jquery/{$set['jquery_version']}/jquery.min.js'></script>
 		<script src='https://cdn.chivalryisdeadgame.com/assets/js/game-v{$set['game_js_version']}.js' async></script>";
-	}
-	
-	function loadJS()
-	{
-	    global $ir, $set;
-	    cslog('log',"JS is loading.");
-	    echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
+			}
+
+			function loadJS()
+			{
+				global $ir, $set;
+				cslog('log', "JS is loading.");
+				echo "<script src='https://cdn.jsdelivr.net/npm/popper.js@{$set['popper_version']}/dist/umd/popper.min.js'></script>
         <script src='https://stackpath.bootstrapcdn.com/bootstrap/{$set['bootstrap_version']}/js/bootstrap.min.js'></script>
 		<script src='https://cdn.jsdelivr.net/gh/MasterGeneral156/chivalry-is-dead-game-cdn@1/js/register.min.js' defer></script>
 		<script src='https://use.fontawesome.com/releases/v{$set['fontawesome_version']}/js/all.js'></script>
@@ -650,43 +608,49 @@ class headers
 		  
 		  gtag('config', 'UA-69718211-1');
 		</script>";
-	    ?>
-		<script src="https://cdn.chivalryisdeadgame.com/assets/js/sidemenu.js" async></script>
-		<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js" defer></script>
-		<script type="text/javascript">
-            jQuery(function ($) {
-            $("#close-sidebar").click(function() {
-              $(".page-wrapper").removeClass("toggled");
-				$.post('js/script/menu.php', { value: 1}, 
-					function(returnedData){
-						 console.log("Disabled sidebar.");
-				});
-			});
-			$("#overlay").click(function() {
-              $(".page-wrapper").removeClass("toggled");
-				$.post('js/script/menu.php', { value: 1}, 
-					function(returnedData){
-						 console.log("Disabled sidebar via overlay.");
-				});
-			});
-            $("#show-sidebar").click(function() {
-              $(".page-wrapper").addClass("toggled");
-			  $.post('js/script/menu.php', { value: 0}, 
-					function(returnedData){
-						 console.log("Enabled sidebar.");
-				});
-            });
-        });	
-        </script>
-        <script src='https://cdn.chivalryisdeadgame.com/assets/js/jquery.canvasjs.min.js' defer></script>
-		<?php
-	}
-	
-	function returnMetadata()
-	{
-		global $set;
-		cslog('log',"Setting website metadata.");
-		echo "<meta charset='utf-8'>
+				?>
+				<script src="https://cdn.chivalryisdeadgame.com/assets/js/sidemenu.js" async></script>
+				<script src="https://malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js" defer></script>
+				<script type="text/javascript">
+					jQuery(function($) {
+						$("#close-sidebar").click(function() {
+							$(".page-wrapper").removeClass("toggled");
+							$.post('js/script/menu.php', {
+									value: 1
+								},
+								function(returnedData) {
+									console.log("Disabled sidebar.");
+								});
+						});
+						$("#overlay").click(function() {
+							$(".page-wrapper").removeClass("toggled");
+							$.post('js/script/menu.php', {
+									value: 1
+								},
+								function(returnedData) {
+									console.log("Disabled sidebar via overlay.");
+								});
+						});
+						$("#show-sidebar").click(function() {
+							$(".page-wrapper").addClass("toggled");
+							$.post('js/script/menu.php', {
+									value: 0
+								},
+								function(returnedData) {
+									console.log("Enabled sidebar.");
+								});
+						});
+					});
+				</script>
+				<script src='https://cdn.chivalryisdeadgame.com/assets/js/jquery.canvasjs.min.js' defer></script>
+				<?php
+			}
+
+			function returnMetadata()
+			{
+				global $set;
+				cslog('log', "Setting website metadata.");
+				echo "<meta charset='utf-8'>
                 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
                 <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
 				<meta name='author' content='{$set['WebsiteOwner']}'>
@@ -720,105 +684,98 @@ class headers
 
 				<!— Windows 8.1 + IE11 and above —>
 				<meta name='msapplication-config' content='https://cdn.chivalryisdeadgame.com/assets/browserconfig.xml' />";
-	}
-	
-	function loadNewsScroller()
-	{
-		global $db;
-		$time = time();
-		$paperads = $db->fetch_single($db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` DESC"));
-		if ($paperads == 0)
-		{
-			$news="Welcome to Chivalry is Dead. <b>//</b> You may purchase an ad by clicking <a href='newspaper.php?action=buyad'>here</a>.";
-		}
-		else
-		{
-			$news='';
-			$npq=$db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` ASC");
-			while ($par=$db->fetch_row($npq))
-				{
-				    $par['news_text'] = str_replace("<br />", " ", $par['news_text']);
-					$phrase = " " . parseUsername($par['news_owner']) . " " . parseUserID($par['news_owner']) . " {$par['news_text']} <b>//</b>";
-					$news.="{$phrase}";
+			}
+
+			function loadNewsScroller()
+			{
+				global $db;
+				$time = time();
+				$paperads = $db->fetch_single($db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` DESC"));
+				if ($paperads == 0) {
+					$news = "Welcome to Chivalry is Dead. <b>//</b> You may purchase an ad by clicking <a href='newspaper.php?action=buyad'>here</a>.";
+				} else {
+					$news = '';
+					$npq = $db->query("/*qc=on*/SELECT * FROM `newspaper_ads` WHERE `news_end` > {$time} ORDER BY `news_cost` ASC");
+					while ($par = $db->fetch_row($npq)) {
+						$par['news_text'] = str_replace("<br />", " ", $par['news_text']);
+						$phrase = " " . parseUsername($par['news_owner']) . " " . parseUserID($par['news_owner']) . " {$par['news_text']} <b>//</b>";
+						$news .= "{$phrase}";
+					}
+					$news .= " You may purchase an ad by clicking <a href='newspaper.php?action=buyad'>here</a>. <b>//END</b>";
 				}
-			$news.=" You may purchase an ad by clicking <a href='newspaper.php?action=buyad'>here</a>. <b>//END</b>";
-		}
-		echo "
+				echo "
 		<div class='marquee'>
 			<div class='text'>{$news}</div>
 		</div><br />";
-	}
+			}
 
-    function userdata($ir, $dosessh = 1)
-    {
-        global $db, $userid, $api, $ir;
-        $IP = $db->escape($_SERVER['REMOTE_ADDR']);
-		$time=time();
-		if (!userHasEffect($userid, constant("invisibility")))
-		{
-			//Update the user as they browse the game.
-			$db->query("UPDATE `users`
+			function userdata($ir, $dosessh = 1)
+			{
+				global $db, $userid, $api, $ir;
+				$IP = $db->escape($_SERVER['REMOTE_ADDR']);
+				$time = time();
+				if (!userHasEffect($userid, constant("invisibility"))) {
+					//Update the user as they browse the game.
+					$db->query("UPDATE `users`
                     SET `laston` = {$_SERVER['REQUEST_TIME']}, 
                     `lastip` = '{$IP}' 
                     WHERE `userid` = {$userid}");
-		}
-		else
-		{
-			//Update the user as they browse the game.
-			$db->query("UPDATE `users`
+				} else {
+					//Update the user as they browse the game.
+					$db->query("UPDATE `users`
                     SET `lastip` = '{$IP}' 
                     WHERE `userid` = {$userid}");
-		}
-        
-        //User's account does not have an email address.
-        if (!$ir['email']) {
-            global $domain;
-            alert('info',"Incomplete Setup","Please be sure to add an email address to your account by clicking <a href='preferences.php?action=changeemail'>here</a>.",false);
-        }
-        //If the user's attacking is not stored in session.
-        if (!isset($_SESSION['attacking'])) {
-            $_SESSION['attacking'] = 0;
-        }
-        //If user does not end a fight correctly, take their XP and warn them.
-        if ($dosessh && ($_SESSION['attacking'] || $ir['attacking'])) {
-            $hosptime = Random(10, 20) + floor($ir['level'] / 2);
-            $api->UserStatusSet($userid, 'infirmary', $hosptime, "Ran from a fight");
-            alert("warning", "Uh Oh!", "For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
-            minutes, and lost all your experience.", false);
-            $db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
-            $_SESSION['attacking'] = 0;
-			$_SESSION['attack_scroll'] = 0;
-        }
-    }
+				}
 
-    function endpage()
-    {
-        global $db, $ir, $set, $userid, $api, $start;
-        $query_extra = '';
-        include('userinfo.php');
-        if (isset($_GET['benchmark']))
-            include('forms/include_end.php');   //benchmark data
-		$this->loadJS();
-		cslog('warn',"Main script has finished executing. Wrapping up now.");
-        //Set mysqldebug in the URL to get query debugging as an admin.
-    if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin')
-    {
-        ?>
-        <pre class='pre-scrollable'>
+				//User's account does not have an email address.
+				if (!$ir['email']) {
+					global $domain;
+					alert('info', "Incomplete Setup", "Please be sure to add an email address to your account by clicking <a href='preferences.php?action=changeemail'>here</a>.", false);
+				}
+				//If the user's attacking is not stored in session.
+				if (!isset($_SESSION['attacking'])) {
+					$_SESSION['attacking'] = 0;
+				}
+				//If user does not end a fight correctly, take their XP and warn them.
+				if ($dosessh && ($_SESSION['attacking'] || $ir['attacking'])) {
+					$hosptime = Random(10, 20) + floor($ir['level'] / 2);
+					$api->UserStatusSet($userid, 'infirmary', $hosptime, "Ran from a fight");
+					alert("warning", "Uh Oh!", "For leaving your previous fight, you were placed in the Infirmary for {$hosptime}
+            minutes, and lost all your experience.", false);
+					$db->query("UPDATE `users` SET `xp` = 0, `attacking` = 0 WHERE `userid` = $userid");
+					$_SESSION['attacking'] = 0;
+					$_SESSION['attack_scroll'] = 0;
+				}
+			}
+
+			function endpage()
+			{
+				global $db, $ir, $set, $userid, $api, $start;
+				$query_extra = '';
+				include('userinfo.php');
+				if (isset($_GET['benchmark']))
+					include('forms/include_end.php');   //benchmark data
+				$this->loadJS();
+				cslog('warn', "Main script has finished executing. Wrapping up now.");
+				//Set mysqldebug in the URL to get query debugging as an admin.
+				if (isset($_GET['mysqldebug']) && $ir['user_level'] == 'Admin') {
+				?>
+					<pre class='pre-scrollable'>
                   <?php
-                  var_dump($db->queries)
-                  ?>
+					var_dump($db->queries)
+					?>
               </pre>
-    	<?php
-    }
-    ?>
-        </div>
-        </div>
-        </div>
-        <!-- /.container -->
-        <br />
-		</body>
-        </html>
-    <?php
-    }
-}
+				<?php
+				}
+				?>
+				</div>
+				</div>
+				</div>
+				<!-- /.container -->
+				<br />
+				</body>
+
+		</html>
+<?php
+			}
+		}
