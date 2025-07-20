@@ -18,9 +18,12 @@ if (!function_exists('error_critical')) {
 
 if (!extension_loaded('mysqli')) {
     // dl doesn't work anymore, crash
-    error_critical('Database connection failed',
-        'MySQLi extension not present but required', 'N/A',
-        debug_backtrace(false));
+    error_critical(
+        'Database connection failed',
+        'MySQLi extension not present but required',
+        'N/A',
+        debug_backtrace(false)
+    );
 }
 
 class database
@@ -55,13 +58,19 @@ class database
             $this->user = "root";
         }
         $conn =
-            mysqli_connect($this->host, $this->user, $this->pass,
-                $this->database);
+            mysqli_connect(
+                $this->host,
+                $this->user,
+                $this->pass,
+                $this->database
+            );
         if (mysqli_connect_error()) {
-            error_critical('Database connection failed',
+            error_critical(
+                'Database connection failed',
                 mysqli_connect_errno() . ': ' . mysqli_connect_error(),
                 'Attempted to connect to database on ' . $this->host,
-                debug_backtrace(false));
+                debug_backtrace(false)
+            );
         }
         // @overridecharset mysqli
         $this->connection_id = $conn;
@@ -87,11 +96,13 @@ class database
         $this->result =
             mysqli_query($this->connection_id, $this->last_query);
         if ($this->result === false) {
-            error_critical('Query failed',
+            error_critical(
+                'Query failed',
                 mysqli_errno($this->connection_id) . ': '
-                . mysqli_error($this->connection_id),
+                    . mysqli_error($this->connection_id),
                 'Attempted to execute query: ' . nl2br($this->last_query),
-                debug_backtrace(false));
+                debug_backtrace(false)
+            );
         }
         return $this->result;
     }
@@ -117,15 +128,28 @@ class database
         return mysqli_insert_id($this->connection_id);
     }
 
-    function fetch_single($result = 0)
+    function fetch_single($result = 0, $column = 0)
     {
         if (!$result) {
             $result = $this->result;
         }
-        //Ugly hack here
+
+        if (!$result || mysqli_num_rows($result) === 0) {
+            return null; // No result rows
+        }
+
+        // Fetch the first row
         mysqli_data_seek($result, 0);
-        $temp = mysqli_fetch_array($result);
-        return $temp[0];
+        $row = mysqli_fetch_assoc($result);
+
+        // Return the specified column
+        if (is_string($column)) {
+            return isset($row[$column]) ? $row[$column] : null;
+        }
+
+        // If column is an integer (default), return that index from numeric array
+        $row_numeric = array_values($row);
+        return isset($row_numeric[$column]) ? $row_numeric[$column] : null;
     }
 
     function easy_insert($table, $data)
@@ -166,5 +190,4 @@ class database
     {
         return mysqli_free_result($result);
     }
-
 }
