@@ -1,4 +1,6 @@
+# Configuration files
 upload/config.php
+<<<<<<< Updated upstream
 upload/test.php
 .idea/
 upload/.idea/
@@ -12,3 +14,55 @@ upload/cache/
 upload/.vs/
 upload/.project
 *.sqlite
+=======
+
+# Log files
+*.log
+upload/logs/
+upload/cache/*
+!upload/cache/index.html
+
+# Database files
+*.sql
+*.db
+*.sqlite
+
+# Backup files
+*_backup.php
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
+
+# Development files
+test*.php
+debug*.php
+benchmark*.php
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Installer lock
+upload/installer.lock
+
+# Node modules (if any)
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Upload directories that may contain user data
+upload/uploads/
+upload/avatars/
+upload/attachments/
+>>>>>>> Stashed changes

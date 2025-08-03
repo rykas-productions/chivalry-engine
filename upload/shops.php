@@ -1,0 +1,238 @@
+<?php
+/*
+	File:		shops.php
+	Created: 	6/23/2019 at 6:11PM Eastern Time
+	Info: 		Allows players to visit in-game shops to buy in-game items.
+	Author:		TheMasterGeneral
+	Website: 	https://github.com/MasterGeneral156/chivalry-engine
+	MIT License
+
+	Copyright (c) 2019 TheMasterGeneral
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+*/
+require("globals.php");
+require_once("includes/vip-benefits.php");
+if (!isset($_GET['action'])) {
+    $_GET['action'] = '';
+}
+switch ($_GET['action']) {
+    case 'shop':
+        shop();
+        break;
+    case 'buy':
+        buy();
+        break;
+    default:
+        home();
+        break;
+}
+function home()
+{
+    global $db, $ir;
+    echo "You begin looking through town to see the shops that interest you. You find a small handful.<br />";
+    $q = $db->query("SELECT `shopID`, `shopNAME`, `shopDESCRIPTION` FROM `shops` WHERE `shopLOCATION` = {$ir['location']}");
+    if ($db->num_rows($q) == 0) {
+        echo "This town doesn't have any shops, funny enough.";
+    } else {
+		echo "<div class='row'>
+				<div class='col-sm'>
+					<h4>Shop Name</h4>
+				</div>
+				<div class='col-sm'>
+					<h4>Shop Desc</h4>
+				</div>
+			</div>
+			<hr />";
+        while ($r = $db->fetch_row($q)) {
+			echo "<div class='row'>
+					<div class='col-sm'>
+						<a href='?action=shop&shop={$r['shopID']}'>{$r['shopNAME']}</a>
+					</div>
+					<div class='col-sm'>
+						{$r['shopDESCRIPTION']}
+					</div>
+				</div>
+				<hr />";
+        }
+        $db->free_result($q);
+    }
+}
+
+function shop()
+{
+    global $db, $ir, $api, $userid;
+    
+    // Initialize VIP benefits
+    $vipBenefits = getVIPBenefits($db, $userid);
+    $_GET['shop'] = abs($_GET['shop']);
+    $sd = $db->query("SELECT `shopLOCATION`, `shopNAME` FROM `shops` WHERE `shopID` = {$_GET['shop']}");
+    if ($db->num_rows($sd) > 0) {
+        $shopdata = $db->fetch_row($sd);
+        if ($shopdata['shopLOCATION'] == $ir['location']) {
+            echo "You begin browsing the stock at {$shopdata['shopNAME']}<br />";
+            
+            // Show VIP discount info if user is VIP
+            if ($vipBenefits->isVIP()) {
+                echo "<div class='alert alert-warning mb-3'>
+                        <i class='fas fa-crown'></i> <strong>VIP Member Discount:</strong> 
+                        You receive 10% off all purchases! {$vipBenefits->getVIPBadge()}
+                      </div>";
+            }
+            
+            echo "<div class='row'>
+				<div class='col-sm'>
+					<h4>Item</h4>
+				</div>
+				<div class='col-sm'>
+					<h4>Price</h4>
+				</div>
+				<div class='col-sm'>
+					<h4>Purchase</h4>
+				</div>
+			</div>
+			<hr />";
+            $qtwo =
+                $db->query(
+                    "SELECT `itmtypename`, `itmname`, `itmdesc`, `itmid`,
+                             `itmbuyprice`, `itmsellprice`, `sitemID`
+                             FROM `shopitems` AS `si`
+                             INNER JOIN `items` AS `i`
+                             ON `si`.`sitemITEMID` = `i`.`itmid`
+                             INNER JOIN `itemtypes` AS `it`
+                             ON `i`.`itmtype` = `it`.`itmtypeid`
+                             WHERE `si`.`sitemSHOP` = {$_GET['shop']}
+                             ORDER BY `itmtype` ASC, `itmbuyprice` ASC,
+                             `itmname` ASC");
+            $lt = "";
+            while ($r = $db->fetch_row($qtwo)) {
+                if ($lt != $r['itmtypename']) {
+                    $lt = $r['itmtypename'];
+                    echo "<div class='row'>
+							<div class='col-sm'>
+								<h5><u><b>{$lt}</b></u></h5>
+							</div>
+						</div>
+						<hr />";
+                }
+                // Apply VIP discount to displayed price
+                $originalPrice = $r['itmbuyprice'];
+                $displayPrice = $vipBenefits->applyShopDiscount($originalPrice);
+                $discountText = '';
+                
+                if ($vipBenefits->isVIP() && $displayPrice < $originalPrice) {
+                    $discountText = "<span class='text-muted'><del>" . number_format($originalPrice) . "</del></span> ";
+                }
+
+				echo "<div class='row'>
+						<div class='col-sm'>
+							<a href='iteminfo.php?ID={$r['itmid']}' data-toggle='tooltip'"; ?> title="<?php echo $r['itmdesc']; ?>" <?php echo ">{$r['itmname']}</a>
+						</div>
+						<div class='col-sm'>
+							{$discountText}<span class='text-success fw-bold'>" . number_format($displayPrice) . "</span>
+						</div>
+						<div class='col-sm'>
+							<form action='?action=buy&ID={$r['sitemID']}' method='post'>
+                            		Quantity <input class='form-control' type='number' min='1' name='qty' value='1' />
+                            		<input class='btn btn-primary' type='submit' value='Buy' />
+                            	</form>
+						</div>
+					</div>
+					<hr />";
+            }
+            $db->free_result($qtwo);
+            echo "</table>";
+        } else {
+            alert('danger', "Uh Oh!", "You are not in the same location as this shop, and thus, cannot view its stock.", true, "shops.php");
+        }
+    } else {
+        alert('danger', "Uh Oh!", "This shop does not exist.", true, "shops.php");
+    }
+    $db->free_result($sd);
+}
+
+function buy()
+{
+    global $db, $userid, $ir, $api, $h;
+    
+    // Initialize VIP benefits
+    $vipBenefits = getVIPBenefits($db, $userid);
+    $_GET['ID'] = (isset($_GET['ID']) && is_numeric($_GET['ID'])) ? abs(($_GET['ID'])) : '';
+    $_POST['qty'] = (isset($_POST['qty']) && is_numeric($_POST['qty'])) ? abs(($_POST['qty'])) : '';
+	if (empty($_GET['ID']) OR empty($_POST['qty'])) {
+		alert('danger', "Uh Oh!", "Please fill out the form completely before submitting it.", true, "shops.php");
+	} else {
+		$q = $db->query("SELECT `itmid`, `itmbuyprice`, `itmname`, `itmbuyable`, `shopLOCATION`
+						FROM `shopitems` AS `si`
+						INNER JOIN `shops` AS `s`
+						ON `si`.`sitemSHOP` = `s`.`shopID`
+						INNER JOIN `items` AS `i`
+						ON `si`.`sitemITEMID` = `i`.`itmid`
+						WHERE `sitemID` = {$_GET['ID']}");
+		if ($db->num_rows($q) == 0) {
+			alert('danger', "Uh Oh!", "You are trying to buy from a non-existent shop.", true, "shops.php");
+		} else {
+			$itemd = $db->fetch_row($q);
+			
+			// Apply VIP discount to the actual purchase price
+			$originalPrice = $itemd['itmbuyprice'] * $_POST['qty'];
+			$finalPrice = $vipBenefits->applyShopDiscount($itemd['itmbuyprice']) * $_POST['qty'];
+			$discount = $originalPrice - $finalPrice;
+			
+			if ($ir['primary_currency'] < $finalPrice) {
+				alert('danger', "Uh Oh!", "You do not have enough " . constant("primary_currency") . " to buy {$_POST['qty']} {$itemd['itmname']}(s).", true, "shops.php");
+				die($h->endpage());
+			}
+			if ($itemd['itmbuyable'] == 'false') {
+				alert('danger', "Uh Oh!", "You cannot buy {$itemd['itmname']}s this way.", true, "shops.php");
+				die($h->endpage());
+			}
+			if ($itemd['shopLOCATION'] != $ir['location']) {
+				alert('danger', "Uh Oh!", "You are not in the same town as this shop and cannot buy from it.", true, "shops.php");
+				die($h->endpage());
+			}
+			
+			addItem($userid, $itemd['itmid'], $_POST['qty']);
+			$db->query(
+				"UPDATE `users`
+					 SET `primary_currency` = `primary_currency` - $finalPrice
+					 WHERE `userid` = $userid");
+			
+			// Log VIP benefit usage if discount was applied
+			if ($discount > 0) {
+				$vipBenefits->logBenefitUsage('shop_discount', $discount);
+			}
+			
+			$ib_log = $db->escape("{$ir['username']} bought {$_POST['qty']} {$itemd['itmname']}(s) for {$finalPrice}");
+			
+			// Show different success message for VIP vs regular users
+			$successMessage = "You have bought {$_POST['qty']} {$itemd['itmname']}(s) for " . number_format($finalPrice) . " " . constant("primary_currency");
+			if ($discount > 0) {
+				$successMessage .= " <span class='text-warning'>(VIP Discount: -" . number_format($discount) . " " . constant("primary_currency") . ")</span>";
+			}
+			$successMessage .= ".";
+			
+			alert('success', "Success!", $successMessage, true, "shops.php");
+			$api->game->addLog($userid, 'itembuy', $ib_log);
+		}
+		$db->free_result($q);
+	}
+}
+
+$h->endpage();

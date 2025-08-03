@@ -29,8 +29,29 @@ if (!checkDirectAccess('./globals_nonauth.php'))
 {
 	die('This file may not be accessed directly.');
 }
+<<<<<<< Updated upstream
 setSession('CEV3'); //Change to whatever session name you'd like.
 require('./lib/basic_error_handler.php');
+=======
+//If theme isn't stored in cookie, set it to cookie.
+if (!isset($_COOKIE['theme'])) {
+    setcookie('theme', 1, time() + 86400);
+    $_COOKIE['theme'] = 1;
+}
+$time = time();
+//Set session name and start it.
+session_name('CEV3');
+@session_start();
+header('X-Frame-Options: SAMEORIGIN');
+//If session is not started, regenerate ID and load it.
+if (!isset($_SESSION['started'])) {
+    session_regenerate_id();
+    $_SESSION['started'] = true;
+}
+ob_start();
+//Require the error handler.
+require "lib/basic_error_handler.php";
+>>>>>>> Stashed changes
 set_error_handler('error_php');
 //Require styling.
 require('./headers_nonauth.php');

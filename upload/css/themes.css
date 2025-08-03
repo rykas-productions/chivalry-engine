@@ -1,0 +1,204 @@
+/* Custom Theme Styles for Chivalry Engine */
+
+/* High Contrast Theme */
+.theme-contrast {
+    --bs-body-bg: #000000 !important;
+    --bs-body-color: #ffffff !important;
+    --bs-primary: #00ff00 !important;
+    --bs-secondary: #ffff00 !important;
+    --bs-success: #00ff00 !important;
+    --bs-info: #00ffff !important;
+    --bs-warning: #ffff00 !important;
+    --bs-danger: #ff0000 !important;
+    --bs-border-color: #ffffff !important;
+    --bs-link-color: #00ffff !important;
+}
+
+.theme-contrast .card {
+    background-color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    color: #ffffff !important;
+}
+
+.theme-contrast .btn {
+    border: 2px solid !important;
+    font-weight: bold !important;
+}
+
+.theme-contrast .progress {
+    background-color: #333333 !important;
+    border: 1px solid #ffffff !important;
+}
+
+.theme-contrast .sidebar {
+    background-color: #000000 !important;
+    border-right: 3px solid #ffffff !important;
+}
+
+/* Medieval Theme */
+.theme-medieval {
+    --bs-body-bg: #2c1810 !important;
+    --bs-body-color: #e8d5b7 !important;
+    --bs-primary: #8b4513 !important;
+    --bs-secondary: #654321 !important;
+    --bs-success: #228b22 !important;
+    --bs-info: #4682b4 !important;
+    --bs-warning: #daa520 !important;
+    --bs-danger: #8b0000 !important;
+    --bs-border-color: #8b4513 !important;
+    --bs-link-color: #daa520 !important;
+    
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232c1810"/><circle cx="50" cy="50" r="2" fill="%23654321" opacity="0.3"/></svg>');
+    background-size: 100px 100px;
+}
+
+.theme-medieval .card {
+    background: linear-gradient(135deg, #3d2914 0%, #2c1810 100%) !important;
+    border: 2px solid #8b4513 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5) !important;
+    color: #e8d5b7 !important;
+}
+
+.theme-medieval .card-header {
+    background: linear-gradient(135deg, #8b4513 0%, #654321 100%) !important;
+    border-bottom: 2px solid #daa520 !important;
+    color: #fff !important;
+}
+
+.theme-medieval .btn {
+    border: 1px solid #8b4513 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7) !important;
+}
+
+.theme-medieval .sidebar {
+    background: linear-gradient(180deg, #3d2914 0%, #2c1810 100%) !important;
+    border-right: 3px solid #8b4513 !important;
+}
+
+.theme-medieval .progress {
+    background-color: #654321 !important;
+    border: 1px solid #8b4513 !important;
+}
+
+/* Modern Theme */
+.theme-modern {
+    --bs-body-bg: #f8fafc !important;
+    --bs-body-color: #1e293b !important;
+    --bs-primary: #3b82f6 !important;
+    --bs-secondary: #6b7280 !important;
+    --bs-success: #10b981 !important;
+    --bs-info: #06b6d4 !important;
+    --bs-warning: #f59e0b !important;
+    --bs-danger: #ef4444 !important;
+    --bs-border-color: #e5e7eb !important;
+    --bs-link-color: #3b82f6 !important;
+}
+
+.theme-modern .card {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+.theme-modern .card-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    border: none !important;
+    border-radius: 16px 16px 0 0 !important;
+    color: white !important;
+}
+
+.theme-modern .btn {
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.theme-modern .btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+.theme-modern .sidebar {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.theme-modern .progress {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
+.theme-modern .progress-bar {
+    border-radius: 10px !important;
+}
+
+/* Dark theme improvements */
+.theme-dark .card {
+    background-color: rgba(33, 37, 41, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-dark .sidebar {
+    background-color: rgba(33, 37, 41, 0.98) !important;
+}
+
+/* Light theme improvements */
+.theme-light .card {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.theme-light .sidebar {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+}
+
+/* Theme transition animations */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Floating theme switcher improvements */
+.theme-switcher-container {
+    transition: all 0.3s ease;
+}
+
+.theme-dropdown {
+    backdrop-filter: blur(10px);
+}
+
+/* Custom scrollbars for medieval theme */
+.theme-medieval::-webkit-scrollbar {
+    width: 12px;
+}
+
+.theme-medieval::-webkit-scrollbar-track {
+    background: #2c1810;
+}
+
+.theme-medieval::-webkit-scrollbar-thumb {
+    background: #8b4513;
+    border-radius: 6px;
+}
+
+.theme-medieval::-webkit-scrollbar-thumb:hover {
+    background: #a0522d;
+}
+
+/* High contrast focus indicators */
+.theme-contrast *:focus {
+    outline: 3px solid #ffff00 !important;
+    outline-offset: 2px !important;
+}
+
+/* Modern theme glass effect for modals */
+.theme-modern .modal-content {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 20px !important;
+}
