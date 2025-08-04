@@ -60,7 +60,7 @@ class EventSystem {
     }
     
     /**
-     * Energy regeneration - calculated based on time passed
+     * Energy regeneration - calculated based on time passed (percentage-based)
      */
     private function processEnergyRegeneration($userid) {
         $user = $this->db->fetch_row($this->db->query(
@@ -68,22 +68,21 @@ class EventSystem {
         ));
         
         if (isset($user['energy']) && isset($user['maxenergy']) && $user['energy'] < $user['maxenergy']) {
-            // Calculate energy gained - more reasonable rate: 1 point per minute, capped at reasonable amounts
+            // Calculate energy gained - percentage based: 1.5% per minute for regular, 3% for VIP
             $time_passed = $this->time - $user['laston'];
             $minutes_passed = floor($time_passed / 60); // 60 seconds = 1 minute
             
             if ($minutes_passed > 0) {
-                // Base regeneration: 1 energy per minute, but cap the offline gain to prevent massive jumps
+                // Cap the offline gain to prevent massive jumps
                 $max_offline_minutes = 240; // Max 4 hours of offline regeneration at once
                 $effective_minutes = min($minutes_passed, $max_offline_minutes);
                 
-                // Calculate base gain: 1 energy per minute
-                $energy_gain = $effective_minutes;
+                // Percentage-based regeneration: 1.5% per minute for regular, 3% for VIP
+                $regen_rate = ($user['vip_days'] > 0) ? 0.03 : 0.015;
+                $total_regen_percent = min(1.0, $regen_rate * $effective_minutes); // Cap at 100%
                 
-                // VIP BENEFIT: 2x energy regeneration for VIP players
-                if ($user['vip_days'] > 0) {
-                    $energy_gain = $energy_gain * 2;
-                }
+                // Calculate actual energy gain
+                $energy_gain = ceil($user['maxenergy'] * $total_regen_percent);
                 
                 $new_energy = min($user['maxenergy'], $user['energy'] + $energy_gain);
                 

@@ -12,8 +12,39 @@ if (!$ir['guild']) {
     die($h->endpage());
 }
 
+// Check if guild war tables exist
+$tables_exist = true;
+$required_tables = ['guild_territories', 'guild_wars', 'guild_war_participants', 'guild_war_battles'];
+foreach ($required_tables as $table) {
+    $check = $db->query("SHOW TABLES LIKE '{$table}'");
+    if ($db->num_rows($check) == 0) {
+        $tables_exist = false;
+        error_log("Guild Wars: Missing table: {$table}");
+        break;
+    }
+}
+
+if (!$tables_exist) {
+    alert('danger', 'Feature Not Available', 'The Guild Wars system is not yet installed. Please contact an administrator.', true, 'guilds.php');
+    die($h->endpage());
+}
+
+// Check if the table structure matches expectations
+$column_check = $db->query("DESCRIBE guild_wars");
+$columns = [];
+while ($row = $db->fetch_row($column_check)) {
+    $columns[] = $row['Field'];
+}
+
+// The existing guild_wars table uses different column names (gw_* instead of war_*)
+// This is the original Chivalry Engine structure, not our new one
+if (in_array('gw_id', $columns) && !in_array('war_id', $columns)) {
+    alert('warning', 'Legacy System', 'This appears to be using the original guild wars system. The new enhanced guild wars system is not yet installed.', true, 'guilds.php');
+    die($h->endpage());
+}
+
 // Get guild info
-$guild = $db->fetch_row($db->query("SELECT * FROM guilds WHERE guild_id = {$ir['guild']}"));
+$guild = $db->fetch_row($db->query("SELECT * FROM guild WHERE guild_id = {$ir['guild']}"));
 
 class GuildWarSystem {
     private $db;
@@ -37,7 +68,7 @@ class GuildWarSystem {
             SELECT t.*, g.guild_name, 
                    COUNT(DISTINCT w.war_id) as active_battles
             FROM guild_territories t
-            LEFT JOIN guilds g ON t.territory_owner = g.guild_id
+            LEFT JOIN guild g ON t.territory_owner = g.guild_id
             LEFT JOIN guild_wars w ON t.territory_id = w.war_territory 
                 AND w.war_status = 'active'
             GROUP BY t.territory_id
@@ -61,8 +92,8 @@ class GuildWarSystem {
                    def.guild_name as defender_name,
                    t.territory_name
             FROM guild_wars w
-            INNER JOIN guilds att ON w.war_attacker = att.guild_id
-            INNER JOIN guilds def ON w.war_defender = def.guild_id
+            INNER JOIN guild att ON w.war_attacker = att.guild_id
+            INNER JOIN guild def ON w.war_defender = def.guild_id
             LEFT JOIN guild_territories t ON w.war_territory = t.territory_id
             WHERE (w.war_attacker = {$this->guildid} OR w.war_defender = {$this->guildid})
                 AND w.war_status IN ('pending', 'active')
@@ -122,10 +153,10 @@ class GuildWarSystem {
         ");
         
         // Deduct from treasury
-        $this->db->query("UPDATE guilds SET guild_treasury = guild_treasury - {$war_cost} WHERE guild_id = {$this->guildid}");
+        $this->db->query("UPDATE guild SET guild_treasury = guild_treasury - {$war_cost} WHERE guild_id = {$this->guildid}");
         
         // Send notifications
-        $target_name = $this->db->fetch_single($this->db->query("SELECT guild_name FROM guilds WHERE guild_id = {$target_guild}"));
+        $target_name = $this->db->fetch_single($this->db->query("SELECT guild_name FROM guild WHERE guild_id = {$target_guild}"));
         $this->notifyGuildMembers($target_guild, "{$guild['guild_name']} has declared war on your guild!");
         
         return ['success' => true, 'message' => "War declared on {$target_name}! Battle begins in 1 hour."];
@@ -247,7 +278,7 @@ class GuildWarSystem {
                 ");
                 
                 $this->db->query("
-                    UPDATE guilds 
+                    UPDATE guild 
                     SET guild_treasury = guild_treasury - {$claim_cost},
                         guild_territories_owned = guild_territories_owned + 1
                     WHERE guild_id = {$this->guildid}
@@ -271,9 +302,9 @@ class GuildWarSystem {
                 WHERE territory_id = {$territory_id}
             ");
             
-            $this->db->query("UPDATE guilds SET guild_territories_owned = guild_territories_owned + 1 WHERE guild_id = {$this->guildid}");
+            $this->db->query("UPDATE guild SET guild_territories_owned = guild_territories_owned + 1 WHERE guild_id = {$this->guildid}");
             if ($old_owner) {
-                $this->db->query("UPDATE guilds SET guild_territories_owned = guild_territories_owned - 1 WHERE guild_id = {$old_owner}");
+                $this->db->query("UPDATE guild SET guild_territories_owned = guild_territories_owned - 1 WHERE guild_id = {$old_owner}");
             }
             
             return ['success' => true, 'message' => "Territory captured!"];

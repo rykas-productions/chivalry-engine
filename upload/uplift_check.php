@@ -41,22 +41,83 @@ class UpliftChecker {
         $current_version = $this->getCurrentVersion();
         echo $this->formatMessage("info", "Current database version: " . ($current_version ?: "Unknown"));
         
-        // Check for missing tables and columns
-        $this->checkAchievementSystem();
-        $this->checkDailyRewardsSystem();
-        $this->checkGuildWarsSystem();
-        $this->checkBattleRoyaleSystem();
-        $this->checkSkillTreeSystem();
-        $this->checkPetSystem();
-        $this->checkDungeonSystem();
-        $this->checkCraftingSystem();
-        $this->checkEventsSystem();
-        $this->checkLeaderboardsSystem();
-        $this->checkWorldBossSystem();
+        // Detect actual installed version based on features
+        $actual_version = $this->determineVersion();
+        
+        // If database version doesn't match actual features, update it
+        if ($current_version != $actual_version) {
+            echo $this->formatMessage("warning", "Database version mismatch. Records show {$current_version} but detected {$actual_version} based on installed features.");
+            echo $this->formatMessage("info", "Updating database version to match installed features...");
+            $this->updateVersion($actual_version);
+            $current_version = $actual_version;
+        }
+        
+        // Only check for updates newer than current version
+        if (version_compare($current_version, '3.0.0', '<')) {
+            // Check v3.0 features
+            $this->checkAchievementSystem();
+            $this->checkDailyRewardsSystem();
+            $this->checkGuildWarsSystem();
+            $this->checkBattleRoyaleSystem();
+        }
+        
+        if (version_compare($current_version, '3.1.0', '<')) {
+            // Check v3.1 features
+            $this->checkSkillTreeSystem();
+            $this->checkPetSystem();
+            $this->checkDungeonSystem();
+            $this->checkCraftingSystem();
+            $this->checkEventsSystem();
+            $this->checkLeaderboardsSystem();
+            $this->checkWorldBossSystem();
+        }
+        
+        if (version_compare($current_version, '3.2.0', '<')) {
+            // Check v3.2 features
+            $this->checkV32Features();
+        }
+        
+        if (version_compare($current_version, '3.3.0', '<')) {
+            // Check v3.3 features (Weather System)
+            $this->checkV33Features();
+        }
+        
+        // Always check these as they might be added to any version
         $this->checkUserColumns();
         $this->checkVIPSystem();
         $this->checkMarriageSystem();
         $this->checkEstateSystem();
+        
+        // Show available features based on version
+        if (version_compare($current_version, '3.3.0', '>=')) {
+            // Already at 3.3 or higher
+            if (empty($this->updates_needed)) {
+                echo $this->formatMessage("success", "✓ Your database is up to date at version {$current_version}!");
+                return;
+            }
+        } elseif (version_compare($current_version, '3.2.0', '>=')) {
+            // At 3.2, show v3.3 features
+            echo $this->formatMessage("info", "Version 3.3.0 is available with Weather System!");
+            
+            // Check v3.3 features if not already checked
+            if (!$this->tableExists('weather_current')) {
+                $this->updates_needed[] = "Create weather system (Dynamic weather affecting all gameplay)";
+            }
+        } else {
+            // Show what v3.2 offers even if no updates were detected
+            echo $this->formatMessage("info", "Version 3.2.0 is available with new features!");
+            
+            // Manually check v3.2 features if they weren't checked
+            if (!$this->tableExists('farm_users')) {
+                $this->updates_needed[] = "Create farming system (farm_users, farm_fields, farm_crops tables)";
+            }
+            if (!$this->tableExists('asset_market')) {
+                $this->updates_needed[] = "Create stock market system (asset_market tables)";
+            }
+            if (!$this->columnExists('users', 'last_regen')) {
+                $this->updates_needed[] = "Add percentage-based energy regeneration";
+            }
+        }
         
         // Display what needs updating
         if (empty($this->updates_needed)) {
@@ -89,8 +150,9 @@ class UpliftChecker {
                 }
             }
             
-            // Update version
-            $this->updateVersion('3.0.0');
+            // Determine appropriate version based on what's installed
+            $new_version = $this->determineVersion();
+            $this->updateVersion($new_version);
         }
         
         echo $this->getFooter();
@@ -393,8 +455,8 @@ class UpliftChecker {
             }
         }
         
-        // Check guild columns if guilds table exists
-        if ($this->tableExists('guilds')) {
+        // Check guild columns if guild table exists
+        if ($this->tableExists('guild')) {
             $guild_columns = [
                 'guild_war_rating' => 'int(11) DEFAULT 1000',
                 'guild_territories_owned' => 'int(11) DEFAULT 0',
@@ -405,8 +467,8 @@ class UpliftChecker {
             ];
             
             foreach ($guild_columns as $column => $definition) {
-                if (!$this->columnExists('guilds', $column)) {
-                    $this->updates_needed[] = "Add column: guilds.{$column}";
+                if (!$this->columnExists('guild', $column)) {
+                    $this->updates_needed[] = "Add column: guild.{$column}";
                 }
             }
         }
@@ -469,8 +531,30 @@ class UpliftChecker {
             }
         }
         
+        // Add v3.2 columns
+        if (in_array("Add column: users.last_regen", $this->updates_needed) || 
+            in_array("Add percentage-based energy regeneration", $this->updates_needed)) {
+            $this->addTableColumn('users', 'last_regen', 'int(11) DEFAULT 0');
+        }
+        
+        // Create v3.2 tables if needed
+        if (in_array("Create farming system (farm_users, farm_fields, farm_crops tables)", $this->updates_needed)) {
+            $this->createFarmingTables();
+        }
+        
+        if (in_array("Create stock market system (asset_market tables)", $this->updates_needed)) {
+            $this->createStockMarketTables();
+        }
+        
+        // Create v3.3 weather system tables
+        if (in_array("Create table: weather_current", $this->updates_needed) ||
+            in_array("Create table: weather_history", $this->updates_needed) ||
+            in_array("Create table: weather_forecasts", $this->updates_needed)) {
+            $this->createWeatherTables();
+        }
+        
         // Add guild columns if needed
-        if ($this->tableExists('guilds')) {
+        if ($this->tableExists('guild')) {
             $guild_columns = [
                 'guild_war_rating' => 'int(11) DEFAULT 1000',
                 'guild_territories_owned' => 'int(11) DEFAULT 0',
@@ -481,8 +565,8 @@ class UpliftChecker {
             ];
             
             foreach ($guild_columns as $column => $definition) {
-                if (in_array("Add column: guilds.{$column}", $this->updates_needed)) {
-                    $this->addTableColumn('guilds', $column, $definition);
+                if (in_array("Add column: guild.{$column}", $this->updates_needed)) {
+                    $this->addTableColumn('guild', $column, $definition);
                 }
             }
         }
@@ -713,6 +797,330 @@ class UpliftChecker {
             return $version ?: null;
         }
         return null;
+    }
+    
+    /**
+     * Determine the appropriate version based on installed features
+     */
+    private function determineVersion() {
+        // Check what features are actually installed
+        $has_v30 = false;
+        $has_v31 = false;
+        $has_v32 = false;
+        
+        // v3.0 features
+        if ($this->tableExists('achievements') && $this->tableExists('daily_rewards') && 
+            $this->tableExists('guild_territories') && $this->tableExists('battle_royale_events')) {
+            $has_v30 = true;
+        }
+        
+        // v3.1 features
+        if ($this->tableExists('skill_trees') && $this->tableExists('world_bosses') && 
+            $this->tableExists('pets') && $this->tableExists('dungeons')) {
+            $has_v31 = true;
+        }
+        
+        // v3.2 features
+        if ($this->tableExists('farm_users') && $this->tableExists('asset_market')) {
+            $has_v32 = true;
+        }
+        
+        // v3.3 features
+        $has_v33 = false;
+        if ($this->tableExists('weather_current') && $this->tableExists('weather_history') && 
+            $this->tableExists('weather_forecasts')) {
+            $has_v33 = true;
+        }
+        
+        // Return highest version installed
+        if ($has_v33) {
+            return '3.3.0';
+        } elseif ($has_v32) {
+            return '3.2.0';
+        } elseif ($has_v31) {
+            return '3.1.0';
+        } elseif ($has_v30) {
+            return '3.0.0';
+        } else {
+            return '2.0.0'; // Base version
+        }
+    }
+    
+    /**
+     * Check v3.2 features
+     */
+    private function checkV32Features() {
+        // Check if last_regen column exists for percentage-based regeneration
+        if (!$this->columnExists('users', 'last_regen')) {
+            $this->updates_needed[] = "Add column: users.last_regen";
+        }
+        
+        // Check if farming tables exist
+        if (!$this->tableExists('farm_users')) {
+            $this->updates_needed[] = "Create table: farm_users";
+        }
+        if (!$this->tableExists('farm_fields')) {
+            $this->updates_needed[] = "Create table: farm_fields";
+        }
+        if (!$this->tableExists('farm_crops')) {
+            $this->updates_needed[] = "Create table: farm_crops";
+        }
+        
+        // Check if stock market tables exist
+        if (!$this->tableExists('asset_market')) {
+            $this->updates_needed[] = "Create table: asset_market";
+        }
+        if (!$this->tableExists('asset_market_owned')) {
+            $this->updates_needed[] = "Create table: asset_market_owned";
+        }
+        if (!$this->tableExists('asset_market_history')) {
+            $this->updates_needed[] = "Create table: asset_market_history";
+        }
+        if (!$this->tableExists('asset_market_profit')) {
+            $this->updates_needed[] = "Create table: asset_market_profit";
+        }
+    }
+    
+    /**
+     * Check v3.3 features (Weather System)
+     */
+    private function checkV33Features() {
+        // Check weather system tables
+        if (!$this->tableExists('weather_current')) {
+            $this->updates_needed[] = "Create table: weather_current";
+        }
+        if (!$this->tableExists('weather_history')) {
+            $this->updates_needed[] = "Create table: weather_history";
+        }
+        if (!$this->tableExists('weather_forecasts')) {
+            $this->updates_needed[] = "Create table: weather_forecasts";
+        }
+    }
+    
+    /**
+     * Create farming system tables
+     */
+    private function createFarmingTables() {
+        // Create farm_users table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `farm_users` (
+                `userid` int(11) unsigned NOT NULL,
+                `farm_level` int(11) NOT NULL DEFAULT 1,
+                `farm_xp` int(11) NOT NULL DEFAULT 0,
+                `xp_needed` int(11) NOT NULL DEFAULT 100,
+                `farm_water_available` int(11) NOT NULL DEFAULT 0,
+                `farm_water_max` int(11) NOT NULL DEFAULT 0,
+                PRIMARY KEY (`userid`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: farm_users";
+        
+        // Create farm_fields table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `farm_fields` (
+                `field_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `userid` int(11) unsigned NOT NULL,
+                `crop_id` int(11) unsigned DEFAULT 0,
+                `field_status` enum('empty','growing','dead') DEFAULT 'empty',
+                `planted_at` int(11) DEFAULT 0,
+                `health` int(11) DEFAULT 100,
+                `last_tended` int(11) DEFAULT 0,
+                PRIMARY KEY (`field_id`),
+                KEY `userid` (`userid`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: farm_fields";
+        
+        // Create farm_crops table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `farm_crops` (
+                `crop_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `crop_name` varchar(100) NOT NULL,
+                `crop_icon` varchar(50) DEFAULT '🌾',
+                `level_required` int(11) NOT NULL DEFAULT 1,
+                `seed_cost` int(11) NOT NULL,
+                `sell_price` int(11) NOT NULL,
+                `grow_time` int(11) NOT NULL,
+                `xp_reward` int(11) NOT NULL DEFAULT 10,
+                `item_id` int(11) unsigned DEFAULT 0,
+                PRIMARY KEY (`crop_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: farm_crops";
+        
+        // Add sample crops
+        $this->db->query("
+            INSERT IGNORE INTO `farm_crops` 
+            (`crop_name`, `crop_icon`, `level_required`, `seed_cost`, `sell_price`, `grow_time`, `xp_reward`) VALUES
+            ('Wheat', '🌾', 1, 100, 200, 300, 5),
+            ('Corn', '🌽', 2, 250, 500, 600, 10),
+            ('Tomatoes', '🍅', 3, 500, 1000, 900, 15),
+            ('Potatoes', '🥔', 4, 750, 1500, 1200, 20),
+            ('Carrots', '🥕', 5, 1000, 2000, 1500, 25)
+        ");
+        $this->updates_applied[] = "Added sample crops";
+    }
+    
+    /**
+     * Create stock market system tables
+     */
+    private function createStockMarketTables() {
+        // Create asset_market table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `asset_market` (
+                `am_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `am_name` varchar(100) NOT NULL,
+                `am_symbol` varchar(10) NOT NULL,
+                `am_desc` text,
+                `am_min` int(11) unsigned NOT NULL DEFAULT 10,
+                `am_max` int(11) unsigned NOT NULL DEFAULT 10000,
+                `am_start` int(11) unsigned NOT NULL DEFAULT 100,
+                `am_cost` int(11) unsigned NOT NULL DEFAULT 100,
+                `am_change` int(11) NOT NULL DEFAULT 0,
+                `am_risk` tinyint(1) unsigned NOT NULL DEFAULT 1,
+                `am_last_update` int(11) NOT NULL DEFAULT 0,
+                PRIMARY KEY (`am_id`),
+                UNIQUE KEY `am_symbol` (`am_symbol`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: asset_market";
+        
+        // Create asset_market_owned table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `asset_market_owned` (
+                `amo_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `userid` int(11) unsigned NOT NULL,
+                `am_id` int(11) unsigned NOT NULL,
+                `shares_owned` int(11) unsigned NOT NULL DEFAULT 0,
+                `shares_cost` bigint(20) unsigned NOT NULL DEFAULT 0,
+                `last_transaction` int(11) NOT NULL,
+                PRIMARY KEY (`amo_id`),
+                UNIQUE KEY `user_asset` (`userid`, `am_id`),
+                KEY `userid` (`userid`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: asset_market_owned";
+        
+        // Create asset_market_history table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `asset_market_history` (
+                `amh_id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
+                `am_id` int(11) unsigned NOT NULL,
+                `old_value` int(11) unsigned NOT NULL,
+                `difference` int(11) NOT NULL,
+                `new_value` int(11) unsigned NOT NULL,
+                `timestamp` int(11) unsigned NOT NULL,
+                PRIMARY KEY (`amh_id`),
+                KEY `am_id` (`am_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: asset_market_history";
+        
+        // Create asset_market_profit table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `asset_market_profit` (
+                `userid` int(11) unsigned NOT NULL,
+                `total_invested` bigint(20) NOT NULL DEFAULT 0,
+                `total_returned` bigint(20) NOT NULL DEFAULT 0,
+                `profit` bigint(20) NOT NULL DEFAULT 0,
+                PRIMARY KEY (`userid`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: asset_market_profit";
+        
+        // Add sample stocks
+        $stocks = [
+            ['Chivalry Mining Corp', 'CMC', 'Leading mining company', 50, 5000, 500, 500, 2],
+            ['Royal Bank', 'RBK', 'Kingdom\'s largest bank', 100, 2000, 300, 300, 1],
+            ['Dragon Airways', 'DAW', 'Premium air travel', 200, 8000, 1000, 1000, 3],
+            ['Peasant Foods Inc', 'PFI', 'Food production giant', 20, 1000, 100, 100, 1]
+        ];
+        
+        foreach ($stocks as $stock) {
+            $this->db->query("
+                INSERT IGNORE INTO asset_market 
+                (am_name, am_symbol, am_desc, am_min, am_max, am_start, am_cost, am_risk, am_last_update)
+                VALUES ('{$stock[0]}', '{$stock[1]}', '{$stock[2]}', {$stock[3]}, {$stock[4]}, 
+                        {$stock[5]}, {$stock[6]}, {$stock[7]}, " . time() . ")
+            ");
+        }
+        $this->updates_applied[] = "Added sample stocks";
+    }
+    
+    /**
+     * Create weather system tables for v3.3
+     */
+    private function createWeatherTables() {
+        // Create weather_current table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `weather_current` (
+                `weather_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `weather_type` varchar(50) NOT NULL,
+                `weather_intensity` float NOT NULL DEFAULT 1.0,
+                `started_at` int(11) NOT NULL,
+                `expires_at` int(11) NOT NULL,
+                `season` varchar(20) NOT NULL,
+                `is_active` tinyint(1) NOT NULL DEFAULT 1,
+                PRIMARY KEY (`weather_id`),
+                KEY `is_active` (`is_active`),
+                KEY `expires_at` (`expires_at`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: weather_current";
+        
+        // Create weather_history table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `weather_history` (
+                `history_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `weather_type` varchar(50) NOT NULL,
+                `started_at` int(11) NOT NULL,
+                `ended_at` int(11) NOT NULL,
+                `affected_users` int(11) NOT NULL DEFAULT 0,
+                PRIMARY KEY (`history_id`),
+                KEY `started_at` (`started_at`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: weather_history";
+        
+        // Create weather_forecasts table
+        $this->db->query("
+            CREATE TABLE IF NOT EXISTS `weather_forecasts` (
+                `forecast_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+                `forecast_time` int(11) NOT NULL,
+                `weather_type` varchar(50) NOT NULL,
+                `probability` int(11) NOT NULL,
+                `created_at` int(11) NOT NULL,
+                PRIMARY KEY (`forecast_id`),
+                KEY `forecast_time` (`forecast_time`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+        $this->updates_applied[] = "Created table: weather_forecasts";
+        
+        // Initialize with current weather
+        $current_time = time();
+        $season = $this->getCurrentSeason();
+        $this->db->query("
+            INSERT INTO weather_current 
+            (weather_type, weather_intensity, started_at, expires_at, season, is_active)
+            VALUES ('sunny', 1.0, {$current_time}, " . ($current_time + 7200) . ", '{$season}', 1)
+        ");
+        $this->updates_applied[] = "Initialized weather system with sunny weather";
+    }
+    
+    /**
+     * Get current season based on month
+     */
+    private function getCurrentSeason() {
+        $month = date('n');
+        if ($month >= 3 && $month <= 5) {
+            return 'spring';
+        } elseif ($month >= 6 && $month <= 8) {
+            return 'summer';
+        } elseif ($month >= 9 && $month <= 11) {
+            return 'autumn';
+        } else {
+            return 'winter';
+        }
     }
     
     /**

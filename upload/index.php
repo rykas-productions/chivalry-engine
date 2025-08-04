@@ -53,6 +53,52 @@ if (userInDungeon($userid)) {
 
 ?>
 
+<?php
+// Admin notification for v3.2 upgrade
+if ($userid == 1) {
+    // Check current database version
+    $db_version = null;
+    $version_check = $db->query("SELECT setting_value FROM settings WHERE setting_name = 'db_version' LIMIT 1");
+    if ($db->num_rows($version_check) > 0) {
+        $db_version = $db->fetch_single($version_check);
+    }
+    
+    // Check if v3.2 features are available but not installed
+    $farm_check = $db->query("SHOW TABLES LIKE 'farm_users'");
+    $stock_check = $db->query("SHOW TABLES LIKE 'asset_market'");
+    $v32_installed = ($db->num_rows($farm_check) > 0 && $db->num_rows($stock_check) > 0);
+    
+    if ($db_version && version_compare($db_version, '3.2.0', '<') && !$v32_installed) {
+        ?>
+        <div class="row mb-4 animate__animated animate__fadeIn">
+            <div class="col-12">
+                <div class="alert alert-info border-0 shadow-lg">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-arrow-up fa-3x"></i>
+                        </div>
+                        <div class="col">
+                            <h4 class="alert-heading mb-1">Database Update Available!</h4>
+                            <p class="mb-2">Version 3.2.0 is available with new features:</p>
+                            <ul class="mb-2">
+                                <li><strong>Farming System</strong> - Plant crops, manage fields, and harvest resources</li>
+                                <li><strong>Stock Market</strong> - Buy and sell shares, build your investment portfolio</li>
+                                <li><strong>Percentage-based Energy</strong> - 1.5% per minute (3% for VIP)</li>
+                            </ul>
+                            <p class="mb-2">Current version: <strong><?php echo $db_version; ?></strong> → Available: <strong>3.2.0</strong></p>
+                            <a href="uplift_check.php" class="btn btn-primary">
+                                <i class="fas fa-download"></i> Run Database Update
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+}
+?>
+
 <?php if ($infirmaryTime > 0): ?>
 <!-- Infirmary Alert -->
 <div class="row mb-4 animate__animated animate__fadeIn animate__pulse">

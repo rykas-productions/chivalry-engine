@@ -33,6 +33,12 @@ class headers
             $this->tableExists('pets') && $this->tableExists('dungeons')) {
             $v31_installed = true;
         }
+        
+        // Check if v3.2 features are installed
+        $v32_installed = false;
+        if ($this->tableExists('farm_users') && $this->tableExists('asset_market')) {
+            $v32_installed = true;
+        }
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -208,6 +214,18 @@ class headers
                             </div>
                         </div>
                         
+                        <!-- Weather Widget -->
+                        <?php if (file_exists('includes/weather_widget.php')): ?>
+                        <div class="sidebar-item px-3 py-2">
+                            <?php 
+                            require_once('includes/weather_widget.php');
+                            if (isset($weather_widget)) {
+                                echo $weather_widget->renderWidget();
+                            }
+                            ?>
+                        </div>
+                        <?php endif; ?>
+                        
                         <!-- Navigation Menu -->
                         <div class="sidebar-item sidebar-menu">
                             <ul>
@@ -255,20 +273,38 @@ class headers
                                 <!-- ACTIVITIES -->
                                 <li class="sidebar-dropdown">
                                     <a href="#">
-                                        <i class="fas fa-tasks"></i>
-                                        <span class="menu-text">Activities</span>
+                                        <i class="fas fa-briefcase"></i>
+                                        <span class="menu-text">Work & Skills</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
+                                            <li><a href="job.php"><i class="fas fa-briefcase"></i> Your Job</a></li>
+                                            <li><a href="mine.php"><i class="fas fa-mountain"></i> Mining</a></li>
+                                            <?php if ($v32_installed): ?>
+                                            <li><a href="farm.php"><i class="fas fa-tractor"></i> Farming</a></li>
+                                            <?php endif; ?>
+                                            <li><a href="crafting.php"><i class="fas fa-hammer"></i> Crafting</a></li>
+                                            <li><a href="academy.php"><i class="fas fa-graduation-cap"></i> Academy</a></li>
+                                            <li><a href="skill_tree.php"><i class="fas fa-tree"></i> Skill Trees</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                
+                                <!-- COMBAT -->
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <i class="fas fa-sword"></i>
+                                        <span class="menu-text">Combat</span>
                                     </a>
                                     <div class="sidebar-submenu">
                                         <ul>
                                             <li><a href="criminal.php"><i class="fas fa-mask"></i> Crimes</a></li>
-                                            <li><a href="job.php"><i class="fas fa-briefcase"></i> Your Job</a></li>
-                                            <li><a href="mine.php"><i class="fas fa-mountain"></i> Mining</a></li>
-                                            <li><a href="academy.php"><i class="fas fa-graduation-cap"></i> Academy</a></li>
                                             <li><a href="dungeons.php"><i class="fas fa-dungeon"></i> Dungeons</a></li>
                                             <li><a href="battle_royale.php"><i class="fas fa-crown"></i> Battle Royale</a></li>
                                             <li><a href="world_boss.php"><i class="fas fa-dragon"></i> World Boss</a></li>
-                                            <li><a href="skill_tree.php"><i class="fas fa-tree"></i> Skill Trees</a></li>
-                                            <li><a href="crafting.php"><i class="fas fa-hammer"></i> Crafting</a></li>
+                                            <?php if ($ir['guild']): ?>
+                                            <li><a href="faction_warfare.php"><i class="fas fa-chess-knight"></i> Faction Warfare</a></li>
+                                            <?php endif; ?>
                                         </ul>
                                     </div>
                                 </li>
@@ -283,6 +319,9 @@ class headers
                                         <ul>
                                             <li><a href="shops.php"><i class="fas fa-store"></i> Shops</a></li>
                                             <li><a href="itemmarket.php"><i class="fas fa-balance-scale"></i> Item Market</a></li>
+                                            <?php if ($v32_installed): ?>
+                                            <li><a href="investmarket.php"><i class="fas fa-chart-line"></i> Stock Market</a></li>
+                                            <?php endif; ?>
                                             <li><a href="bank.php"><i class="fas fa-university"></i> Bank</a></li>
                                             <li><a href="estates.php"><i class="fas fa-home"></i> Estates</a></li>
                                         </ul>
@@ -301,16 +340,29 @@ class headers
                                             <li><a href="forums.php"><i class="fas fa-comments"></i> Forums</a></li>
                                             <li><a href="guilds.php"><i class="fas fa-shield-alt"></i> Guilds</a></li>
                                             <?php if ($ir['guild']): ?>
-                                            <li><a href="guild_wars.php"><i class="fas fa-chess"></i> Guild Wars</a></li>
+                                            <li><a href="guild_alliances.php"><i class="fas fa-handshake"></i> Guild Alliances</a></li>
                                             <?php endif; ?>
                                             <li><a href="users.php"><i class="fas fa-user-friends"></i> Player List</a></li>
                                             <li><a href="marriage.php"><i class="fas fa-heart"></i> Marriage</a></li>
                                             <li><a href="stats.php"><i class="fas fa-trophy"></i> Hall of Fame</a></li>
+                                            <li><a href="leaderboards.php"><i class="fas fa-trophy"></i> Leaderboards</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                
+                                <!-- FEATURES -->
+                                <li class="sidebar-dropdown">
+                                    <a href="#">
+                                        <i class="fas fa-star"></i>
+                                        <span class="menu-text">Features</span>
+                                    </a>
+                                    <div class="sidebar-submenu">
+                                        <ul>
                                             <li><a href="daily_rewards.php"><i class="fas fa-calendar-check"></i> Daily Rewards</a></li>
                                             <li><a href="achievements.php"><i class="fas fa-medal"></i> Achievements</a></li>
                                             <li><a href="pets.php"><i class="fas fa-paw"></i> Pets</a></li>
                                             <li><a href="events.php"><i class="fas fa-calendar-alt"></i> Live Events</a></li>
-                                            <li><a href="leaderboards.php"><i class="fas fa-trophy"></i> Leaderboards</a></li>
+                                            <li><a href="weather_system.php"><i class="fas fa-cloud-sun"></i> Weather System</a></li>
                                         </ul>
                                     </div>
                                 </li>
