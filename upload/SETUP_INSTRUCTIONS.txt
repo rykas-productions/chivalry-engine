@@ -1,0 +1,79 @@
+========================================
+CHIVALRY ENGINE V3 - SETUP INSTRUCTIONS
+========================================
+
+1. DATABASE SETUP
+-----------------
+The full game database with all content is in: chivalry_full.sql
+
+To import:
+mysql -u chivalry -p chivalry_engine < chivalry_full.sql
+
+This includes:
+- All game tables and structure
+- 18 item types
+- 21 estates  
+- 3 towns with shops
+- Marriage system
+- VIP system
+- Sample NPCs and content
+
+2. ADMIN ACCOUNT
+----------------
+Default admin credentials:
+Username: CID Admin
+Password: admin123
+User ID: 1
+
+To reset admin password:
+Option A: Run http://your-domain.com/reset_admin.php
+Option B: Import reset_admin_password.sql
+
+IMPORTANT: Change the password immediately after first login!
+DELETE reset_admin.php after use!
+
+3. CONFIGURATION
+----------------
+config.php has been created with:
+- Database: chivalry_engine
+- Username: chivalry  
+- Password: chivalry123
+- Host: localhost
+
+Modify if your setup differs.
+
+4. RESTORE GAME DATA
+--------------------
+After login as admin, run:
+http://your-domain.com/restore_game_data.php
+
+This will ensure all game content is properly loaded.
+
+5. KEY FEATURES TO TEST
+-----------------------
+✓ Real-time stats (train at gym, watch HP/energy update)
+✓ Theme switching (Settings → Themes)
+✓ VIP System (VIP Store in navigation)
+✓ Marriage System (Social → Marriage)
+✓ Enhanced Estates (with VIP discounts)
+✓ Bootstrap 5.3 responsive design
+
+6. SECURITY CHECKLIST
+---------------------
+□ Delete installer.php
+□ Delete reset_admin.php after password change
+□ Change admin password from default
+□ Set proper file permissions (755 dirs, 644 files)
+□ Configure SSL certificate
+□ Set up regular backups
+
+7. CRON JOBS
+------------
+Add to crontab:
+*/5 * * * * php /path/to/upload/crons/fivemins.php
+0 * * * * php /path/to/upload/crons/hour.php
+0 0 * * * php /path/to/upload/crons/day.php
+
+========================================
+Your game is ready to play!
+========================================

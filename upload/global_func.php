@@ -1552,8 +1552,20 @@ function addLog(int $user, string $logtype, string $input)
 				(NULL, '{$logtype}', '{$user}', '{$time}', '{$input}', '{$IP}');");
 }
 
-function randomNumber(int $min = PHP_INT_MIN, int $max = PHP_INT_MAX)
+function randomNumber($min = null, $max = null)
 {
+    // Set defaults that won't cause overflow
+    if ($min === null) {
+        $min = -2147483648; // Safe 32-bit min
+    }
+    if ($max === null) {
+        $max = 2147483647; // Safe 32-bit max
+    }
+    
+    // Ensure integers
+    $min = (int) $min;
+    $max = (int) $max;
+    
     return random_int($min, $max);
 }
 

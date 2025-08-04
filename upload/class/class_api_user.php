@@ -376,7 +376,7 @@ class user
         Returns the value in the stat specified.
         Throws E_ERROR if attempting to edit a sensitive field (Such as passwords)
     */
-	function setInfo(int $user, string $stat, int $change)
+	function setInfo(int $user, string $stat, $change)
 	{
 		global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
