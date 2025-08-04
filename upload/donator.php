@@ -68,16 +68,17 @@ while ($r = $db->fetch_row($q)) {
 		</div>
 		<div class='col-sm'>
 		";
-    //List the item's effects.
-    $iterations=count(json_decode($r['itmeffects_toggle']));
-    $toggle=json_decode($r['itmeffects_toggle']);
-    $stat=json_decode($r['itmeffects_stat']);
-    $dir=json_decode($r['itmeffects_dir']);
-    $type=json_decode($r['itmeffects_type']);
-    $amount=json_decode($r['itmeffects_amount']);
-    $usecount=0;
-    $uhoh=0;
-    while ($usecount != $iterations)
+    //List the item's effects if they exist
+    if (isset($r['itmeffects_toggle'])) {
+        $iterations=count(json_decode($r['itmeffects_toggle']));
+        $toggle=json_decode($r['itmeffects_toggle']);
+        $stat=json_decode($r['itmeffects_stat']);
+        $dir=json_decode($r['itmeffects_dir']);
+        $type=json_decode($r['itmeffects_type']);
+        $amount=json_decode($r['itmeffects_amount']);
+        $usecount=0;
+        $uhoh=0;
+        while ($usecount != $iterations)
     {
         if ($toggle[$usecount] == 1)
         {
@@ -101,6 +102,10 @@ while ($r = $db->fetch_row($q)) {
         $usecount=$usecount+1;
     }
     if ($uhoh == 0) {
+        echo $r['itmdesc'];
+    }
+    } else {
+        // No effects data, just show description
         echo $r['itmdesc'];
     }
     //The form handles a lot of the internals for the pack info.
