@@ -222,7 +222,7 @@ class user
         Returns true if user is placed in the infirmary, or is removed from it.
         Returns false otherwise.
     */
-    function setInfirmary(int $user, int $time, string $reason)
+    function setInfirmary(int $user, $time, string $reason)
     {
         global $db;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;

@@ -275,6 +275,8 @@ class headers
                                             <li><a href="users.php"><i class="fas fa-user-friends"></i> Player List</a></li>
                                             <li><a href="marriage.php"><i class="fas fa-heart"></i> Marriage</a></li>
                                             <li><a href="stats.php"><i class="fas fa-trophy"></i> Hall of Fame</a></li>
+                                            <li><a href="daily_rewards.php"><i class="fas fa-calendar-check"></i> Daily Rewards</a></li>
+                                            <li><a href="achievements.php"><i class="fas fa-medal"></i> Achievements</a></li>
                                         </ul>
                                     </div>
                                 </li>
