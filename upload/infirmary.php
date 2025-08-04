@@ -216,8 +216,9 @@ function heal()
                 die($h->endpage());
             }
             
-            // Heal the player
+            // Heal the player and restore their HP to 100%
             $db->query("UPDATE `infirmary` SET `infirmary_out` = 0 WHERE `infirmary_user` = {$_GET['user']}");
+            $db->query("UPDATE `users` SET `hp` = `maxhp` WHERE `userid` = {$_GET['user']}");
             $db->query("UPDATE `users` SET `secondary_currency` = `secondary_currency` - {$cost} WHERE `userid` = {$userid}");
             
             // Notify the healed player
