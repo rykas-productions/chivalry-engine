@@ -7,9 +7,25 @@
 */
 class headers
 {
+    /**
+     * Check if a database table exists
+     */
+    private function tableExists($table) {
+        global $db;
+        $result = $db->query("SHOW TABLES LIKE '{$table}'");
+        return $db->num_rows($result) > 0;
+    }
+    
     function startheaders()
     {
         global $ir, $set, $h, $db, $menuhide, $userid, $macropage, $api, $time;
+        
+        // Check if v3.0.0 features are installed
+        $v3_installed = false;
+        if ($this->tableExists('achievements') && $this->tableExists('daily_rewards') && 
+            $this->tableExists('guild_territories') && $this->tableExists('battle_royale_events')) {
+            $v3_installed = true;
+        }
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -241,6 +257,8 @@ class headers
                                             <li><a href="job.php"><i class="fas fa-briefcase"></i> Your Job</a></li>
                                             <li><a href="mine.php"><i class="fas fa-mountain"></i> Mining</a></li>
                                             <li><a href="academy.php"><i class="fas fa-graduation-cap"></i> Academy</a></li>
+                                            <li><a href="dungeons.php"><i class="fas fa-dungeon"></i> Dungeons</a></li>
+                                            <li><a href="battle_royale.php"><i class="fas fa-crown"></i> Battle Royale</a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -272,11 +290,15 @@ class headers
                                             <li><a href="inbox.php"><i class="fas fa-envelope"></i> Messages <?php if($ir['mail'] > 0) echo "<span class='badge bg-danger'>{$ir['mail']}</span>"; ?></a></li>
                                             <li><a href="forums.php"><i class="fas fa-comments"></i> Forums</a></li>
                                             <li><a href="guilds.php"><i class="fas fa-shield-alt"></i> Guilds</a></li>
+                                            <?php if ($ir['guild']): ?>
+                                            <li><a href="guild_wars.php"><i class="fas fa-chess"></i> Guild Wars</a></li>
+                                            <?php endif; ?>
                                             <li><a href="users.php"><i class="fas fa-user-friends"></i> Player List</a></li>
                                             <li><a href="marriage.php"><i class="fas fa-heart"></i> Marriage</a></li>
                                             <li><a href="stats.php"><i class="fas fa-trophy"></i> Hall of Fame</a></li>
                                             <li><a href="daily_rewards.php"><i class="fas fa-calendar-check"></i> Daily Rewards</a></li>
                                             <li><a href="achievements.php"><i class="fas fa-medal"></i> Achievements</a></li>
+                                            <li><a href="pets.php"><i class="fas fa-paw"></i> Pets</a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -348,6 +370,28 @@ class headers
                 
                 <main class="page-content">
                     <div class="container-fluid">
+                    <?php 
+                    // Show upgrade notice if v3 features aren't installed
+                    if (!$v3_installed && $api->user->getStaffLevel($userid, 'admin')): ?>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>New Features Available!</strong>
+                            <p class="mb-2">Chivalry Engine v3.0 features are not installed. Install them to get:</p>
+                            <ul class="mb-2">
+                                <li>Achievement System with 30+ achievements</li>
+                                <li>Daily Login Rewards with streaks</li>
+                                <li>Guild Wars with territory control</li>
+                                <li>Battle Royale events</li>
+                                <li>Pet System with battles</li>
+                                <li>Dungeons & Raids</li>
+                                <li>Skill Trees & Crafting</li>
+                                <li>Leaderboards & Seasons</li>
+                            </ul>
+                            <a href="uplift_check.php" class="btn btn-warning btn-sm">
+                                <i class="fas fa-download"></i> Run Uplift Check Now
+                            </a>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
             <?php
         }
     }

@@ -44,6 +44,14 @@ class UpliftChecker {
         // Check for missing tables and columns
         $this->checkAchievementSystem();
         $this->checkDailyRewardsSystem();
+        $this->checkGuildWarsSystem();
+        $this->checkBattleRoyaleSystem();
+        $this->checkSkillTreeSystem();
+        $this->checkPetSystem();
+        $this->checkDungeonSystem();
+        $this->checkCraftingSystem();
+        $this->checkEventsSystem();
+        $this->checkLeaderboardsSystem();
         $this->checkUserColumns();
         $this->checkVIPSystem();
         $this->checkMarriageSystem();
@@ -138,17 +146,142 @@ class UpliftChecker {
     }
     
     /**
+     * Check Guild Wars System
+     */
+    private function checkGuildWarsSystem() {
+        $tables = ['guild_territories', 'guild_wars', 'guild_war_participants', 'guild_war_battles'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
+     * Check Battle Royale System
+     */
+    private function checkBattleRoyaleSystem() {
+        $tables = ['battle_royale_events', 'battle_royale_participants', 'battle_royale_battles', 'battle_royale_loot'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
+     * Check Skill Tree System
+     */
+    private function checkSkillTreeSystem() {
+        $tables = ['skill_trees', 'skills', 'user_skills'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
+     * Check Pet System
+     */
+    private function checkPetSystem() {
+        $tables = ['pets', 'user_pets', 'pet_battles'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
+     * Check Dungeon System
+     */
+    private function checkDungeonSystem() {
+        $tables = ['dungeons', 'dungeon_bosses', 'dungeon_loot', 'dungeon_runs'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
+     * Check Crafting System
+     */
+    private function checkCraftingSystem() {
+        $tables = ['crafting_recipes', 'recipe_materials', 'user_crafting', 'enchantments'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
+     * Check Events System
+     */
+    private function checkEventsSystem() {
+        $tables = ['events', 'event_participation'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
+     * Check Leaderboards System
+     */
+    private function checkLeaderboardsSystem() {
+        $tables = ['seasons', 'leaderboards'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
      * Check for new user columns
      */
     private function checkUserColumns() {
         $columns = [
             'achievement_points' => 'int(11) DEFAULT 0',
-            'achievements_earned' => 'int(11) DEFAULT 0'
+            'achievements_earned' => 'int(11) DEFAULT 0',
+            'guild_wars_participated' => 'int(11) DEFAULT 0',
+            'guild_war_kills' => 'int(11) DEFAULT 0',
+            'guild_war_score' => 'int(11) DEFAULT 0',
+            'skill_points' => 'int(11) DEFAULT 0',
+            'skill_reset_count' => 'int(11) DEFAULT 0',
+            'active_pet' => 'int(11) unsigned DEFAULT NULL',
+            'dungeons_completed' => 'int(11) DEFAULT 0',
+            'raids_completed' => 'int(11) DEFAULT 0',
+            'crafting_level' => 'int(11) DEFAULT 1',
+            'season_points' => 'int(11) DEFAULT 0',
+            'battle_royale_wins' => 'int(11) DEFAULT 0'
         ];
         
         foreach ($columns as $column => $definition) {
             if (!$this->columnExists('users', $column)) {
                 $this->updates_needed[] = "Add column: users.{$column}";
+            }
+        }
+        
+        // Check guild columns if guilds table exists
+        if ($this->tableExists('guilds')) {
+            $guild_columns = [
+                'guild_war_rating' => 'int(11) DEFAULT 1000',
+                'guild_territories_owned' => 'int(11) DEFAULT 0',
+                'guild_wars_won' => 'int(11) DEFAULT 0',
+                'guild_wars_lost' => 'int(11) DEFAULT 0',
+                'guild_war_points' => 'int(11) DEFAULT 0',
+                'guild_treasury' => 'bigint(20) DEFAULT 0'
+            ];
+            
+            foreach ($guild_columns as $column => $definition) {
+                if (!$this->columnExists('guilds', $column)) {
+                    $this->updates_needed[] = "Add column: guilds.{$column}";
+                }
             }
         }
     }
@@ -195,18 +328,60 @@ class UpliftChecker {
      * Apply all needed updates
      */
     private function applyUpdates() {
-        // Add user columns first if needed
-        if (in_array("Add column: users.achievement_points", $this->updates_needed)) {
-            $this->addUserColumn('achievement_points', 'int(11) DEFAULT 0');
-        }
-        if (in_array("Add column: users.achievements_earned", $this->updates_needed)) {
-            $this->addUserColumn('achievements_earned', 'int(11) DEFAULT 0');
+        // Add user columns first
+        $user_columns = [
+            'achievement_points' => 'int(11) DEFAULT 0',
+            'achievements_earned' => 'int(11) DEFAULT 0',
+            'guild_wars_participated' => 'int(11) DEFAULT 0',
+            'guild_war_kills' => 'int(11) DEFAULT 0',
+            'guild_war_score' => 'int(11) DEFAULT 0',
+            'skill_points' => 'int(11) DEFAULT 0',
+            'skill_reset_count' => 'int(11) DEFAULT 0',
+            'active_pet' => 'int(11) unsigned DEFAULT NULL',
+            'dungeons_completed' => 'int(11) DEFAULT 0',
+            'raids_completed' => 'int(11) DEFAULT 0',
+            'crafting_level' => 'int(11) DEFAULT 1',
+            'season_points' => 'int(11) DEFAULT 0',
+            'battle_royale_wins' => 'int(11) DEFAULT 0'
+        ];
+        
+        foreach ($user_columns as $column => $definition) {
+            if (in_array("Add column: users.{$column}", $this->updates_needed)) {
+                $this->addTableColumn('users', $column, $definition);
+            }
         }
         
-        // Load the WOW features SQL
-        $sql_file = __DIR__ . '/wow_features.sql';
-        if (file_exists($sql_file)) {
-            $this->executeSQLFile($sql_file);
+        // Add guild columns if needed
+        if ($this->tableExists('guilds')) {
+            $guild_columns = [
+                'guild_war_rating' => 'int(11) DEFAULT 1000',
+                'guild_territories_owned' => 'int(11) DEFAULT 0',
+                'guild_wars_won' => 'int(11) DEFAULT 0',
+                'guild_wars_lost' => 'int(11) DEFAULT 0',
+                'guild_war_points' => 'int(11) DEFAULT 0',
+                'guild_treasury' => 'bigint(20) DEFAULT 0'
+            ];
+            
+            foreach ($guild_columns as $column => $definition) {
+                if (in_array("Add column: guilds.{$column}", $this->updates_needed)) {
+                    $this->addTableColumn('guilds', $column, $definition);
+                }
+            }
+        }
+        
+        // Load SQL files in order
+        $sql_files = [
+            'wow_features.sql',           // Achievements and Daily Rewards
+            'guild_wars.sql',             // Guild Wars system
+            'battle_royale.sql',          // Battle Royale system
+            'wow_features_complete.sql'   // All other systems
+        ];
+        
+        foreach ($sql_files as $file) {
+            $sql_file = __DIR__ . '/' . $file;
+            if (file_exists($sql_file)) {
+                $this->executeSQLFile($sql_file);
+            }
         }
         
         // Add VIP packages if needed
@@ -221,17 +396,24 @@ class UpliftChecker {
     }
     
     /**
-     * Add column to users table
+     * Add column to any table
      */
-    private function addUserColumn($column, $definition) {
+    private function addTableColumn($table, $column, $definition) {
         try {
-            $this->db->query("ALTER TABLE `users` ADD COLUMN `{$column}` {$definition}");
-            $this->updates_applied[] = "Added column: users.{$column}";
+            $this->db->query("ALTER TABLE `{$table}` ADD COLUMN `{$column}` {$definition}");
+            $this->updates_applied[] = "Added column: {$table}.{$column}";
         } catch (Exception $e) {
             if (stripos($e->getMessage(), 'Duplicate column') === false) {
-                $this->errors[] = "Failed to add column users.{$column}: " . $e->getMessage();
+                $this->errors[] = "Failed to add column {$table}.{$column}: " . $e->getMessage();
             }
         }
+    }
+    
+    /**
+     * Add column to users table (backward compatibility)
+     */
+    private function addUserColumn($column, $definition) {
+        $this->addTableColumn('users', $column, $definition);
     }
     
     /**

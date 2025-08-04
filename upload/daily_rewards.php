@@ -320,7 +320,7 @@ $calendar = $daily_rewards->getCalendarData();
                     <h5><?php echo $today_reward['dr_description']; ?></h5>
                     <form method="POST" class="mt-3">
                         <input type="hidden" name="claim" value="1">
-                        <?php echo getCSRF('daily_reward'); ?>
+                        <?php echo getHtmlCSRF('daily_reward'); ?>
                         <button type="submit" class="btn btn-success btn-lg pulse-animation">
                             <i class="fas fa-gift"></i> Claim Reward!
                         </button>
