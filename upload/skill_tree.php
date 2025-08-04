@@ -26,8 +26,8 @@ class SkillTreeSystem {
             SELECT st.*,
                    (SELECT COUNT(*) FROM skills WHERE skill_tree = st.st_id) as total_skills,
                    (SELECT COUNT(*) FROM user_skills us 
-                    INNER JOIN skills s ON us.us_skill = s.skill_id 
-                    WHERE s.skill_tree = st.st_id AND us.us_user = {$this->userid} AND us.us_level > 0) as unlocked_skills
+                    INNER JOIN skills s ON us.skill_id = s.skill_id 
+                    WHERE s.skill_tree = st.st_id AND us.userid = {$this->userid} AND us.skill_lvl > 0) as unlocked_skills
             FROM skill_trees st
             ORDER BY st.st_class
         ");
@@ -46,10 +46,10 @@ class SkillTreeSystem {
         $skills = [];
         $query = $this->db->query("
             SELECT s.*,
-                   COALESCE(us.us_level, 0) as user_level,
+                   COALESCE(us.skill_lvl, 0) as user_level,
                    (SELECT skill_name FROM skills WHERE skill_id = s.skill_prereq) as prereq_name
             FROM skills s
-            LEFT JOIN user_skills us ON s.skill_id = us.us_skill AND us.us_user = {$this->userid}
+            LEFT JOIN user_skills us ON s.skill_id = us.skill_id AND us.userid = {$this->userid}
             WHERE s.skill_tree = {$tree_id}
             ORDER BY s.skill_tier, s.skill_name
         ");
@@ -59,8 +59,8 @@ class SkillTreeSystem {
             $row['can_unlock'] = true;
             if ($row['skill_prereq']) {
                 $prereq_level = $this->db->fetch_single($this->db->query("
-                    SELECT us_level FROM user_skills 
-                    WHERE us_user = {$this->userid} AND us_skill = {$row['skill_prereq']}
+                    SELECT skill_lvl FROM user_skills 
+                    WHERE userid = {$this->userid} AND skill_id = {$row['skill_prereq']}
                 "));
                 $row['can_unlock'] = $prereq_level > 0;
             }
@@ -83,9 +83,9 @@ class SkillTreeSystem {
         
         // Get skill info
         $skill = $this->db->fetch_row($this->db->query("
-            SELECT s.*, COALESCE(us.us_level, 0) as current_level
+            SELECT s.*, COALESCE(us.skill_lvl, 0) as current_level
             FROM skills s
-            LEFT JOIN user_skills us ON s.skill_id = us.us_skill AND us.us_user = {$this->userid}
+            LEFT JOIN user_skills us ON s.skill_id = us.skill_id AND us.userid = {$this->userid}
             WHERE s.skill_id = {$skill_id}
         "));
         
@@ -107,8 +107,8 @@ class SkillTreeSystem {
         // Check prerequisites
         if ($skill['skill_prereq']) {
             $prereq_level = $this->db->fetch_single($this->db->query("
-                SELECT us_level FROM user_skills 
-                WHERE us_user = {$this->userid} AND us_skill = {$skill['skill_prereq']}
+                SELECT skill_lvl FROM user_skills 
+                WHERE userid = {$this->userid} AND skill_id = {$skill['skill_prereq']}
             "));
             
             if (!$prereq_level || $prereq_level == 0) {
@@ -120,7 +120,7 @@ class SkillTreeSystem {
         if ($skill['current_level'] == 0) {
             // Unlock new skill
             $this->db->query("
-                INSERT INTO user_skills (us_user, us_skill, us_level)
+                INSERT INTO user_skills (userid, skill_id, skill_lvl)
                 VALUES ({$this->userid}, {$skill_id}, 1)
             ");
             $message = "Unlocked {$skill['skill_name']}!";
@@ -128,8 +128,8 @@ class SkillTreeSystem {
             // Upgrade existing skill
             $this->db->query("
                 UPDATE user_skills 
-                SET us_level = us_level + 1
-                WHERE us_user = {$this->userid} AND us_skill = {$skill_id}
+                SET skill_lvl = skill_lvl + 1
+                WHERE userid = {$this->userid} AND skill_id = {$skill_id}
             ");
             $message = "Upgraded {$skill['skill_name']} to level " . ($skill['current_level'] + 1) . "!";
         }
@@ -183,14 +183,19 @@ class SkillTreeSystem {
         
         // Get total skill points spent
         $total_points = $this->db->fetch_single($this->db->query("
-            SELECT SUM(us.us_level * s.skill_cost_per_level)
+            SELECT SUM(us.skill_lvl * s.skill_cost_per_level)
             FROM user_skills us
-            INNER JOIN skills s ON us.us_skill = s.skill_id
-            WHERE us.us_user = {$this->userid}
+            INNER JOIN skills s ON us.skill_id = s.skill_id
+            WHERE us.userid = {$this->userid}
         "));
         
+        // Handle null result (no skills to reset)
+        if (!$total_points) {
+            $total_points = 0;
+        }
+        
         // Reset all skills
-        $this->db->query("DELETE FROM user_skills WHERE us_user = {$this->userid}");
+        $this->db->query("DELETE FROM user_skills WHERE userid = {$this->userid}");
         
         // Refund skill points
         $this->db->query("
@@ -203,6 +208,41 @@ class SkillTreeSystem {
         
         return ['success' => true, 'message' => "Skills reset! {$total_points} skill points refunded."];
     }
+}
+
+// Check if tables exist
+$tables_exist = true;
+$missing_tables = [];
+
+$required_tables = ['skill_trees', 'skills', 'user_skills'];
+foreach ($required_tables as $table) {
+    $check = $db->query("SHOW TABLES LIKE '{$table}'");
+    if ($db->num_rows($check) == 0) {
+        $tables_exist = false;
+        $missing_tables[] = $table;
+    }
+}
+
+if (!$tables_exist) {
+    // Show installation required message
+    ?>
+    <div class="container-fluid">
+        <div class="alert alert-danger">
+            <h4><i class="fas fa-exclamation-triangle"></i> Skill Tree System Not Installed</h4>
+            <p>The Skill Tree system tables are not installed. Missing tables: <?php echo implode(', ', $missing_tables); ?></p>
+            <?php if ($api->user->getStaffLevel($userid, 'admin')): ?>
+                <p>Please run the uplift check to install the v3.1 features.</p>
+                <a href="uplift_check.php" class="btn btn-warning">
+                    <i class="fas fa-download"></i> Run Uplift Check
+                </a>
+            <?php else: ?>
+                <p>Please contact an administrator to install this feature.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
+    $h->endpage();
+    exit;
 }
 
 // Initialize system
@@ -248,7 +288,7 @@ if (empty($skills) && $selected_tree == 1) {
     
     foreach ($warrior_skills as $idx => $sk) {
         $prereq = $idx > 1 ? $idx - 1 : 'NULL';
-        $this->db->query("
+        $db->query("
             INSERT IGNORE INTO skills 
             (skill_tree, skill_name, skill_desc, skill_tier, skill_effect, skill_value_per_level, skill_prereq)
             VALUES (1, '{$sk[0]}', '{$sk[1]}', {$sk[2]}, '{$sk[3]}', {$sk[4]}, {$prereq})

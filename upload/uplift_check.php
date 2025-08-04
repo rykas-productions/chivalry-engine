@@ -52,6 +52,7 @@ class UpliftChecker {
         $this->checkCraftingSystem();
         $this->checkEventsSystem();
         $this->checkLeaderboardsSystem();
+        $this->checkWorldBossSystem();
         $this->checkUserColumns();
         $this->checkVIPSystem();
         $this->checkMarriageSystem();
@@ -174,11 +175,124 @@ class UpliftChecker {
      */
     private function checkSkillTreeSystem() {
         $tables = ['skill_trees', 'skills', 'user_skills'];
+        $missing = [];
         foreach ($tables as $table) {
             if (!$this->tableExists($table)) {
                 $this->updates_needed[] = "Create table: {$table}";
+                $missing[] = $table;
             }
         }
+        
+        // If tables are missing, create them directly
+        if (in_array('skill_trees', $missing)) {
+            $this->createSkillTreesTables();
+        }
+        
+        // Check if existing players need skill points
+        $this->grantRetroactiveSkillPoints();
+    }
+    
+    /**
+     * Create skill tree tables directly
+     */
+    private function createSkillTreesTables() {
+        // Create skill_trees table
+        $sql1 = "CREATE TABLE IF NOT EXISTS `skill_trees` (
+            `st_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `st_name` varchar(100) NOT NULL,
+            `st_class` enum('warrior','mage','rogue','hybrid') NOT NULL,
+            `st_desc` text NOT NULL,
+            `st_icon` varchar(50) DEFAULT 'fa-tree',
+            `st_max_points` int(11) NOT NULL DEFAULT 50,
+            PRIMARY KEY (`st_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        
+        if ($this->db->query($sql1)) {
+            $this->updates_applied[] = "✓ Created table: skill_trees";
+        }
+        
+        // Create skills table
+        $sql2 = "CREATE TABLE IF NOT EXISTS `skills` (
+            `skill_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `skill_tree` int(11) unsigned NOT NULL,
+            `skill_name` varchar(100) NOT NULL,
+            `skill_desc` text NOT NULL,
+            `skill_icon` varchar(50) DEFAULT 'fa-star',
+            `skill_type` enum('passive','active','ultimate') NOT NULL DEFAULT 'passive',
+            `skill_tier` int(11) NOT NULL DEFAULT 1,
+            `skill_max_level` int(11) NOT NULL DEFAULT 5,
+            `skill_cost_per_level` int(11) NOT NULL DEFAULT 1,
+            `skill_prereq` int(11) unsigned DEFAULT NULL,
+            `skill_effect` varchar(50) NOT NULL,
+            `skill_value_per_level` decimal(10,2) NOT NULL,
+            PRIMARY KEY (`skill_id`),
+            KEY `skill_tree` (`skill_tree`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        
+        if ($this->db->query($sql2)) {
+            $this->updates_applied[] = "✓ Created table: skills";
+        }
+        
+        // Create user_skills table
+        $sql3 = "CREATE TABLE IF NOT EXISTS `user_skills` (
+            `us_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `us_user` int(11) unsigned NOT NULL,
+            `us_skill` int(11) unsigned NOT NULL,
+            `us_level` int(11) NOT NULL DEFAULT 0,
+            `us_unlocked_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`us_id`),
+            UNIQUE KEY `user_skill` (`us_user`, `us_skill`),
+            KEY `us_user` (`us_user`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        
+        if ($this->db->query($sql3)) {
+            $this->updates_applied[] = "✓ Created table: user_skills";
+        }
+    }
+    
+    /**
+     * Grant retroactive skill points to existing players
+     */
+    private function grantRetroactiveSkillPoints() {
+        // Check if we've already granted skill points
+        $check = $this->db->query("SELECT userid FROM users WHERE skill_points > 0 LIMIT 1");
+        if ($this->db->num_rows($check) > 0) {
+            // Some users already have skill points, skip
+            return;
+        }
+        
+        // Grant skill points based on level (1 point per level)
+        $result = $this->db->query("
+            UPDATE users 
+            SET skill_points = level 
+            WHERE skill_points = 0 OR skill_points IS NULL
+        ");
+        
+        $affected = $this->db->affected_rows();
+        if ($affected > 0) {
+            $this->updates_applied[] = "✓ Granted skill points to {$affected} existing players (1 per level)";
+            $this->updates_needed[] = "Grant retroactive skill points";
+        }
+        
+        // Give bonus skill points to high level players
+        $this->db->query("
+            UPDATE users 
+            SET skill_points = skill_points + 5 
+            WHERE level >= 50
+        ");
+        
+        $this->db->query("
+            UPDATE users 
+            SET skill_points = skill_points + 10 
+            WHERE level >= 100
+        ");
+        
+        // Notify about the update
+        $this->db->query("
+            INSERT IGNORE INTO announcements (ann_text, ann_time, ann_poster)
+            VALUES ('Skill Tree System is now available! You have been granted skill points based on your level. Visit the Skill Trees page to allocate your points!', 
+                    UNIX_TIMESTAMP(), 'System')
+        ");
     }
     
     /**
@@ -242,6 +356,18 @@ class UpliftChecker {
     }
     
     /**
+     * Check World Boss System
+     */
+    private function checkWorldBossSystem() {
+        $tables = ['world_bosses', 'world_boss_damage', 'world_boss_rewards'];
+        foreach ($tables as $table) {
+            if (!$this->tableExists($table)) {
+                $this->updates_needed[] = "Create table: {$table}";
+            }
+        }
+    }
+    
+    /**
      * Check for new user columns
      */
     private function checkUserColumns() {
@@ -290,24 +416,16 @@ class UpliftChecker {
      * Check VIP system
      */
     private function checkVIPSystem() {
-        // Check for VIP packages
-        if ($this->tableExists('vip_packages')) {
-            $count = $this->db->fetch_single($this->db->query("SELECT COUNT(*) FROM vip_packages"));
-            if ($count == 0) {
-                $this->updates_needed[] = "Add VIP packages";
-            }
-        } else {
-            $this->updates_needed[] = "Create VIP system tables";
-        }
+        // VIP system already exists with tables: vip_listing, vip_market, vips_accepted
+        // No need to check for vip_packages as the system uses different tables
     }
     
     /**
      * Check Marriage system
      */
     private function checkMarriageSystem() {
-        if (!$this->tableExists('marriage')) {
-            $this->updates_needed[] = "Create marriage system table";
-        }
+        // Marriage system already exists with tables: marriages, marriage_proposals, marriage_gifts
+        // No need for additional checks
     }
     
     /**
@@ -374,7 +492,8 @@ class UpliftChecker {
             'wow_features.sql',           // Achievements and Daily Rewards
             'guild_wars.sql',             // Guild Wars system
             'battle_royale.sql',          // Battle Royale system
-            'wow_features_complete.sql'   // All other systems
+            'wow_features_complete.sql',  // All other systems
+            'world_boss_tables.sql'       // World Boss system
         ];
         
         foreach ($sql_files as $file) {
@@ -420,21 +539,26 @@ class UpliftChecker {
      * Execute SQL file
      */
     private function executeSQLFile($file) {
+        $this->updates_applied[] = "Processing SQL file: " . basename($file);
+        
         $sql = file_get_contents($file);
         
-        // Remove SQL comments
-        $sql = preg_replace('/--.*$/m', '', $sql);
+        // Remove SQL comments but preserve section markers
+        $sql = preg_replace('/^--(?!.*======).*$/m', '', $sql);
         $sql = preg_replace('/\/\*.*?\*\//s', '', $sql);
         
         // Split by semicolon followed by newline or end of string
         // This better handles multi-line statements
         $queries = preg_split('/;\s*$/m', $sql);
         
+        $query_count = 0;
+        $error_count = 0;
+        
         foreach ($queries as $query) {
             $query = trim($query);
             if (empty($query)) continue;
             
-            // Skip comment-only lines
+            // Skip comment-only lines and section markers
             if (strpos($query, '--') === 0) continue;
             
             try {
@@ -443,30 +567,50 @@ class UpliftChecker {
                     $query .= ';';
                 }
                 
-                $this->db->query($query);
-                
-                // Determine what was done
+                // Log what we're trying to do
                 if (stripos($query, 'CREATE TABLE') !== false) {
-                    preg_match('/CREATE TABLE.*?`([^`]+)`/i', $query, $matches);
+                    preg_match('/CREATE TABLE\s+(?:IF NOT EXISTS\s+)?`?([^`\s]+)`?/i', $query, $matches);
                     if (isset($matches[1])) {
-                        $this->updates_applied[] = "Created table: " . $matches[1];
-                    }
-                } elseif (stripos($query, 'ALTER TABLE') !== false) {
-                    preg_match('/ALTER TABLE.*?`([^`]+)`.*?ADD.*?`([^`]+)`/i', $query, $matches);
-                    if (isset($matches[1]) && isset($matches[2])) {
-                        $this->updates_applied[] = "Added column: " . $matches[1] . "." . $matches[2];
-                    }
-                } elseif (stripos($query, 'INSERT') !== false) {
-                    if (stripos($query, 'INSERT IGNORE') !== false) {
-                        preg_match('/INSERT IGNORE INTO.*?`([^`]+)`/i', $query, $matches);
-                    } else {
-                        preg_match('/INSERT INTO.*?`([^`]+)`/i', $query, $matches);
-                    }
-                    if (isset($matches[1])) {
-                        // Check if anything was actually inserted
-                        if ($this->db->affected_rows() > 0) {
-                            $this->updates_applied[] = "Added data to: " . $matches[1];
+                        $table_name = $matches[1];
+                        
+                        // Check if table already exists
+                        $exists = $this->tableExists($table_name);
+                        if ($exists) {
+                            $this->updates_applied[] = "Table already exists: {$table_name}";
+                            continue;
                         }
+                    }
+                }
+                
+                $result = $this->db->query($query);
+                if (!$result) {
+                    $error_count++;
+                    // Get the actual error
+                    $error_msg = mysqli_error($this->db->connection);
+                    
+                    // Only log non-duplicate errors
+                    if (strpos($error_msg, 'already exists') === false && 
+                        strpos($error_msg, 'Duplicate') === false) {
+                        $this->updates_applied[] = "Error: " . substr($query, 0, 50) . "... - " . $error_msg;
+                    }
+                    continue;
+                } else {
+                    $query_count++;
+                    
+                    // Determine what was done
+                    if (stripos($query, 'CREATE TABLE') !== false) {
+                        preg_match('/CREATE TABLE.*?`([^`]+)`/i', $query, $matches);
+                        if (isset($matches[1])) {
+                            $this->updates_applied[] = "✓ Created table: " . $matches[1];
+                        }
+                    } elseif (stripos($query, 'ALTER TABLE') !== false) {
+                        preg_match('/ALTER TABLE.*?`([^`]+)`.*?ADD.*?`([^`]+)`/i', $query, $matches);
+                        if (isset($matches[1]) && isset($matches[2])) {
+                            $this->updates_applied[] = "✓ Added column: " . $matches[1] . "." . $matches[2];
+                        }
+                    } elseif (stripos($query, 'INSERT') !== false) {
+                        // Don't log every insert
+                        continue;
                     }
                 }
             } catch (Exception $e) {
@@ -476,6 +620,11 @@ class UpliftChecker {
                     $this->errors[] = "SQL Error: " . $e->getMessage();
                 }
             }
+        }
+        
+        $this->updates_applied[] = "Processed {$query_count} queries from " . basename($file);
+        if ($error_count > 0) {
+            $this->updates_applied[] = "Skipped {$error_count} queries (tables/data may already exist)";
         }
     }
     

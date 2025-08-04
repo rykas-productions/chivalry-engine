@@ -26,6 +26,13 @@ class headers
             $this->tableExists('guild_territories') && $this->tableExists('battle_royale_events')) {
             $v3_installed = true;
         }
+        
+        // Check if v3.1 features are installed
+        $v31_installed = false;
+        if ($this->tableExists('skill_trees') && $this->tableExists('world_bosses') && 
+            $this->tableExists('pets') && $this->tableExists('dungeons')) {
+            $v31_installed = true;
+        }
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -259,6 +266,9 @@ class headers
                                             <li><a href="academy.php"><i class="fas fa-graduation-cap"></i> Academy</a></li>
                                             <li><a href="dungeons.php"><i class="fas fa-dungeon"></i> Dungeons</a></li>
                                             <li><a href="battle_royale.php"><i class="fas fa-crown"></i> Battle Royale</a></li>
+                                            <li><a href="world_boss.php"><i class="fas fa-dragon"></i> World Boss</a></li>
+                                            <li><a href="skill_tree.php"><i class="fas fa-tree"></i> Skill Trees</a></li>
+                                            <li><a href="crafting.php"><i class="fas fa-hammer"></i> Crafting</a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -299,6 +309,8 @@ class headers
                                             <li><a href="daily_rewards.php"><i class="fas fa-calendar-check"></i> Daily Rewards</a></li>
                                             <li><a href="achievements.php"><i class="fas fa-medal"></i> Achievements</a></li>
                                             <li><a href="pets.php"><i class="fas fa-paw"></i> Pets</a></li>
+                                            <li><a href="events.php"><i class="fas fa-calendar-alt"></i> Live Events</a></li>
+                                            <li><a href="leaderboards.php"><i class="fas fa-trophy"></i> Leaderboards</a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -371,21 +383,31 @@ class headers
                 <main class="page-content">
                     <div class="container-fluid">
                     <?php 
-                    // Show upgrade notice if v3 features aren't installed
-                    if (!$v3_installed && $api->user->getStaffLevel($userid, 'admin')): ?>
+                    // Show upgrade notice if v3 or v3.1 features aren't installed
+                    if ((!$v3_installed || !$v31_installed) && $api->user->getStaffLevel($userid, 'admin')): ?>
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <i class="fas fa-exclamation-triangle"></i> <strong>New Features Available!</strong>
+                            <?php if (!$v3_installed): ?>
                             <p class="mb-2">Chivalry Engine v3.0 features are not installed. Install them to get:</p>
                             <ul class="mb-2">
                                 <li>Achievement System with 30+ achievements</li>
                                 <li>Daily Login Rewards with streaks</li>
                                 <li>Guild Wars with territory control</li>
                                 <li>Battle Royale events</li>
-                                <li>Pet System with battles</li>
-                                <li>Dungeons & Raids</li>
-                                <li>Skill Trees & Crafting</li>
-                                <li>Leaderboards & Seasons</li>
                             </ul>
+                            <?php endif; ?>
+                            <?php if (!$v31_installed): ?>
+                            <p class="mb-2">Chivalry Engine v3.1 features are not installed. Install them to get:</p>
+                            <ul class="mb-2">
+                                <li>Pet System with training and battles</li>
+                                <li>Dungeons & Raids with boss fights</li>
+                                <li>Skill Trees with 3 specializations</li>
+                                <li>Crafting & Enchanting system</li>
+                                <li>Live Events Calendar</li>
+                                <li>Leaderboards & Seasons</li>
+                                <li>World Boss cooperative battles</li>
+                            </ul>
+                            <?php endif; ?>
                             <a href="uplift_check.php" class="btn btn-warning btn-sm">
                                 <i class="fas fa-download"></i> Run Uplift Check Now
                             </a>
