@@ -1,23 +1,12 @@
-# Chivalry Engine - Modern Edition
-Chivalry Engine is a free to use and open source engine created by TheMasterGeneral. This modern edition has been upgraded to Bootstrap 5.3 and includes numerous enhancements for improved gameplay and user experience.
+# Chivalry Engine v3 - Modern Edition
+Chivalry Engine is a free to use and open source engine created by TheMasterGeneral. This v3 modern edition has been upgraded to Bootstrap 5.3 and includes numerous enhancements for improved gameplay and user experience.
 
 # Requirements
-<<<<<<< Updated upstream
-A web-server with PHP 7.0+ and MySQLi support. Users need to have Javascript enabled or a lot of the core features won't work. With the inclusion of Bootstrap V4, you cannot run this engine on clients running Internet Explorer 9 or older. Its recommended that users on Android use a browser different to the default one, unless they're running Android 5.0 or newer.  
-=======
 A web-server with PHP 7.4+ and MySQLi support. Users need to have Javascript enabled or a lot of the core features won't work. With the inclusion of Bootstrap 5.3, this engine supports all modern browsers and provides excellent mobile responsiveness. 
->>>>>>> Stashed changes
   
 # Live Game
 Want to give v1 of the engine a test in a live game instance? Check out [Chivalry is Dead](https://chivalryisdeadgame.com)!
  
-<<<<<<< Updated upstream
-# Goals for V3
-Chivalry Engine V3 is a full rewrite of Chivalry Engine with an object-orientated programming style in mind. This hopefully makes life easier when developing and running a game on Chivalry Engine. This will likely not be compatible with previous version of Chivalry Engine.
-
-# Major Changes in V3
-N/A
-=======
 # Modern Edition Features
 This enhanced version includes all the improvements from V2 plus additional modern enhancements:
 
@@ -44,9 +33,8 @@ This enhanced version includes all the improvements from V2 plus additional mode
 3. Import `cengine.sql` to create the database structure  
 4. Run `restore_game_data.php` as admin to restore all original content
 5. Configure your web server to point to the upload directory 
->>>>>>> Stashed changes
 
-# Chivalry Engine V3 License
+# Chivalry Engine V2 License
 MIT License
 
 Copyright (c) 2019 TheMasterGeneral

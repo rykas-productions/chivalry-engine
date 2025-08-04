@@ -1,20 +1,5 @@
 # Configuration files
 upload/config.php
-<<<<<<< Updated upstream
-upload/test.php
-.idea/
-upload/.idea/
-*.log
-upload/cache/
-.project/
-.buildpath/
-.settings/
-.settings/
-.metadata/
-upload/.vs/
-upload/.project
-*.sqlite
-=======
 
 # Log files
 *.log
@@ -65,4 +50,3 @@ node_modules/
 upload/uploads/
 upload/avatars/
 upload/attachments/
->>>>>>> Stashed changes
