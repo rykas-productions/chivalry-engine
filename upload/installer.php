@@ -72,7 +72,7 @@ function diagnostics()
 {
 	global $Build, $Version;
     menuprint("diag");
-    if (version_compare(phpversion(), '5.5.0') < 0)
+    if (version_compare(phpversion(), '7.3.0') < 0)
     {
         $pv = '<span style="color: red">Failed</span>';
         $pvf = 0;
@@ -141,7 +141,7 @@ function diagnostics()
     <h3>Basic Diagnostic Results:</h3>
     <table class='table table-bordered table-hover'>
     		<tr>
-    			<td>Is the server's PHP Version greater than 5.5.0?</td>
+    			<td>Is the server's PHP Version >= 7.4?</td>
     			<td>{$pv}</td>
     		</tr>
     		<tr>
