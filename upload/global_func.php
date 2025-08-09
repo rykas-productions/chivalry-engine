@@ -1984,35 +1984,68 @@ function recache_forum($forum)
     echo " ... Recaching completed.<br />";
 }
 
-function isImage($url)
-{
-    $params = array('http' => array(
-        'method' => 'HEAD'
-    ));
-    $ctx = stream_context_create($params);
-    $fp = @fopen($url, 'rb', false, $ctx);
-    if (!$fp)
-        return false;  // Problem with url
-
-    $meta = stream_get_meta_data($fp);
-    if ($meta === false) {
-        fclose($fp);
-        return false;  // Problem reading data from url
+function isImage($url) {
+    // Validate URL
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return false;
     }
 
-    $wrapper_data = $meta["wrapper_data"];
-    if (is_array($wrapper_data)) {
-        foreach (array_keys($wrapper_data) as $hh) {
-            if (substr($wrapper_data[$hh], 0, 19) == "Content-Type: image") // strlen("Content-Type: image") == 19
-            {
+    // Only allow http and https protocols
+    if (!preg_match('/^https?:\/\//i', $url)) {
+        return false;
+    }
+
+    $params = array('http' => array(
+        'method' => 'HEAD',
+        'timeout' => 5, // 5 second timeout
+        'user_agent' => 'ChivalryEngine ImageValidator',
+        'follow_location' => 0,  // Don't follow redirects
+        'max_redirects' => 0,
+        'protocol_version' => 1.1
+    ));
+
+    try {
+        $ctx = stream_context_create($params);
+        $fp = @fopen($url, 'rb', false, $ctx);
+        if (!$fp) {
+            return false;
+        }
+
+        $meta = stream_get_meta_data($fp);
+        if ($meta === false) {
+            fclose($fp);
+            return false;
+        }
+
+        $wrapper_data = $meta["wrapper_data"];
+        if (!is_array($wrapper_data)) {
+            fclose($fp);
+            return false;
+        }
+
+        // Check for valid image MIME types
+        $allowedTypes = array(
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/webp',
+            'image/bmp'
+        );
+
+        foreach ($wrapper_data as $header) {
+            if (strpos(strtolower($header), 'content-type:') === 0) {
+                $contentType = trim(substr($header, 13));
                 fclose($fp);
-                return true;
+                return in_array(strtolower($contentType), $allowedTypes);
             }
         }
-    }
 
-    fclose($fp);
-    return false;
+        fclose($fp);
+        return false;
+    } catch (Exception $e) {
+        error_log("Image validation error: " . $e->getMessage());
+        return false;
+    }
 }
 
 /*
