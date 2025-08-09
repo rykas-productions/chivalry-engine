@@ -1641,7 +1641,7 @@ function get_filesize_remote($url)
                 'header' => [
                     'Connection: close'
                 ]
-            },
+            ],
             'ssl' => [
                 'verify_peer' => true,
                 'verify_peer_name' => true
