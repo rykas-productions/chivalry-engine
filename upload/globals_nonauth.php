@@ -62,6 +62,16 @@ ob_start();
 //Require the error handler.
 require "lib/basic_error_handler.php";
 set_error_handler('error_php');
+
+set_exception_handler(function($exception) {
+    error_critical(
+        'An unexpected error occurred.',
+        $exception->getMessage(),
+        'Exception in ' . $exception->getFile() . ' on line ' . $exception->getLine(),
+        ['stack_trace' => $exception->getTraceAsString()]
+        );
+});
+
 //Require styling.
 require "header_nonauth.php";
 include "config.php";
