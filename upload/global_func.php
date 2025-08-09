@@ -90,34 +90,54 @@ function ParseTimestamp($time)
 	@param int $user The user who to test for.
 */
 
-function user_infirmary($user)
-{
+function user_infirmary($user) {
     global $db;
-    //Assign current Unix Time to a variable.
+    
+    // Basic validation
+    $user = (int)$user;
+    if ($user <= 0) {
+        error_log("Invalid user ID in user_infirmary check: " . $user);
+        return false;
+    }
+
     $CurrentTime = time();
-    //Select user from infirmary if their exit infirmary time is after the current Unix Timestamp.
-    $query = $db->query("SELECT `infirmary_user` FROM `infirmary` WHERE `infirmary_user` = {$user} AND
-                        `infirmary_out` > {$CurrentTime}");
-    //Return false if they return no rows, true if they do.
-    $return = ($db->num_rows($query) == 0) ? false : true;
-    return $return;
+    
+    try {
+        $query = $db->query("SELECT `infirmary_user` FROM `infirmary` 
+                            WHERE `infirmary_user` = {$user} 
+                            AND `infirmary_out` > {$CurrentTime}");
+        return ($db->num_rows($query) > 0);
+    } catch (Exception $e) {
+        error_log("Database error in user_infirmary: " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
 	The function for testing if a player is in the dungeon.
 	@param int $user The user who to test for.
 */
-function user_dungeon($user)
-{
+function user_dungeon($user) {
     global $db;
-    //Assign current Unix Time to a variable.
+    
+    // Basic validation
+    $user = (int)$user;
+    if ($user <= 0) {
+        error_log("Invalid user ID in user_dungeon check: " . $user);
+        return false;
+    }
+
     $CurrentTime = time();
-    //Select user from dungeon if their exit dungeon time is after the current Unix Timestamp.
-    $query = $db->query("SELECT `dungeon_user` FROM `dungeon` WHERE `dungeon_user` = {$user} AND
-						`dungeon_out` > {$CurrentTime}");
-    //Return false if they return no rows, true if they do.
-    $return = ($db->num_rows($query) == 0) ? false : true;
-    return $return;
+    
+    try {
+        $query = $db->query("SELECT `dungeon_user` FROM `dungeon` 
+                            WHERE `dungeon_user` = {$user} 
+                            AND `dungeon_out` > {$CurrentTime}");
+        return ($db->num_rows($query) > 0);
+    } catch (Exception $e) {
+        error_log("Database error in user_dungeon: " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
@@ -126,23 +146,50 @@ function user_dungeon($user)
 	@param int $time The time (in minutes) to add.
 	@param text $reason The reason the user is in the infirmary.
 */
-function put_infirmary($user, $time, $reason)
-{
+function put_infirmary($user, $time, $reason) {
     global $db;
-    //Assign current Unix Timestamp to a variable.
-    $CurrentTime = time();
-    //Select the $user's current infirmary out time.
-    $Infirmary = $db->fetch_single($db->query("SELECT `infirmary_out` FROM `infirmary` WHERE `infirmary_user` = {$user}"));
-    //Since the time is in minutes, lets multiply the $time by 60. (Otherwise we would be adding seconds)
-    $TimeMath = $time * 60;
-    //If $user is currently not in the infirmary, lets add the time! (Their out time is the Unix Timestamp plus $TimeMath)
-    if ($Infirmary <= $CurrentTime) {
-        $db->query("UPDATE `infirmary` SET `infirmary_out` = {$CurrentTime} + {$TimeMath}, `infirmary_in` = {$CurrentTime},
-					`infirmary_reason` = '{$reason}' WHERE `infirmary_user` = {$user}");
-    } //If $user is already in the infirmary, lets just add $TimeMath onto their current sentence.
-    else {
-        $db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` + {$TimeMath}, `infirmary_reason` = '{$reason}'
-					WHERE `infirmary_user` = {$user}");
+    
+    // Input validation
+    $user = (int)$user;
+    $time = (int)$time;
+    if ($user <= 0 || $time <= 0) {
+        error_log("Invalid parameters in put_infirmary: user=$user, time=$time");
+        return false;
+    }
+
+    // Sanitize reason
+    $reason = $db->escape(substr(strip_tags($reason), 0, 255));
+    if (empty($reason)) {
+        $reason = "Unknown reason";
+    }
+    
+    try {
+        $CurrentTime = time();
+        $TimeMath = $time * 60;
+
+        // Check if user is currently in infirmary
+        $Infirmary = $db->fetch_single($db->query("SELECT `infirmary_out` 
+                                                  FROM `infirmary` 
+                                                  WHERE `infirmary_user` = {$user}"));
+
+        if ($Infirmary <= $CurrentTime) {
+            // New stay
+            $db->query("UPDATE `infirmary` 
+                       SET `infirmary_out` = {$CurrentTime} + {$TimeMath},
+                           `infirmary_in` = {$CurrentTime},
+                           `infirmary_reason` = '{$reason}'
+                       WHERE `infirmary_user` = {$user}");
+        } else {
+            // Extend current stay
+            $db->query("UPDATE `infirmary` 
+                       SET `infirmary_out` = `infirmary_out` + {$TimeMath},
+                           `infirmary_reason` = '{$reason}'
+                       WHERE `infirmary_user` = {$user}");
+        }
+        return true;
+    } catch (Exception $e) {
+        error_log("Database error in put_infirmary: " . $e->getMessage());
+        return false;
     }
 }
 
@@ -151,13 +198,33 @@ function put_infirmary($user, $time, $reason)
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to remove.
 */
-function remove_infirmary($user, $time)
-{
+function remove_infirmary($user, $time) {
     global $db;
-    //Multiply $time by 60 since we're dealing with minutes, not seconds.
-    $TimeMath = $time * 60;
-    //Remove $TimeMath from their stay. $user will be removed from infirmary automatically, if needed.
-    $db->query("UPDATE `infirmary` SET `infirmary_out` = `infirmary_out` - '{$TimeMath}' WHERE `infirmary_user` = {$user}");
+    
+    // Input validation
+    $user = (int)$user;
+    $time = (int)$time;
+    if ($user <= 0 || $time <= 0) {
+        error_log("Invalid parameters in remove_infirmary: user=$user, time=$time");
+        return false;
+    }
+    
+    try {
+        $TimeMath = $time * 60;
+        
+        $db->query("UPDATE `infirmary` 
+                   SET `infirmary_out` = CASE 
+                       WHEN (`infirmary_out` - {$TimeMath}) < `infirmary_in` 
+                       THEN `infirmary_in`
+                       ELSE `infirmary_out` - {$TimeMath}
+                   END
+                   WHERE `infirmary_user` = {$user}");
+        
+        return true;
+    } catch (Exception $e) {
+        error_log("Database error in remove_infirmary: " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
@@ -166,23 +233,50 @@ function remove_infirmary($user, $time)
 	@param int $time The time (in minutes) to add.
 	@param text $reason The reason the user is in the dungeon.
 */
-function put_dungeon($user, $time, $reason)
-{
+function put_dungeon($user, $time, $reason) {
     global $db;
-    //Assign current Unix Timestamp to a variable.
-    $CurrentTime = time();
-    //Select $user's dungeon exit time.
-    $Dungeon = $db->fetch_single($db->query("SELECT `dungeon_out` FROM `dungeon` WHERE `dungeon_user` = {$user}"));
-    //Since we're dealing with minutes, lets multiply $time by 60.
-    $TimeMath = $time * 60;
-    //If $user is not in the dungeon already, lets set their exit time to $CurrentTime + $TimeMath
-    if ($Dungeon <= $CurrentTime) {
-        $db->query("UPDATE `dungeon` SET `dungeon_out` = {$CurrentTime} + {$TimeMath}, `dungeon_in` = {$CurrentTime},
-					`dungeon_reason` = '{$reason}' WHERE `dungeon_user` = {$user}");
-    } //$user is already in the dungeon, so lets just add $TimeMath to their sentence.
-    else {
-        $db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` + {$TimeMath}, `dungeon_reason` = '{$reason}'
-					WHERE `dungeon_user` = {$user}");
+    
+    // Input validation
+    $user = (int)$user;
+    $time = (int)$time;
+    if ($user <= 0 || $time <= 0) {
+        error_log("Invalid parameters in put_dungeon: user=$user, time=$time");
+        return false;
+    }
+
+    // Sanitize reason
+    $reason = $db->escape(substr(strip_tags($reason), 0, 255));
+    if (empty($reason)) {
+        $reason = "Unknown reason";
+    }
+    
+    try {
+        $CurrentTime = time();
+        $TimeMath = $time * 60;
+
+        // Check if user is currently in dungeon
+        $Dungeon = $db->fetch_single($db->query("SELECT `dungeon_out` 
+                                                FROM `dungeon` 
+                                                WHERE `dungeon_user` = {$user}"));
+
+        if ($Dungeon <= $CurrentTime) {
+            // New stay
+            $db->query("UPDATE `dungeon` 
+                       SET `dungeon_out` = {$CurrentTime} + {$TimeMath},
+                           `dungeon_in` = {$CurrentTime},
+                           `dungeon_reason` = '{$reason}'
+                       WHERE `dungeon_user` = {$user}");
+        } else {
+            // Extend current stay
+            $db->query("UPDATE `dungeon` 
+                       SET `dungeon_out` = `dungeon_out` + {$TimeMath},
+                           `dungeon_reason` = '{$reason}'
+                       WHERE `dungeon_user` = {$user}");
+        }
+        return true;
+    } catch (Exception $e) {
+        error_log("Database error in put_dungeon: " . $e->getMessage());
+        return false;
     }
 }
 
@@ -191,13 +285,33 @@ function put_dungeon($user, $time, $reason)
 	@param int $user The user to put in the infirmary
 	@param int $time The time (in minutes) to remove.
 */
-function remove_dungeon($user, $time)
-{
+function remove_dungeon($user, $time) {
     global $db;
-    //Multiply $time by 60 since we're dealing with minutes, not seconds.
-    $TimeMath = $time * 60;
-    //Remove $TimeMath from $user's dungeon sentence. $user will be automatically removed from the dungeon if needed.
-    $db->query("UPDATE `dungeon` SET `dungeon_out` = `dungeon_out` - '{$TimeMath}' WHERE `dungeon_user` = {$user}");
+    
+    // Input validation
+    $user = (int)$user;
+    $time = (int)$time;
+    if ($user <= 0 || $time <= 0) {
+        error_log("Invalid parameters in remove_dungeon: user=$user, time=$time");
+        return false;
+    }
+    
+    try {
+        $TimeMath = $time * 60;
+        
+        $db->query("UPDATE `dungeon` 
+                   SET `dungeon_out` = CASE 
+                       WHEN (`dungeon_out` - {$TimeMath}) < `dungeon_in` 
+                       THEN `dungeon_in`
+                       ELSE `dungeon_out` - {$TimeMath}
+                   END
+                   WHERE `dungeon_user` = {$user}");
+        
+        return true;
+    } catch (Exception $e) {
+        error_log("Database error in remove_dungeon: " . $e->getMessage());
+        return false;
+    }
 }
 
 /**
