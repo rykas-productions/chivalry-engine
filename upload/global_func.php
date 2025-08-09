@@ -1630,7 +1630,7 @@ function get_filesize_remote($url)
                 'header' => [
                     'Connection: close'
                 ]
-            ],
+            },
             'ssl' => [
                 'verify_peer' => true,
                 'verify_peer_name' => true
@@ -1853,14 +1853,67 @@ function SystemLogsAdd($user, $logtype, $input)
 }
 
 /**
- * Fall back for PHP 7 functions on a PHP < 7 versions.
- * */
+ * Generate cryptographically secure random numbers with fallbacks
+ * @param int $min Minimum value
+ * @param int $max Maximum value
+ * @return int A random number between min and max
+ */
 function Random($min = 0, $max = PHP_INT_MAX)
 {
-    if (function_exists('random_int'))
-        return random_int($min, $max);
-    else
+    try {
+        // Input validation
+        $min = (int)$min;
+        $max = (int)$max;
+        if ($min > $max) {
+            throw new Exception("Minimum value cannot be greater than maximum value");
+        }
+
+        // Prefer random_int for cryptographic security
+        if (function_exists('random_int')) {
+            return random_int($min, $max);
+        }
+        
+        // Fallback to OpenSSL
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $range = $max - $min;
+            if ($range < 0) {
+                $range = PHP_INT_MAX;
+            }
+            
+            $bytes = openssl_random_pseudo_bytes(PHP_INT_SIZE);
+            if ($bytes === false) {
+                throw new Exception("Failed to generate secure random bytes");
+            }
+            
+            $value = 0;
+            for ($i = 0; $i < PHP_INT_SIZE; $i++) {
+                $value = ($value << 8) | ord($bytes[$i]);
+            }
+            $value = abs($value);
+            
+            // Ensure even distribution
+            $max_range = PHP_INT_MAX - (PHP_INT_MAX % ($range + 1));
+            if ($value > $max_range) {
+                // Try again if we're over the max range to ensure unbiased results
+                return Random($min, $max);
+            }
+            
+            return $min + ($value % ($range + 1));
+        }
+        
+        // Last resort fallback with warning
+        trigger_error(
+            "Cryptographically secure random number generation not available. ".
+            "Using less secure fallback method.", 
+            E_USER_WARNING
+        );
         return mt_rand($min, $max);
+        
+    } catch (Exception $e) {
+        error_log("Random number generation error: " . $e->getMessage());
+        // Fallback to mt_rand if everything else fails
+        return mt_rand($min, $max);
+    }
 }
 
 /*
