@@ -11,8 +11,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('1.1.0'); //For game/engine
-$Build=('108');	    //todo: at 1.1, count the actual builds and start there. at 1.0.3c, we'd
+$Version=('1.1.1'); //For game/engine
+$Build=('109');	    //todo: at 1.1, count the actual builds and start there. at 1.0.3c, we'd
 					//actually be at 107
 define('MONO_ON', 1);
 session_name('CENGINE');
@@ -141,7 +141,7 @@ function diagnostics()
     <h3>Basic Diagnostic Results:</h3>
     <table class='table table-bordered table-hover'>
     		<tr>
-    			<td>Is the server's PHP Version >= 7.4?</td>
+    			<td>Is the server's PHP Version >= 7.3?</td>
     			<td>{$pv}</td>
     		</tr>
     		<tr>
