@@ -11,21 +11,53 @@
 if (strpos($_SERVER['PHP_SELF'], "globals_nonauth.php") !== false) {
     exit;
 }
-//If theme isn't stored in cookie, set it to cookie.
+
+// Set secure session parameters
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1);
+ini_set('session.use_strict_mode', 1);
+ini_set('session.cookie_samesite', 'Lax');
+
+// Set secure cookie parameters for theme
 if (!isset($_COOKIE['theme'])) {
-    setcookie('theme', 1, time() + 86400);
+    setcookie('theme', 1, [
+        'expires' => time() + 86400,
+        'path' => '/',
+        'domain' => '',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
     $_COOKIE['theme'] = 1;
 }
+
 $time = time();
-//Set session name and start it.
 session_name('CENGINE');
-@session_start();
-header('X-Frame-Options: SAMEORIGIN');
-//If session is not started, regenerate ID and load it.
+session_start();
+
+// Set security headers
+header('X-Frame-Options: DENY'); 
+header('X-Content-Type-Options: nosniff');
+header('X-XSS-Protection: 1; mode=block');
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://ajax.googleapis.com https://cdnjs.cloudflare.com https://stackpath.bootstrapcdn.com; style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://maxcdn.bootstrapcdn.com; img-src 'self' data: https:; font-src 'self' https://maxcdn.bootstrapcdn.com; connect-src 'self';");
+header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), camera=(), microphone=()');
+
+// Generate secure session ID if not started
 if (!isset($_SESSION['started'])) {
-    session_regenerate_id();
+    if (function_exists('random_bytes')) {
+        $entropy = random_bytes(32);
+    } elseif (function_exists('openssl_random_pseudo_bytes')) {
+        $entropy = openssl_random_pseudo_bytes(32);
+    } else {
+        $entropy = mt_rand() . uniqid(mt_rand(), true);
+    }
+    session_id(hash('sha256', $entropy));
+    session_regenerate_id(true);
     $_SESSION['started'] = true;
 }
+
 ob_start();
 //Require the error handler.
 require "lib/basic_error_handler.php";

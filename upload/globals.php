@@ -9,24 +9,57 @@
 */
 //Profiler start time
 $StartTime = microtime();
-//If file is loaded directly.
 if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false) {
     exit;
 }
-//Set session name, then start session.
+
+// Set secure session parameters
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1);
+ini_set('session.use_strict_mode', 1);
+ini_set('session.cookie_samesite', 'Lax');
+
 session_name('CENGINE');
 session_start();
 $time = time();
+
+// Set security headers
+header('X-Frame-Options: DENY');
+header('X-Content-Type-Options: nosniff');
+header('X-XSS-Protection: 1; mode=block');
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://ajax.googleapis.com https://cdnjs.cloudflare.com https://stackpath.bootstrapcdn.com https://cdn.rawgit.com; style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://maxcdn.bootstrapcdn.com https://code.jquery.com; img-src 'self' data: https:; font-src 'self' https://maxcdn.bootstrapcdn.com; connect-src 'self';");
+header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), camera=(), microphone=()');
+
+// Prevent clickjacking
 header('X-Frame-Options: SAMEORIGIN');
-//If session has not started, regenerate session ID, then start it.
+
+// If session has not started, regenerate session ID with proper entropy
 if (!isset($_SESSION['started'])) {
-    session_regenerate_id();
+    if (function_exists('random_bytes')) {
+        $entropy = random_bytes(32);
+    } elseif (function_exists('openssl_random_pseudo_bytes')) {
+        $entropy = openssl_random_pseudo_bytes(32);
+    } else {
+        $entropy = mt_rand() . uniqid(mt_rand(), true);
+    }
+    session_id(hash('sha256', $entropy));
+    session_regenerate_id(true);
     $_SESSION['started'] = true;
 }
-//Set user's theme to cookies for 30 days.
+
+// Set secure cookie parameters
 if (!isset($_COOKIE['theme'])) {
-    setcookie('theme', '1', time() + 86400);
+    setcookie('theme', '1', [
+        'expires' => time() + 86400,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
 }
+
 ob_start();
 //Require the error handler and developer helper files.
 require "lib/basic_error_handler.php";
