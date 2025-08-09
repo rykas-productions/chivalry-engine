@@ -1685,15 +1685,56 @@ function get_fg_cache($file, $ip, $hours = 1)
 function update_fg_info($ip)
 {
     global $set;
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.fraudguard.io/ip/$ip",
-        CURLOPT_USERPWD => "{$set['FGUsername']}:{$set['FGPassword']}",
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_RETURNTRANSFER => true));
-    $content = curl_exec($curl);
-    curl_close($curl);
-    return $content;
+    
+    try {
+        // Validate IP
+        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+            throw new Exception("Invalid IP address");
+        }
+
+        // Validate credentials
+        if (empty($set['FGUsername']) || empty($set['FGPassword'])) {
+            throw new Exception("Missing FraudGuard credentials");
+        }
+
+        $curl = curl_init();
+        $options = array(
+            CURLOPT_URL => "https://api.fraudguard.io/ip/" . urlencode($ip),
+            CURLOPT_USERPWD => $set['FGUsername'] . ":" . $set['FGPassword'],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_USERAGENT => "ChivalryEngine/v{$set['Version_Number']}",
+            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+            CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS
+        );
+        
+        curl_setopt_array($curl, $options);
+        
+        $content = curl_exec($curl);
+        
+        if ($content === false) {
+            throw new Exception("CURL Error: " . curl_error($curl));
+        }
+        
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if ($httpCode !== 200) {
+            throw new Exception("HTTP Error: Received code " . $httpCode);
+        }
+        
+        return $content;
+        
+    } catch (Exception $e) {
+        error_log("FraudGuard API error: " . $e->getMessage());
+        return false;
+    } finally {
+        if (isset($curl)) {
+            curl_close($curl);
+        }
+    }
 }
 
 /**
@@ -1977,6 +2018,7 @@ function recache_forum($forum)
 }
 
 function isImage($url) {
+    global $set;
     // Validate URL
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
         return false;
@@ -1990,7 +2032,7 @@ function isImage($url) {
     $params = array('http' => array(
         'method' => 'HEAD',
         'timeout' => 5, // 5 second timeout
-        'user_agent' => 'ChivalryEngine ImageValidator',
+        'user_agent' => "ChivalryEngine v{$set['Version_Number']} ImageValidator",
         'follow_location' => 0,  // Don't follow redirects
         'max_redirects' => 0,
         'protocol_version' => 1.1
@@ -2237,26 +2279,76 @@ function armory_dropdown($ddname = "item", $selected = -1)
     return $ret;
 }
 /**
- * Sends a keep alive to TheMasterGeneral.
+ * Sends anonymous usage data with improved security
+ * @param string $url The analytics endpoint
+ * @return void
  */
-function sendData($url='https://www.chivalryisdeadgame.com/chivalry-engine-analytics.php')
+function sendData($url = 'https://www.chivalryisdeadgame.com/chivalry-engine-analytics.php')
 {
     global $set, $_CONFIG;
-    $postdata = "update=1&domain=" . determine_game_urlbase() . "&gamename={$set['WebsiteName']}&dbtype={$_CONFIG['driver']}&version={$set['Version_Number']}";
-    $ch = curl_init();
-    curl_setopt ($ch, CURLOPT_URL, $url);
-    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 Chivarly Engine Keep-Alive v{$set['Version_Number']}");
-    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch, CURLOPT_REFERER, $url);
-    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
-    curl_setopt ($ch, CURLOPT_POST, 1);
-    $result = curl_exec ($ch);
-    if ($result === false) {
-        echo "cURL Error: " . curl_error($ch);
-        echo " (Error Code: " . curl_errno($ch) . ")";
+    
+    try {
+        // Validate URL
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new Exception("Invalid analytics URL");
+        }
+
+        // Only allow HTTPS
+        if (!preg_match('/^https:\/\//i', $url)) {
+            throw new Exception("Analytics URL must use HTTPS");
+        }
+        
+        // Prepare and validate data
+        $data = array(
+            'update' => '1',
+            'domain' => determine_game_urlbase(),
+            'gamename' => isset($set['WebsiteName']) ? $set['WebsiteName'] : '',
+            'dbtype' => isset($_CONFIG['driver']) ? $_CONFIG['driver'] : '',
+            'version' => isset($set['Version_Number']) ? $set['Version_Number'] : ''
+        );
+        
+        // URL encode all values
+        $postdata = http_build_query($data, '', '&', PHP_QUERY_RFC3986);
+        
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $postdata,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_USERAGENT => "Mozilla/5.0 Chivalry Engine Keep-Alive v{$set['Version_Number']}",
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_MAXREDIRS => 0,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+            CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/x-www-form-urlencoded',
+                'X-Requested-With: XMLHttpRequest'
+            )
+        );
+        
+        curl_setopt_array($ch, $options);
+        
+        $result = curl_exec($ch);
+        
+        if ($result === false) {
+            throw new Exception("CURL Error: " . curl_error($ch));
+        }
+        
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpCode !== 200) {
+            throw new Exception("HTTP Error: Received code " . $httpCode);
+        }
+        
+    } catch (Exception $e) {
+        error_log("Analytics error: " . $e->getMessage());
+    } finally {
+        if (isset($ch)) {
+            curl_close($ch);
+        }
     }
-    curl_close($ch);
 }
