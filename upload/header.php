@@ -27,7 +27,7 @@ class headers
                 <meta property="og:description" content="<?php echo $set['Website_Description']; ?>"/>
                 <meta property="og:image" content=""/>
                 <link rel="shortcut icon" href="" type="image/x-icon"/>
-                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
                 <meta name="theme-color" content="#e7e7e7">
                 <meta name="author" content="<?php echo $set['WebsiteOwner']; ?>">
                 <?php echo "<title>{$set['WebsiteName']}</title>"; ?>
@@ -44,65 +44,79 @@ class headers
         <body>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
-                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="CENGINENav">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="explore.php"><?php echo "Explore"; ?></a>
-                    </li>
-                </ul>
-                <div class="my-2 my-lg-0">
-                    <ul class="navbar-nav mr-auto">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.php"><?php echo $set['WebsiteName']; ?></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#CENGINENav"
+                        aria-controls="CENGINENav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="CENGINENav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link"
-                               href="inbox.php"><?php echo "Inbox <span class='badge badge-pill badge-primary'>{$ir['mail']}</span>"; ?></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               href="notifications.php"><?php echo "Notifications <span class='badge badge-pill badge-primary'>{$ir['notifications']}</span>"; ?></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="inventory.php"><?php echo "Inventory"; ?></a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <?php
-                                //User has a display picture, lets show it!
-                                if ($ir['display_pic']) {
-                                    echo "<img src='{$ir['display_pic']}' width='24' height='24'>";
-                                }
-                                echo " Hello, {$ir['username']}!";
-                                ?>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>"><i
-                                        class="fa fa-fw fa-user"></i> <?php echo "Profile"; ?></a>
-                                <a class="dropdown-item" href="preferences.php?action=menu"><i
-                                        class="fa fa-fw fa-gear"></i><?php echo "Preferences"; ?></a>
-                                <?php
-                                //User is a staff member, so lets show the panel's link.
-                                if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
-                                    ?>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="staff/index.php"><i
-                                            class="fa fa-fw fa fa-terminal"></i> <?php echo "Staff Panel"; ?></a>
-                                <?php
-                                }
-                                ?>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="gamerules.php"><i
-                                        class="fa fa-fw fa-server"></i> <?php echo "Game Rules"; ?></a>
-                                <a class="dropdown-item" href="logout.php"><i
-                                        class="fa fa-fw fa-power-off"></i> <?php echo "Logout"; ?></a>
-                            </div>
+                            <a class="nav-link" href="explore.php"><?php echo "Explore"; ?></a>
                         </li>
                     </ul>
+                    <div class="d-flex">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="inbox.php">
+                                    <?php echo "Inbox <span class='badge bg-primary rounded-pill'>{$ir['mail']}</span>"; ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="notifications.php">
+                                    <?php echo "Notifications <span class='badge bg-primary rounded-pill'>{$ir['notifications']}</span>"; ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="inventory.php"><?php echo "Inventory"; ?></a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <?php
+                                    if ($ir['display_pic']) {
+                                        echo "<img src='{$ir['display_pic']}' width='24' height='24'>";
+                                    }
+                                    echo " Hello, {$ir['username']}!";
+                                    ?>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="profile.php?user=<?php echo "{$ir['userid']}"; ?>">
+                                            <i class="fa fa-user"></i> <?php echo "Profile"; ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="preferences.php?action=menu">
+                                            <i class="fa fa-gear"></i> <?php echo "Preferences"; ?>
+                                        </a>
+                                    </li>
+                                    <?php
+                                    if (in_array($ir['user_level'], array('Admin', 'Forum Moderator', 'Web Developer', 'Assistant'))) {
+                                        echo '<li><hr class="dropdown-divider"></li>';
+                                        echo '<li>
+                                            <a class="dropdown-item" href="staff/index.php">
+                                                <i class="fa fa-terminal"></i> Staff Panel
+                                            </a>
+                                          </li>';
+                                    }
+                                    ?>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="gamerules.php">
+                                            <i class="fa fa-server"></i> <?php echo "Game Rules"; ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="logout.php">
+                                            <i class="fa fa-power-off"></i> <?php echo "Logout"; ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -277,18 +291,16 @@ class headers
         <!-- /.container -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
         <link rel="stylesheet" href="css/game.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <!-- jQuery Version 3.3.1 -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
         <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
-
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Removed bootstrap-hover-tabs as it's not needed in Bootstrap 5 -->
         <!-- Other JavaScript -->
         <script src="js/game.js"></script>
         <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-        <script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
         </body>
         <footer>
             <p>
