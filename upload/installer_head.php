@@ -19,13 +19,13 @@ ob_start();
 			<center>
 			<meta charset="utf-8">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge">
-			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<title>Chivalry Engine Installer</title>
 			<!-- CSS -->
-			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 			<meta name="theme-color" content="#e7e7e7">
 		</head>
 		<body>
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-12 text-center">
+					<div class="col-12 text-center">

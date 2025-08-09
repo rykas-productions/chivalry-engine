@@ -15,24 +15,19 @@ if (!defined('MONO_ON'))
 		</div>
 	</div>
 </div>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css">
-<link rel="stylesheet" href="css/game.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<!-- jQuery Version 3.2.1 -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Other JavaScript -->
+<!-- Custom JavaScript -->
 <script src="js/game.js"></script>
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-<script src="https://cdn.rawgit.com/tonystar/bootstrap-hover-tabs/v3.1.1/bootstrap-hover-tabs.js" async defer></script>
+
 </body>
-<footer>
+<footer class="mt-4">
     <p>
-        <br />
         <?php
         echo "<hr />
 					Time is now " . date('F j, Y') . " " . date('g:i:s a') . "<br />

@@ -210,7 +210,7 @@ function config()
     		<tr>
     			<th>Database Driver</td>
     			<td>
-    				<select name='driver' class='form-control' type='dropdown'>
+    				<select name='driver' class='form-select' type='dropdown'>
        ";
     if (function_exists('mysqli_connect'))
     {
@@ -235,14 +235,14 @@ function config()
     		<tr>
     			<th>
     				Hostname<br />
-    				<small>This is usually localhost</small>
+    				<small class='text-muted'>This is usually localhost</small>
     			</th>
     			<td><input type='text' name='hostname' class='form-control' value='localhost' required='1' /></td>
     		</tr>
     		<tr>
     			<th>
     				Username<br />
-    				<small>The user must be able to use the database</small>
+    				<small class='text-muted'>The user must be able to use the database</small>
     			</th>
     			<td><input type='text' name='username' class='form-control' required='1' /></td>
     		</tr>
@@ -253,17 +253,17 @@ function config()
     		<tr>
     			<th>
     				Database Name<br />
-    				<small>The database should not have any other software using it.</small>
+    				<small class='text-muted'>The database should not have any other software using it.</small>
     			</th>
     			<td><input type='text' name='database' class='form-control' required='1' value='' /></td>
     		</tr>
     		<tr>
     			<th>
     				Send Install Info?<br />
-    				<small>Just your domain name, codebase version, install date, game name and database type.</small>
+    				<small class='text-muted'>Just your domain name, codebase version, install date, game name and database type.</small>
     			</th>
     			<td>
-    				<select name='analytics' class='form-control' required='1' type='dropdown'>
+    				<select name='analytics' class='form-select' required='1' type='dropdown'>
     					<option value='true'>True</option>
     					<option value='false'>False</option>
     				</select>
@@ -279,28 +279,28 @@ function config()
     		<tr>
     			<th>
     				Game Owner<br />
-    				<small>This can be your nick, real name, or a company</small>
+    				<small class='text-muted'>This can be your nick, real name, or a company</small>
     			</th>
     			<td><input type='text' name='game_owner' class='form-control' required='1' /></td>
     		</tr>
     		<tr>
     			<th>
     				Game Description<br />
-    				<small>This is shown on the login page.</small>
+    				<small class='text-muted'>This is shown on the login page.</small>
     			</th>
     			<td><textarea rows='6' cols='40' name='game_description' class='form-control' required='1'></textarea></td>
     		</tr>
     		<tr>
     			<th>
     				PayPal Address<br />
-    				<small>This is where the payments for game DPs go.  Must be at least Premier.</small>
+    				<small class='text-muted'>This is where the payments for game DPs go. Must be at least Premier.</small>
     			</th>
     			<td><input type='email' name='paypal' class='form-control' required='1' /></td>
     		</tr>
 			<tr>
     			<th>
     				Password Cost<br />
-    				<small>How much resources should you allocate towards generating a user's password?<br /> 
+    				<small class='text-muted'>How much resources should you allocate towards generating a user's password?<br /> 
 					Benchmark your server <a href='password_benchmark.php'>here</a>.</small>
     			</th>
     			<td><input type='number' class='form-control' value='10' required='1' min='5' max='15' name='password_effort'></td>
@@ -308,28 +308,28 @@ function config()
 			<tr>
     			<th>
     				Fraudguard IO Username<br />
-    				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
+    				<small class='text-muted'><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
     			</th>
     			<td><input type='text' name='fgun' class='form-control' required='1' /></td>
     		</tr>
 			<tr>
     			<th>
     				Fraudguard IO Password<br />
-    				<small><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
+    				<small class='text-muted'><a href='https://fraudguard.io/'>https://fraudguard.io/</a></small>
     			</th>
     			<td><input type='password' name='fgpw' class='form-control' required='1' /></td>
     		</tr>
 			<tr>
     			<th>
     				ReCaptcha Public Key<br />
-    				<small><a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a></small>
+    				<small class='text-muted'><a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a></small>
     			</th>
     			<td><input type='text' name='recappub' class='form-control' required='1' /></td>
     		</tr>
 			<tr>
     			<th>
     				ReCaptcha Private Key<br />
-    				<small><a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a></small>
+    				<small class='text-muted'><a href='https://www.google.com/recaptcha/admin'>https://www.google.com/recaptcha/admin</a></small>
     			</th>
     			<td><input type='password' name='recappriv' class='form-control' required='1' /></td>
     		</tr>
@@ -355,7 +355,7 @@ function config()
     		<tr>
     			<th>Gender</th>
     			<td>
-    				<select name='gender' class='form-control' required='1' type='dropdown'>
+    				<select name='gender' class='form-select' required='1' type='dropdown'>
     					<option value='Male'>Male</option>
     					<option value='Female'>Female</option>
     				</select>
@@ -364,7 +364,7 @@ function config()
 			<tr>
     			<th>Class</th>
     			<td>
-    				<select name='class' class='form-control' required='1' type='dropdown'>
+    				<select name='class' class='form-select' required='1' type='dropdown'>
     					<option value='Warrior'>Warrior</option>
     					<option value='Rogue'>Rogue</option>
 						<option value='Defender'>Defender</option>
@@ -372,7 +372,7 @@ function config()
     			</td>
     		</tr>
     		<tr>
-    			<td colspan='2' align='center'>
+    			<td colspan='2' class='text-center'>
     				<input type='submit' value='Install' class='btn btn-primary' />
     			</td>
     		</tr>
