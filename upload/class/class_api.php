@@ -34,7 +34,7 @@ class api
      */
     function SystemReturnAPIVersion(): string
     {
-        return "24.4.1";    //Last Updated 4/29/2024
+        return "25.8.1";    //Last Updated 08/09/2025
     }
 
     /**
