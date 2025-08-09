@@ -121,7 +121,7 @@ class api
     function UserTakeCurrency($user, $type, $quantity)
     {
         global $db;
-        $acceptableType = array("primary","secondary");
+        $acceptableType = array("primary", "secondary");
         if (!in_array($type, $acceptableType))
             trigger_error("Unacceptable currency type '{$type}'.");
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
@@ -148,31 +148,28 @@ class api
     function UserEquippedItem($user, $slot, $itemid = -1)
     {
         global $db;
-        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-        $slot = $db->escape(stripslashes(strtolower($slot)));
-        if ($slot == 'primary' || $slot == 'secondary' || $slot == 'armor') {
-            //Any item equipped
-            if ($itemid == -1) {
-                $equipped = $db->fetch_single($db->query("/*qc=on*/SELECT `equip_{$slot}` FROM `users` WHERE `userid` = {$user}"));
-                if ($equipped > 0) {
-                    return true;
-                }
-            } //Specific item equipped
-            elseif ($itemid > 0) {
-                $itemid = (isset($itemid) && is_numeric($itemid)) ? abs(intval($itemid)) : 0;
-                $equipped = $db->fetch_single($db->query("/*qc=on*/SELECT `equip_{$slot}` FROM `users` WHERE `userid` = {$user}"));
-                if ($equipped == $itemid) {
-                    return true;
-                }
-            } //Nothing equipped
-            elseif ($itemid == 0) {
-                $equipped = $db->fetch_single($db->query("/*qc=on*/SELECT `equip_{$slot}` FROM `users` WHERE `userid` = {$user}"));
-                if ($equipped == 0) {
-                    return true;
-                }
-            }
+
+        $user = (is_numeric($user)) ? abs((int)$user) : 0;
+        $slot = strtolower(trim($slot));
+        $allowedSlots = ['primary', 'secondary', 'armor'];
+
+        if ($user <= 0 || !in_array($slot, $allowedSlots)) {
+            return false;
+        }
+
+        $equipped = $db->fetch_single(
+            $db->query("/*qc=on*/SELECT `equip_{$slot}` FROM `users` WHERE `userid` = {$user}")
+        );
+
+        if ($itemid === -1) {
+            return ($equipped > 0);
+        } elseif ($itemid === 0) {
+            return ($equipped == 0);
+        } else {
+            return ($equipped == abs((int)$itemid));
         }
     }
+
 
     /*
         Tests the inputted user to see if they're in the dungeon or infirmary
@@ -263,7 +260,7 @@ class api
             $db->free_result($userexist);
             $userexist = $db->query("/*qc=on*/SELECT `userid` FROM `users` WHERE `userid` =  {$from}");
             if ($db->num_rows($userexist) > 0) {
-                $msg=encrypt_message($msg,$from,$user);
+                $msg = encrypt_message($msg, $from, $user);
                 $db->query("INSERT INTO `mail`
 				(`mail_to`, `mail_from`, `mail_status`, `mail_subject`, `mail_text`, `mail_time`) 
 				VALUES 
@@ -322,7 +319,8 @@ class api
                     }
                 } else {
                     if ($level == 'member') {
-                        if ($ulevel == 'Member' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
+                        if (
+                            $ulevel == 'Member' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
                             || $ulevel == 'Web Developer' || $ulevel == 'Admin'
                         ) {
                             return true;
@@ -340,7 +338,8 @@ class api
                             return true;
                         }
                     } elseif ($level == 'npc') {
-                        if ($ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
+                        if (
+                            $ulevel == 'Member' || $ulevel == 'NPC' || $ulevel == 'Forum Moderator' || $ulevel == 'Assistant'
                             || $ulevel == 'Web Developer' || $ulevel == 'Admin'
                         ) {
                             return true;
@@ -366,22 +365,19 @@ class api
     function UserHasItem($user, $item, $qty = 1)
     {
         global $db;
-        $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
-        $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
-        $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
-        if ($user > 0 || $item > 0 || $qty > 0) {
-            $i = $db->fetch_single($db->query("/*qc=on*/SELECT `inv_qty` FROM `inventory` WHERE `inv_userid` = {$user} && `inv_itemid` = {$item}"));
-            if ($qty == 1) {
-                if ($i >= 1) {
-                    return true;
-                }
-            } else {
-                if ($i >= $qty) {
-                    return true;
-                }
-            }
+
+        $user = (is_numeric($user)) ? abs((int)$user) : 0;
+        $item = (is_numeric($item)) ? abs((int)$item) : 0;
+        $qty  = (is_numeric($qty))  ? abs((int)$qty)  : 1;
+
+        if ($user > 0 && $item > 0 && $qty > 0) {
+            $i = $db->fetch_single($db->query("/*qc=on*/SELECT `inv_qty` FROM `inventory` WHERE `inv_userid` = {$user} AND `inv_itemid` = {$item}"));
+            return ($i >= $qty);
         }
+
+        return false;
     }
+
 
     /*
         Returns the specified user's stat, optionally as a percent.
@@ -435,12 +431,12 @@ class api
                     $number = ($change / 100) * $maxstat;
                     $db->query("UPDATE users SET `{$stat}`=`{$stat}`+{$number} WHERE `{$stat}` < `max{$stat}` AND `userid` = {$user}");
                     if ($fixMin)
-						$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+                        $db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
                     return true;
                 } else {
                     $db->query("UPDATE users SET `{$stat}` = `{$stat}` + {$change} WHERE `userid` = {$user}");
-					if ($fixMin)
-						$db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
+                    if ($fixMin)
+                        $db->query("UPDATE users SET `{$stat}` = `max{$stat}` WHERE `{$stat}` > `max{$stat}`");
                     return true;
                 }
             } elseif ($change == 0) {
@@ -453,12 +449,12 @@ class api
                     $number = ($change / 100) * $maxstat;
                     $db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$number} WHERE `userid` = {$user}");
                     if ($fixMin)
-						$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
+                        $db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
                     return true;
                 } else {
                     $db->query("UPDATE users SET `{$stat}` = `{$stat}` - {$change} WHERE `userid` = {$user}");
                     if ($fixMin)
-						$db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
+                        $db->query("UPDATE users SET `{$stat}` = 0 WHERE `{$stat}` < 0");
                     return true;
                 }
             }
@@ -610,9 +606,9 @@ class api
             return $number + ($number * ($tax / 100));
         else
             if (getUserSkill($userid, 18) == 0)
-                return $number + ($number * ($tax / 100));
-            else
-                return $number;
+            return $number + ($number * ($tax / 100));
+        else
+            return $number;
     }
 
     /*
@@ -710,8 +706,15 @@ class api
         global $db, $api;
         $user = (isset($user) && is_numeric($user)) ? abs(intval($user)) : 0;
         $stat = $db->escape(stripslashes(strtolower($stat)));
-        if (in_array($stat, array('password', 'email', 'lastip', 'loginip',
-            'registerip', 'personal_notes', 'staff_notes'))) {
+        if (in_array($stat, array(
+            'password',
+            'email',
+            'lastip',
+            'loginip',
+            'registerip',
+            'personal_notes',
+            'staff_notes'
+        ))) {
             trigger_error("You do not have permission to set the {$stat} on this user.", E_ERROR);
         } else {
             if (is_int($state)) {
@@ -793,18 +796,16 @@ class api
         $udq = $db->query("/*qc=on*/SELECT * FROM `users` WHERE `userid` = {$userid}");
         $userdata = $db->fetch_row($udq);
         $gain = 0;
-		$reset = $db->fetch_single($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$userid}"));
-		$optTraining = getUserSkill($userid, 8);
+        $reset = $db->fetch_single($db->query("SELECT `reset` FROM `user_settings` WHERE `userid` = {$userid}"));
+        $optTraining = getUserSkill($userid, 8);
         //Do while value is less than the user's energy input, then add one to value.
-        for ($i = 0; $i < $times; $i++) 
-        {
+        for ($i = 0; $i < $times; $i++) {
             $gain += Random(1, 4) / Random(600, 1000) * Random(500, 1000) * (($userdata['will'] + 25) / 175);
             //Skill optimized training
             if ($optTraining == 0)
                 $userdata['will'] -= Random(1, 3);
-            else
-            {
-                if (Random(1,100) > ($optTraining * getSkillBonus(8)))
+            else {
+                if (Random(1, 100) > ($optTraining * getSkillBonus(8)))
                     $userdata['will'] -= Random(1, 3);
             }
             //User's will ends up negative, set to zero.
@@ -812,8 +813,8 @@ class api
                 $userdata['will'] = 0;
             }
         }
-		$modifier=((getUserSkill($userid,2)*getSkillBonus(2))/100);
-		$nmodifier=((getUserSkill($userid,2)*getSkillBonus(2))/100);
+        $modifier = ((getUserSkill($userid, 2) * getSkillBonus(2)) / 100);
+        $nmodifier = ((getUserSkill($userid, 2) * getSkillBonus(2)) / 100);
         //User's class is warrior
         if ($userdata['class'] == 'Warrior') {
             //Trained stat is strength, double its output.
@@ -851,18 +852,16 @@ class api
         $gain *= $multiplier;
         //Round the gained stats.
         $gain = floor($gain);
-		
-		//Lucked out for 5% more stats?
-		if (calculateLuck($userid))
-		{
-			$gain = $gain + ($gain*0.07);
-		}
-		
-		if ($reset > 1)
-		{
-			$gain = $gain + ($gain * (0.1 * $reset)); 
-		}
-		
+
+        //Lucked out for 5% more stats?
+        if (calculateLuck($userid)) {
+            $gain = $gain + ($gain * 0.07);
+        }
+
+        if ($reset > 1) {
+            $gain = $gain + ($gain * (0.1 * $reset));
+        }
+
         //Update the user's stats.
         $db->query("UPDATE `userstats`
                     SET `{$stat}` = `{$stat}` + {$gain}
@@ -893,10 +892,10 @@ class api
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-type: text/html; charset=iso-8859-1';
         $headers[] = "From: Chivalry is Dead <{$from}>";
-		$htmlhdr="<img src='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo512.png' width='64' height='64'><br /><h4>Chivalry is Dead</h4><hr />";
-		$htmlftr="<hr /> -CID Admin, Chivalry is Dead Developer.<br /><a href='https://www.chivalryisdeadgame.com/'>https://www.chivalryisdeadgame.com/</a>";
-		$realBody= $htmlhdr . $body . $htmlftr;
-		return mail($to, $subject, $realBody, implode("\r\n", $headers));
+        $htmlhdr = "<img src='https://cdn.chivalryisdeadgame.com/assets/img/logo/logo512.png' width='64' height='64'><br /><h4>Chivalry is Dead</h4><hr />";
+        $htmlftr = "<hr /> -CID Admin, Chivalry is Dead Developer.<br /><a href='https://www.chivalryisdeadgame.com/'>https://www.chivalryisdeadgame.com/</a>";
+        $realBody = $htmlhdr . $body . $htmlftr;
+        return mail($to, $subject, $realBody, implode("\r\n", $headers));
     }
 
     /*
@@ -963,20 +962,20 @@ class api
         }
         $db->free_result($q);
     }
-	function UserBlocked($blocked,$blocker)
-	{
-		global $db;
-		$blocked = (isset($blocked) && is_numeric($blocked)) ? abs(intval($blocked)) : 0;
-		$blocker = (isset($blocker) && is_numeric($blocker)) ? abs(intval($blocker)) : 0;
-		$q=$db->query("/*qc=on*/SELECT `block_id` FROM `blocklist` WHERE `blocked` = {$blocked} AND `blocker` = {$blocker}");
-		if ($db->num_rows($q) > 0)
-			return true;
-	}
-	
-	function GuildHasItem($guild, $item, $qty = 1)
+    function UserBlocked($blocked, $blocker)
     {
         global $db;
-		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $blocked = (isset($blocked) && is_numeric($blocked)) ? abs(intval($blocked)) : 0;
+        $blocker = (isset($blocker) && is_numeric($blocker)) ? abs(intval($blocker)) : 0;
+        $q = $db->query("/*qc=on*/SELECT `block_id` FROM `blocklist` WHERE `blocked` = {$blocked} AND `blocker` = {$blocker}");
+        if ($db->num_rows($q) > 0)
+            return true;
+    }
+
+    function GuildHasItem($guild, $item, $qty = 1)
+    {
+        global $db;
+        $guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
         $item = (isset($item) && is_numeric($item)) ? abs(intval($item)) : 0;
         $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
         if ($guild > 0 || $item > 0 || $qty > 0) {
@@ -992,90 +991,82 @@ class api
             }
         }
     }
-	function GuildHasXP($guild, $xp)
+    function GuildHasXP($guild, $xp)
     {
         global $db;
-		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
-		$xp = (isset($xp) && is_numeric($xp)) ? abs(intval($xp)) : 0;
-		if ($guild > 0 || $xp > 0) 
-		{
+        $guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $xp = (isset($xp) && is_numeric($xp)) ? abs(intval($xp)) : 0;
+        if ($guild > 0 || $xp > 0) {
             $i = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_xp` FROM `guild` WHERE `guild_id` = {$guild}"));
-            if ($i >= $xp) 
-            {
+            if ($i >= $xp) {
                 return true;
             }
         }
     }
-	function GuildRemoveXP($guild, $xp)
+    function GuildRemoveXP($guild, $xp)
     {
         global $db;
-		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
         $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` - {$xp} WHERE `guild_id` = {$guild}");
     }
-	function GuildAddXP($guild, $xp)
+    function GuildAddXP($guild, $xp)
     {
         global $db;
-		$guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
+        $guild = (isset($guild) && is_numeric($guild)) ? abs(intval($guild)) : 0;
         $qty = (isset($qty) && is_numeric($qty)) ? abs(intval($qty)) : 0;
         $db->query("UPDATE `guild` SET `guild_xp` = `guild_xp` + {$xp} WHERE `guild_id` = {$guild}");
     }
-	function GuildHasCurrency($guild, $type, $minimum)
+    function GuildHasCurrency($guild, $type, $minimum)
     {
         global $db;
         $guild = (isset($user) && is_numeric($guild)) ? abs(intval($guild)) : 0;
         $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $userexist = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$guild}"));
-        if ($userexist) 
-		{
-            if ($type == 'primary' || $type == 'secondary') 
-			{
-				if ($type == 'primary')
-					$typee = 'prim';
-				else
-					$typee = 'sec';
+        if ($userexist) {
+            if ($type == 'primary' || $type == 'secondary') {
+                if ($type == 'primary')
+                    $typee = 'prim';
+                else
+                    $typee = 'sec';
                 $UserMoney = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_{$typee}curr` FROM `guild` WHERE `guild_id` = {$guild}"));
-                if ($UserMoney >= $minimum) 
+                if ($UserMoney >= $minimum)
                     return true;
             }
         }
     }
-	function GuildGiveCurrency($guild, $type, $quantity)
+    function GuildGiveCurrency($guild, $type, $quantity)
     {
         global $db;
         $guild = (isset($user) && is_numeric($guild)) ? abs(intval($guild)) : 0;
         $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $userexist = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$guild}"));
-        if ($userexist) 
-		{
-            if ($type == 'primary' || $type == 'secondary') 
-			{
-				if ($type == 'primary')
-					$type = 'prim';
-				else
-					$type = 'sec';
+        if ($userexist) {
+            if ($type == 'primary' || $type == 'secondary') {
+                if ($type == 'primary')
+                    $type = 'prim';
+                else
+                    $type = 'sec';
                 $db->query("UPDATE `guild` SET `guild_{$type}curr` = `guild_{$type}curr` + {$quantity} WHERE `guild_id` = {$guild}");
                 return true;
             }
         }
     }
-	function GuildRemoveCurrency($guild, $type, $quantity)
+    function GuildRemoveCurrency($guild, $type, $quantity)
     {
         global $db;
         $guild = (isset($user) && is_numeric($guild)) ? abs(intval($guild)) : 0;
         $minimum = (isset($minimum) && is_numeric($minimum)) ? abs(intval($minimum)) : 0;
         $type = $db->escape(stripslashes(strtolower($type)));
         $userexist = $db->fetch_single($db->query("/*qc=on*/SELECT `guild_id` FROM `guild` WHERE `guild_id` = {$guild}"));
-        if ($userexist) 
-		{
-            if ($type == 'primary' || $type == 'secondary') 
-			{
-				if ($type == 'primary')
-					$type = 'prim';
-				else
-					$type = 'sec';
+        if ($userexist) {
+            if ($type == 'primary' || $type == 'secondary') {
+                if ($type == 'primary')
+                    $type = 'prim';
+                else
+                    $type = 'sec';
                 $db->query("UPDATE `guild` SET `guild_{$type}curr` = `guild_{$type}curr` - {$quantity} WHERE `guild_id` = {$guild}");
                 return true;
             }
