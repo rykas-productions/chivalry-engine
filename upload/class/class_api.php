@@ -14,16 +14,16 @@ if (!defined('MONO_ON')) {
 class api
 {
     /** @var array Acceptable currency types */
-    private array $acceptableCurrencyTypes = ['primary', 'secondary'];
+    var $acceptableCurrencyTypes = ['primary', 'secondary'];
 
     /** @var array Acceptable equipment slots */
-    private array $acceptableEquipSlots = ['primary', 'secondary', 'armor'];
+    var $acceptableEquipSlots = ['primary', 'secondary', 'armor'];
 
     /** @var array Acceptable status locations */
-    private array $acceptableStatusLocations = ['infirmary', 'dungeon'];
+    var $acceptableStatusLocations = ['infirmary', 'dungeon'];
 
     /** @var array Protected user fields that cannot be modified */
-    private array $protectedUserFields = [
+    var $protectedUserFields = [
         'password', 'email', 'lastip', 'loginip',
         'registerip', 'personal_notes', 'staff_notes'
     ];
