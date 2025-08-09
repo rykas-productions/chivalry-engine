@@ -276,7 +276,12 @@ if ($_GET['user'] == 21)
 		alert("info","","You have hunted " . shortNumberParse($turkeyKills) . " turkey(s) this year.",false);
 	}
 }
-echo "<h3>{$user_name}'s Profile</h3>
+echo "<h3></h3>
+<div class='card'>
+    <div class='card-header'>
+        {$user_name}'s Profile
+    </div>
+    <div class='card-body'>
 <div class='row'>
 	<div class='col-auto col-lg-6 col-xxxl-4'>
 		<div class='card {$cardColor}'>
@@ -752,6 +757,9 @@ echo "<h3>{$user_name}'s Profile</h3>
 		}
 	echo "</div>
 </div>";
+	
+//new end
+echo "</div></div>";
 $h->endpage();
 function formatMasteryRank($rank)
 {

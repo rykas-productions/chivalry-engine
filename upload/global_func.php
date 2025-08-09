@@ -892,26 +892,40 @@ function staffnotes_entry($user,$text,$whodo=-1)
  */
 function parseImage($url)
 {
-	if (strpos($url, 'https://') !== false)
-		return $url;
-	else
-	{
-		$url=removeFrontTag($url);
-		return "https://images.weserv.nl/?url={$url}&errorredirect=ssl:{$url}";
-	}
+    // If already HTTPS, just return
+    if (strpos($url, 'https://') === 0) {
+        return $url;
+    }
+    
+    $host = parse_url($url, PHP_URL_HOST);
+    
+    // If host is an IP
+    if (filter_var($host, FILTER_VALIDATE_IP)) {
+        return "/image-proxy.php?src=" . urlencode($url);
+    }
+    
+    // If host is a private network name/IP (like myserver.local), proxy it too
+    $privateRanges = [
+        '10.', '192.168.', '172.16.', '172.17.', '172.18.', '172.19.', '172.20.',
+        '172.21.', '172.22.', '172.23.', '172.24.', '172.25.', '172.26.',
+        '172.27.', '172.28.', '172.29.', '172.30.', '172.31.'
+    ];
+    foreach ($privateRanges as $range) {
+        if (strpos($host, $range) === 0) {
+            return "/image-proxy.php?src=" . urlencode($url);
+        }
+    }
+    
+    // Otherwise, send to weserv
+    $cleanUrl = removeFrontTag($url);
+    return "https://images.weserv.nl/?url={$cleanUrl}&errorredirect=ssl:{$cleanUrl}";
 }
 
-/**
- * Internal function to remove the front tags on the URL. (IE: www;htttp;https;etc.)
- * @param string $url URL to remove from tags from.
- * @return string URL without front tags.
- */
 function removeFrontTag($url)
 {
-	$url=str_replace("http://","",$url);
-	$url=str_replace("https://","",$url);
-	$url=str_replace("www.","",$url);
-	return $url;
+    $url = preg_replace('#^https?://#', '', $url);
+    $url = preg_replace('#^www\.#', '', $url);
+    return $url;
 }
 
 /**

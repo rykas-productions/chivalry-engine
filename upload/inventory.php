@@ -8,6 +8,7 @@
 	Website: 	https://github.com/MasterGeneral156/chivalry-engine
 */
 require("globals.php");
+$tresder = (Random(100, 999));
 $itemActions = [
     28 => [["bomb.php?action=small", "Set Bomb"]],
     33 => [["bor.php?tresde={$tresder}", "Open"]],
@@ -40,7 +41,7 @@ $itemActions = [
     263 => [["vipitem.php?item=willstim", "Convert"]],
     264 => [["2019halloween.php?action=ticket", "Scratch"]],
     268 => [["scratchticket.php?action=2ndyearann", "Scratch"]],
-    320 => [["goditem.php", "Eat Potato"]],
+    320 => [["goditem.php", "Use"]],
     352 => [["scratchticket.php?action=2020bang", "Scratch"]],
     364 => [["vipitem.php?item=autobum", "Redeem"]],
     376 => [["2020halloween.php?action=ticket", "Scratch"]],
@@ -50,13 +51,11 @@ $itemActions = [
     449 => [["2022halloween.php?action=ticket", "Scratch"]],
     514 => [["scratchticket.php?action=24halloween", "Scratch"]]
     // ... Add more here
-    ];
+];
 
-$potionexclusion=array(17,123,68,138,95,96,148,177,227,286,285,258,287);
-if (isset($_POST['itemUse']))
-{
-    if (!empty($_POST['itemUse']))
-    {
+$potionexclusion = array(17, 123, 68, 138, 95, 96, 148, 177, 227, 286, 285, 258, 287);
+if (isset($_POST['itemUse'])) {
+    if (!empty($_POST['itemUse'])) {
         $redir = $db->escape($_POST['itemUse']);
         header("Location: {$redir}");
     }
@@ -174,10 +173,9 @@ echo "<div class='row'>
                                 </div>
                             </div>
                         </div>";
-                        $trinkq=$db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `itemid` > 0");
-                        while ($r=$db->fetch_row($trinkq))
-                        {
-                            echo "
+$trinkq = $db->query("SELECT * FROM `user_equips` WHERE `userid` = {$userid} AND `itemid` > 0");
+while ($r = $db->fetch_row($trinkq)) {
+    echo "
                             <div class='col-12'>
                             <div class='row'>
                                 <div class='col-12'>
@@ -196,15 +194,15 @@ echo "<div class='row'>
                                 </div>
                             </div>
                         </div>";
-                        }
-                                    
-                    echo"
+}
+
+echo "
                     </div>
                 </div>
             </div>
         </div>
     </div>";
-            alert('secondary', "", "<h4><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h4>", false);
+alert('secondary', "", "<h4><i class='fas fa-fw fa-briefcase'></i> Your Inventory</h4>", false);
 $inv =
     $db->query(
         "/*qc=on*/SELECT `iv`.`inv_qty`, `iv`.`inv_id`,
@@ -216,7 +214,8 @@ $inv =
                  ON `i`.`itmtype` = `it`.`itmtypeid`
                  WHERE `iv`.`inv_userid` = {$userid}
                  AND `iv`.`inv_qty` > 0
-                 ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC");
+                 ORDER BY `i`.`itmtype` ASC, `i`.`itmname` ASC"
+    );
 $lt = "";
 echo "
 <div class='accordion' id='inventoryAccordian'>";
@@ -225,18 +224,18 @@ while ($i = $db->fetch_row($inv)) {
         $lt = $i['itmtypename'];
         echo "<div class='card'><div class='card-body'><h4 class='mb-0'>{$lt}</h4></div></div>";
     }
-    
+
     $i['itmdesc'] = htmlentities($i['itmdesc'], ENT_QUOTES);
     $icon = ($ir['icons'] == 1) ? returnIcon($i['itmid'], 2) : "";
     $i['inv_qty_value'] = $i['inv_qty'] * $i['itmsellprice'];
     $total = returnTotalItemCount($i['itmid']);
     $itemUse = getItemUses($i, $tresder, $ir, $potionexclusion);
-    
+
     $options = "";
     foreach ($itemUse as $v) {
         $options .= "<option value='{$v[0]}'>{$v[1]}</option>";
     }
-    
+
     // Echo the block here (using HEREDOC or output buffer for maintainability)
     echo "
     <div class='card'>
@@ -269,7 +268,7 @@ while ($i = $db->fetch_row($inv)) {
                     <div class='col text-left'>
                         <b><a href='iteminfo.php?ID={$i['itmid']}'>{$i['itmname']}</a></b> is a {$lt} item.<br />
                         <i>{$i['itmdesc']}</i>";
-    
+
     // Effects
     $start = 0;
     for ($enum = 1; $enum <= 3; $enum++) {
@@ -284,7 +283,7 @@ while ($i = $db->fetch_row($inv)) {
             echo "{$einfo['dir']}" . number_format($einfo['inc_amount']) . "{$einfo['inc_type']} " . statParser($einfo['stat']) . ". ";
         }
     }
-    
+
     echo "
                     </div>
                 </div>
@@ -295,7 +294,7 @@ while ($i = $db->fetch_row($inv)) {
                     <div class='col-6 col-md'><b>Total Value</b><br /><small>{$i['inv_qty_value']} Copper Coins</small></div>
                     <div class='col-6 col-md'><b>Circulating</b><br /><small>{$total}</small></div>
                 </div>";
-    
+
     // Equip stats
     if ($i['weapon'] || $i['ammo'] || $i['armor']) {
         echo "<hr /><div class='row'>";
@@ -304,7 +303,7 @@ while ($i = $db->fetch_row($inv)) {
         if ($i['armor']) echo "<div class='col'><b>Armor</b><br /><small>" . shortNumberParse($i['armor']) . "</small></div>";
         echo "</div>";
     }
-    
+
     echo "</div></div></div>";
 }
 echo "</div><br />
@@ -312,52 +311,54 @@ echo "</div><br />
 $db->free_result($inv);
 $h->endpage();
 
-function getItemUses($i, $tresder, $ir, $potionexclusion) {
+function getItemUses($i, $tresder, $ir, $potionexclusion)
+{
     global $itemActions;
-    
+
     $uses = [];
-    
+
     // Default effect use
     if (($i['effect1_on'] === 'true' || $i['effect2_on'] === 'true' || $i['effect3_on'] === 'true')
         && $i['armor'] == 0 && $i['weapon'] == 0
-        && !in_array($i['itmtypename'], ['Rings', 'Necklaces', 'Pendants', 'Badges'])) {
-            $uses[] = ["itemuse.php?item={$i['inv_id']}", "Use {$i['itmname']}"];
+        && !in_array($i['itmtypename'], ['Rings', 'Necklaces', 'Pendants', 'Badges'])
+    ) {
+        $uses[] = ["itemuse.php?item={$i['inv_id']}", "Use {$i['itmname']}"];
+    }
+
+    // Static mappings
+    if (isset($itemActions[$i['itmid']])) {
+        foreach ($itemActions[$i['itmid']] as $action) {
+            $uses[] = [$action[0], "{$action[1]} {$i['itmname']}"];
         }
-        
-        // Static mappings
-        if (isset($itemActions[$i['itmid']])) {
-            foreach ($itemActions[$i['itmid']] as $action) {
-                $uses[] = [$action[0], "{$action[1]} {$i['itmname']}"];
-            }
-        }
-        
-        // Equip logic
-        if ($i['weapon'] > 0) {
-            $uses[] = ["equip.php?slot=weapon&ID={$i['inv_id']}", "Equip as Weapon"];
-        }
-        if ($i['armor'] > 0) {
-            $uses[] = ["equip.php?slot=armor&ID={$i['inv_id']}", "Equip as Armor"];
-        }
-        if ($i['itmtypename'] === 'Badges') {
-            $uses[] = ["equip.php?slot=badge&ID={$i['inv_id']}", "Equip as Badge"];
-        }
-        if ($i['itmtypename'] === 'Rings') {
-            $uses[] = ["equip.php?slot=ring&ID={$i['inv_id']}", "Equip as Ring"];
-        }
-        if ($i['itmtypename'] === 'Necklaces') {
-            $uses[] = ["equip.php?slot=necklace&ID={$i['inv_id']}", "Equip as Necklace"];
-        }
-        if ($i['itmtypename'] === 'Pendants') {
-            $uses[] = ["equip.php?slot=pendant&ID={$i['inv_id']}", "Equip as Pendant"];
-        }
-        if (in_array($i['itmtypename'], ['Potions', 'Food']) && !in_array($i['itmid'], $potionexclusion)) {
-            $uses[] = ["equip.php?slot=potion&ID={$i['inv_id']}", "Equip as Potion"];
-        }
-        
-        // Always available actions
-        $uses[] = ["itemsend.php?ID={$i['inv_id']}", "Send"];
-        $uses[] = ["itemmarket.php?action=add&ID={$i['itmid']}", "List on Market"];
-        $uses[] = ["itemsell.php?ID={$i['inv_id']}", "Sell"];
-        
-        return $uses;
+    }
+
+    // Equip logic
+    if ($i['weapon'] > 0) {
+        $uses[] = ["equip.php?slot=weapon&ID={$i['inv_id']}", "Equip as Weapon"];
+    }
+    if ($i['armor'] > 0) {
+        $uses[] = ["equip.php?slot=armor&ID={$i['inv_id']}", "Equip as Armor"];
+    }
+    if ($i['itmtypename'] === 'Badges') {
+        $uses[] = ["equip.php?slot=badge&ID={$i['inv_id']}", "Equip as Badge"];
+    }
+    if ($i['itmtypename'] === 'Rings') {
+        $uses[] = ["equip.php?slot=ring&ID={$i['inv_id']}", "Equip as Ring"];
+    }
+    if ($i['itmtypename'] === 'Necklaces') {
+        $uses[] = ["equip.php?slot=necklace&ID={$i['inv_id']}", "Equip as Necklace"];
+    }
+    if ($i['itmtypename'] === 'Pendants') {
+        $uses[] = ["equip.php?slot=pendant&ID={$i['inv_id']}", "Equip as Pendant"];
+    }
+    if (in_array($i['itmtypename'], ['Potions', 'Food']) && !in_array($i['itmid'], $potionexclusion)) {
+        $uses[] = ["equip.php?slot=potion&ID={$i['inv_id']}", "Equip as Potion"];
+    }
+
+    // Always available actions
+    $uses[] = ["itemsend.php?ID={$i['inv_id']}", "Send"];
+    $uses[] = ["itemmarket.php?action=add&ID={$i['itmid']}", "List on Market"];
+    $uses[] = ["itemsell.php?ID={$i['inv_id']}", "Sell"];
+
+    return $uses;
 }

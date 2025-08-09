@@ -11,30 +11,23 @@ function doAutoMiner()
     global $db, $api;
     $q = $db->query("SELECT * FROM `mining_auto`");
     //$api->GameAddNotification(1, "Auto miner tick");
-    while ($r = $db->fetch_row($q))
-    {
-        if (!userHasEffect($r['userid'], effect_drill_jam))
-        {
+    while ($r = $db->fetch_row($q)) {
+        if (!userHasEffect($r['userid'], effect_drill_jam)) {
             $mineinfo = $db->query("/*qc=on*/SELECT * FROM `mining_data` WHERE `mine_id` = {$r['miner_location']}");
             $MSI = $db->fetch_row($mineinfo);
             $MSI['mine_iq'] = calcMineIQ($r['userid'], $r['miner_location']);
             $Rolls = getMineRolls($r['userid'], $MSI['mine_iq']);
-            if ($Rolls <= 2)
-            {
-                $negTime = Random(5,15);
+            if ($Rolls <= 2) {
+                $negTime = Random(5, 15);
                 //negative event
                 $api->GameAddNotification($r['userid'], "One of your powered miners has jammed, and the crews managing your miners have stopped working until they can resolve why the one miner jammed. Should be fixed in about {$negTime} minutes!");
                 userGiveEffect($r['userid'], effect_drill_jam, $negTime * 60);
-            }
-            elseif ($Rolls >= 3 && $Rolls <= 14)
-            {
-                $Pos = Random(1,3);
+            } elseif ($Rolls >= 3 && $Rolls <= 14) {
+                $Pos = Random(1, 3);
                 $dropList = json_decode(getMineDrop($r['miner_location'], $Pos), true);
                 $drops = randMineDropCalc($r['userid'], $r['miner_location'], $Pos);
                 $api->UserGiveItem($r['userid'], $dropList['itemDrop'], $drops);
-            }
-            else
-            {
+            } else {
                 $dropList = json_decode(getMineDrop($r['miner_location'], 4), true);
                 $drops = randMineDropCalc($r['userid'], $r['miner_location'], 4);
                 $api->UserGiveItem($r['userid'], $dropList['itemDrop'], $drops);
@@ -55,7 +48,7 @@ function getMineRolls($userid, $mineIQ)
         $Rolls = Random(2, 10);
     else
         $Rolls = Random(3, 15);
-        return $Rolls;
+    return $Rolls;
 }
 
 function calculateMinePowerCost($userid)
@@ -67,23 +60,23 @@ function calculateMinePowerCost($userid)
         $multiplier /= 0.5;
     $miningLevel = getUserMiningLevel($userid);
     if ($miningLevel < 10)
-        $CostForPower=10;
+        $CostForPower = 10;
     elseif (($miningLevel >= 10) && ($miningLevel < 20))
-        $CostForPower=15;
+        $CostForPower = 15;
     elseif (($miningLevel >= 20) && ($miningLevel < 50))
-        $CostForPower=25;
+        $CostForPower = 25;
     elseif (($miningLevel >= 50) && ($miningLevel < 75))
-        $CostForPower=50;
+        $CostForPower = 50;
     elseif (($miningLevel >= 75) && ($miningLevel < 100))
-        $CostForPower=75;
+        $CostForPower = 75;
     elseif (($miningLevel >= 100) && ($miningLevel < 150))
-        $CostForPower=100;
+        $CostForPower = 100;
     elseif (($miningLevel >= 150) && ($miningLevel < 200))
-        $CostForPower=175;
+        $CostForPower = 175;
     elseif (($miningLevel >= 200) && ($miningLevel < 300))
-        $CostForPower=325;
+        $CostForPower = 325;
     else
-        $CostForPower=500;
+        $CostForPower = 500;
     return $CostForPower * $multiplier;
 }
 
@@ -136,23 +129,21 @@ function randMineDropCalc($userid, $mineID, $dropID)
     global $db;
     $itemMultipler = 1.0;
     if (isHoliday())
-        $itemMultipler+=1.1;
+        $itemMultipler += 1.1;
     if (reachedMonthlyDonationGoal())
-        $itemMultipler+=1.25;
-    if ($dropID < 4)
-    {
+        $itemMultipler += 1.25;
+    if ($dropID < 4) {
         if (hasNecklaceEquipped($userid, 332))
             $itemMultipler += 0.05;
         $drop = json_decode(getMineDrop($mineID, $dropID), true);
         if (calculateLuck($userid))
-            $drops = Random($drop['minDrop']+($drop['minDrop']/4), $drop['maxDrop']+($drop['maxDrop']/4));
+            $drops = Random($drop['minDrop'] + ($drop['minDrop'] / 4), $drop['maxDrop'] + ($drop['maxDrop'] / 4));
         else
             $drops = Random($drop['minDrop'], $drop['maxDrop']);
         $userLevel = $db->fetch_single($db->query("SELECT `level` FROM `users` WHERE `userid` = {$userid}"));
         $drops = round($drops + ($drops * levelMultiplier($userLevel)));
         $drops = $drops * $itemMultipler;
-    }
-    else
+    } else
         $drops = 1 * $itemMultipler;
     return $drops;
 }
@@ -161,11 +152,11 @@ function calcMineXPGains($userid, $mineID, $dropID, $dropCount)
 {
     global $db;
     $xpMultiplier = 1.0;
-    $mineLevel = $db->fetch_single("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$mineID}");
+    $mineLevel = $db->fetch_single($db->query("SELECT `mine_level` FROM `mining_data` WHERE `mine_id` = {$mineID}"));
     if (isHoliday())
-        $xpMultiplier+=1.1;
+        $xpMultiplier += 1.1;
     if (reachedMonthlyDonationGoal())
-        $xpMultiplier+=1.25;
+        $xpMultiplier += 1.25;
     $gainedXP = 0;
     if ($dropID == 1)
         $baseXP = 0.35;
@@ -198,17 +189,17 @@ function mining_levelup()
     global $db, $userid, $MUS, $ir;
     if (!isset($ir['reset']))
         $ir['reset'] = 0;
-        $MUS['xp_needed'] = (round(($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1) * (1 - ($ir['reset'] * 0.1)));
-        if ($MUS['miningxp'] >= $MUS['xp_needed']) {
-            $expu = $MUS['miningxp'] - $MUS['xp_needed'];
-            $MUS['mining_level'] += 1;
-            $MUS['miningxp'] = $expu;
-            $MUS['buyable_power'] += 1;
-            $MUS['xp_needed'] =
+    $MUS['xp_needed'] = (round(($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1) * (1 - ($ir['reset'] * 0.1)));
+    if ($MUS['miningxp'] >= $MUS['xp_needed']) {
+        $expu = $MUS['miningxp'] - $MUS['xp_needed'];
+        $MUS['mining_level'] += 1;
+        $MUS['miningxp'] = $expu;
+        $MUS['buyable_power'] += 1;
+        $MUS['xp_needed'] =
             round(($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * ($MUS['mining_level'] + 0.75) * 1);
-            $db->query("UPDATE `mining` SET `mining_level` = `mining_level` + 1, `miningxp` = {$expu},
+        $db->query("UPDATE `mining` SET `mining_level` = `mining_level` + 1, `miningxp` = {$expu},
                  `buyable_power` = `buyable_power` + 1 WHERE `userid` = {$userid}");
-        }
+    }
 }
 
 function countUserAutoMiners($userid)
@@ -221,10 +212,9 @@ function doBonusMiningEnergyChance()
 {
     global $db, $userid, $MU;
     $incr = 10;
-    if (Random(1,200) == Random(1,200))
-    {
+    if (Random(1, 200) == Random(1, 200)) {
         $MU['max_miningpower'] = $MU['max_miningpower'] + $incr;
         $db->query("UPDATE `mining` SET `max_miningpower` = `max_miningpower` + {$incr} WHERE `userid` = {$userid}");
-        alert('info',"","You've gained a bonus {$incr} Maximum mining power!!",false);
+        alert('info', "", "You've gained a bonus {$incr} Maximum mining power!!", false);
     }
 }

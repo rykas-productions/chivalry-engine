@@ -120,8 +120,13 @@ class database
         if (!$result) {
             $result = $this->result;
         }
+        if (!($result instanceof mysqli_result)) {
+            var_dump($result);
+            die('Invalid result passed to num_rows()');
+        }
         return mysqli_num_rows($result);
     }
+
 
     function insert_id()
     {

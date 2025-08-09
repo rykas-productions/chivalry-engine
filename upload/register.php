@@ -108,7 +108,8 @@ if (!empty($username)) {
         }
         $encpsw = encode_password($base_pw);    //Encode the password.
         $e_encpsw = $db->escape($encpsw);
-        $profilepic = "https://chivalryisdeadgame.com/assets/img/npc/" . strtolower($e_gender) . ".svg";
+        $seed = urlencode(md5($e_email . randomizer()));
+        $profilepic = "http://206.130.120.126:3000/9.x/pixel-art/svg?seed={$seed}?size=250";
         $CurrentTime = time();
         $db->query("INSERT INTO `users`
 					(`username`,`email`,`password`,`level`,`gender`,`class`,
