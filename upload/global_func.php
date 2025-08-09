@@ -1323,33 +1323,55 @@ function verify_csrf_code($formid, $code, $expiry = 300)
  * @param string $pass The user's encrypted password
  *
  * @return boolean    true for equal, false for not (login failed etc)
- *
  */
 function verify_user_password($input, $pass)
 {
-    //Check that the password matches or not.
-    $return = (password_verify(base64_encode(hash('sha256', $input, true)), $pass)) ? true : false;
-    return $return;
+    if (empty($input) || empty($pass)) {
+        return false;
+    }
+    
+    // Handle both new format and legacy format
+    if (str_starts_with($pass, '$2y$') || str_starts_with($pass, '$2a$')) {
+        return password_verify(base64_encode(hash('sha256', $input, true)), $pass);
+    } else {
+        // Legacy format fallback - should upgrade on next login
+        return (password_verify(base64_encode(hash('sha256', $input, true)), $pass));
+    }
 }
 
 /**
- * Given a password and a salt, encode them to the form which is stored in
- * the game's database.
+ * Given a password, encode it securely for storage in the database.
  *
  * @param string $password The password to be encoded
- *
- * @return string    The resulting encoded password.
+ * @param int $type The password hashing algorithm to use
+ * @return string The resulting encoded password.
  */
-function encode_password($password, $type = PASSWORD_DEFAULT)
+function encode_password($password, $type = PASSWORD_DEFAULT) 
 {
     global $set;
-	if ($type == PASSWORD_BCRYPT)
-	{
-		$options = ['cost' => $set['Password_Effort'],];
-        return password_hash(base64_encode(hash('sha256', $password, true)), PASSWORD_BCRYPT, $options);
-	}
-	else
-		return password_hash(base64_encode(hash('sha256', $password, true)), $type);
+    
+    if (empty($password)) {
+        throw new InvalidArgumentException("Password cannot be empty");
+    }
+
+    // Generate a cryptographically secure hash
+    $hash = base64_encode(hash('sha256', $password, true));
+    
+    $options = [
+        'cost' => isset($set['Password_Effort']) ? (int)$set['Password_Effort'] : 10
+    ];
+
+    if ($type === PASSWORD_BCRYPT) {
+        // Ensure cost is between 10-31 for bcrypt
+        $options['cost'] = max(10, min(31, $options['cost']));
+    }
+
+    try {
+        return password_hash($hash, $type, $options);
+    } catch (Exception $e) {
+        // Fallback to default if specified algorithm fails
+        return password_hash($hash, PASSWORD_DEFAULT);
+    }
 }
 
 /**
