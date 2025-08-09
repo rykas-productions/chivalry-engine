@@ -1382,6 +1382,17 @@ function request_csrf_code($formid, $expiry = 3600)
 }
 
 /**
+ * Request that an anti-CSRF verification code be issued for a particular form in the game, and return the HTML to be placed in the form.
+ * @param string $formid A unique string used to identify this form to match up its submission with the right token.
+ * @return string The HTML for the code issued to be added to the form.
+ */
+function request_csrf_html($formid)
+{
+    return "<input type='hidden' name='verf' value='" . request_csrf_code($formid) . "' />";
+}
+
+
+/**
  * Request a cryptographically secure random token
  * @return string A secure random token
  */
@@ -1476,7 +1487,7 @@ function verify_user_password($input, $pass)
     }
     
     // Handle both new format and legacy format
-    if (str_starts_with($pass, '$2y$') || str_starts_with($pass, '$2a$')) {
+    if (substr($pass, 0, 4) === '$2y$' || substr($pass, 0, 4) === '$2a$') {
         return password_verify(base64_encode(hash('sha256', $input, true)), $pass);
     } else {
         // Legacy format fallback - should upgrade on next login
