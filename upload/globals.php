@@ -15,7 +15,7 @@ if (strpos($_SERVER['PHP_SELF'], "globals.php") !== false) {
 
 // Set secure session parameters
 ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_secure', 0);  // Changed from 1 to 0 to allow HTTP
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_samesite', 'Lax');
 
