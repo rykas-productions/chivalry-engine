@@ -1602,66 +1602,58 @@ function is_ajax()
 
 function get_filesize_remote($url)
 {
-    // Retrieve headers
-    if (strlen($url) < 8) {
-        return 0; // no file
-    }
-    $is_ssl = false;
-    if (substr($url, 0, 7) == 'http://') {
-        $port = 80;
-    } else if (substr($url, 0, 8) == 'https://' && extension_loaded('openssl')) {
-        $port = 443;
-        $is_ssl = true;
-    } else {
-        return 0; // bad protocol
-    }
-    // Break up url
-    $url_parts = explode('/', $url);
-    $host = $url_parts[2];
-    unset($url_parts[2]);
-    unset($url_parts[1]);
-    unset($url_parts[0]);
-    $path = '/' . implode('/', $url_parts);
-    if (strpos($host, ':') !== false) {
-        $host_parts = explode(':', $host);
-        if (count($host_parts) == 2 && ctype_digit($host_parts[1])) {
-            $port = (int)$host_parts[1];
-            $host = $host_parts[0];
-        } else {
-            return 0; // malformed host
+    try {
+        // Input validation
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            return 0;
         }
-    }
-    $request =
-        "HEAD {$path} HTTP/1.1\r\n" . "Host: {$host}\r\n"
-        . "Connection: Close\r\n\r\n";
-    $fh = fsockopen(($is_ssl ? 'ssl://' : '') . $host, $port);
-    if ($fh === false) {
+
+        // Only allow http/https protocols
+        if (!preg_match('/^https?:\/\//i', $url)) {
+            return 0;
+        }
+
+        $parsed = parse_url($url);
+        if ($parsed === false || empty($parsed['host'])) {
+            return 0;
+        }
+
+        // Set up context with timeouts and security options
+        $ctx = stream_context_create([
+            'http' => [
+                'method' => 'HEAD',
+                'timeout' => 5,
+                'ignore_errors' => true,
+                'follow_location' => 0,
+                'max_redirects' => 0,
+                'protocol_version' => 1.1,
+                'header' => [
+                    'Connection: close'
+                ]
+            ],
+            'ssl' => [
+                'verify_peer' => true,
+                'verify_peer_name' => true
+            ]
+        ]);
+
+        $headers = @get_headers($url, true, $ctx);
+        if ($headers === false) {
+            return 0;
+        }
+
+        // Look for content-length in a case-insensitive way
+        foreach ($headers as $name => $value) {
+            if (strcasecmp($name, 'content-length') === 0) {
+                return (int)$value;
+            }
+        }
+
+        return 0;
+    } catch (Exception $e) {
+        error_log("Error getting remote file size: " . $e->getMessage());
         return 0;
     }
-    fwrite($fh, $request);
-    $headers = array();
-    $total_loaded = 0;
-    while (!feof($fh) && $line = fgets($fh, 1024)) {
-        if ($line == "\r\n") {
-            break;
-        }
-        if (strpos($line, ':') !== false) {
-            list($key, $val) = explode(':', $line, 2);
-            $headers[strtolower($key)] = trim($val);
-        } else {
-            $headers[] = strtolower($line);
-        }
-        $total_loaded += strlen($line);
-        if ($total_loaded > 50000) {
-            // Stop loading garbage!
-            break;
-        }
-    }
-    fclose($fh);
-    if (!isset($headers['content-length'])) {
-        return 0;
-    }
-    return (int)$headers['content-length'];
 }
 
 /**
