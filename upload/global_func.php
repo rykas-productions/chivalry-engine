@@ -1240,77 +1240,108 @@ function forum_dropdown($ddname = "forum", $selected = -1)
 }
 
 /**
- * Request that an anti-CSRF verification code be issued for a particular form in the game.
- * @param string $formid A unique string used to identify this form to match up its submission with the right token.
+ * Request that an anti-CSRF verification code be issued for a particular form.
+ * @param string $formid A unique string used to identify this form
+ * @param int $expiry Optional expiry time in seconds (default 1 hour)
  * @return string The code issued to be added to the form.
  */
-function request_csrf_code($formid)
+function request_csrf_code($formid, $expiry = 3600)
 {
-    //Assign Unix Timestamp to a variable.
+    if (empty($formid)) {
+        throw new InvalidArgumentException("Form ID cannot be empty");
+    }
+
     $time = time();
-    //Generate the token from the randomizer function, and hash it with sha512.
-    $token = hash('sha512', (randomizer()));
-    //Store the CSRF Form into $_SESSION.
-    $_SESSION["csrf_{$formid}"] = array('token' => $token, 'issued' => $time);
-    //Return the token.
-    return $token;
+    $token = randomizer();
+    
+    // Add additional entropy
+    $entropy = hash('sha256', session_id() . $time . $formid);
+    $finalToken = hash('sha512', $token . $entropy);
+    
+    $_SESSION["csrf_{$formid}"] = [
+        'token' => $finalToken,
+        'issued' => $time,
+        'expiry' => $expiry
+    ];
+    
+    return $finalToken;
 }
 
 /**
- * Request a randomly generated phrase.
- * Returns the randomly generated phrase.
+ * Request a cryptographically secure random token
+ * @return string A secure random token
  */
 function randomizer()
 {
-    //Set to true for stronger randomization on OpenSSL
-    $Safe = true;
-    //Use PHP V7's Random Bytes generator first!
-    if (function_exists('random_bytes'))
-        return bin2hex(random_bytes(128));
-    //If we can't... lets use OpenSSL's random bytes generator
-    elseif (function_exists('openssl_random_pseudo_bytes'))
-        return bin2hex(openssl_random_pseudo_bytes(128, $Safe));
-    //That fails... use our shitty one. ;/
-    else
-        return sha1(decbin(Random(1, PHP_INT_MAX)));
-}
-
-/**
- * Request that an anti-CSRF verification code be issued for a particular form in the game, and return the HTML to be placed in the form.
- * @param string $formid A unique string used to identify this form to match up its submission with the right token.
- * @return string The HTML for the code issued to be added to the form.
- */
-function request_csrf_html($formid)
-{
-    return "<input type='hidden' name='verf' value='" . request_csrf_code($formid) . "' />";
-}
-
-/**
- * Check the CSRF code we received against the one that was registered for the form - return false if the request shouldn't be processed...
- * @param string $formid A unique string used to identify this form to match up its submission with the right token.
- * @param string $code The code the user's form input returned.
- * @param int $expiry The amount of time the CSRF is valid for. Default 300 seconds.
- * @return boolean Whether the user provided a valid code or not
- */
-function verify_csrf_code($formid, $code, $expiry = 300)
-{
-    //User does not have a CSRF Session started for $formid, or its missing information.
-    if (!isset($_SESSION["csrf_{$formid}"]) || !is_array($_SESSION["csrf_{$formid}"])) {
-        return false;
-    } else {
-        //Set verified to false until we can be sure they have verified successfully.
-        $verified = false;
-        //Assign the CSRF $formid to a variable.
-        $token = $_SESSION["csrf_{$formid}"];
-        //Check to see if the token is still valid.
-        if ($token['issued'] + $expiry > time()) {
-            //User becomes verified if the code matches the token that was stored in $_SESSION
-            $verified = ($token['token'] === $code);
+    try {
+        // Use PHP 7+ random_bytes for best security
+        if (function_exists('random_bytes')) {
+            return bin2hex(random_bytes(64));
         }
-        //Unset the CSRF $formid from $_SESSION
-        unset($_SESSION["csrf_{$formid}"]);
-        //Return if the user has verified successfully or not.
-        return $verified;
+        
+        // Fallback to OpenSSL if available
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $strong = true;
+            $bytes = openssl_random_pseudo_bytes(64, $strong);
+            if ($bytes !== false && $strong) {
+                return bin2hex($bytes);
+            }
+        }
+        
+        // Last resort fallback
+        $bytes = '';
+        for ($i = 0; $i < 64; $i++) {
+            $bytes .= chr(Random(0, 255));
+        }
+        return bin2hex($bytes);
+    } catch (Exception $e) {
+        // Log error and fallback to basic random
+        error_log("Failed to generate secure random bytes: " . $e->getMessage());
+        return hash('sha512', uniqid(mt_rand(), true));
+    }
+}
+
+/**
+ * Check the CSRF code against the registered token
+ * @param string $formid Form identifier
+ * @param string $code User provided token
+ * @param int $expiry Optional override for token expiry
+ * @return boolean Whether the token is valid
+ */
+function verify_csrf_code($formid, $code, $expiry = null) 
+{
+    if (empty($formid) || empty($code)) {
+        return false;
+    }
+
+    $sessionKey = "csrf_{$formid}";
+    
+    if (!isset($_SESSION[$sessionKey]) || !is_array($_SESSION[$sessionKey])) {
+        return false;
+    }
+
+    try {
+        $token = $_SESSION[$sessionKey];
+        
+        // Use token-specific expiry if set, otherwise use passed expiry
+        $tokenExpiry = $expiry ?? $token['expiry'] ?? 3600;
+        
+        // Validate token age
+        if (time() > ($token['issued'] + $tokenExpiry)) {
+            throw new Exception('Token expired');
+        }
+
+        // Constant-time string comparison
+        $valid = hash_equals($token['token'], $code);
+        
+        // Always clean up used/expired tokens
+        unset($_SESSION[$sessionKey]);
+        
+        return $valid;
+    } catch (Exception $e) {
+        error_log("CSRF validation failed: " . $e->getMessage());
+        unset($_SESSION[$sessionKey]);
+        return false;
     }
 }
 
@@ -1417,23 +1448,21 @@ function alert($type, $title, $text, $doredirect = true, $redirect = 'back', $re
  */
 function determine_game_urlbase()
 {
-    $domain = $_SERVER['HTTP_HOST'];
-    $turi = $_SERVER['REQUEST_URI'];
-    $turiq = '';
-    for ($t = strlen($turi) - 1; $t >= 0; $t--) {
-        if ($turi[$t] != '/') {
-            $turiq = $turi[$t] . $turiq;
-        } else {
-            break;
-        }
-    }
-    $turiq = '/' . $turiq;
-    if ($turiq == '/') {
-        $domain .= substr($turi, 0, -1);
-    } else {
-        $domain .= str_replace($turiq, '', $turi);
-    }
-    return $domain;
+    // Get host with port if non-standard
+    $host = $_SERVER['HTTP_HOST'];
+    $requestUri = $_SERVER['REQUEST_URI'];
+    
+    // Basic sanitization
+    $host = filter_var($host, FILTER_SANITIZE_URL);
+    $requestUri = filter_var($requestUri, FILTER_SANITIZE_URL);
+    
+    // Extract the path portion up to the last /
+    $path = preg_replace('#/[^/]*$#', '', $requestUri);
+    
+    // Ensure proper URL format
+    $proto = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://';
+    
+    return rtrim($proto . $host . $path, '/');
 }
 
 /**
