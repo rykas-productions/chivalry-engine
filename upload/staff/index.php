@@ -62,180 +62,182 @@ if ($api->UserMemberLevelGet($userid, 'admin')) {
 }
 echo "
 </div>
-	<div class='col-md-4'>
-		<ul class='nav nav-pills flex-column'>";
+    <div class='container'>
+        <div class='row'>
+            <div class='col-md-4'>
+                <ul class='nav nav-pills flex-column' id='staffTabs' role='tablist'>";
 if ($api->UserMemberLevelGet($userid, 'admin')) {
     echo "
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ADMIN'>Admin</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#MODULES'>Modules</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#SHOPS'>Shops</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#BOTS'>NPCs</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#JOBS'>Jobs</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#TOWN'>Towns</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ESTATES'>Estates</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#MINES'>Mines</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#SMELT'>Smeltery</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ACADEMY'>Academy</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#PROMO'>Promo Codes</a>
-			</li>";
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link active' data-bs-toggle='tab' data-bs-target='#ADMIN' type='button' role='tab' aria-selected='true'>Admin</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#MODULES' type='button' role='tab' aria-selected='false'>Modules</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#SHOPS' type='button' role='tab' aria-selected='false'>Shops</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#BOTS' type='button' role='tab' aria-selected='false'>NPCs</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#JOBS' type='button' role='tab' aria-selected='false'>Jobs</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#TOWN' type='button' role='tab' aria-selected='false'>Towns</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#ESTATES' type='button' role='tab' aria-selected='false'>Estates</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#MINES' type='button' role='tab' aria-selected='false'>Mines</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#SMELT' type='button' role='tab' aria-selected='false'>Smeltery</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#ACADEMY' type='button' role='tab' aria-selected='false'>Academy</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#PROMO' type='button' role='tab' aria-selected='false'>Promo Codes</button>
+                    </li>";
 }
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
-    echo "<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#ITEMS'>Items</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#USERS'>Users</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#GUILDS'>Guilds</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#LOGS'>Logs</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#POLL'>Polls</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#PERMISSION'>Permissions</a>
-			</li>";
+    echo "<li class='nav-item' role='presentation'>
+                        <button class='nav-link" . (!$api->UserMemberLevelGet($userid, 'admin') ? " active" : "") . "' data-bs-toggle='tab' data-bs-target='#ITEMS' type='button' role='tab' aria-selected='" . (!$api->UserMemberLevelGet($userid, 'admin') ? "true" : "false") . "'>Items</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#USERS' type='button' role='tab' aria-selected='false'>Users</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#GUILDS' type='button' role='tab' aria-selected='false'>Guilds</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#LOGS' type='button' role='tab' aria-selected='false'>Logs</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#POLL' type='button' role='tab' aria-selected='false'>Polls</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#PERMISSION' type='button' role='tab' aria-selected='false'>Permissions</button>
+                    </li>";
 }
 echo "
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#PUNISH'>Punishments</a>
-			</li>
-			<li class='nav-item'>
-				<a class='nav-link' data-toggle='tab' href='#FORUMS'>Forums</a>
-			</li>
-		</ul>
-	</div>
-	<div class='col-md-8'>
-		<div class='tab-content'>";
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link" . (!$api->UserMemberLevelGet($userid, 'admin') && !$api->UserMemberLevelGet($userid, 'assistant') ? " active" : "") . "' data-bs-toggle='tab' data-bs-target='#PUNISH' type='button' role='tab' aria-selected='" . (!$api->UserMemberLevelGet($userid, 'admin') && !$api->UserMemberLevelGet($userid, 'assistant') ? "true" : "false") . "'>Punishments</button>
+                    </li>
+                    <li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#FORUMS' type='button' role='tab' aria-selected='false'>Forums</button>
+                    </li>
+                </ul>
+            </div>
+            <div class='col-md-8'>
+                <div class='tab-content' id='staffTabsContent'>";
 if ($api->UserMemberLevelGet($userid, 'admin')) {
-    echo "<div id='ADMIN' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_settings.php?action=basicset'>Game Settings</a><br />
-								<a href='staff_settings.php?action=announce'>Create Announcement</a><br />
-								<a href='staff_settings.php?action=diagnostics'>Game Diagnostics</a><br />
-								<a href='staff_donate.php?action=addpack'>Add VIP Pack</a><br />
-								<a href='staff_donate.php?action=editpack'>Edit VIP Pack</a><br />
-								<a href='staff_donate.php?action=delpack'>Delete VIP Pack</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='MODULES' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_criminal.php'>Crimes</a>
-							</div>
-						</div>
-					</div>
-					<div id='PROMO' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_promo.php?action=addpromo'>Create Promotion Code</a><br />
-								<a href='staff_promo.php?action=viewpromo'>View Promotion Codes</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='SHOPS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_shops.php?action=newshop'>Create Shop</a><br />
-								<a href='staff_shops.php?action=delshop'>Delete Shop</a><br />
-								<a href='staff_shops.php?action=newitem'>Add Stock to Shop</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='BOTS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_bots.php?action=addbot'>Add NPC Bot</a><br />
-								<a href='staff_bots.php?action=delbot'>Delete NPC Bot</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='TOWN' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_towns.php?action=addtown'>Create Town</a><br />
-								<a href='staff_towns.php?action=edittown'>Edit Town</a><br />
-								<a href='staff_towns.php?action=deltown'>Delete Town</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='ACADEMY' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_academy.php?action=add'>Create Academy Course</a><br />
-								<a href='staff_academy.php?action=edit'>Edit Academy Course</a><br />
-								<a href='staff_academy.php?action=del'>Delete Academy Course</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='ESTATES' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_estates.php?action=addestate'>Create Estate</a><br />
-								<a href='staff_estates.php?action=editestate'>Edit Estate</a><br />
-								<a href='staff_estates.php?action=delestate'>Delete Estate</a><br />
-							</div>
-						</div>
-					</div>
-					<div id='MINES' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_mine.php?action=addmine'>Create Mine</a><br />
-								<a href='staff_mine.php?action=editmine'>Edit Mine</a><br />
-								<a href='staff_mine.php?action=delmine'>Delete Mine</a>
-							</div>
-						</div>
-					</div>
-					<div id='SMELT' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_smelt.php?action=add'>Create Smelting Recipe</a><br />
-								<a href='staff_smelt.php?action=del'>Delete Smelting Recipe</a>
-							</div>
-						</div>
-					</div>
-					<div id='JOBS' class='tab-pane'>
-						<div class='card'>
-							<div class='card-body'>
-								<a href='staff_jobs.php?action=newjob'>Create Job</a><br />
-								<a href='staff_jobs.php?action=jobedit'>Edit Job</a><br />
-								<a href='staff_jobs.php?action=jobdele'>Delete Job</a><br />
-								<a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a><br />
-								<a href='staff_jobs.php?action=jobrankedit'>Edit Job Rank</a><br />
-								<a href='staff_jobs.php?action=jobrankdele'>Delete Job Rank</a><br />
-							</div>
-						</div>
-					</div>
-					";
+    echo "<div class='tab-pane fade show active' id='ADMIN' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_settings.php?action=basicset'>Game Settings</a><br />
+                                <a href='staff_settings.php?action=announce'>Create Announcement</a><br />
+                                <a href='staff_settings.php?action=diagnostics'>Game Diagnostics</a><br />
+                                <a href='staff_donate.php?action=addpack'>Add VIP Pack</a><br />
+                                <a href='staff_donate.php?action=editpack'>Edit VIP Pack</a><br />
+                                <a href='staff_donate.php?action=delpack'>Delete VIP Pack</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='MODULES' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_criminal.php'>Crimes</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='PROMO' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_promo.php?action=addpromo'>Create Promotion Code</a><br />
+                                <a href='staff_promo.php?action=viewpromo'>View Promotion Codes</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='SHOPS' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_shops.php?action=newshop'>Create Shop</a><br />
+                                <a href='staff_shops.php?action=delshop'>Delete Shop</a><br />
+                                <a href='staff_shops.php?action=newitem'>Add Stock to Shop</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='BOTS' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_bots.php?action=addbot'>Add NPC Bot</a><br />
+                                <a href='staff_bots.php?action=delbot'>Delete NPC Bot</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='TOWN' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_towns.php?action=addtown'>Create Town</a><br />
+                                <a href='staff_towns.php?action=edittown'>Edit Town</a><br />
+                                <a href='staff_towns.php?action=deltown'>Delete Town</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='ACADEMY' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_academy.php?action=add'>Create Academy Course</a><br />
+                                <a href='staff_academy.php?action=edit'>Edit Academy Course</a><br />
+                                <a href='staff_academy.php?action=del'>Delete Academy Course</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='ESTATES' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_estates.php?action=addestate'>Create Estate</a><br />
+                                <a href='staff_estates.php?action=editestate'>Edit Estate</a><br />
+                                <a href='staff_estates.php?action=delestate'>Delete Estate</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='MINES' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_mine.php?action=addmine'>Create Mine</a><br />
+                                <a href='staff_mine.php?action=editmine'>Edit Mine</a><br />
+                                <a href='staff_mine.php?action=delmine'>Delete Mine</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='SMELT' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_smelt.php?action=add'>Create Smelting Recipe</a><br />
+                                <a href='staff_smelt.php?action=del'>Delete Smelting Recipe</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='tab-pane fade' id='JOBS' role='tabpanel' tabindex='0'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <a href='staff_jobs.php?action=newjob'>Create Job</a><br />
+                                <a href='staff_jobs.php?action=jobedit'>Edit Job</a><br />
+                                <a href='staff_jobs.php?action=jobdele'>Delete Job</a><br />
+                                <a href='staff_jobs.php?action=newjobrank'>Create Job Rank</a><br />
+                                <a href='staff_jobs.php?action=jobrankedit'>Edit Job Rank</a><br />
+                                <a href='staff_jobs.php?action=jobrankdele'>Delete Job Rank</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    ";
 }
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
-    echo "<div id='GUILDS' class='tab-pane'>
+    echo "<div class='tab-pane fade' id='GUILDS' role='tabpanel' tabindex='0'>
 						<div class='card'>
 							<div class='card-body'>
 								<a href='staff_guilds.php?action=viewguild'>View Guild</a><br />
@@ -251,7 +253,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 					";
 }
 if ($api->UserMemberLevelGet($userid, 'assistant')) {
-    echo "<div id='ITEMS' class='tab-pane'>
+    echo "<div class='tab-pane fade' id='ITEMS' role='tabpanel' tabindex='0'>
 					<div class='card'>
 						<div class='card-body'>";
     if ($api->UserMemberLevelGet($userid, 'admin')) {
@@ -266,7 +268,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 						</div>
 					</div>
 				</div>
-				<div id='POLL' class='tab-pane'>
+				<div class='tab-pane fade' id='POLL' role='tabpanel' tabindex='0'>
 					<div class='card'>
 						<div class='card-body'>
 							<a href='staff_polling.php?action=addpoll'>Create Poll</a><br />
@@ -274,7 +276,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 						</div>
 					</div>
 				</div>
-				<div id='USERS' class='tab-pane'>
+				<div class='tab-pane fade' id='USERS' role='tabpanel' tabindex='0'>
 					<div class='card'>
 						<div class='card-body'>";
     if ($api->UserMemberLevelGet($userid, 'admin')) {
@@ -293,7 +295,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 						</div>
 					</div>
 				</div>
-				<div id='LOGS' class='tab-pane'>
+				<div class='tab-pane fade' id='LOGS' role='tabpanel' tabindex='0'>
 					<div class='card'>
 						<div class='card-body'>
 							<table class='table table-sm'>
@@ -438,7 +440,7 @@ if ($api->UserMemberLevelGet($userid, 'assistant')) {
 						</div>
 					</div>
 				</div>
-				<div id='PERMISSION' class='tab-pane'>
+				<div class='tab-pane fade' id='PERMISSION' role='tabpanel' tabindex='0'>
 					<div class='card'>
 						<div class='card-body'>
 							<a href='staff_perms.php?action=viewperm'>View User's Permissions</a><br />

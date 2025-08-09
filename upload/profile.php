@@ -81,38 +81,48 @@ if (!$_GET['user']) {
         $r['daysold'] = DateTime_Parse($r['registertime'], false, true);
 
         $rhpperc = round($r['hp'] / $r['maxhp'] * 100);
-        echo "<h3>{$user_name}'s Profile</h3>";
-        ?>
-		<div class="row">
-			<div class="col-lg-2">
-				<?php
-        echo "{$displaypic}<br />
-                        {$r['user_level']}<br />
-						Location {$r['town_name']}<br />
+        echo "<h3>{$user_name}'s Profile</h3>
+<div class='container'>
+    <div class='row'>
+        <div class='col-lg-3'>
+            <div class='card mb-3'>
+                <div class='card-body text-center'>
+                    {$displaypic}
+                    <div class='mt-3'>
+                        <strong>{$r['user_level']}</strong><br />
+                        Location: {$r['town_name']}<br />
                         Level: {$r['level']}<br />";
-        echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
-        echo "Health: {$r['hp']}/{$r['maxhp']}<br />";
-
-        ?>
-			</div>
-			<div class="col-lg-10">
-				<ul class="nav nav-tabs nav-justified">
-				  <li class="active nav-item"><a class='nav-link' data-toggle="tab" href="#info"><?php echo "Physical Info"; ?></a></li>
-				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#actions"><?php echo "Actions"; ?></a></li>
-				  <li class='nav-item'><a class='nav-link' data-toggle="tab" href="#financial"><?php echo "Financial Info"; ?></a></li>
-				  <?php
-        if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
-            echo "<li class='nav-item'><a class='nav-link' data-toggle='tab' href='#staff'>Staff</a></li>";
-        }
-        ?>
-				</ul>
-				<br />
-				<div class="tab-content">
-				  <div id="info" class="tab-pane active">
+                        echo ($r['guild']) ? "Guild: <a href='guilds.php?action=view&id={$r['guild']}'>{$r['guild_name']}</a><br />" : '';
+                        echo "<div class='progress mt-2'>
+                            <div class='progress-bar bg-success' role='progressbar' style='width: {$rhpperc}%'>
+                                HP: {$r['hp']}/{$r['maxhp']}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-lg-9'>
+            <ul class='nav nav-tabs nav-justified mb-3' id='profileTabs' role='tablist'>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link active' data-bs-toggle='tab' data-bs-target='#info' type='button' role='tab' aria-selected='true'>Physical Info</button>
+                </li>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link' data-bs-toggle='tab' data-bs-target='#actions' type='button' role='tab' aria-selected='false'>Actions</button>
+                </li>
+                <li class='nav-item' role='presentation'>
+                    <button class='nav-link' data-bs-toggle='tab' data-bs-target='#financial' type='button' role='tab' aria-selected='false'>Financial Info</button>
+                </li>";
+                if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
+                    echo "<li class='nav-item' role='presentation'>
+                        <button class='nav-link' data-bs-toggle='tab' data-bs-target='#staff' type='button' role='tab' aria-selected='false'>Staff</button>
+                    </li>";
+                }
+            echo "</ul>
+            
+            <div class='tab-content' id='profileTabsContent'>
+                <div class='tab-pane fade show active' id='info' role='tabpanel' tabindex='0'>
 					<p>
-						<?php
-        echo
-        "
 						<table class='table table-bordered'>
 							<tr>
 								<th width='25%'>Sex</th>
@@ -169,7 +179,7 @@ if (!$_GET['user']) {
         echo "</table>
 					</p>
 				  </div>
-				  <div id='actions' class='tab-pane'>
+				  <div class='tab-pane fade' id='actions' role='tabpanel' tabindex='0'>
                     <a href='inbox.php?action=compose&user={$r['userid']}' class='btn btn-primary'>Message {$r['username']}</a>
                     <br />
 				    <br />
@@ -189,7 +199,7 @@ if (!$_GET['user']) {
 				  ";
         ?>
 				  </div>
-				  <div id="financial" class="tab-pane">
+				  <div class='tab-pane fade' id='financial' role='tabpanel' tabindex='0'>
 					<?php
         echo
             "
@@ -223,7 +233,7 @@ if (!$_GET['user']) {
         ?>
 				  </div>
 				  <?php
-        echo '<div id="staff" class="tab-pane">';
+        echo '<div class="tab-pane fade" id="staff" role="tabpanel" tabindex="0">';
         if (!in_array($ir['user_level'], array('Member', 'NPC'))) {
             $fg = json_decode(get_fg_cache("cache/{$r['lastip']}.json", "{$r['lastip']}", 65655), true);
             $log = $db->fetch_single($db->query("SELECT `log_text` FROM `logs` WHERE `log_user` = {$r['userid']} ORDER BY `log_id` DESC"));
