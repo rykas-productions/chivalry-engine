@@ -83,6 +83,9 @@ switch ($_GET['action']) {
 	case 'gymsplit':
 	    gymSplit();
 	    break;
+	case 'apikey':
+	    apikey();
+        break;
     default:
         prefs_home();
         break;
@@ -108,6 +111,9 @@ function prefs_home()
                             </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-danger btn-block' href='?action=changeemail'>Change Email Address</a><br />
+                            </div>
+                            <div class='col-12 col-sm-6 col-lg-12'>
+                                <a class='btn btn-primary btn-block' href='?action=apikey'>API Key</a><br />
                             </div>
                             <div class='col-12 col-sm-6 col-lg-12'>
                                 <a class='btn btn-primary btn-block' href='?action=classreset'>Class Reset</a><br />
@@ -390,10 +396,15 @@ function pw_change()
 function pic_change()
 {
     global $db, $h, $userid, $ir, $api;
+    
     if (!isset($_POST['newpic'])) {
         $csrf = request_csrf_html('prefs_changepic');
-        //@todo funcyion test before launch
+        
+        // Security: Properly escape output to prevent XSS
+        $display_pic = htmlspecialchars($ir['display_pic'], ENT_QUOTES, 'UTF-8');
+        
         echo "
+        <form method='post' action='?action=picchange'>
         <div class='row'>
             <div class='col-12'>
                 <div class='card'>
@@ -411,7 +422,7 @@ function pic_change()
                                         <small>New Avatar</small>
                                     </div>
                                     <div class='col-12'>
-                                        <input type='url' name='newpic' class='form-control' value='{$ir['display_pic']}' />
+                                        <input type='url' name='newpic' class='form-control' value='{$display_pic}' />
                                     </div>
                                 </div>
                             </div>
@@ -431,29 +442,54 @@ function pic_change()
 		</form>
 		";
     } else {
+        // Security: Verify CSRF token before processing
         if (!isset($_POST['verf']) || !verify_csrf_code('prefs_changepic', stripslashes($_POST['verf']))) {
             alert('danger', "Action Blocked!", "Your action was blocked for security reasons. Fill out the form quicker next time.");
             die($h->endpage());
         }
+        
+        // Security: Sanitize input properly
         $npic = (isset($_POST['newpic']) && is_string($_POST['newpic'])) ? stripslashes($_POST['newpic']) : '';
+        
+        // Security: Validate URL format before processing
         if (!empty($npic)) {
+            // Security: Validate URL format to prevent malicious input
+            if (!filter_var($npic, FILTER_VALIDATE_URL)) {
+                alert('danger', "Uh Oh!", "The link you've input is not a valid URL.");
+                $h->endpage();
+                exit;
+            }
+            
+            // Security: Check file size and validate image
             $sz = get_filesize_remote($npic);
             if ($sz <= 0 || $sz >= 8388608) {
                 alert('danger', "Uh Oh!", "You picture's file size is too big. At maximum, picture file size can be 8MB.");
                 $h->endpage();
                 exit;
             }
+            
+            // Security: Validate that the URL points to an actual image
             $image = (@isImage($npic));
             if (!$image) {
                 alert('danger', "Uh Oh!", "The link you've input is not an image.");
                 die($h->endpage());
             }
         }
-        $img = htmlentities($_POST['newpic'], ENT_QUOTES, 'ISO-8859-1');
+        
+        // Security: Properly escape output to prevent XSS in HTML rendering
+        $img = htmlspecialchars($_POST['newpic'], ENT_QUOTES, 'UTF-8');
+        
         alert('success', "Success!", "You have successfully updated your display picture to what's shown below.", true, 'preferences.php');
+        
+        // Security: Escape the image URL in output to prevent XSS
         echo "<img src='{$img}' width='250' height='250' class='img-thumbnail img-fluid'>";
+        
         $api->SystemLogsAdd($userid, 'preferences', "Changed display picture.");
-        $db->query("UPDATE `users` SET `display_pic` = '" . $db->escape($npic) . "' WHERE `userid` = {$userid}");
+        
+        // Security: Use proper escaping for database query (maintaining backward compatibility)
+        // Note: This assumes $db->escape properly escapes the data
+        $escaped_npic = $db->escape($npic);
+        $db->query("UPDATE `users` SET `display_pic` = '{$escaped_npic}' WHERE `userid` = {$userid}");
     }
 }
 
@@ -2067,4 +2103,80 @@ function gymSplit()
 		<input type='hidden' value='1' name='submit'>
 		</form>";
 }
+
+function apikey()
+{
+    global $db, $userid, $api;
+    if (isset($_POST['action'])) {
+        if ($_POST['action'] == 'generate') {
+            // Generate new API key
+            $api_key = bin2hex(random_bytes(32));
+            $time = time();
+            
+            // Check if user already has an API key
+            $q = $db->query("SELECT * FROM `user_api_keys` WHERE `userid` = {$userid}");
+            if ($db->num_rows($q) > 0) {
+                $db->query("UPDATE `user_api_keys` SET `api_key` = '{$api_key}', `key_timestamp` = {$time} WHERE `userid` = {$userid}");
+            } else {
+                $db->query("INSERT INTO `user_api_keys` (`userid`, `api_key`, `key_timestamp`) VALUES ({$userid}, '{$api_key}', {$time})");
+            }
+            alert('success', 'Success!', 'Your API key has been generated successfully.');
+        } elseif ($_POST['action'] == 'delete') {
+            $db->query("DELETE FROM `user_api_keys` WHERE `userid` = {$userid}");
+            alert('success', 'Success!', 'Your API key has been deleted.');
+        }
+    }
+    
+    // Get current API key if exists
+    $q = $db->query("SELECT `api_key`, `key_timestamp` FROM `user_api_keys` WHERE `userid` = {$userid}");
+    if ($db->num_rows($q) > 0) {
+        $apik = $db->fetch_row($q);
+    }
+    
+    echo "<h3>API Key Management</h3>
+    <div class='container'>
+        <div class='row'>
+            <div class='col-sm-12'>
+                <table class='table table-bordered'>
+                    <tr>
+                        <th colspan='2'>Your API Key</th>
+                    </tr>";
+    if (isset($apik)) {
+        echo "<tr>
+                <td>API Key:</td>
+                <td>{$apik['api_key']}</td>
+              </tr>
+              <tr>
+                <td>Generated on:</td>
+                <td>" . date('F j, Y g:i:s a', $apik['key_timestamp']) . "</td>
+              </tr>
+              <tr>
+                <td colspan='2'>
+                    <form method='post'>
+                        <input type='hidden' name='action' value='generate'>
+                        <button type='submit' class='btn btn-warning'>Regenerate API Key</button>
+                    </form>
+                    <form method='post' style='margin-top: 10px;'>
+                        <input type='hidden' name='action' value='delete'>
+                        <button type='submit' class='btn btn-danger'>Delete API Key</button>
+                    </form>
+                </td>
+              </tr>";
+    } else {
+        echo "<tr>
+                <td colspan='2'>
+                    You don't have an API key yet.
+                    <form method='post'>
+                        <input type='hidden' name='action' value='generate'>
+                        <button type='submit' class='btn btn-primary'>Generate API Key</button>
+                    </form>
+                </td>
+              </tr>";
+    }
+    echo "</table>
+            </div>
+        </div>
+    </div>";
+}
+
 $h->endpage();
