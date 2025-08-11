@@ -1279,7 +1279,11 @@ function getCurrentPage()
  * @return string Image HTML of the asset.
  */
 function loadImageAsset($img, $size = 1)
-{   
+{
+    if (!is_string($img) || $img === '') {
+        return '';
+    }
+    
     return "<img src='" . returnAssetDir() . "img/{$img}' style='width:{$size}rem;'></img>";
 }
 
@@ -1636,56 +1640,65 @@ function returnDataDir()
  * @return string HTML markup for the loot table contents or an error message
  */
 
-function parseLootTableOdds(string $tableName): string {
-    $filePath = returnDataDir() . "loot/{$tableName}.json";
-    
-    if (!file_exists($filePath)) {
-        return "Error: Loot table not found.";
+/**
+ * Generate an HTML summary of the loot table odds.
+ *
+ * @param string $tableName The name of the loot table JSON file (without .json).
+ * @return string           An HTML fragment describing each drop chance.
+ */
+function parseLootTableOdds(string $tableName): string
+{
+    // Load and decode the loot table once – bail out early if it fails
+    $file = returnDataDir() . "loot/{$tableName}.json";
+    if (!is_file($file)) {
+        return 'Error: Loot file not found.';
     }
     
-    $json = file_get_contents($filePath);
-    $lootTables = json_decode($json, true);
-    
-    if (!isset($lootTables[$tableName])) {
-        return "Error: Invalid loot table format.";
+    $data = json_decode(file_get_contents($file), true);
+    if (empty($data) || !isset($data['entries'])) {
+        return 'Error: Invalid loot table format.';
     }
     
-    $lootTable = $lootTables[$tableName];
+    // The JSON is trusted, but we still escape any values that will be rendered.
     $lootSummary = [];
-    
-    // Process guaranteed drops
-    if (isset($lootTable['guaranteed'])) {
-        foreach ($lootTable['guaranteed'] as $entry) {
-            $min = shortNumberParse($entry['min']);
-            $max = shortNumberParse($entry['max']);
-            $itemName = getItemName($entry['item']);
+    foreach ($data['entries'] as $entry) {
+        // Ensure the required keys exist and are numeric
+        if (!isset($entry['min'], $entry['max'], $entry['item'])) {
+            continue; // skip malformed entries silently
+        }
+        
+        $min      = (int)$entry['min'];
+        $max      = (int)$entry['max'];
+        $chance   = isset($entry['chance']) ? round((float)$entry['chance'] * 100, 2) : null;
+        $itemName = getItemName($entry['item']);
+        
+        // Escape everything that will be inserted into the HTML
+        $minEsc      = htmlspecialchars((string)$min, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $maxEsc      = htmlspecialchars((string)$max, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $chanceEsc   = $chance !== null ? htmlspecialchars((string)$chance, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : '';
+        $itemNameEsc = htmlspecialchars($itemName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        
+        // Build the row – we keep the same visual structure but now all data is safe.
+        if ($chance !== null) {
+            $lootSummary[] = "<div class='col-12 col-xxxl'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        <small><b>{$chanceEsc}% Chance</b></small>
+                                    </div>
+                                    <div class='col-12'>
+                                        {$minEsc}-{$maxEsc} x {$itemNameEsc}(s)
+                                    </div>
+                                </div>
+                            </div>";
+        } else {
+            // Fixed‑amount drop
             $lootSummary[] = "<div class='col-12 col-xxxl'>
                                 <div class='row'>
                                     <div class='col-12'>
                                         <small><b>100% Chance</b></small>
                                     </div>
                                     <div class='col-12'>
-                                        {$min}-{$max} x {$itemName}(s)
-                                    </div>
-                                </div>
-                            </div>";
-        }
-    }
-    
-    // Process chance-based drops
-    if (isset($lootTable['chance_based'])) {
-        foreach ($lootTable['chance_based'] as $entry) {
-            $chance = round($entry['chance'] * 100, 2);
-            $min = shortNumberParse($entry['min']);
-            $max = shortNumberParse($entry['max']);
-            $itemName = getItemName($entry['item']);
-            $lootSummary[] = "<div class='col-12 col-xxxl'>
-                                <div class='row'>
-                                    <div class='col-12'>
-                                        <small><b>{$chance}% Chance</b></small>
-                                    </div>
-                                    <div class='col-12'>
-                                        {$min}-{$max} x {$itemName}(s)
+                                        {$minEsc}-{$maxEsc} x {$itemNameEsc}(s)
                                     </div>
                                 </div>
                             </div>";
@@ -1696,6 +1709,7 @@ function parseLootTableOdds(string $tableName): string {
         return "This loot table has no available drops.";
     }
     
+    // Return a single string – the caller can echo it directly.
     return implode("\n", $lootSummary);
 }
 
