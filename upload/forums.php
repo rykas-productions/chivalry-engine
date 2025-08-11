@@ -1664,52 +1664,51 @@ function delepost()
 
 function deletopic()
 {
-    global $userid, $h, $db, $api;
-    $_GET['topic'] = (isset($_GET['topic']) && is_numeric($_GET['topic'])) ? abs($_GET['topic']) : '';
-    if (!($api->UserMemberLevelGet($userid, 'forum moderator'))) {
+    global $db, $userid, $h, $api;
+    
+    $_GET['topic'] = isset($_GET['topic']) && is_numeric($_GET['topic']) ? abs($_GET['topic']) : '';
+    
+    if (!$api->UserMemberLevelGet($userid, 'forum moderator')) {
         alert('danger', "Security Issue!", "You do not have permission to view this forum category. If you feel this is incorrect, please contact an admin.", true, "forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
+    
     if (empty($_GET['topic'])) {
         alert('danger', "Uh Oh!", "Please select a topic you wish to view.", true, 'forums.php');
         die($h->endpage());
     }
-    $q = $db->query("/*qc=on*/SELECT `ft_forum_id`, `ft_name` FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
-    if ($db->num_rows($q) == 0) {
-        $db->free_result($q);
+    
+    $topicResult = $db->query("SELECT ft_forum_id, ft_name FROM forum_topics WHERE ft_id = " . (int)$_GET['topic']);
+    
+    if ($topicResult && $topicRow = $db->fetch_assoc($topicResult)) {
+        $db->query("DELETE FROM forum_topics WHERE ft_id = " . (int)$_GET['topic']);
+        $db->query("DELETE FROM forum_posts WHERE fp_topic_id = " . (int)$_GET['topic']);
+        
+        alert('success', "Success!", "You have deleted this topic successfully.", true, 'forums.php');
+        recache_forum($topicRow['ft_forum_id']);
+        $api->SystemLogsAdd($userid, 'staff', "Deleted topic {$topicRow['ft_name']}");
+    } else {
         alert('danger', "Forum topic does not exist!", "You are attempting to interact with a topic that does not exist. Check your source and try again.", true, "forums.php?viewtopic={$_GET['topic']}");
         die($h->endpage());
     }
-    $topic = $db->fetch_row($q);
-    $db->free_result($q);
-    $db->query("DELETE FROM `forum_topics` WHERE `ft_id` = {$_GET['topic']}");
-    $db->query("DELETE FROM `forum_posts` WHERE `fp_topic_id` = {$_GET['topic']}");
-    alert('success', "Success!", "You have deleted this topic successfully.", true, 'forums.php');
-    recache_forum($topic['ft_forum_id']);
-    $api->SystemLogsAdd($userid, 'staff', "Deleted topic {$topic['ft_name']}");
 }
 
 function updateRating($topic, $rating)
 {
-    global $db, $userid, $api;
-    if (($rating != 'up') && ($rating != 'down') && ($rating != 'none')) {
+    global $db, $userid;
+    
+    if (!in_array($rating, ['up', 'down', 'none'])) {
         return;
     }
-    $q = $db->query("SELECT * FROM `forum_tops_rating` WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
-    if ($db->num_rows($q) == 0) {
-        if ($rating == 'up')
-            $db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', 1, '{$userid}')");
-        elseif ($rating == 'down')
-            $db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', -1, '{$userid}')");
-        elseif ($rating == 'none')
-            $db->query("INSERT INTO `forum_tops_rating` (`topic_id`, `rating`, `userid`) VALUES ('{$topic}', 0, '{$userid}')");
+    
+    $ratingValue = ($rating === 'up') ? 1 : (($rating === 'down') ? -1 : 0);
+    
+    $checkResult = $db->query("SELECT rating FROM forum_tops_rating WHERE userid = " . (int)$userid . " AND topic_id = " . (int)$topic);
+    
+    if ($checkResult && $db->fetch_assoc($checkResult)) {
+        $db->query("UPDATE forum_tops_rating SET rating = " . (int)$ratingValue . " WHERE userid = " . (int)$userid . " AND topic_id = " . (int)$topic);
     } else {
-        if ($rating == 'up')
-            $db->query("UPDATE `forum_tops_rating` SET `rating` = 1 WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
-        elseif ($rating == 'down')
-            $db->query("UPDATE `forum_tops_rating` SET `rating` = -1 WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
-        elseif ($rating == 'none')
-            $db->query("UPDATE `forum_tops_rating` SET `rating` = 0 WHERE `userid` = {$userid} AND `topic_id` = {$topic}");
+        $db->query("INSERT INTO forum_tops_rating (topic_id, rating, userid) VALUES (" . (int)$topic . ", " . (int)$ratingValue . ", " . (int)$userid . ")");
     }
 }
 
@@ -1726,16 +1725,20 @@ function getUserTopicRating($topic)
 
 function replaceMentions($string)
 {
-    global $api;
-    $mentionID = get_string_between($string, "[mention]", "[/mention]");
-    if ($api->SystemUserIDtoName($mentionID)) {
-        $count = 1;
-        while (strpos($string, $mentionID) != false) {
-            $str = preg_replace("/{$mentionID}/", "<a href='profile.php?user={$mentionID}'>@{$api->SystemUserIDtoName($mentionID)}</a>", $string, 1);
-        }
-        return $str;
+    global $db, $userid;
+    
+    if (!in_array($rating, ['up', 'down', 'none'])) {
+        return;
+    }
+    
+    $ratingValue = ($rating === 'up') ? 1 : (($rating === 'down') ? -1 : 0);
+    
+    $checkResult = $db->query("SELECT rating FROM forum_tops_rating WHERE userid = " . (int)$userid . " AND topic_id = " . (int)$topic);
+    
+    if ($checkResult && $db->fetch_assoc($checkResult)) {
+        $db->query("UPDATE forum_tops_rating SET rating = " . (int)$ratingValue . " WHERE userid = " . (int)$userid . " AND topic_id = " . (int)$topic);
     } else {
-        return $string;
+        $db->query("INSERT INTO forum_tops_rating (topic_id, rating, userid) VALUES (" . (int)$topic . ", " . (int)$ratingValue . ", " . (int)$userid . ")");
     }
 }
 
