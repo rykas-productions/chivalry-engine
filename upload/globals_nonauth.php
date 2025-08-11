@@ -41,10 +41,13 @@ if (!isset($_SESSION['started'])) {
 }
 ob_start();
 //Require styling.
-if (!isset($_GET['othermenu']))
-	require "header_nonauth.php";
-else
-	require "header_nonauth2.php";
+if (!isset($hidehdr))
+{
+    if (!isset($_GET['othermenu']))
+    	require "header_nonauth.php";
+    else
+    	require "header_nonauth2.php";
+}
 include "config.php";
 define("MONO_ON", 1);
 //Connect to database.
