@@ -191,6 +191,7 @@ function crime()
 			if (hasNecklaceEquipped($userid,284))
 					$sucrate=$sucrate+($sucrate*0.1);
             $ir['brave'] -= $r['crimeBRAVE'];
+            $brave = $api->UserInfoGet($userid, 'brave', true);
             $api->UserInfoSet($userid, "brave", "-{$r['crimeBRAVE']}");
             $lvlMulti = levelMultiplier($ir['level'], $ir['reset']);
             if (Random(1, 100) <= $sucrate) {
@@ -251,7 +252,50 @@ function crime()
 				crime_log($_GET['c'],false,0,0);
             }
 			$api->SystemLogsAdd($userid, 'xp_gain', "+" . number_format($r['crimeXP']) . "XP");
-            alert("{$type}", "{$title}", "{$r['crimeITEXT']} {$text}", true, "?action=crime&c={$_GET['c']}", "Attempt Again");
+            echo "
+                <div class='card'>
+                    <div class='card-header'>
+                        Attempting {$r['crimeNAME']} crime...
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12'>
+                                        {$r['crimeITEXT']}
+                                    </div>
+                                    <div class='col-12 text-{$type}'>
+                                        {$text}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='card-footer'>
+                        <div class='row'>
+                            <div class='col-auto' align='left'>
+                                Brave <span id='ui_brave_perc'>{$brave}%</span>
+                            </div>
+                            <div class='col'>
+                                " . scaledColorProgressBar($ir['brave'], 0, $ir['maxbrave']) . "
+                            </div>
+                        </div>
+                    </div>
+                    <div class='card-body'>
+                        <div class='row'>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-12 col-lg'>
+                                        <a href='criminal.php' class='btn btn-info btn-block'>Go Back</a>
+                                    </div>
+                                    <div class='col-12 col-lg'>
+                                        <a href='?action=crime&c={$_GET['c']}' class='btn btn-success btn-block'>Attempt Again</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>";
             setCurrentUserPref('lastCrimeTime', time());
             die($h->endpage());
         }
