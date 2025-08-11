@@ -245,6 +245,13 @@ function mirrorEquipsToDefender()
     equipUserSlot($_GET['user'], slot_potion, $ir['equip_potion']);
 }
 
+/**
+ * Adjusts boss statistics based on player stats and boss scaling parameters.
+ * 
+ * This function scales the player's strength, agility, and guard stats according to
+ * the boss's stat scale modifier and random variation. It then updates the boss's
+ * userstats and level to match the attacking player's stats and equipment.
+ */
 function handleBossLogic()
 {
     global $ir, $db, $bossq;
