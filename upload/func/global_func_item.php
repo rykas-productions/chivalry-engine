@@ -9,7 +9,9 @@ function returnIcon($item, $size = 1)
         $r = $iconCache[$item];
     } else {
         // Fetch from DB and cache it
-        $r = $db->fetch_row($db->query("/*qc=on*/SELECT `icon`, `color` FROM `items` WHERE `itmid` = {$item}"));
+        $query = "/*qc=on*/SELECT `icon`, `color` FROM `items` WHERE `itmid` = " . (int)$item;
+        $result = $db->query($query);
+        $r = $db->fetch_row($result);
         $iconCache[$item] = $r;
     }
     
@@ -20,12 +22,12 @@ function returnIcon($item, $size = 1)
     
     // If icon is an image
     if ($r['color'] === 'img') {
-        return "<img src='{$r['icon']}' style='width:{$size}rem;' loading='lazy'>";
+        return "<img src='" . htmlspecialchars($r['icon'], ENT_QUOTES, 'UTF-8') . "' style='width:{$size}rem;' loading='lazy'>";
     }
     
     // Font icon with optional color
-    $colorStyle = !empty($r['color']) ? "color: {$r['color']};" : "";
-    return "<i class='{$r['icon']}' style='font-size:{$size}rem; {$colorStyle}'></i>";
+    $colorStyle = !empty($r['color']) ? "color: " . htmlspecialchars($r['color'], ENT_QUOTES, 'UTF-8') . ";" : "";
+    return "<i class='" . htmlspecialchars($r['icon'], ENT_QUOTES, 'UTF-8') . "' style='font-size:{$size}rem; {$colorStyle}'></i>";
 }
 
 
