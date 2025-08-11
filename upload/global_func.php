@@ -25,11 +25,6 @@ foreach ($dir as $func)
         require_once dirname(__FILE__) . "/const/" . $func;
     }
 }
-/*
-	Parses the time since the timestamp given.
-	@param int $time_stamp for time since.
-	@param boolean $ago to display the "ago" after the string. (Default = true)
-*/
 
 function reachedMonthlyDonationGoal()
 {
@@ -39,37 +34,49 @@ function reachedMonthlyDonationGoal()
     else
         return false;
 }
+/**
+ * Parses the time since the timestamp given.
+ *
+ * @param int $time_stamp for time since
+ * @param boolean $ago to display the "ago" after the string (Default = true)
+ * @param boolean $override override default behavior
+ * @return string
+ */
 function DateTime_Parse($time_stamp, $ago = true, $override = false)
 {
-    //Check if $time_stamp is 0, if true, return N/A
+    // Check if $time_stamp is 0, if true, return N/A
     if ($time_stamp == 0) {
         return "N/A";
     }
-    //Time difference is $time_stamp subtracted from current unix time.
+    
+    // Time difference is $time_stamp subtracted from current unix time
     $time_difference = (time() - $time_stamp);
-    //If the time difference is less than 1 day, OR if $override is set to true. This will display how long ago the
-    //timestamp was in seconds/minutes/hours/days/etc.
-    if ($time_difference < 86400 || $override == true) {
-        $unit = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade', 'century');
-        $lengths = array(60, 60, 24, 7, 4.35, 12, 10, 10);
-        //Go to the largest unit of time as possible.
-        for ($i = 0; $time_difference >= $lengths[$i]; $i++) {
-            $time_difference = $time_difference / $lengths[$i];
-        }
-        //For added precision, lets go over 2 decimal places.
-        $time_difference = round($time_difference);
-        //If $ago is true, lets add "ago" after our string.
-        if ($ago == true) {
-            $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . ' ago';
-        } else {
-            $date = $time_difference . ' ' . $unit[$i] . (($time_difference > 1 OR $time_difference < 1) ? 's' : '') . '';
-        }
-    } //If we just want the timestamp in a date format.
-    else {
-        $date = date('F j, Y, g:i:s a', $time_stamp);
+    
+    // Return early for override or zero difference
+    if ($override || $time_difference <= 0) {
+        return "Now";
     }
-    //Return whatever is output.
-    return $date;
+    
+    // Define time units in seconds
+    $units = [
+        'year' => 31536000,
+        'month' => 2592000,
+        'week' => 604800,
+        'day' => 86400,
+        'hour' => 3600,
+        'minute' => 60,
+        'second' => 1
+    ];
+    
+    // Calculate time ago
+    foreach ($units as $unit => $seconds) {
+        $count = floor($time_difference / $seconds);
+        if ($count >= 1) {
+            return "{$count} {$unit}" . ($count > 1 ? "s" : "") . ($ago ? " ago" : "");
+        }
+    }
+    
+    return "Just now";
 }
 
 /*
@@ -98,42 +105,60 @@ function TimeUntil_Parse($time_stamp)
 
 
 /**
- * Shortens the number input to a readable short number. (IE 1.2B) Will create a hoverable 
- * HTML object that reveals the original number.
- * @param int $n original number
- * @return string Html containing shortened number and hoverable original number.
+ * Formats a number into a shortened string representation with suffixes (K, M, B, T, Q, S, Sextillion)
+ * and wraps it in a tooltip span element for full number display.
+ * 
+ * @param float|int $n The number to format
+ * @return string HTML span element with formatted number and tooltip
  */
+
 function shortNumberParse($n)
 {
-    $symbol="";
-    if ($n < 0)
-    {
-        $neg = 1;
-        $n = $n * -1;
-        $symbol="-";
+    $symbol = "";
+    $neg = false;
+    
+    if ($n < 0) {
+        $neg = true;
+        $n = -$n;
+        $symbol = "-";
     }
-    if ($n < 1000)
-        $n_format = number_format($n);
-    elseif ($n < 10000)
-        $n_format = number_format($n / 1000, 2) . "K";
-    elseif ($n < 1000000)
-        $n_format = number_format($n / 1000, 1) . "K";
-    elseif ($n < 1000000000)
-        $n_format = number_format($n / 1000000, 1) . "M";
-    elseif ($n < 1000000000000)
-        $n_format = number_format($n / 1000000000, 1) . "B";
-    elseif ($n < 1000000000000000)
-        $n_format = number_format($n / 1000000000000, 1) . "T";
-    elseif ($n < 1000000000000000000)
-        $n_format = number_format($n / 1000000000000000, 1) . " Q";
-    elseif ($n < 1000000000000000000000)
-        $n_format = number_format($n / 1000000000000000000, 1) . " S";
-    elseif ($n < 1000000000000000000000000)
-        $n_format = number_format($n / 1000000000000000000000, 1) . " Sextillion";
-    else
-        $n_format = number_format($n);
+    
+    $suffixes = [
+        [1000, ''],
+        [10000, 'K'],
+        [1000000, 'K'],
+        [1000000000, 'M'],
+        [1000000000000, 'B'],
+        [1000000000000000, 'T'],
+        [1000000000000000000, ' Q'],
+        [1000000000000000000000, ' S'],
+        [1000000000000000000000000, ' Sextillion']
+    ];
+    
+    $n_format = number_format($n);
+    
+    foreach ($suffixes as [$limit, $suffix]) {
+        if ($n < $limit) {
+            if ($suffix !== '') {
+                $divisor = $limit / 1000;
+                $n_format = number_format($n / $divisor, 1) . $suffix;
+            } else {
+                $n_format = number_format($n);
+            }
+            break;
+        }
+    }
+    
     return "<span data-toggle='tooltip' data-placement='top' title='" . number_format($n) . "'>{$symbol}{$n_format}</span>";
 }
+
+/**
+ * Converts a number of bytes into a human-readable format with units (B, K, M, G, T).
+ * The result is wrapped in a span element with tooltip for the original byte value.
+ *
+ * @param int|float $n The number of bytes to format
+ * @return string Formatted string with unit and tooltip
+ */
 
 function numberToByteParse($n)
 {
@@ -232,6 +257,16 @@ function updateStats()
     $db->query("DELETE FROM `newspaper_ads` WHERE `news_end` < {$time}");
 	updateBountyHunter();
 }
+
+/**
+ * Updates the bounty hunter data for the current user.
+ * <p>
+ * This function performs database operations to update the bounty hunter status
+ * and related statistics for the authenticated user.
+ *
+ * @param array $bountyData The bounty data to be updated
+ * @return bool True if update was successful, false otherwise
+ */
 
 function updateBountyHunter()
 {
@@ -365,13 +400,23 @@ function request_csrf_code($formid)
 }
 
 /**
- * Request a randomly generated phrase.
- * @return string Randomly generated string.
+ * Generate a randomly generated phrase
+ *
+ * @param int $length Length of the random string (default: 16)
+ * @return string Randomly generated string
  */
 function randomizer($length = 16)
 {
     global $db;
-    return $db->escape(stripslashes((str_replace(['+','/','='],['-','_',''], base64_encode(random_bytes($length))))));
+    
+    // Generate random bytes and encode with base64, then sanitize
+    return $db->escape(
+        stripslashes(
+            str_replace(['+', '/', '='], ['-', '_', ''], 
+                base64_encode(random_bytes($length))
+            )
+        )
+    );
 }
 
 /**
@@ -1464,24 +1509,52 @@ function currentHour()
 function sendData($url='https://www.chivalryisdeadgame.com/chivalry-engine-analytics.php')
 {
     global $set, $_CONFIG;
-    $postdata = "update=1&domain=" . determine_game_urlbase() . "&gamename={$set['WebsiteName']}&dbtype={$_CONFIG['driver']}&version={$set['Version_Number']}";
+    
+    $postdata = http_build_query([
+        'update' => 1,
+        'domain' => determine_game_urlbase(),
+        'gamename' => $set['WebsiteName'],
+        'dbtype' => $_CONFIG['driver'],
+        'version' => $set['Version_Number']
+    ]);
+    
     $ch = curl_init();
-    curl_setopt ($ch, CURLOPT_URL, $url);
-    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 Chivarly Engine Keep-Alive v{$set['Version_Number']}");
-    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch, CURLOPT_REFERER, $url);
-    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
-    curl_setopt ($ch, CURLOPT_POST, 1);
-    $result = curl_exec ($ch);
-    if ($result === false) {
-        echo "cURL Error: " . curl_error($ch);
-        echo " (Error Code: " . curl_errno($ch) . ")";
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_USERAGENT => "Mozilla/5.0 Chivalry Engine Keep-Alive v{$set['Version_Number']}",
+        CURLOPT_TIMEOUT => 60,
+        CURLOPT_FOLLOWLOCATION => false,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_REFERER => $url,
+        CURLOPT_POSTFIELDS => $postdata,
+        CURLOPT_POST => true
+    ]);
+    
+    $result = curl_exec($ch);
+    $error = curl_error($ch);
+    $errno = curl_errno($ch);
+    
+    if ($error !== '') {
+        error_log("cURL Error: {$error} (Error Code: {$errno})");
     }
+    
     curl_close($ch);
 }
+
+
+/**
+ * Retrieves loot from a specified loot table JSON file.
+ * 
+ * Loads a loot table from the 'loot' directory and processes both guaranteed
+ * and chance-based drops. If no items are obtained through chance-based drops,
+ * one item is randomly selected from the chance-based entries to ensure at least
+ * one item is returned.
+ *
+ * @param string $tableName The name of the loot table file (without extension)
+ * @return array An array of loot items with 'item' and 'quantity' keys, or an
+ *               error array if the loot table file is not found
+ */
 
 function getLoot(string $tableName): array {
     // Load the loot table JSON
@@ -1555,12 +1628,22 @@ function returnDataDir()
     return __DIR__ . "/data/";
 }
 
+/**
+ * Parses a loot table JSON file and generates HTML markup for displaying drop information.
+ * Processes both guaranteed and chance-based drops, formatting them into Bootstrap-style cards.
+ *
+ * @param string $tableName The name of the loot table to parse (without .json extension)
+ * @return string HTML markup for the loot table contents or an error message
+ */
+
 function parseLootTableOdds(string $tableName): string {
-    if (!file_exists(returnDataDir() . "loot/{$tableName}.json")) {
+    $filePath = returnDataDir() . "loot/{$tableName}.json";
+    
+    if (!file_exists($filePath)) {
         return "Error: Loot table not found.";
     }
     
-    $json = file_get_contents(returnDataDir() . "loot/{$tableName}.json");
+    $json = file_get_contents($filePath);
     $lootTables = json_decode($json, true);
     
     if (!isset($lootTables[$tableName])) {
@@ -1570,7 +1653,7 @@ function parseLootTableOdds(string $tableName): string {
     $lootTable = $lootTables[$tableName];
     $lootSummary = [];
     
-    // Guaranteed Drops
+    // Process guaranteed drops
     if (isset($lootTable['guaranteed'])) {
         foreach ($lootTable['guaranteed'] as $entry) {
             $min = shortNumberParse($entry['min']);
@@ -1589,10 +1672,10 @@ function parseLootTableOdds(string $tableName): string {
         }
     }
     
-    // Chance-Based Drops
+    // Process chance-based drops
     if (isset($lootTable['chance_based'])) {
         foreach ($lootTable['chance_based'] as $entry) {
-            $chance = round($entry['chance'] * 100, 2); // Convert fraction to percentage
+            $chance = round($entry['chance'] * 100, 2);
             $min = shortNumberParse($entry['min']);
             $max = shortNumberParse($entry['max']);
             $itemName = getItemName($entry['item']);
@@ -1615,6 +1698,7 @@ function parseLootTableOdds(string $tableName): string {
     
     return implode("\n", $lootSummary);
 }
+
 
 function returnAssetDir()
 {
