@@ -11,8 +11,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('1.1.1'); //For game/engine
-$Build=('109');	    //todo: at 1.1, count the actual builds and start there. at 1.0.3c, we'd
+$Version=('1.1.2'); //For game/engine
+$Build=('110');	    //todo: at 1.1, count the actual builds and start there. at 1.0.3c, we'd
 					//actually be at 107
 define('MONO_ON', 1);
 session_name('CENGINE');
@@ -256,18 +256,6 @@ function config()
     				<small class='text-muted'>The database should not have any other software using it.</small>
     			</th>
     			<td><input type='text' name='database' class='form-control' required='1' value='' /></td>
-    		</tr>
-    		<tr>
-    			<th>
-    				Send Install Info?<br />
-    				<small class='text-muted'>Just your domain name, codebase version, install date, game name and database type.</small>
-    			</th>
-    			<td>
-    				<select name='analytics' class='form-select' required='1' type='dropdown'>
-    					<option value='true'>True</option>
-    					<option value='false'>False</option>
-    				</select>
-    			</td>
     		</tr>
     		<tr>
     			<th colspan='2'>Game Config</th>
@@ -609,12 +597,6 @@ EOF;
 	$db->query("INSERT INTO `settings` VALUE (NULL, 'keepAlivePing', '{$_POST['analytics']}')");
 	$db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 	$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
-    if ($_POST['analytics'] == 'true')
-    {
-        echo "Sending install analytics...";
-        sendData($ins_game_name,$db_driver);
-        echo "Analytics have been sent. TheMasterGeneral thanks you!<br />";
-    }
     echo '... Done.<br />';
     $path = dirname($_SERVER['SCRIPT_FILENAME']);
     echo "
@@ -723,35 +705,4 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
         return "Chivalry Engine is up to date.";
     else
         return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
-}
-/*
- * Function to send analytical data to TheMasterGeneral, if the installer chooses to.
- */
-function sendData($gamename, $dbtype, $url='https://www.chivalryisdeadgame.com/chivalry-engine-analytics.php')
-{
-    global $Version;
-    $postdata = "domain=" . getGameURL() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
-    $ch = curl_init();
-    curl_setopt ($ch, CURLOPT_URL, $url);
-    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6");
-    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch, CURLOPT_REFERER, $url);
-    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
-    curl_setopt ($ch, CURLOPT_POST, 1);
-    $result = curl_exec ($ch);
-    curl_close($ch);
-}
-function getGameURL()
-{
-    // Get the domain (HTTP_HOST) and scheme (HTTP_SCHEME)
-    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-    $domain = (!empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : "";
-    
-    // Combine scheme and domain to get the base URL
-    $urlbase = $scheme . '://' . $domain;
-    
-    return $urlbase;
 }
