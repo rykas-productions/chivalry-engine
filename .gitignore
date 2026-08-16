@@ -14,3 +14,7 @@ upload/.idea/codeStyles/codeStyleConfig.xml
 .project
 /.metadata
 upload/.buildpath
+.idea/chivalry-engine-v1.iml
+.idea/modules.xml
+.idea/php.xml
+.idea/vcs.xml
