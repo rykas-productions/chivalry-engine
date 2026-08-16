@@ -32,7 +32,6 @@ if (file_exists('./installer.lock'))
     exit;
 }
 $Version=('2.0.3');
-$Build=('2.0.3');
 define('MONO_ON', 1);
 session_name('CEV2');
 session_start();
@@ -224,7 +223,7 @@ function diagnostics()
     		</tr>
 			<tr>
     			<td>Chivalry Engine Version</td>
-    			<td>{$Version} (Build: {$Build})</td>
+    			<td>{$Version}</td>
     		</tr>
     		<tr>
     			<td>Is Chivalry Engine up to date?</td>
