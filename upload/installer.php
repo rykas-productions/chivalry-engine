@@ -122,6 +122,16 @@ function diagnostics()
         $hv = '<span style="color: red">Failed...</span>';
         $hvf = 0;
     }
+    if (function_exists('curl_exec'))
+	{
+		$curlv = '<span style="color: green">Pass! cURL enabled!</span>';
+		$curlvf = 0;
+	}
+	else
+	{
+		$curlv = '<span style="color: red">Fail! Please enable cURL</span>';
+		$curlvf = 1;
+	}
 	if (extension_loaded('pdo_mysql'))
     {
         $pdv = '<span style="color: green">PDO detected. Please use PDO!</span>';
@@ -160,6 +170,10 @@ function diagnostics()
     			<td>OpenSSL Random Pseudo Bytes avaliable?</td>
     			<td>{$ov}</td>
     		</tr>
+    		<tr>
+    		<td>cURL avaliable?</td>
+    		<td>{$curlv}</td>
+    		</tr>
 			<tr>
     			<td>Chivalry Engine Version</td>
     			<td>{$Version}</td>
@@ -176,7 +190,7 @@ function diagnostics()
         	</tr>
     </table>
        ";
-    if ($pvf + $pdf + $wvf + $hvf + $ovf < 5)
+    if ($pvf + $pdf + $wvf + $hvf + $ovf + $curlvf < 6)
     {
         echo "
 		<hr />
