@@ -74,82 +74,82 @@ function diagnostics()
     menuprint("diag");
     if (version_compare(phpversion(), '7.3.0') < 0)
     {
-        $pv = '<span style="color: red">Failed</span>';
+        $pv = '<span class="text-danger font-weight-bold">Failed</span>';
         $pvf = 0;
     }
     else
     {
-        $pv = "<span style='color: green'>Pass! PHP Version is " . phpversion();  "!</span>";
+        $pv = "<span class='text-success'>Pass! PHP Version is <span class='font-weight-bold'>" . phpversion();  "</span>!</span>";
         $pvf = 1;
     }
     if (is_writable('./'))
     {
-        $wv = '<span style="color: green">Pass! Game folder is writable.</span>';
+        $wv = '<span class="text-success">Pass!</span>';
         $wvf = 1;
     }
     else
     {
-        $wv = '<span style="color: red">Fail!</span>';
+        $wv = '<span class="text-danger font-weight-bold">Fail!</span>';
         $wvf = 0;
     }
 	if (is_writable('./cache'))
     {
-        $cv = '<span style="color: green">Pass! Cache folder is writable.</span>';
+        $cv = '<span class="text-success">Pass! Cache folder is writable.</span>';
         $cvf = 1;
     }
 	else
     {
-        $cv = '<span style="color: red">Cache folder unwritable.</span>';
+        $cv = '<span class="text-danger font-weight-bold">Cache folder unwritable.</span>';
         $cvf = 0;
     }
 	if (function_exists('openssl_random_pseudo_bytes'))
     {
-        $ov = '<span style="color: green">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
+        $ov = '<span class="text-success">Pass! OpenSSL Random Pseudo Bytes detected!</span>';
         $ovf = 1;
     }
     else
     {
-        $ov = '<span style="color: red">Failed...</span>';
+        $ov = '<span class="text-danger font-weight-bold">Fail!</span>';
         $ovf = 0;
     }
 	if (function_exists('password_hash'))
     {
-        $hv = '<span style="color: green">Pass! Using stronger password hash method.</span>';
+        $hv = '<span class="text-success">Pass! Using stronger password hash method.</span>';
         $hvf = 1;
     }
     else
     {
-        $hv = '<span style="color: red">Failed...</span>';
+        $hv = '<span class="text-danger font-weight-bold">Fail!</span>';
         $hvf = 0;
     }
     if (function_exists('curl_exec'))
 	{
-		$curlv = '<span style="color: green">Pass! cURL enabled!</span>';
-		$curlvf = 0;
+		$curlv = '<span class="text-success">Pass! cURL enabled!</span>';
+		$curlvf = 1;
 	}
 	else
 	{
-		$curlv = '<span style="color: red">Fail! Please enable cURL</span>';
-		$curlvf = 1;
+		$curlv = '<span class="text-danger font-weight-bold">Fail! Please enable cURL</span>';
+		$curlvf = 0;
 	}
 	if (extension_loaded('pdo_mysql'))
     {
-        $pdv = '<span style="color: green">PDO detected. Please use PDO!</span>';
+        $pdv = '<span class="text-success">PDO detected. Please use PDO!</span>';
         $pdf = 1;
     }
     elseif (function_exists('mysqli_connect'))
     {
-        $pdv = '<span style="color: orange">PDO not detected. Use MySQLi!</span>';
+        $pdv = '<span class="text-warning">PDO not detected. Use MySQLi!</span>';
         $pdf = 1;
     }
 	else
 	{
-		$pdv = '<span style="color: red">No acceptable database handler found. Installer will not continue.</span>';
+		$pdv = '<span class="text-danger font-weight-bold">No acceptable database handler found. Installer will not continue.</span>';
         $pdf = 0;
 	}
     echo "
     <h3>Basic Diagnostic Results:</h3>
-    <table class='table table-bordered table-hover'>
+    <table class='table table-bordered'>
     		<tr>
     			<td>Is the server's PHP Version >= 7.3?</td>
     			<td>{$pv}</td>
@@ -194,7 +194,7 @@ function diagnostics()
     {
         echo "
 		<hr />
-		<span style='color: red; font-weight: bold;'>
+		<span class='text-danger font-weight-bold'>
 		One of the basic diagnostics failed, so Setup cannot continue.
 		Please fix the ones that failed and try again.
 		</span>
@@ -217,7 +217,7 @@ function config()
     echo "
     <h3>Configuration:</h3>
     <form action='installer.php?code=install' method='post'>
-    <table class='table table-bordered table-hover'>
+    <table class='table table-bordered'>
     		<tr>
     			<th colspan='2'>Database Config</th>
     		</tr>
@@ -494,7 +494,7 @@ function install()
         <ul>";
         foreach ($errors as $error)
         {
-            echo "<li><span style='color: red;'>{$error}</span></li>";
+            echo "<li><span class='text-danger font-weight-bold'>{$error}</span></li>";
         }
         echo "</ul>
         &gt; <a href='installer.php?code=config'>Go back to config</a>";
@@ -642,17 +642,17 @@ EOF;
         echo "Attempting to lock installer... ";
         @touch('installer.lock');
         $success2 = file_exists('installer.lock');
-        echo "<span style='color: " . ($success2 ? "green;'>Succeeded" : "red;'>Failed")
+        echo "<span class='" . ($success2 ? "text-success'>Succeeded" : "'text-danger font-weight-bold'>Failed")
                 . "</span><br />";
         if ($success2)
         {
-            echo "<span style='font-weight: bold;'>"
+            echo "<span class='font-weight-bold'>"
                     . "You should now remove installer.php from your server."
                     . "</span>";
         }
         else
         {
-            echo "<span style='font-weight: bold; font-size: 20pt;'>"
+            echo "<span class='font-weight-bold text-danger'>"
                     . "YOU MUST REMOVE installer.php "
                     . "from your server.<br />"
                     . "Failing to do so will allow other people "
@@ -702,7 +702,6 @@ function update_file($url)
 		CURLOPT_SSL_VERIFYPEER => false,
 		CURLOPT_RETURNTRANSFER => true));
 	$content = curl_exec($curl);
-	curl_close($curl);
 	return $content;
 }
 /*
@@ -716,7 +715,7 @@ function version_json($url = 'https://raw.githubusercontent.com/MasterGeneral156
     if (is_null($json))
         return "Update checker failed.";
     if (version_compare($engine_version, $json['latest']) == 0 || version_compare($engine_version, $json['latest']) == 1)
-        return "Chivalry Engine is up to date.";
+        return "<span class='text-success'>Chivalry Engine is up to date.</span>";
     else
-        return "Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.";
+        return "<span class='text-info'>Chivalry Engine update available. Download it <a href='{$json['download-latest']}'>here</a>.</span>";
 }
