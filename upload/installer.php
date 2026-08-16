@@ -62,6 +62,7 @@ default:
 
 function menuprint($highlight)
 {
+	global $Version;
     $items =
             array('diag' => '1. Diagnostics', 'input' => '2. Configuration',
                     'sql' => '3. Installation & Extras',);
@@ -69,7 +70,7 @@ function menuprint($highlight)
     ?>
 	<!-- Navigation -->
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href="index.php">Chivalry Engine Installer</a>
+                <a class="navbar-brand" href="index.php">Chivalry Engine v<?php echo $Version; ?> Installer</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#CENGINENav"
                         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
