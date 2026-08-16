@@ -31,8 +31,8 @@ if (file_exists('./installer.lock'))
 {
     exit;
 }
-$Version=('2.0.2');
-$Build=('2.0.2');
+$Version=('2.0.3');
+$Build=('2.0.3');
 define('MONO_ON', 1);
 session_name('CEV2');
 session_start();
@@ -314,18 +314,6 @@ function config()
     				<small>The database should not have any other software using it.</small>
     			</th>
     			<td><input type='text' name='database' class='form-control' required='1' value='' /></td>
-    		</tr>
-    		<tr>
-    			<th>
-    				Send Install Info?<br />
-    				<small>Just your domain name, codebase version, install date, game name and database type.</small>
-    			</th>
-    			<td>
-    				<select name='analytics' class='form-control' required='1' type='dropdown'>
-    					<option value='true'>True</option>
-    					<option value='false'>False</option>
-    				</select>
-    			</td>
     		</tr>
     		<tr>
     			<th colp='2'>Game Config</th>
@@ -618,12 +606,6 @@ EOF;
 	$db->query("INSERT INTO `infirmary` (`infirmary_user`, `infirmary_reason`, `infirmary_in`, `infirmary_out`) VALUES ('{$i}', 'N/A', '0', '0');");
 	$db->query("INSERT INTO `dungeon` (`dungeon_user`, `dungeon_reason`, `dungeon_in`, `dungeon_out`) VALUES ('{$i}', 'N/A', '0', '0');");
     echo '... Done.<br />';
-    if ($_POST['analytics'] == 'true')
-    {
-        echo "Sending install analytics...";
-        sendData($ins_game_name,$db_driver);
-        echo "Analytics have been sent. TheMasterGeneral thanks you!<br />";
-    }
     $path = dirname($_SERVER['SCRIPT_FILENAME']);
     echo "
     <h2>Installation Complete!</h2>
@@ -731,45 +713,4 @@ function getEngineVersion(string $url = 'https://raw.githubusercontent.com/Maste
         return "Chivalry Engine is up to date.";
     else
         return "Chivalry Engine version {$json['latest-v2']} available. Download it <a href='{$json['download-latest']}'>here</a>.";
-}
-
-/*
- * Function to send analytical data to TheMasterGeneral, if the installer chooses to.
- */
-function sendData($gamename, $dbtype, $url='https://chivalryisdeadgame.com/chivalry-engine-analytics.php')
-{
-    global $Version;
-    $postdata = "domain=" . getGameURL() . "&install=" . time() ."&gamename={$gamename}&dbtype={$dbtype}&version={$Version}";
-    $ch = curl_init();
-    curl_setopt ($ch, CURLOPT_URL, $url);
-    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt ($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6");
-    curl_setopt ($ch, CURLOPT_TIMEOUT, 60);
-    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch, CURLOPT_REFERER, $url);
-    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postdata);
-    curl_setopt ($ch, CURLOPT_POST, 1);
-    $result = curl_exec ($ch);
-    curl_close($ch);
-}
-function getGameURL()
-{
-    $domain = $_SERVER['HTTP_HOST'];
-    $turi = $_SERVER['REQUEST_URI'];
-    $turiq = '';
-    for ($t = strlen($turi) - 1; $t >= 0; $t--) {
-        if ($turi[$t] != '/') {
-            $turiq = $turi[$t] . $turiq;
-        } else {
-            break;
-        }
-    }
-    $turiq = '/' . $turiq;
-    if ($turiq == '/') {
-        $domain .= substr($turi, 0, -1);
-    } else {
-        $domain .= str_replace($turiq, '', $turi);
-    }
-    return $domain;
 }
