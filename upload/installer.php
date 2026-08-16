@@ -116,7 +116,7 @@ function diagnostics()
 {
 	global $Version, $Build;
     menuprint("diag");
-    if (version_compare(phpversion(), '7.0.0') < 0)
+    if (version_compare(phpversion(), '7.3.0') < 0)
     {
         $pv = '<span class="text-danger">Failed</span>';
         $pvf = 0;
@@ -193,9 +193,9 @@ function diagnostics()
      }
     echo "
     <h3>Basic Diagnostic Results:</h3>
-    <table class='table table-bordered table-hover'>
+    <table class='table table-bordered'>
     		<tr>
-    			<td>Is the server's PHP Version greater than 7.0.0?</td>
+    			<td>Is the server's PHP Version greater than 7.3?</td>
     			<td>{$pv}</td>
     		</tr>
     		<tr>
@@ -696,7 +696,6 @@ function updateFile($url)
 		CURLOPT_SSL_VERIFYPEER => false,
 		CURLOPT_RETURNTRANSFER => true));
 	$content = curl_exec($curl);
-	curl_close($curl);
 	return $content;
 }
 /*
@@ -704,8 +703,8 @@ function updateFile($url)
  */
 function getEngineVersion(string $url = 'https://raw.githubusercontent.com/MasterGeneral156/Version/master/chivalry-engine.json')
 {
-    global $set;
-    $engine_version = $set['Version_Number'];
+    global $Version;
+    $engine_version = $Version;
     $json = json_decode(getCachedFile($url, __DIR__ . "/cache/update_check.txt"), true);
     if (is_null($json))
         return "Update checker failed.";
