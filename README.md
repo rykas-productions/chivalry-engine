@@ -1,4 +1,4 @@
-# Chivalry Engine v1.1.0
+# Chivalry Engine v1.1.2c
 Chivalry Engine is a free to use and open source engine created by TheMasterGeneral. Built on top of Bootstrap, Chivalry Engine is a mobile-first experience. It should work swell on any modern device.
 
 Chivalry Engine is incomplete, however, for those interested in the developement cycle, feel free to star the repository. We're trying to limit builds to once a week, just so you don't have to constantly check back here.
